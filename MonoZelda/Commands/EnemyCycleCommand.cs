@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Microsoft.Xna.Framework.Input;
 using MonoZelda.Enemies;
 using PixelPushers.MonoZelda.Controllers;
 
@@ -19,7 +20,7 @@ public class EnemyCycleCommand : ICommand
         this.enemyCycler = enemyCycler;
     }
 
-    public GameState Execute()
+    public GameState Execute(Keys PressedKey)
     {
         if (enemyCycler == null)
             return controller.GameState;

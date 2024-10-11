@@ -2,6 +2,7 @@
 using PixelPushers.MonoZelda.Link;
 using PixelPushers.MonoZelda.Controllers;
 using PixelPushers.MonoZelda.Link.Projectiles;
+using Microsoft.Xna.Framework.Input;
 
 
 namespace PixelPushers.MonoZelda.Commands;
@@ -9,37 +10,47 @@ namespace PixelPushers.MonoZelda.Commands;
 public class PlayerUseItemCommand : ICommand
 {
     private Player player;
-    private IController controller;
     private Projectile projectiles;
+    private ProjectileManager projectileManager;
+    private IController controller;
     private IProjectile launchedProjectile;
     private ProjectileType projectileType;
-    private int itemIdx;
 
     public PlayerUseItemCommand()
     {
     }
 
-    public PlayerUseItemCommand(Projectile projectile, Player player)
+    public PlayerUseItemCommand(Projectile projectiles, ProjectileManager projectileManager, Player player)
     {
-        this.projectiles = projectile;
+        this.projectiles = projectiles;
+        this.projectileManager = projectileManager;
         this.player = player;
     }
 
-    public GameState Execute()
+    private void CreateProjectile(Keys PressedKey)
     {
+        launchedProjectile = projectiles.GetProjectileObject(projectileManager.getProjectileType(PressedKey));
+        projectileManager.setProjectile(launchedProjectile);
+        projectiles.enableDict();
+    }
+
+    public GameState Execute(Keys PressedKey)
+    {
+        // create projectile
+        if(projectileManager.ProjectileFired != true)
+        {
+            CreateProjectile(PressedKey);
+        }
+
         // animate player throw projectile
-        player.PlayerUseItem();
-        launchedProjectile.updateProjectile();
+        if (player != null)
+        {
+            player.PlayerUseItem();
+            launchedProjectile.updateProjectile();
+        }
 
         // Keep GameState the same inside the controller
         return controller.GameState;
-    }
-
-    public void CreateProjectile(int itemNumber,ProjectileManager projectileManager)
-    {
-        launchedProjectile = projectiles.GetProjectileObject(itemNumber);
-        projectileManager.setProjectile(launchedProjectile);
-        projectiles.enableDict();
     }
 
     public void SetController(IController controller)

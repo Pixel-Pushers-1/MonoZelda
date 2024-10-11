@@ -67,10 +67,9 @@ public class Projectile
     }
 
 
-    public IProjectile GetProjectileObject(int itemNumber)
+    public IProjectile GetProjectileObject(ProjectileType currentProjectile)
     {
         IProjectile launchProjectile = null;
-        currentProjectile = (ProjectileType)itemNumber;
         switch (currentProjectile)
         {
             case ProjectileType.arrow_green:

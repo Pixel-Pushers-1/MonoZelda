@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using PixelPushers.MonoZelda.Link;
 using PixelPushers.MonoZelda.Controllers;
+using Microsoft.Xna.Framework.Input;
 
 namespace PixelPushers.MonoZelda.Commands;
 
@@ -19,13 +20,12 @@ public class PlayerTakeDamageCommand : ICommand
         this.player = player;
     }
 
-    public GameState Execute()
+    public GameState Execute(Keys PressedKey)
     {
         if (player == null)
             return controller.GameState;
 
         // Apply damage to player
-        Debug.WriteLine("Player taking " + damage + " units of damage");
         player.PlayerTakeDamage();
         // Keep GameState the same inside the controller
         return controller.GameState;

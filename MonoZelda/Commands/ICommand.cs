@@ -1,10 +1,11 @@
-﻿using PixelPushers.MonoZelda.Controllers;
+﻿using Microsoft.Xna.Framework.Input;
+using PixelPushers.MonoZelda.Controllers;
 
 namespace PixelPushers.MonoZelda.Commands;
 
 public interface ICommand
 {
-    GameState Execute();
+    GameState Execute(Keys PressedKey);
     GameState UnExecute();
     void SetController(IController controller);
 }

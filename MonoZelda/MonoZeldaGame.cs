@@ -37,7 +37,7 @@ public class MonoZeldaGame : Game
 
         // Commands that use MonoZeldaGame reference
         commandManager.ReplaceCommand(CommandEnum.ExitCommand, new ExitCommand(this));
-        commandManager.ReplaceCommand(CommandEnum.StartCommand, new StartGameCommand(this));
+        commandManager.ReplaceCommand(CommandEnum.StartGameCommand, new StartGameCommand(this));
         commandManager.ReplaceCommand(CommandEnum.ResetCommand, new ResetCommand(this));
 
         keyboardController = new KeyboardController(commandManager);

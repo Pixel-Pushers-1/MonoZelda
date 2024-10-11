@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework.Input;
 using PixelPushers.MonoZelda.Controllers;
 using PixelPushers.MonoZelda.Tiles;
 
@@ -19,7 +20,7 @@ public class ItemCycleCommand : ICommand
         cycleable = item;
     }
     
-    public GameState Execute()
+    public GameState Execute(Keys PressedKey)
     {
         // Update the currentItem based on the value of cycleAddition
         if (cycleable != null)

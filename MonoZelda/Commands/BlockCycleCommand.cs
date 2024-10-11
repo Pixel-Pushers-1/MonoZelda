@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework.Input;
 using PixelPushers.MonoZelda.Controllers;
 using PixelPushers.MonoZelda.Tiles;
 
@@ -18,7 +19,7 @@ public class BlockCycleCommand : ICommand
         cycleable = _tile;
     }
 
-    public GameState Execute()
+    public GameState Execute(Keys PressedKey)
     {
         if (cycleable != null)
         {

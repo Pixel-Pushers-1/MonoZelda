@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework.Input;
 using PixelPushers.MonoZelda.Controllers;
 
 namespace PixelPushers.MonoZelda.Commands;
@@ -17,7 +18,7 @@ public class ResetCommand : ICommand
         _game = game;
     }
 
-    public GameState Execute()
+    public GameState Execute(Keys PressedKey)
     {
         _game?.StartMenu();
 

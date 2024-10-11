@@ -32,7 +32,7 @@ namespace PixelPushers.MonoZelda.Controllers
 
             if (action != CommandEnum.None)
             {
-                _commandManager.Execute(action);
+                _commandManager.Execute(action,Keys.Enter);
             }
 
             return true;

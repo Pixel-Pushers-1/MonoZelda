@@ -1,8 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 using PixelPushers.MonoZelda.Commands;
-using PixelPushers.MonoZelda.Link.Projectiles;
-
+using System;
+using System.Collections.Generic;
 
 namespace PixelPushers.MonoZelda.Controllers;
 
@@ -12,16 +11,39 @@ public class KeyboardController : IController
     private KeyboardState currentKeyboardState;
     private GameState gameState;
     private CommandManager commandManager;
-    private ProjectileManager projectileManager;
+    private Dictionary<Tuple<Keys,OneShot>,CommandEnum> keyCommandDictionary;
 
     public KeyboardController(CommandManager commandManager)
     {
         gameState = GameState.Title;
         this.commandManager = commandManager;
-        projectileManager = new ProjectileManager();
+        keyCommandDictionary = new Dictionary<Tuple<Keys, OneShot>, CommandEnum>
+        {
+            {Tuple.Create(Keys.Enter,OneShot.YES), CommandEnum.StartGameCommand},
+            {Tuple.Create(Keys.W,OneShot.NO),CommandEnum.PlayerMoveCommand},
+            {Tuple.Create(Keys.Up,OneShot.NO),CommandEnum.PlayerMoveCommand},
+            {Tuple.Create(Keys.S,OneShot.NO),CommandEnum.PlayerMoveCommand},
+            {Tuple.Create(Keys.Down, OneShot.NO),CommandEnum.PlayerMoveCommand},
+            {Tuple.Create(Keys.D, OneShot.NO),CommandEnum.PlayerMoveCommand},
+            {Tuple.Create(Keys.Right, OneShot.NO),CommandEnum.PlayerMoveCommand},
+            {Tuple.Create(Keys.A, OneShot.NO),CommandEnum.PlayerMoveCommand},
+            {Tuple.Create(Keys.Left, OneShot.NO),CommandEnum.PlayerMoveCommand},
+            {Tuple.Create(Keys.D1, OneShot.YES),CommandEnum.PlayerUseItemCommand},
+            {Tuple.Create(Keys.D2, OneShot.YES),CommandEnum.PlayerUseItemCommand},
+            {Tuple.Create(Keys.D3, OneShot.YES),CommandEnum.PlayerUseItemCommand},
+            {Tuple.Create(Keys.D4, OneShot.YES),CommandEnum.PlayerUseItemCommand},
+            {Tuple.Create(Keys.D5, OneShot.YES),CommandEnum.PlayerUseItemCommand},
+            {Tuple.Create(Keys.D6, OneShot.YES),CommandEnum.PlayerUseItemCommand},
+            {Tuple.Create(Keys.Z, OneShot.YES),CommandEnum.PlayerAttackCommand},
+            {Tuple.Create(Keys.N, OneShot.YES),CommandEnum.PlayerAttackCommand},
+            {Tuple.Create(Keys.Q, OneShot.NO),CommandEnum.ExitCommand},
+            {Tuple.Create(Keys.R, OneShot.NO),CommandEnum.ResetCommand},
+            {Tuple.Create(Keys.None, OneShot.NO),CommandEnum.PlayerStandingCommand},
+        };
     }
 
     // Properties
+
     public KeyboardState CurrentKeyboardState
     {
         get
@@ -61,124 +83,24 @@ public class KeyboardController : IController
     public bool Update()
     {
         currentKeyboardState = Keyboard.GetState();
-
-        commandManager.SetController(this);
         GameState newState = gameState;
 
-        if (currentKeyboardState.IsKeyDown(Keys.Q))
-        {
-            // Exit Command
-            commandManager.Execute(CommandEnum.ExitCommand);
-        }
-        else if (OneShotPressed(Keys.R))
-        {
-            // Reset Command
-            commandManager.Execute(CommandEnum.ResetCommand);
-        }
-        else
-        {
-            // this line makes sure playerUseItemCommand.Execute() is called in each update, if a projectile has been fired,
-            // so that it can keep moving
-            projectileManager.executeProjectile();
+        // Set controller for all commands
+        commandManager.SetController(this);
 
-            // Check for Player item swap input
-            if (OneShotPressed(Keys.D1) && !projectileManager.ProjectileFired)
+        // Iterate keyCommandDictionary to check input
+        foreach (var keyCommandPair in keyCommandDictionary)
+        {
+            Tuple<Keys, OneShot> keyOneShot = keyCommandPair.Key;
+            if (keyOneShot.Item2 == OneShot.NO && (currentKeyboardState.IsKeyDown(keyOneShot.Item1) || keyOneShot.Item1 == Keys.None))
             {
-                // Player item 1 equip. Green Arrow
-                PlayerUseItemCommand playerUseItemCommand = (PlayerUseItemCommand)commandManager.CommandMap[CommandEnum.PlayerUseItemCommand];
-                playerUseItemCommand.CreateProjectile(1,projectileManager);
-                commandManager.Execute(CommandEnum.PlayerUseItemCommand);
+                newState = commandManager.Execute(keyCommandPair.Value, keyOneShot.Item1);
+                break;
             }
-            else if (OneShotPressed(Keys.D2) && !projectileManager.ProjectileFired)
+            else if(keyOneShot.Item2 == OneShot.YES && OneShotPressed(keyOneShot.Item1))
             {
-                // Player item 2 equip. Blue Arrow
-                PlayerUseItemCommand playerUseItemCommand = (PlayerUseItemCommand) commandManager.CommandMap[CommandEnum.PlayerUseItemCommand];
-                playerUseItemCommand.CreateProjectile(2,projectileManager);
-                commandManager.Execute(CommandEnum.PlayerUseItemCommand);
-            }
-            else if (OneShotPressed(Keys.D3) && !projectileManager.ProjectileFired)
-            {
-                // Player item 3 equip. Boomerang
-                PlayerUseItemCommand playerUseItemCommand = (PlayerUseItemCommand) commandManager.CommandMap[CommandEnum.PlayerUseItemCommand];
-                playerUseItemCommand.CreateProjectile(3,projectileManager);
-                commandManager.Execute(CommandEnum.PlayerUseItemCommand);
-            }
-            else if (OneShotPressed(Keys.D4) && !projectileManager.ProjectileFired)
-            {
-                // Player item 4 equip. Blue Boomerang
-                PlayerUseItemCommand playerUseItemCommand = (PlayerUseItemCommand) commandManager.CommandMap[CommandEnum.PlayerUseItemCommand];
-                playerUseItemCommand.CreateProjectile(4,projectileManager);
-                commandManager.Execute(CommandEnum.PlayerUseItemCommand);
-            }
-            else if (OneShotPressed(Keys.D5) && !projectileManager.ProjectileFired)
-            {
-                // Player item 5 equip. Bomb
-                PlayerUseItemCommand playerUseItemCommand = (PlayerUseItemCommand)commandManager.CommandMap[CommandEnum.PlayerUseItemCommand];
-                playerUseItemCommand.CreateProjectile(5,projectileManager);
-                commandManager.Execute(CommandEnum.PlayerUseItemCommand);
-            }
-            else if (OneShotPressed(Keys.D6) && !projectileManager.ProjectileFired)
-            {
-                // Player item 6 equip. Blue Candle
-                PlayerUseItemCommand playerUseItemCommand = (PlayerUseItemCommand)commandManager.CommandMap[CommandEnum.PlayerUseItemCommand];
-                playerUseItemCommand.CreateProjectile(6,projectileManager);
-                commandManager.Execute(CommandEnum.PlayerUseItemCommand);
-            }
-            else if (OneShotPressed(Keys.Enter))
-            {
-                newState = commandManager.Execute(CommandEnum.StartCommand);
-            }
-            else
-      
-                // Check for Player movement input
-                if (currentKeyboardState.IsKeyDown(Keys.W) || currentKeyboardState.IsKeyDown(Keys.Up))
-                {
-                    // Player move forward command
-                    PlayerMoveCommand playerMoveCommand = (PlayerMoveCommand)commandManager.CommandMap[CommandEnum.PlayerMoveCommand];
-                    playerMoveCommand.SetScalarVector(new Vector2(0, -1));
-                    commandManager.Execute(CommandEnum.PlayerMoveCommand);
-                }
-                else if (currentKeyboardState.IsKeyDown(Keys.S) || currentKeyboardState.IsKeyDown(Keys.Down))
-                {
-                    // Player move backward command
-                    PlayerMoveCommand playerMoveCommand = (PlayerMoveCommand)commandManager.CommandMap[CommandEnum.PlayerMoveCommand];
-                    playerMoveCommand.SetScalarVector(new Vector2(0, 1));
-                    commandManager.Execute(CommandEnum.PlayerMoveCommand);
-                }
-                else if (currentKeyboardState.IsKeyDown(Keys.D) || currentKeyboardState.IsKeyDown(Keys.Right))
-                {
-                    // Player move right command
-                    PlayerMoveCommand playerMoveCommand = (PlayerMoveCommand)commandManager.CommandMap[CommandEnum.PlayerMoveCommand];
-                    playerMoveCommand.SetScalarVector(new Vector2(1, 0));
-                    commandManager.Execute(CommandEnum.PlayerMoveCommand);
-                }
-                else if (currentKeyboardState.IsKeyDown(Keys.A) || currentKeyboardState.IsKeyDown(Keys.Left))
-                {
-                    // Player move left command
-                    PlayerMoveCommand playerMoveCommand = (PlayerMoveCommand)commandManager.CommandMap[CommandEnum.PlayerMoveCommand];
-                    playerMoveCommand.SetScalarVector(new Vector2(-1, 0));
-                    commandManager.Execute(CommandEnum.PlayerMoveCommand);
-                }
-                else
-                {
-                    // Player stay still
-                    PlayerStandingCommand playerStandingCommand = (PlayerStandingCommand)commandManager.CommandMap[CommandEnum.PlayerStandingCommand];
-                    commandManager.Execute(CommandEnum.PlayerStandingCommand);
-                    
-                }
-
-            // Check for Player attack input
-            if (OneShotPressed(Keys.Z))
-            {
-                PlayerAttackCommand playerAttackCommand = (PlayerAttackCommand)commandManager.CommandMap[CommandEnum.PlayerAttackCommand];
-                playerAttackCommand.SetAttackIndex(0);
-                commandManager.Execute(CommandEnum.PlayerAttackCommand);
-            }
-            else if (OneShotPressed(Keys.N))
-            {
-                PlayerAttackCommand playerAttackCommand = (PlayerAttackCommand)commandManager.CommandMap[CommandEnum.PlayerAttackCommand];
-                playerAttackCommand.SetAttackIndex(1);
-                commandManager.Execute(CommandEnum.PlayerAttackCommand);
+                newState = commandManager.Execute(keyCommandPair.Value, keyOneShot.Item1);
+                break;
             }
         }
 
@@ -186,12 +108,7 @@ public class KeyboardController : IController
         previousKeyboardState = currentKeyboardState;
 
         // Setting new Game State of keyboard controller if needed
-        if (gameState != newState)
-        {
-            gameState = newState;
-            return true;
-        }
-        return false;
+        return (gameState != newState) ? (gameState = newState) == newState : false;
     }
 
     public bool OneShotPressed(Keys key)
@@ -201,5 +118,7 @@ public class KeyboardController : IController
             return true;
         }
         return false;
+    }
+
 }
-}
+

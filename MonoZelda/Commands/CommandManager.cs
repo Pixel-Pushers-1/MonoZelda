@@ -1,15 +1,18 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using Microsoft.Xna.Framework.Input;
 using PixelPushers.MonoZelda.Controllers;
 
 namespace PixelPushers.MonoZelda.Commands;
 
+public enum OneShot
+{
+    YES,
+    NO,
+}
+
 public enum CommandEnum
 {
-    // Temporary Commands for Sprint2
-    BlockCycleCommand,
-    EnemyCycleCommand,
-    ItemCycleCommand,
     // Commands for entire project
     ExitCommand,
     PlayerAttackCommand,
@@ -18,7 +21,7 @@ public enum CommandEnum
     PlayerUseItemCommand,
     ResetCommand,
     PlayerStandingCommand,
-    StartCommand,
+    StartGameCommand,
     None
 }
 
@@ -28,17 +31,13 @@ public class CommandManager
     public CommandManager()
     {
         commandMap = new Dictionary<CommandEnum, ICommand>();
-        AddCommand(CommandEnum.BlockCycleCommand, new BlockCycleCommand());
-        AddCommand(CommandEnum.EnemyCycleCommand, new EnemyCycleCommand());
-        AddCommand(CommandEnum.ItemCycleCommand, new ItemCycleCommand());
         AddCommand(CommandEnum.ExitCommand, new ExitCommand());
         AddCommand(CommandEnum.PlayerAttackCommand, new PlayerAttackCommand());
         AddCommand(CommandEnum.PlayerMoveCommand, new PlayerMoveCommand());
-        AddCommand(CommandEnum.PlayerTakeDamageCommand, new PlayerTakeDamageCommand());
         AddCommand(CommandEnum.PlayerUseItemCommand, new PlayerUseItemCommand());
         AddCommand(CommandEnum.PlayerStandingCommand, new PlayerStandingCommand());
         AddCommand(CommandEnum.ResetCommand, new ResetCommand());
-        AddCommand(CommandEnum.StartCommand, new StartGameCommand());
+        AddCommand(CommandEnum.StartGameCommand, new StartGameCommand());
     }
 
     public Dictionary<CommandEnum, ICommand> CommandMap
@@ -49,9 +48,9 @@ public class CommandManager
         }
     }
 
-    public GameState Execute(CommandEnum commandName)
+    public GameState Execute(CommandEnum commandName,Keys PressedKey)
     {
-        return commandMap[commandName].Execute();
+        return commandMap[commandName].Execute(PressedKey);
     }
 
     public bool ReplaceCommand(CommandEnum commandName, ICommand command)
@@ -63,7 +62,6 @@ public class CommandManager
         }
         else
         {
-            Debug.WriteLine("Command with same enum name not present in the dictionary.");
             return false;
         }
     }
@@ -72,7 +70,6 @@ public class CommandManager
     {
         if (commandMap.ContainsKey(commandName))
         {
-            Debug.WriteLine("Command with same enum name already present in the dictionary.");
             return false;
         }
         else

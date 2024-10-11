@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using PixelPushers.MonoZelda.Controllers;
 
 namespace PixelPushers.MonoZelda.Commands;
@@ -18,7 +19,7 @@ public class ExitCommand : ICommand
         _game = game;
     }
 
-    public GameState Execute()
+    public GameState Execute(Keys PressedKey)
     {
         _game.Exit();
 
