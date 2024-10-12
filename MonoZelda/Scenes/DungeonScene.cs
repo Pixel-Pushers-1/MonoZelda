@@ -32,7 +32,7 @@ public class DungeonScene : IScene
 
     public void LoadContent(ContentManager contentManager)
     {
-        var _ = new ExperimentalDungeonLoader(contentManager);
+        var _ = new ExperimentalDungeonLoader(contentManager, collidableManager, graphicsDevice);
 
         //create player and player collision
         player = new Player();
