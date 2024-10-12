@@ -47,7 +47,7 @@ internal class DungeonScene : IScene
 
     public void LoadContent(ContentManager contentManager)
     {
-        var _ = new ExperimentalDungeonLoader(contentManager);
+        var _ = new ExperimentalDungeonLoader(contentManager, collidableManager, graphicsDevice);
 
         // create projectile object and spriteDict
         var projectileDict = new SpriteDict(contentManager.Load<Texture2D>("Sprites/player"), SpriteCSVData.Projectiles, 0, new Point(0, 0));
