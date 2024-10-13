@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using PixelPushers.MonoZelda.Commands;
 
 namespace PixelPushers.MonoZelda.Controllers
@@ -12,7 +13,7 @@ namespace PixelPushers.MonoZelda.Controllers
             _commandManager = commandManager;
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             var keys = Keyboard.GetState().GetPressedKeys();
             var action = CommandEnum.None;

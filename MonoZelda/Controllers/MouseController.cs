@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using PixelPushers.MonoZelda.Commands;
 
 namespace PixelPushers.MonoZelda.Controllers;
@@ -26,7 +27,7 @@ public class MouseController : IController
         }
     }
 
-    public void Update()
+    public void Update(GameTime gameTime)
     {
         MouseState = Mouse.GetState();
 

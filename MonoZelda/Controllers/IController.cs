@@ -1,9 +1,10 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace PixelPushers.MonoZelda.Controllers;
 
 public interface IController
 {
     // Methods
-    void Update();
+    void Update(GameTime gameTime);
 }

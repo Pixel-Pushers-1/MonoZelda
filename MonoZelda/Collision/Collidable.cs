@@ -5,14 +5,16 @@ namespace MonoZelda.Collision
 {
     public class Collidable : ICollidable
     {
+        public string name { get; set; }
         public Rectangle Bounds { get; set; }
 
         private readonly CollisionHitboxDraw hitbox;
 
-        public Collidable(Rectangle bounds, GraphicsDevice graphicsDevice)
+        public Collidable(Rectangle bounds, GraphicsDevice graphicsDevice, string name)
         {
             Bounds = bounds;
             hitbox = new CollisionHitboxDraw(this, graphicsDevice);
+            this.name = name;
         }
 
         public bool Intersects(ICollidable other)
@@ -31,6 +33,11 @@ namespace MonoZelda.Collision
 
         public void SetGizmoThickness(int thickness) {
             hitbox.Thickness = thickness;
+        }
+
+        public override string ToString()
+        {
+            return $"{name}";
         }
     }
 }

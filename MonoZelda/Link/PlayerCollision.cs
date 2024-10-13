@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
+using PixelPushers.MonoZelda.Controllers;
 using PixelPushers.MonoZelda.Link;
 
 namespace MonoZelda.Link
@@ -14,8 +15,8 @@ namespace MonoZelda.Link
         private readonly int height;
         private Player player;
         private Collidable playerHitbox;
-        private CollidablesManager collidablesManager;
-        public PlayerCollision(Player player, Collidable playerHitbox, CollidablesManager collisionHitboxDrawer)
+        private CollisionController collisionController;
+        public PlayerCollision(Player player, Collidable playerHitbox, CollisionController collisionController)
         {
             this.player = player;
             this.playerHitbox = playerHitbox;
@@ -30,7 +31,7 @@ namespace MonoZelda.Link
                 width,
                 height
             );
-            this.collidablesManager = collisionHitboxDrawer;
+            this.collisionController = collisionController;
 
             playerHitbox.Bounds = bounds;
         }
@@ -38,7 +39,6 @@ namespace MonoZelda.Link
         public void Update()
         {
             UpdateBoundingBox();
-            CheckCollision();
         }
 
         private void UpdateBoundingBox()
@@ -52,30 +52,6 @@ namespace MonoZelda.Link
             );
 
             playerHitbox.Bounds = newBounds;            
-        }
-
-        private void CheckCollision() {
-            bool collided = false;
-            List<Collidable> allHitBoxes = collidablesManager.GetHitboxes();
-            foreach (var hitbox in allHitBoxes) {
-                //ignore player's own hitbox
-                if (hitbox == playerHitbox)
-                    continue;
-                //collision has occurred
-                if (playerHitbox.Intersects(hitbox)) {
-                    collided = true;
-                    playerHitbox.SetGizmoColor(Color.Lime);
-                    hitbox.SetGizmoColor(Color.Lime);
-                }
-                else {
-                    //reset other collider's hitbox color
-                    hitbox.SetGizmoColor(Color.Red);
-                }
-            }
-            //collided with nothing
-            if (!collided) {
-                playerHitbox.SetGizmoColor(Color.Red);
-            }
         }
     }
 }

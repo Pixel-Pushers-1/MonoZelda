@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using PixelPushers.MonoZelda.Commands;
 using System;
 using System.Collections.Generic;
@@ -66,7 +67,7 @@ public class KeyboardController : IController
         }
     }
 
-    public void Update()
+    public void Update(GameTime gameTime)
     {
         _currentKeyboardState = Keyboard.GetState();
 
