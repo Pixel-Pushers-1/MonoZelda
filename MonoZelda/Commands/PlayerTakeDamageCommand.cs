@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Diagnostics;
 using PixelPushers.MonoZelda.Link;
-using PixelPushers.MonoZelda.Controllers;
 using Microsoft.Xna.Framework.Input;
 
 namespace PixelPushers.MonoZelda.Commands;
 
 public class PlayerTakeDamageCommand : ICommand
 {
-    IController controller;
     int damage;
     private Player player;
+
+    public MonoZeldaGame _game { get; set; }
     public PlayerTakeDamageCommand()
     {
     }
@@ -20,18 +19,16 @@ public class PlayerTakeDamageCommand : ICommand
         this.player = player;
     }
 
-    public GameState Execute(Keys PressedKey)
+    public void Execute(Keys PressedKey)
     {
         if (player == null)
-            return controller.GameState;
+            return;
 
         // Apply damage to player
         player.PlayerTakeDamage();
-        // Keep GameState the same inside the controller
-        return controller.GameState;
     }
 
-    public GameState UnExecute()
+    public void UnExecute()
     {
         throw new NotImplementedException();
     }
@@ -39,10 +36,5 @@ public class PlayerTakeDamageCommand : ICommand
     public void SetDamage(int damage) 
     {
         this.damage = damage;
-    }
-
-    public void SetController(IController controller)
-    {
-        this.controller = controller;
     }
 }

@@ -8,14 +8,6 @@ using MonoZelda.Collision;
 
 namespace PixelPushers.MonoZelda;
 
-public enum GameState
-{
-    Title,
-    Start,
-    Reset,
-    Quit,
-}
-
 public class MonoZeldaGame : Game
 {
     private GraphicsDeviceManager graphicsDeviceManager;

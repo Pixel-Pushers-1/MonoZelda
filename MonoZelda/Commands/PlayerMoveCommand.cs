@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using PixelPushers.MonoZelda.Link;
-using PixelPushers.MonoZelda.Controllers;
 using Microsoft.Xna.Framework.Input;
 
 namespace PixelPushers.MonoZelda.Commands;
@@ -14,10 +13,11 @@ public enum Direction
 }
 public class PlayerMoveCommand : ICommand
 {
-    private IController controller;
     private Vector2 scalarVector;
     private Direction playerDirection;
     private Player player; 
+
+    public MonoZeldaGame _game { get; set; }
 
     public PlayerMoveCommand()
     {
@@ -62,24 +62,24 @@ public class PlayerMoveCommand : ICommand
     {
         if (PressedKey == Keys.W || PressedKey == Keys.Up)
         {
-            this.scalarVector = new Vector2(0, -1); // Move up
+            scalarVector = new Vector2(0, -1); // Move up
         }
         else if (PressedKey == Keys.S || PressedKey == Keys.Down)
         {
-            this.scalarVector = new Vector2(0, 1); // Move down
+            scalarVector = new Vector2(0, 1); // Move down
         }
         else if (PressedKey == Keys.A || PressedKey == Keys.Left)
         {
-            this.scalarVector = new Vector2(-1, 0); // Move left
+            scalarVector = new Vector2(-1, 0); // Move left
         }
         else if (PressedKey == Keys.D || PressedKey == Keys.Right)
         {
-            this.scalarVector = new Vector2(1, 0); // Move right
+            scalarVector = new Vector2(1, 0); // Move right
         }
         SetPlayerDirection();
     }
 
-    public GameState Execute(Keys PressedKey)
+    public void Execute(Keys PressedKey)
     {
         // set scalar vector for player direction
         SetScalarVector(PressedKey);
@@ -89,18 +89,10 @@ public class PlayerMoveCommand : ICommand
         {
             player.MovePlayer(this);
         }
-
-        // Keep GameState the same inside the controller
-        return controller.GameState;
     }
-    public GameState UnExecute()
+    public void UnExecute()
     {
         // Implement if you need to reverse this command
         throw new NotImplementedException();
-    }
-
-    public void SetController(IController controller)
-    {
-        this.controller = controller;
-    }   
+    } 
 }

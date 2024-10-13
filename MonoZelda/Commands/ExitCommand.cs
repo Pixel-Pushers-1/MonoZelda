@@ -1,38 +1,28 @@
 ﻿using System;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using PixelPushers.MonoZelda.Controllers;
 
 namespace PixelPushers.MonoZelda.Commands;
 
 public class ExitCommand : ICommand
 {
-    private Game _game;
+    public MonoZeldaGame _game { get; set; }
 
-    IController controller;
     public ExitCommand()
     {
     }
 
-    public ExitCommand(Game game)
+    public ExitCommand(MonoZeldaGame game)
     {
         _game = game;
     }
 
-    public GameState Execute(Keys PressedKey)
+    public void Execute(Keys PressedKey)
     {
         _game.Exit();
-
-        return GameState.Quit;
     }
 
-    public GameState UnExecute()
+    public void UnExecute()
     {
         throw new NotImplementedException();
-    }
-
-    public void SetController(IController controller)
-    {
-        this.controller = controller;
     }
 }

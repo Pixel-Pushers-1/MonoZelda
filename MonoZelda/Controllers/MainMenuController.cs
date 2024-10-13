@@ -5,16 +5,14 @@ namespace PixelPushers.MonoZelda.Controllers
 {
     internal class MainMenuController : IController
     {
-        public GameState GameState { get; set; }
         private CommandManager _commandManager;
 
         public MainMenuController(CommandManager commandManager)
         {
             _commandManager = commandManager;
-            GameState = GameState.Start;
         }
 
-        public bool Update()
+        public void Update()
         {
             var keys = Keyboard.GetState().GetPressedKeys();
             var action = CommandEnum.None;
@@ -34,8 +32,6 @@ namespace PixelPushers.MonoZelda.Controllers
             {
                 _commandManager.Execute(action,Keys.Enter);
             }
-
-            return true;
         }
     }
 }

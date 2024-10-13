@@ -7,17 +7,15 @@ namespace PixelPushers.MonoZelda.Controllers;
 
 public class KeyboardController : IController
 {
-    private KeyboardState previousKeyboardState;
-    private KeyboardState currentKeyboardState;
-    private GameState gameState;
-    private CommandManager commandManager;
-    private Dictionary<Tuple<Keys,OneShot>,CommandEnum> keyCommandDictionary;
+    private KeyboardState _previousKeyboardState;
+    private KeyboardState _currentKeyboardState;
+    private CommandManager _commandManager;
+    private Dictionary<Tuple<Keys,OneShot>,CommandEnum> _keyCommandDictionary;
 
     public KeyboardController(CommandManager commandManager)
     {
-        gameState = GameState.Title;
-        this.commandManager = commandManager;
-        keyCommandDictionary = new Dictionary<Tuple<Keys, OneShot>, CommandEnum>
+        _commandManager = commandManager;
+        _keyCommandDictionary = new Dictionary<Tuple<Keys, OneShot>, CommandEnum>
         {
             {Tuple.Create(Keys.Enter,OneShot.YES), CommandEnum.StartGameCommand},
             {Tuple.Create(Keys.W,OneShot.NO),CommandEnum.PlayerMoveCommand},
@@ -48,11 +46,11 @@ public class KeyboardController : IController
     {
         get
         {
-            return currentKeyboardState;
+            return _currentKeyboardState;
         }
         set
         {
-            currentKeyboardState = value;
+            _currentKeyboardState = value;
         }
     }
 
@@ -60,60 +58,41 @@ public class KeyboardController : IController
     {
         get
         {
-            return previousKeyboardState;
+            return _previousKeyboardState;
         }
         set
         {
-            previousKeyboardState = value;
+            _previousKeyboardState = value;
         }
     }
 
-    public GameState GameState
+    public void Update()
     {
-        get
-        {
-            return gameState;
-        }
-        set
-        {
-            gameState = value;
-        }
-    }
-
-    public bool Update()
-    {
-        currentKeyboardState = Keyboard.GetState();
-        GameState newState = gameState;
-
-        // Set controller for all commands
-        commandManager.SetController(this);
+        _currentKeyboardState = Keyboard.GetState();
 
         // Iterate keyCommandDictionary to check input
-        foreach (var keyCommandPair in keyCommandDictionary)
+        foreach (var keyCommandPair in _keyCommandDictionary)
         {
             Tuple<Keys, OneShot> keyOneShot = keyCommandPair.Key;
-            if (keyOneShot.Item2 == OneShot.NO && (currentKeyboardState.IsKeyDown(keyOneShot.Item1) || keyOneShot.Item1 == Keys.None))
+            if (keyOneShot.Item2 == OneShot.NO && (_currentKeyboardState.IsKeyDown(keyOneShot.Item1) || keyOneShot.Item1 == Keys.None))
             {
-                newState = commandManager.Execute(keyCommandPair.Value, keyOneShot.Item1);
+                _commandManager.Execute(keyCommandPair.Value, keyOneShot.Item1);
                 break;
             }
             else if(keyOneShot.Item2 == OneShot.YES && OneShotPressed(keyOneShot.Item1))
             {
-                newState = commandManager.Execute(keyCommandPair.Value, keyOneShot.Item1);
+                _commandManager.Execute(keyCommandPair.Value, keyOneShot.Item1);
                 break;
             }
         }
 
         // Update previous keyboard state (Do after all keyboard checks)
-        previousKeyboardState = currentKeyboardState;
-
-        // Setting new Game State of keyboard controller if needed
-        return (gameState != newState) ? (gameState = newState) == newState : false;
+        _previousKeyboardState = _currentKeyboardState;
     }
 
-    public bool OneShotPressed(Keys key)
+    private bool OneShotPressed(Keys key)
     {
-        if (currentKeyboardState.IsKeyDown(key) && !previousKeyboardState.IsKeyDown(key))
+        if (_currentKeyboardState.IsKeyDown(key) && !_previousKeyboardState.IsKeyDown(key))
         {
             return true;
         }

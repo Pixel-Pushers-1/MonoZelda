@@ -5,14 +5,12 @@ namespace PixelPushers.MonoZelda.Controllers;
 
 public class MouseController : IController
 {
-    private MouseState mouseState;
-    private GameState gameState;
-    private CommandManager commandManager;
+    private MouseState _mouseState;
+    private CommandManager _commandManager;
 
     public MouseController(CommandManager commandManager)
     {
-        gameState = GameState.Start;
-        this.commandManager = commandManager;
+        this._commandManager = commandManager;
     }
 
     // Properties
@@ -20,40 +18,19 @@ public class MouseController : IController
     {
         get
         {
-            return mouseState;
+            return _mouseState;
         }
         set
         {
-            mouseState = value;
+            _mouseState = value;
         }
     }
 
-    public GameState GameState
-    {
-        get
-        {
-            return gameState;
-        }
-        set
-        {
-            gameState = value;
-        }
-    }
-
-    public bool Update()
+    public void Update()
     {
         MouseState = Mouse.GetState();
-        GameState newState = gameState;
 
         // Mouse input logic goes here
-
-        // Setting new Game State of mouse controller if needed
-        if (gameState != newState)
-        {
-            gameState = newState;
-            return true;
-        }
-        return false;
     }
 
 }
