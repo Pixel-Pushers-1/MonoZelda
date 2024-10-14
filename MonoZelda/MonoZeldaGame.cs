@@ -43,6 +43,8 @@ public class MonoZeldaGame : Game
         graphicsDeviceManager.PreferredBackBufferHeight = 896;
         graphicsDeviceManager.ApplyChanges();
 
+        dungeonLoader = new(Content, collidableManager, graphicsDeviceManager.GraphicsDevice);
+
         base.Initialize();
     }
 
@@ -82,6 +84,7 @@ public class MonoZeldaGame : Game
     {
         // Clean state to start a new scene
         SpriteDrawer.Reset();
+        collidableManager.Clear();
         this.scene = scene;
         scene.LoadContent(Content);
     }
@@ -96,7 +99,15 @@ public class MonoZeldaGame : Game
         // Preventing the StartCommand from activating when it shouldn't. -js
         if (scene is MainMenu)
         {
-            LoadScene(new DungeonScene(GraphicsDevice, commandManager, collisionController));
+            // TODO: Passing MonoZeldaGame smells. It's used by some things to LoadContent, SpriteDict multiple AddSprite()
+            LoadDungeon("Room1");
+        }
+    }
+
+    public void LoadDungeon(string roomName)
+    {
+        // TODO: Some of these overlaods will go away when we get instanced SpriteDicts. -js
+        LoadScene(new DungeonScene(roomName, dungeonLoader, GraphicsDevice, graphicsDeviceManager, commandManager, this, collidableManager));
         }
     }
 

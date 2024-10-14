@@ -10,6 +10,9 @@ using MonoZelda.Link;
 using MonoZelda.Collision;
 using PixelPushers.MonoZelda.Controllers;
 using System;
+using MonoZelda.Dungeons;
+using MonoZelda.Commands;
+using MonoZelda.Scenes;
 
 namespace PixelPushers.MonoZelda.Scenes;
 
@@ -19,6 +22,8 @@ public class DungeonScene : IScene
     private CommandManager commandManager;
     private Player player;
     private ProjectileManager projectileManager;
+    private IDungeonRoomLoader dungeonLoader;
+    private MonoZeldaGame game;
 
     private PlayerCollision playerCollision;
     private CollisionController collisionController;
@@ -32,7 +37,10 @@ public class DungeonScene : IScene
 
     public void LoadContent(ContentManager contentManager)
     {
-        var _ = new ExperimentalDungeonLoader(contentManager, collidableManager, graphicsDevice);
+        // TODO: This belongs in the Scene that Loads room scenes.
+        var room = dungeonLoader.LoadRoom(roomName);
+        commandManager.ReplaceCommand(CommandEnum.LoadRoomCommand, new LoadRoomCommand(game, room));
+        // TODO: Make Rooms a subscene... Decorator pattern? hopefully not -js
 
         //create player and player collision
         player = new Player();
