@@ -10,6 +10,9 @@ using PixelPushers.MonoZelda.Tiles;
 using PixelPushers.MonoZelda.Link.Projectiles;
 using MonoZelda.Link;
 using MonoZelda.Collision;
+using MonoZelda.Dungeons;
+using MonoZelda.Commands;
+using MonoZelda.Scenes;
 
 namespace PixelPushers.MonoZelda.Scenes;
 
@@ -19,16 +22,26 @@ internal class DungeonScene : IScene
     private CommandManager commandManager;
     private Player player;
     private ProjectileManager projectileManager;
+    private IDungeonRoomLoader dungeonLoader;
+    private MonoZeldaGame game;
 
     private PlayerCollision playerCollision;
     private EnemyCycler enemyCycler;
+    private string roomName;
     CollidablesManager collidableManager;
 
-    public DungeonScene(GraphicsDevice graphicsDevice, GraphicsDeviceManager gManager, CommandManager cManager, MonoZeldaGame game, CollidablesManager collidableManager) 
+
+    public DungeonScene(string roomName, IDungeonRoomLoader dungeonLoader, GraphicsDevice graphicsDevice, GraphicsDeviceManager gManager, CommandManager cManager, MonoZeldaGame game, CollidablesManager collidableManager) 
     {
         this.graphicsDevice = graphicsDevice;
+        this.dungeonLoader = dungeonLoader;
+        this.roomName = roomName;
+        this.game = game;
         commandManager = cManager;
+
         player = new Player();
+
+
         this.collidableManager = collidableManager;
         Collidable playerHitbox = new Collidable(new Rectangle(100, 100, 50, 50), graphicsDevice);
         this.collidableManager.AddHitbox(playerHitbox);
@@ -47,7 +60,10 @@ internal class DungeonScene : IScene
 
     public void LoadContent(ContentManager contentManager)
     {
-        var _ = new ExperimentalDungeonLoader(contentManager, collidableManager, graphicsDevice);
+        // TODO: This belongs in the Scene that Loads room scenes.
+        var room = dungeonLoader.LoadRoom(roomName);
+        commandManager.ReplaceCommand(CommandEnum.LoadRoomCommand, new LoadRoomCommand(game, room));
+        // TODO: Make Rooms a subscene... Decorator pattern? hopefully not -js
 
         // create projectile object and spriteDict
         var projectileDict = new SpriteDict(contentManager.Load<Texture2D>("Sprites/player"), SpriteCSVData.Projectiles, 0, new Point(0, 0));

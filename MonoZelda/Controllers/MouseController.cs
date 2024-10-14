@@ -46,6 +46,10 @@ public class MouseController : IController
         GameState newState = gameState;
 
         // Mouse input logic goes here
+        if (MouseState.LeftButton == ButtonState.Pressed)
+        {
+            newState = commandManager.Execute(CommandEnum.LoadRoomCommand, Keys.None);
+        }
 
         // Setting new Game State of mouse controller if needed
         if (gameState != newState)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
 using PixelPushers.MonoZelda.Sprites;
+using System;
 
 namespace MonoZelda.Collision
 {
@@ -31,6 +32,11 @@ namespace MonoZelda.Collision
         public List<Collidable> GetHitboxes()
         {
             return collidables;
+        }
+
+        internal void Clear()
+        {
+            collidables.Clear();
         }
     }
 }
