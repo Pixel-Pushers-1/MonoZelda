@@ -39,7 +39,7 @@ public class CommandManager
         AddCommand(CommandEnum.PlayerStandingCommand, new PlayerStandingCommand());
         AddCommand(CommandEnum.ResetCommand, new ResetCommand());
         AddCommand(CommandEnum.StartGameCommand, new StartGameCommand());
-        AddCommand(CommandEnum.LoadRoomCommand, new LoadRoomCommand());
+        //AddCommand(CommandEnum.LoadRoomCommand, new LoadRoomCommand());
     }
 
     public Dictionary<CommandEnum, ICommand> CommandMap

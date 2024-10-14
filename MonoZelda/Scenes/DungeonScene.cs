@@ -5,9 +5,6 @@ using PixelPushers.MonoZelda.Link;
 using PixelPushers.MonoZelda.Commands;
 using PixelPushers.MonoZelda.Sprites;
 using PixelPushers.MonoZelda.Link.Projectiles;
-using MonoZelda.Link;
-using MonoZelda.Collision;
-using MonoZelda.Dungeons;
 using MonoZelda.Commands;
 using MonoZelda.Scenes;
 using PixelPushers.MonoZelda.Collision;
@@ -28,9 +25,9 @@ internal class DungeonScene : IScene
     private PlayerCollision playerCollision;
     private CollisionController collisionController;
     private ItemFactory itemFactory;
+    private string roomName;
 
-
-    public DungeonScene(string roomName, IDungeonRoomLoader dungeonLoader, GraphicsDevice graphicsDevice, GraphicsDeviceManager gManager, CommandManager cManager, MonoZeldaGame game, CollidablesManager collidableManager) 
+    public DungeonScene(string roomName, IDungeonRoomLoader dungeonLoader, GraphicsDevice graphicsDevice, GraphicsDeviceManager gManager, CommandManager cManager, MonoZeldaGame game, CollisionController collisionController) 
     {
         this.graphicsDevice = graphicsDevice;
         this.dungeonLoader = dungeonLoader;
@@ -59,7 +56,7 @@ internal class DungeonScene : IScene
     {
         // TODO: This belongs in the Scene that Loads room scenes.
         var room = dungeonLoader.LoadRoom(roomName);
-        commandManager.ReplaceCommand(CommandEnum.LoadRoomCommand, new LoadRoomCommand(game, room));
+        //commandManager.ReplaceCommand(CommandEnum.LoadRoomCommand, new LoadRoomCommand(game, room));
         // TODO: Make Rooms a subscene... Decorator pattern? hopefully not -js
 
         // create projectile object and spriteDict

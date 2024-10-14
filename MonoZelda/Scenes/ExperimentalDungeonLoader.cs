@@ -8,10 +8,11 @@ using Microsoft.VisualBasic.FileIO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
+using PixelPushers.MonoZelda.Collision;
 using MonoZelda.Dungeons;
 using MonoZelda.Scenes;
 using MonoZelda.Sprites;
+using PixelPushers.MonoZelda.Controllers;
 using PixelPushers.MonoZelda.Sprites;
 
 namespace PixelPushers.MonoZelda.Scenes;
@@ -29,13 +30,13 @@ public class ExperimentalDungeonLoader : IDungeonRoomLoader
 
     private Texture2D _dungeonTexture;
     private GraphicsDevice _graphicsDevice;
-    private CollidablesManager _collidablesManager;
+    private CollisionController _collisionController;
 
-    public ExperimentalDungeonLoader(ContentManager contentManager, CollidablesManager collidablesManager, GraphicsDevice graphicsDevice)
+    public ExperimentalDungeonLoader(ContentManager contentManager, CollisionController collisionController, GraphicsDevice graphicsDevice)
     {
         _dungeonTexture = contentManager.Load<Texture2D>(TextureData.Blocks);
         _graphicsDevice = graphicsDevice;
-        _collidablesManager = collidablesManager;
+        _collisionController = collisionController;
     }
 
     public IDungeonRoom LoadRoom(string roomName)
@@ -142,8 +143,8 @@ public class ExperimentalDungeonLoader : IDungeonRoomLoader
                 {
                     var position = new Point(j * TileWidth, i * TileHeight) + DungeonPosition + Margin;
                     var rect = GetCollisionRectangle(collisionRect, position, TileWidth, TileHeight);
-                    var itemHitbox = new Collidable(rect, _graphicsDevice);
-                    _collidablesManager.AddHitbox(itemHitbox);
+                    var itemHitbox = new Collidable(rect, _graphicsDevice, "CollisionBlock");
+                    _collisionController.AddCollidable(itemHitbox);
                 }
             }
             i++;

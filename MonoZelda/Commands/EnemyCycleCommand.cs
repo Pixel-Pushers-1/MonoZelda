@@ -27,7 +27,7 @@ public class EnemyCycleCommand : ICommand
 
         // Apply cycle addition to enemy list
         enemyCycler.SetCycle(cycleAddition);
-
+        
     }
 
     public void UnExecute()

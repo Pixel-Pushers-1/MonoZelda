@@ -7,11 +7,12 @@ using System.Numerics;
 
 namespace MonoZelda.Commands
 {
-    internal class LoadRoomCommand : ICommand
+    internal class LoadRoomCommand
     {
         private MonoZeldaGame game;
         private IDungeonRoom room;
 
+        public MonoZeldaGame _game { get; set; }
         public MouseState MouseState {get;set;}
 
         public LoadRoomCommand() { }
