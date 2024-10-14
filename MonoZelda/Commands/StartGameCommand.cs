@@ -1,13 +1,11 @@
 ﻿using Microsoft.Xna.Framework.Input;
-using PixelPushers.MonoZelda.Controllers;
 using System;
 
 namespace PixelPushers.MonoZelda.Commands;
 
 public class StartGameCommand : ICommand
 {
-    private IController controller;
-    private MonoZeldaGame game;
+    public MonoZeldaGame _game { get; set; }
 
     public StartGameCommand()
     {
@@ -16,22 +14,15 @@ public class StartGameCommand : ICommand
 
     public StartGameCommand(MonoZeldaGame game)
     {
-        this.game = game;
+        _game = game;
     }
 
-    public GameState Execute(Keys PressedKey)
+    public void Execute(Keys PressedKey)
     {
-        game?.StartDungeon();
-
-        return GameState.Start;
+        _game?.StartDungeon();
     }
 
-    public void SetController(IController controller)
-    {
-        this.controller = controller;
-    }
-
-    public GameState UnExecute()
+    public void UnExecute()
     {
         throw new NotImplementedException();
     }

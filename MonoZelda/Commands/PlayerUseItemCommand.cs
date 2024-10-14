@@ -1,6 +1,5 @@
 ﻿using System;
 using PixelPushers.MonoZelda.Link;
-using PixelPushers.MonoZelda.Controllers;
 using PixelPushers.MonoZelda.Link.Projectiles;
 using Microsoft.Xna.Framework.Input;
 
@@ -12,8 +11,9 @@ public class PlayerUseItemCommand : ICommand
     private Player player;
     private Projectile projectiles;
     private ProjectileManager projectileManager;
-    private IController controller;
     private IProjectile launchedProjectile;
+
+    public MonoZeldaGame _game { get; set; }
 
     public PlayerUseItemCommand()
     {
@@ -33,7 +33,7 @@ public class PlayerUseItemCommand : ICommand
         projectiles.enableDict();
     }
 
-    public GameState Execute(Keys PressedKey)
+    public void Execute(Keys PressedKey)
     {
         // create projectile
         if(projectileManager.ProjectileFired != true)
@@ -47,17 +47,9 @@ public class PlayerUseItemCommand : ICommand
             player.PlayerUseItem();
             launchedProjectile.updateProjectile();
         }
-
-        // Keep GameState the same inside the controller
-        return controller.GameState;
     }
 
-    public void SetController(IController controller)
-    {
-        this.controller = controller;
-    }
-
-    public GameState UnExecute()
+    public void UnExecute()
     {
         throw new NotImplementedException();
     }

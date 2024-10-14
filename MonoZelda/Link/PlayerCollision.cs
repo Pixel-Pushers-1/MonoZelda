@@ -1,42 +1,44 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using PixelPushers.MonoZelda.Collision;
-using PixelPushers.MonoZelda.Collision.Collidables;
+using Microsoft.Xna.Framework.Graphics;
+using MonoZelda.Collision;
+using PixelPushers.MonoZelda.Controllers;
+using PixelPushers.MonoZelda.Link;
 
-namespace PixelPushers.MonoZelda.Link;
-
-public class PlayerCollision
+namespace MonoZelda.Link
 {
-    private readonly int width;
-    private readonly int height;
-    private Player player;
-    private Collidable playerHitbox;
-    private CollidablesManager collidablesManager;
-    public PlayerCollision(Player player, Collidable playerHitbox, CollidablesManager collidablesManager)
+    public class PlayerCollision
     {
-        this.player = player;
-        this.playerHitbox = playerHitbox;
-        width = 64;
-        height = 64;
+        private readonly int width;
+        private readonly int height;
+        private Player player;
+        private Collidable playerHitbox;
+        private CollisionController collisionController;
+        public PlayerCollision(Player player, Collidable playerHitbox, CollisionController collisionController)
+        {
+            this.player = player;
+            this.playerHitbox = playerHitbox;
+            this.width = 64;
+            this.height = 64;
 
-        // Create initial hitbox for the player
-        Vector2 playerPosition = player.getPlayerPosition();
-        Rectangle bounds = new Rectangle(
-            (int)playerPosition.X - width / 2,
-            (int)playerPosition.Y - height / 2,
-            width,
-            height
-        );
+            // Create initial hitbox for the player
+            Vector2 playerPosition = player.getPlayerPosition();
+            Rectangle bounds = new Rectangle(
+                (int)playerPosition.X - width / 2,
+                (int)playerPosition.Y - height / 2,
+                width,
+                height
+            );
+            this.collisionController = collisionController;
 
         this.collidablesManager = collidablesManager;
         playerHitbox.Bounds = bounds;
     }
 
-    public void Update()
-    {
-        UpdateBoundingBox();
-        CheckCollision();
-    }
+        public void Update()
+        {
+            UpdateBoundingBox();
+        }
 
     private void UpdateBoundingBox()
     {
@@ -48,35 +50,7 @@ public class PlayerCollision
             height
         );
 
-        playerHitbox.Bounds = newBounds;
-    }
-
-    private void CheckCollision()
-    {
-        bool collided = false;
-        List<Collidable> collidableObjects = collidablesManager.GetListOfCollidableObjects();
-        foreach (var hitbox in collidableObjects)
-        {
-            //ignore player's own hitbox
-            if (hitbox == playerHitbox)
-                continue;
-            //collision has occurred
-            if (playerHitbox.Intersects(hitbox))
-            {
-                collided = true;
-                playerHitbox.SetGizmoColor(Color.Lime);
-                hitbox.SetGizmoColor(Color.Lime);
-            }
-            else
-            {
-                //reset other collider's hitbox color
-                hitbox.SetGizmoColor(Color.Red);
-            }
-        }
-        //collided with nothing
-        if (!collided)
-        {
-            playerHitbox.SetGizmoColor(Color.Red);
+            playerHitbox.Bounds = newBounds;            
         }
     }
 }
