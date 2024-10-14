@@ -1,15 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Enemies;
 using PixelPushers.MonoZelda.Link;
 using PixelPushers.MonoZelda.Commands;
-using PixelPushers.MonoZelda.Items;
 using PixelPushers.MonoZelda.Sprites;
-using PixelPushers.MonoZelda.Tiles;
 using PixelPushers.MonoZelda.Link.Projectiles;
-using MonoZelda.Link;
-using MonoZelda.Collision;
+using PixelPushers.MonoZelda.Collision;
+using PixelPushers.MonoZelda.Collision.Collidables;
+using PixelPushers.MonoZelda.Items;
 
 namespace PixelPushers.MonoZelda.Scenes;
 
@@ -19,10 +17,9 @@ internal class DungeonScene : IScene
     private CommandManager commandManager;
     private Player player;
     private ProjectileManager projectileManager;
-
     private PlayerCollision playerCollision;
-    private EnemyCycler enemyCycler;
-    CollidablesManager collidableManager;
+    private CollidablesManager collidableManager;
+    private ItemFactory itemFactory;
 
     public DungeonScene(GraphicsDevice graphicsDevice, GraphicsDeviceManager gManager, CommandManager cManager, MonoZeldaGame game, CollidablesManager collidableManager) 
     {
@@ -30,19 +27,19 @@ internal class DungeonScene : IScene
         commandManager = cManager;
         player = new Player();
         this.collidableManager = collidableManager;
+
+        //create player hitbox
         Collidable playerHitbox = new Collidable(new Rectangle(100, 100, 50, 50), graphicsDevice);
-        this.collidableManager.AddHitbox(playerHitbox);
+        this.collidableManager.AddCollidableObject(playerHitbox);
         playerCollision = new PlayerCollision(player, playerHitbox, this.collidableManager);
 
         //create some sample hitboxes
         Collidable itemHitbox1 = new Collidable(new Rectangle(100, 200, 50, 50), graphicsDevice);
-        this.collidableManager.AddHitbox(itemHitbox1);
+        this.collidableManager.AddCollidableObject(itemHitbox1);
         Collidable itemHitbox2 = new Collidable(new Rectangle(200, 200, 100, 100), graphicsDevice);
-        this.collidableManager.AddHitbox(itemHitbox2);
+        this.collidableManager.AddCollidableObject(itemHitbox2);
         Collidable itemHitbox3 = new Collidable(new Rectangle(350, 250, 50, 50), graphicsDevice);
-        this.collidableManager.AddHitbox(itemHitbox3);
-
-
+        this.collidableManager.AddCollidableObject(itemHitbox3);        
     }
 
     public void LoadContent(ContentManager contentManager)
@@ -54,6 +51,11 @@ internal class DungeonScene : IScene
         projectileDict.Enabled = false;
         var projectiles = new Projectile(projectileDict, player);
         projectileManager = new ProjectileManager();
+
+        // Temporary itemFactory object to create item according to the room number
+        itemFactory = new ItemFactory(graphicsDevice, collidableManager);
+
+        // create a spriteDict for item spawning(Temp - Remove once multi drawing sprite dict is functional)
 
         // replace required commands
         commandManager.ReplaceCommand(CommandEnum.PlayerMoveCommand, new PlayerMoveCommand(player));
@@ -67,13 +69,18 @@ internal class DungeonScene : IScene
         player.SetPlayerSpriteDict(playerSpriteDict);
     }
 
+    //public spawnItems()
+    //{
+
+    //}
+
     public void Update(GameTime gameTime)
     {
         if(projectileManager.ProjectileFired == true)
         {
             projectileManager.executeProjectile();
         }
-        // not doing anything currently
+
         playerCollision.Update();
     }
 }

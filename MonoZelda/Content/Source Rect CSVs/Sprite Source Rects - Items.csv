@@ -5,13 +5,13 @@ heart_empty,8,8,8,8,1,top left
 heart_blue,0,8,8,8,1,top left
 heartcontainer,16,0,16,16,1,top left
 fairy,32,0,8,16,2,top left
-timer,48,0,16,16,1,top left
+clock,48,0,16,16,1,top left
 rupee,64,0,8,16,1,top left
 rupee_blue,64,16,8,16,1,top left
 potion,72,0,8,16,1,top left
 potion_blue,72,16,8,16,1,top left
-paper,80,0,8,16,1,top left
-paper_blue,80,16,8,16,1,top left
+map,80,0,8,16,1,top left
+map_blue,80,16,8,16,1,top left
 meat,88,0,8,16,1,top left
 woodensword,96,0,8,16,1,top left
 whitesword,96,16,8,16,1,top left

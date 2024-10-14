@@ -4,7 +4,7 @@ using PixelPushers.MonoZelda.Controllers;
 using PixelPushers.MonoZelda.Sprites;
 using PixelPushers.MonoZelda.Commands;
 using PixelPushers.MonoZelda.Scenes;
-using MonoZelda.Collision;
+using PixelPushers.MonoZelda.Collision;
 
 namespace PixelPushers.MonoZelda;
 
@@ -33,6 +33,7 @@ public class MonoZeldaGame : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
 
+        // create Command Manager
         commandManager = new CommandManager();
 
         // Commands that use MonoZeldaGame reference
@@ -40,10 +41,12 @@ public class MonoZeldaGame : Game
         commandManager.ReplaceCommand(CommandEnum.StartGameCommand, new StartGameCommand(this));
         commandManager.ReplaceCommand(CommandEnum.ResetCommand, new ResetCommand(this));
 
+        // create controller objects
         keyboardController = new KeyboardController(commandManager);
         mouseController = new MouseController(commandManager);
 
-        collidableManager = new();
+        // create collidable manager
+        collidableManager = new CollidablesManager();
     }
 
     protected override void Initialize()

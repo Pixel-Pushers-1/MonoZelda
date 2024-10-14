@@ -26,11 +26,11 @@ public class PlayerAttackCommand : ICommand
     {
         if(PressedKey == Keys.Z)
         {
-            this.attackIdx = 0;
+            attackIdx = 0;
         }
         else if (PressedKey == Keys.N)
         {
-            this.attackIdx = 1;
+            attackIdx = 1;
         }
     }
 
