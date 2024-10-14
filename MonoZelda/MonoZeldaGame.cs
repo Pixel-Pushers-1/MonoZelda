@@ -4,9 +4,20 @@ using PixelPushers.MonoZelda.Controllers;
 using PixelPushers.MonoZelda.Sprites;
 using PixelPushers.MonoZelda.Commands;
 using PixelPushers.MonoZelda.Scenes;
+using MonoZelda.Collision;
+using MonoZelda.Commands;
 using PixelPushers.MonoZelda.Collision;
 
 namespace PixelPushers.MonoZelda;
+
+public enum GameState
+{
+    Title,
+    Start,
+    Reset,
+    Quit,
+    None
+}
 
 public class MonoZeldaGame : Game
 {
@@ -16,6 +27,8 @@ public class MonoZeldaGame : Game
     private MouseController mouseController;
     private CollisionController collisionController;
     private CommandManager commandManager;
+    private CollidablesManager collidableManager;
+    private ExperimentalDungeonLoader dungeonLoader;
 
     private IScene scene;
 
@@ -45,6 +58,8 @@ public class MonoZeldaGame : Game
         graphicsDeviceManager.PreferredBackBufferWidth = 1024;
         graphicsDeviceManager.PreferredBackBufferHeight = 896;
         graphicsDeviceManager.ApplyChanges();
+
+        dungeonLoader = new(Content, collidableManager, graphicsDeviceManager.GraphicsDevice);
 
         base.Initialize();
     }
@@ -85,6 +100,7 @@ public class MonoZeldaGame : Game
     {
         // Clean state to start a new scene
         SpriteDrawer.Reset();
+        collidableManager.Clear();
         this.scene = scene;
         scene.LoadContent(Content);
     }
@@ -100,6 +116,14 @@ public class MonoZeldaGame : Game
         if (scene is MainMenu)
         {
             // TODO: Passing MonoZeldaGame smells. It's used by some things to LoadContent, SpriteDict multiple AddSprite()
+            LoadDungeon("Room1");
+        }
+    }
+
+    public void LoadDungeon(string roomName)
+    {
+        // TODO: Some of these overlaods will go away when we get instanced SpriteDicts. -js
+        LoadScene(new DungeonScene(roomName, dungeonLoader, GraphicsDevice, graphicsDeviceManager, commandManager, this, collidableManager));
             LoadScene(new DungeonScene(GraphicsDevice, graphicsDeviceManager, commandManager, this, collisionController));
         }
     }
