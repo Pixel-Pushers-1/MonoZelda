@@ -14,7 +14,6 @@ public class PlayerUseItemCommand : ICommand
     private ProjectileManager projectileManager;
     private IController controller;
     private IProjectile launchedProjectile;
-    private ProjectileType projectileType;
 
     public PlayerUseItemCommand()
     {
