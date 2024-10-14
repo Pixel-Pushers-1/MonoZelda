@@ -15,7 +15,6 @@ public class CollisionController : IController
     public CollisionController(CommandManager commandManager)
     {
         _commandManager = commandManager;
-
         _gameObjects = new List<Collidable>();
     }
 
@@ -62,11 +61,9 @@ public class CollisionController : IController
     // Handle what happens when two objects collide
     private void HandleCollision(Collidable collidableA, Collidable collidableB)
     {
-
-        // Debug Statement
-        System.Diagnostics.Debug.WriteLine("Handling Collision");
         // Example collision response: print a message
         System.Diagnostics.Debug.WriteLine(collidableA + " collides with " + collidableB);
+        System.Diagnostics.Debug.WriteLine("Handling Collision");
 
         // Handle all different types of collision (Method will be rather large)
     }

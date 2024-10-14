@@ -4,7 +4,6 @@ using PixelPushers.MonoZelda.Controllers;
 using PixelPushers.MonoZelda.Sprites;
 using PixelPushers.MonoZelda.Commands;
 using PixelPushers.MonoZelda.Scenes;
-using PixelPushers.MonoZelda.Collision;
 
 namespace PixelPushers.MonoZelda;
 

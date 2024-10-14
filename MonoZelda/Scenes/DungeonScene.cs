@@ -5,11 +5,11 @@ using PixelPushers.MonoZelda.Link;
 using PixelPushers.MonoZelda.Commands;
 using PixelPushers.MonoZelda.Sprites;
 using PixelPushers.MonoZelda.Link.Projectiles;
-using MonoZelda.Commands;
 using MonoZelda.Scenes;
 using PixelPushers.MonoZelda.Collision;
 using PixelPushers.MonoZelda.Controllers;
 using PixelPushers.MonoZelda.Items;
+using PixelPushers.MonoZelda.Items.ItemClasses;
 
 namespace PixelPushers.MonoZelda.Scenes;
 
@@ -33,23 +33,9 @@ internal class DungeonScene : IScene
         this.dungeonLoader = dungeonLoader;
         this.roomName = roomName;
         this.game = game;
-        commandManager = cManager;
-
-        player = new Player();
         this.collisionController = collisionController;
-        Collidable playerHitbox = new Collidable(new Rectangle(100, 100, 50, 50), graphicsDevice, "Player");
-        this.collisionController.AddCollidable(playerHitbox);
-        playerCollision = new PlayerCollision(player, playerHitbox, this.collisionController);
-
-        //create some sample hitboxes
-        Collidable itemHitbox1 = new Collidable(new Rectangle(100, 200, 50, 50), graphicsDevice, "Item1");
-        this.collisionController.AddCollidable(itemHitbox1);
-        Collidable itemHitbox2 = new Collidable(new Rectangle(200, 200, 100, 100), graphicsDevice, "Item2");
-        this.collisionController.AddCollidable(itemHitbox2);
-        Collidable itemHitbox3 = new Collidable(new Rectangle(350, 250, 50, 50), graphicsDevice, "Item3");
-        this.collisionController.AddCollidable(itemHitbox3);
-
-
+        commandManager = cManager;
+        player = new Player();
     }
 
     public void LoadContent(ContentManager contentManager)
@@ -65,10 +51,21 @@ internal class DungeonScene : IScene
         var projectiles = new Projectile(projectileDict, player);
         projectileManager = new ProjectileManager();
 
+        // Creating player collidable
+        Collidable playerHitbox = new Collidable(new Rectangle(100, 100, 50, 50), graphicsDevice, "Player");
+        collisionController.AddCollidable(playerHitbox);
+        playerCollision = new PlayerCollision(player, playerHitbox, this.collisionController);
+
         // Temporary itemFactory object to create item according to the room number
         itemFactory = new ItemFactory(graphicsDevice, collisionController);
 
-        // create a spriteDict for item spawning(Temp - Remove once multi drawing sprite dict is functional)
+        //spawn some temporary items for item hitbox testing
+        var compassDict = new SpriteDict(contentManager.Load<Texture2D>("Sprites/items"), SpriteCSVData.Items, 0, new Point(0, 0));
+        IItem Compass = itemFactory.CreateItem<Compass>();
+        Compass.itemSpawn(compassDict, new Point(128, 448));
+        var keyDict = new SpriteDict(contentManager.Load<Texture2D>("Sprites/items"), SpriteCSVData.Items, 0, new Point(0, 0));
+        IItem Key = itemFactory.CreateItem<Key>();
+        Key.itemSpawn(keyDict, new Point(448, 448));
 
         // replace required commands
         commandManager.ReplaceCommand(CommandEnum.PlayerMoveCommand, new PlayerMoveCommand(player));
@@ -81,11 +78,6 @@ internal class DungeonScene : IScene
         var playerSpriteDict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Player), SpriteCSVData.Player, 1, new Point(100, 100));
         player.SetPlayerSpriteDict(playerSpriteDict);
     }
-
-    //public spawnItems()
-    //{
-
-    //}
 
     public void Update(GameTime gameTime)
     {
