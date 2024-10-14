@@ -9,7 +9,7 @@ public class BlockCycleCommand : ICommand
     ICycleable cycleable;
     int cycleAddition;
 
-    public MonoZeldaGame _game { get; set; }
+    public MonoZeldaGame Game { get; set; }
 
     public BlockCycleCommand()
     {

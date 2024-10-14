@@ -48,6 +48,11 @@ public class CollisionController : IController
         _gameObjects.Remove(collidable);
     }
 
+    public void Reset()
+    {
+        _gameObjects = new List<Collidable>();
+    }
+
     // Check if two objects are colliding (AABB collision detection)
     private bool IsColliding(Collidable collidableA, Collidable collidableB)
     {

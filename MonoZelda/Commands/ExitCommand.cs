@@ -5,7 +5,7 @@ namespace PixelPushers.MonoZelda.Commands;
 
 public class ExitCommand : ICommand
 {
-    public MonoZeldaGame _game { get; set; }
+    public MonoZeldaGame Game { get; set; }
 
     public ExitCommand()
     {
@@ -13,12 +13,12 @@ public class ExitCommand : ICommand
 
     public ExitCommand(MonoZeldaGame game)
     {
-        _game = game;
+        Game = game;
     }
 
     public void Execute(Keys PressedKey)
     {
-        _game.Exit();
+        Game.Exit();
     }
 
     public void UnExecute()

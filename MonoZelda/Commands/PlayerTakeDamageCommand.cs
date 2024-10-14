@@ -9,7 +9,7 @@ public class PlayerTakeDamageCommand : ICommand
     int damage;
     private Player player;
 
-    public MonoZeldaGame _game { get; set; }
+    public MonoZeldaGame Game { get; set; }
     public PlayerTakeDamageCommand()
     {
     }

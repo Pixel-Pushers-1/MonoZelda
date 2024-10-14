@@ -14,7 +14,7 @@ public class PlayerUseItemCommand : ICommand
     private IProjectile launchedProjectile;
     private ProjectileType projectileType;
 
-    public MonoZeldaGame _game { get; set; }
+    public MonoZeldaGame Game { get; set; }
 
     public PlayerUseItemCommand()
     {

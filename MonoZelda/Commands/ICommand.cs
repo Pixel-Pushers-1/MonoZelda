@@ -4,7 +4,7 @@ namespace PixelPushers.MonoZelda.Commands;
 
 public interface ICommand
 {
-    MonoZeldaGame _game {get; set;}
+    MonoZeldaGame Game {get; set;}
 
     void Execute(Keys PressedKey);
     void UnExecute();

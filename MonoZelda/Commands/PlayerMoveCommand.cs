@@ -17,7 +17,7 @@ public class PlayerMoveCommand : ICommand
     private Direction playerDirection;
     private Player player; 
 
-    public MonoZeldaGame _game { get; set; }
+    public MonoZeldaGame Game { get; set; }
 
     public PlayerMoveCommand()
     {

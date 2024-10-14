@@ -7,7 +7,7 @@ namespace PixelPushers.MonoZelda.Commands;
 public class ResetCommand : ICommand
 {
 
-    public MonoZeldaGame _game { get; set; }
+    public MonoZeldaGame Game { get; set; }
 
     public ResetCommand()
     {
@@ -15,12 +15,13 @@ public class ResetCommand : ICommand
 
     public ResetCommand(MonoZeldaGame game)
     {
-        _game = game;
+        Game = game;
     }
 
     public void Execute(Keys PressedKey)
     {
-        _game?.StartMenu();
+        Game?.GetCollisionController().Reset();
+        Game?.StartMenu();
     }
 
     public void UnExecute()

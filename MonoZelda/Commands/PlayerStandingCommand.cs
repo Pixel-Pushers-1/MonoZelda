@@ -9,7 +9,7 @@ namespace PixelPushers.MonoZelda.Commands
         private Player player;
         private Direction lastDirection;
 
-        public MonoZeldaGame _game { get; set; }
+        public MonoZeldaGame Game { get; set; }
 
         public PlayerStandingCommand()
         {

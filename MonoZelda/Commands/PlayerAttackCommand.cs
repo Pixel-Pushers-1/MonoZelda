@@ -9,7 +9,7 @@ public class PlayerAttackCommand : ICommand
     private int attackIdx;
     private Player player; 
 
-    public MonoZeldaGame _game { get; set; }
+    public MonoZeldaGame Game { get; set; }
 
     public PlayerAttackCommand()
     {

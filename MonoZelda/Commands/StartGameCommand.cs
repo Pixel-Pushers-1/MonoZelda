@@ -5,7 +5,7 @@ namespace PixelPushers.MonoZelda.Commands;
 
 public class StartGameCommand : ICommand
 {
-    public MonoZeldaGame _game { get; set; }
+    public MonoZeldaGame Game { get; set; }
 
     public StartGameCommand()
     {
@@ -14,12 +14,12 @@ public class StartGameCommand : ICommand
 
     public StartGameCommand(MonoZeldaGame game)
     {
-        _game = game;
+        Game = game;
     }
 
     public void Execute(Keys PressedKey)
     {
-        _game?.StartDungeon();
+        Game?.StartDungeon();
     }
 
     public void UnExecute()

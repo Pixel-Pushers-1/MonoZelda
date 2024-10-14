@@ -9,7 +9,7 @@ public class EnemyCycleCommand : ICommand
     EnemyCycler enemyCycler;
     int cycleAddition;
 
-    public MonoZeldaGame _game { get; set; }
+    public MonoZeldaGame Game { get; set; }
 
     public EnemyCycleCommand()
     {

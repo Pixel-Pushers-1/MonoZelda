@@ -4,6 +4,7 @@ using PixelPushers.MonoZelda.Controllers;
 using PixelPushers.MonoZelda.Sprites;
 using PixelPushers.MonoZelda.Commands;
 using PixelPushers.MonoZelda.Scenes;
+using System.Diagnostics.Tracing;
 
 namespace PixelPushers.MonoZelda;
 
@@ -99,5 +100,10 @@ public class MonoZeldaGame : Game
             // TODO: Passing MonoZeldaGame smells. It's used by some things to LoadContent, SpriteDict multiple AddSprite()
             LoadScene(new DungeonScene(GraphicsDevice, graphicsDeviceManager, commandManager, this, collisionController));
         }
+    }
+
+    public CollisionController GetCollisionController() 
+    {
+        return collisionController;
     }
 }
