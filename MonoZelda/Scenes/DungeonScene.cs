@@ -29,16 +29,16 @@ internal class DungeonScene : IScene
         commandManager = cManager;
         player = new Player();
         this.collisionController = collisionController;
-        Collidable playerHitbox = new Collidable(new Rectangle(100, 100, 50, 50), graphicsDevice, "Player");
+        Collidable playerHitbox = new Collidable(new Rectangle(100, 100, 50, 50), graphicsDevice, CollidableType.Player);
         this.collisionController.AddCollidable(playerHitbox);
         playerCollision = new PlayerCollision(player, playerHitbox, this.collisionController);
 
         //create some sample hitboxes
-        Collidable itemHitbox1 = new Collidable(new Rectangle(100, 200, 50, 50), graphicsDevice, "Item1");
+        Collidable itemHitbox1 = new Collidable(new Rectangle(100, 200, 50, 50), graphicsDevice, CollidableType.Item);
         this.collisionController.AddCollidable(itemHitbox1);
-        Collidable itemHitbox2 = new Collidable(new Rectangle(200, 200, 100, 100), graphicsDevice, "Item2");
+        Collidable itemHitbox2 = new Collidable(new Rectangle(200, 200, 100, 100), graphicsDevice, CollidableType.Item);
         this.collisionController.AddCollidable(itemHitbox2);
-        Collidable itemHitbox3 = new Collidable(new Rectangle(350, 250, 50, 50), graphicsDevice, "Item3");
+        Collidable itemHitbox3 = new Collidable(new Rectangle(350, 250, 50, 50), graphicsDevice, CollidableType.Item);
         this.collisionController.AddCollidable(itemHitbox3);
 
 

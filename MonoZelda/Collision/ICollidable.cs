@@ -4,7 +4,7 @@ namespace MonoZelda.Collision
 {
     public interface ICollidable
     {
-        string name { get; set; }
+        CollidableType type { get; set; }
         Rectangle Bounds { get; set; }
 
         bool Intersects(ICollidable other);
