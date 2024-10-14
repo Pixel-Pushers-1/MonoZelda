@@ -5,9 +5,9 @@ using PixelPushers.MonoZelda.Link;
 using PixelPushers.MonoZelda.Commands;
 using PixelPushers.MonoZelda.Sprites;
 using PixelPushers.MonoZelda.Link.Projectiles;
-using MonoZelda.Link;
-using MonoZelda.Collision;
+using PixelPushers.MonoZelda.Collision;
 using PixelPushers.MonoZelda.Controllers;
+using PixelPushers.MonoZelda.Items;
 
 namespace PixelPushers.MonoZelda.Scenes;
 
@@ -18,9 +18,7 @@ internal class DungeonScene : IScene
     private Player player;
     private ProjectileManager projectileManager;
     private PlayerCollision playerCollision;
-    private EnemyCycler enemyCycler;
     private CollisionController collisionController;
-    private CollidablesManager collidableManager;
     private ItemFactory itemFactory;
 
     public DungeonScene(GraphicsDevice graphicsDevice, GraphicsDeviceManager gManager, CommandManager cManager, MonoZeldaGame game, CollisionController collisionController) 
@@ -55,7 +53,7 @@ internal class DungeonScene : IScene
         projectileManager = new ProjectileManager();
 
         // Temporary itemFactory object to create item according to the room number
-        itemFactory = new ItemFactory(graphicsDevice, collidableManager);
+        itemFactory = new ItemFactory(graphicsDevice, collisionController);
 
         // create a spriteDict for item spawning(Temp - Remove once multi drawing sprite dict is functional)
 

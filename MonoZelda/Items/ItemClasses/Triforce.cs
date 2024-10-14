@@ -1,14 +1,14 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using PixelPushers.MonoZelda.Collision.Collidables;
 using PixelPushers.MonoZelda.Collision;
 using PixelPushers.MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
+using PixelPushers.MonoZelda.Controllers;
 
 namespace PixelPushers.MonoZelda.Items.ItemClasses;
 
 public class Triforce : IItem
 {
-    private CollidablesManager collidablesManager;
+    private CollisionController collisionController;
     private Collidable triforceCollidable;
     private GraphicsDevice graphicsDevice;
     private bool itemPickedUp;
@@ -25,18 +25,18 @@ public class Triforce : IItem
         }
     }
 
-    public Triforce(CollidablesManager collidablesManager, GraphicsDevice graphicsDevice)
+    public Triforce(CollisionController collisionController, GraphicsDevice graphicsDevice)
     {
-        this.collidablesManager = collidablesManager;
+        this.collisionController = collisionController;
         this.graphicsDevice = graphicsDevice;
     }
 
     public void itemSpawn(SpriteDict triforceDict, Point spawnPosition)
     {
-        triforceCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 64, 64), graphicsDevice);
+        triforceCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 64, 64), graphicsDevice, "Triforce");
         triforceDict.Position = spawnPosition;
         triforceDict.SetSprite("triforce");
-        collidablesManager.AddCollidableObject(triforceCollidable);
+        collisionController.AddCollidable(triforceCollidable);
     }
 
 }

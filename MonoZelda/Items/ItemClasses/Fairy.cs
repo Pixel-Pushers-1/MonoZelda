@@ -1,14 +1,14 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using PixelPushers.MonoZelda.Collision.Collidables;
 using PixelPushers.MonoZelda.Collision;
 using PixelPushers.MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
+using PixelPushers.MonoZelda.Controllers;
 
 namespace PixelPushers.MonoZelda.Items.ItemClasses;
 
 public class Fairy : IItem
 {
-    private CollidablesManager collidablesManager;
+    private CollisionController collisionController;
     private Collidable fairyCollidable;
     private GraphicsDevice graphicsDevice;
     private bool itemPickedUp;
@@ -25,18 +25,18 @@ public class Fairy : IItem
         }
     }
 
-    public Fairy(CollidablesManager collidablesManager, GraphicsDevice graphicsDevice)
+    public Fairy(CollisionController collisionController, GraphicsDevice graphicsDevice)
     {
-        this.collidablesManager = collidablesManager;
+        this.collisionController = collisionController;
         this.graphicsDevice = graphicsDevice;
     }
 
     public void itemSpawn(SpriteDict fairyDict, Point spawnPosition)
     {
-        fairyCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice);
+        fairyCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, "Fairy");
         fairyDict.Position = spawnPosition;
         fairyDict.SetSprite("fairy");
-        collidablesManager.AddCollidableObject(fairyCollidable);
+        collisionController.AddCollidable(fairyCollidable);
     }
 
 }

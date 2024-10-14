@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using PixelPushers.MonoZelda.Sprites;
-using PixelPushers.MonoZelda.Collision.Collidables;
 
 namespace PixelPushers.MonoZelda.Collision
 {

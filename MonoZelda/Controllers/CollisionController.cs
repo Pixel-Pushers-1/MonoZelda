@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using PixelPushers.MonoZelda.Commands;
 using Microsoft.Xna.Framework;
 using System;
-using MonoZelda.Collision;
+using PixelPushers.MonoZelda.Collision;
 
 namespace PixelPushers.MonoZelda.Controllers;
 
@@ -62,7 +62,7 @@ public class CollisionController : IController
     private void HandleCollision(Collidable collidableA, Collidable collidableB)
     {
         // Example collision response: print a message
-        Console.WriteLine($"{collidableA} collided with {collidableB}");
+        System.Diagnostics.Debug.WriteLine(collidableA + " collides with " + collidableB);
 
         // Handle all different types of collision (Method will be rather large)
     }

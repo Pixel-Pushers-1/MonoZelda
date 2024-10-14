@@ -4,18 +4,19 @@ using PixelPushers.MonoZelda.Collision;
 using PixelPushers.MonoZelda.Items.ItemClasses;
 using System;
 using System.Collections.Generic;
+using PixelPushers.MonoZelda.Controllers;
 
 namespace PixelPushers.MonoZelda.Items;
 
 public class ItemFactory
 {
     private GraphicsDevice graphicsDevice;
-    private CollidablesManager collidablesManager;
+    private CollisionController collisionController;
 
-    public ItemFactory(GraphicsDevice graphicsDevice, CollidablesManager collidablesManager)
+    public ItemFactory(GraphicsDevice graphicsDevice, CollisionController collisionController)
     {
         this.graphicsDevice = graphicsDevice;
-        this.collidablesManager = collidablesManager;
+        this.collisionController = collisionController;
     }
 
     public IItem CreateItem(ItemType itemType)
@@ -29,7 +30,7 @@ public class ItemFactory
         if (itemTypeClass != null)
         {
             // Use Activator.CreateInstance to create the item, passing the necessary constructor arguments
-            return (IItem)Activator.CreateInstance(itemTypeClass, graphicsDevice, collidablesManager);
+            return (IItem)Activator.CreateInstance(itemTypeClass, graphicsDevice, collisionController);
         }
 
         throw new InvalidOperationException($"Item type {itemType} not found.");

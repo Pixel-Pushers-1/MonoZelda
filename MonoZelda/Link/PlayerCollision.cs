@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
+﻿using Microsoft.Xna.Framework;
+using PixelPushers.MonoZelda.Collision;
 using PixelPushers.MonoZelda.Controllers;
-using PixelPushers.MonoZelda.Link;
 
-namespace MonoZelda.Link
+namespace PixelPushers.MonoZelda.Link
 {
     public class PlayerCollision
     {
@@ -30,10 +27,8 @@ namespace MonoZelda.Link
                 height
             );
             this.collisionController = collisionController;
-
-        this.collidablesManager = collidablesManager;
-        playerHitbox.Bounds = bounds;
-    }
+            playerHitbox.Bounds = bounds;
+        }
 
         public void Update()
         {

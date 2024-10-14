@@ -1,13 +1,13 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using PixelPushers.MonoZelda.Collision.Collidables;
 using PixelPushers.MonoZelda.Collision;
 using PixelPushers.MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
+using PixelPushers.MonoZelda.Controllers;
 namespace PixelPushers.MonoZelda.Items.ItemClasses;
 
 public class Heart : IItem
 {
-    private CollidablesManager collidablesManager;
+    private CollisionController collisionController;
     private Collidable heartCollidable;
     private GraphicsDevice graphicsDevice;
     private bool itemPickedUp;
@@ -24,18 +24,18 @@ public class Heart : IItem
         }
     }
 
-    public Heart(CollidablesManager collidablesManager, GraphicsDevice graphicsDevice)
+    public Heart(CollisionController collisionController, GraphicsDevice graphicsDevice)
     { 
-        this.collidablesManager = collidablesManager;
+        this.collisionController = collisionController;
         this.graphicsDevice = graphicsDevice;
     }
 
     public void itemSpawn(SpriteDict heartDict, Point spawnPosition)
     {
-        heartCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 32), graphicsDevice);
+        heartCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 32), graphicsDevice, "Heart");
         heartDict.Position = spawnPosition;
         heartDict.SetSprite("heart_full");
-        collidablesManager.AddCollidableObject(heartCollidable);
+        collisionController.AddCollidable(heartCollidable);
     }
 
 }

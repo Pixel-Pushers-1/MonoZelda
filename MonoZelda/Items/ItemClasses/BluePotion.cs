@@ -1,14 +1,14 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using PixelPushers.MonoZelda.Collision.Collidables;
 using PixelPushers.MonoZelda.Collision;
 using PixelPushers.MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
+using PixelPushers.MonoZelda.Controllers;
 
 namespace PixelPushers.MonoZelda.Items.ItemClasses;
 
 public class BluePotion : IItem
 {
-    private CollidablesManager collidablesManager;
+    private CollisionController collisionController;
     private Collidable bluepotionCollidable;
     private GraphicsDevice graphicsDevice;
     private bool itemPickedUp;
@@ -25,17 +25,17 @@ public class BluePotion : IItem
         }
     }
 
-    public BluePotion(CollidablesManager collidablesManager, GraphicsDevice graphicsDevice)
+    public BluePotion(CollisionController collisionController, GraphicsDevice graphicsDevice)
     {
-        this.collidablesManager = collidablesManager;
+        this.collisionController = collisionController;
         this.graphicsDevice = graphicsDevice;   
     }
 
     public void itemSpawn(SpriteDict bluepotionDict, Point spawnPosition)
     {
-        bluepotionCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice);
+        bluepotionCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, "BluePotion");
         bluepotionDict.Position = spawnPosition;
         bluepotionDict.SetSprite("potion_blue");
-        collidablesManager.AddCollidableObject(bluepotionCollidable);
+        collisionController.AddCollidable(bluepotionCollidable);
     }
 }

@@ -1,14 +1,14 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using PixelPushers.MonoZelda.Collision.Collidables;
 using PixelPushers.MonoZelda.Collision;
 using PixelPushers.MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
+using PixelPushers.MonoZelda.Controllers;
 
 namespace PixelPushers.MonoZelda.Items.ItemClasses;
 
 public class Clock : IItem
 {
-    private CollidablesManager collidablesManager;
+    private CollisionController collisionController;
     private Collidable clockCollidable;
     private GraphicsDevice graphicsDevice;
     private bool itemPickedUp;
@@ -25,18 +25,18 @@ public class Clock : IItem
         }
     }
 
-    public Clock(CollidablesManager collidablesManager, GraphicsDevice graphicsDevice)
+    public Clock(CollisionController collisionController, GraphicsDevice graphicsDevice)
     {
-        this.collidablesManager = collidablesManager;
+        this.collisionController = collisionController;
         this.graphicsDevice = graphicsDevice;   
     }
 
     public void itemSpawn(SpriteDict clockDict, Point spawnPosition)
     {
-        clockCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 64, 64), graphicsDevice);
+        clockCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 64, 64), graphicsDevice, "Clock");
         clockDict.Position = spawnPosition;
         clockDict.SetSprite("clock");
-        collidablesManager.AddCollidableObject(clockCollidable);
+        collisionController.AddCollidable(clockCollidable);
     }
 
 }
