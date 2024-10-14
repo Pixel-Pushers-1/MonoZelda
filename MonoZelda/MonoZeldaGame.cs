@@ -4,17 +4,9 @@ using PixelPushers.MonoZelda.Controllers;
 using PixelPushers.MonoZelda.Sprites;
 using PixelPushers.MonoZelda.Commands;
 using PixelPushers.MonoZelda.Scenes;
-using MonoZelda.Collision;
+using System.Diagnostics.Tracing;
 
 namespace PixelPushers.MonoZelda;
-
-public enum GameState
-{
-    Title,
-    Start,
-    Reset,
-    Quit,
-}
 
 public class MonoZeldaGame : Game
 {
@@ -22,8 +14,8 @@ public class MonoZeldaGame : Game
     private SpriteBatch spriteBatch;
     private KeyboardController keyboardController;
     private MouseController mouseController;
+    private CollisionController collisionController;
     private CommandManager commandManager;
-    private CollidablesManager collidableManager;
 
     private IScene scene;
 
@@ -42,8 +34,7 @@ public class MonoZeldaGame : Game
 
         keyboardController = new KeyboardController(commandManager);
         mouseController = new MouseController(commandManager);
-
-        collidableManager = new();
+        collisionController = new CollisionController(commandManager);
     }
 
     protected override void Initialize()
@@ -66,8 +57,9 @@ public class MonoZeldaGame : Game
 
     protected override void Update(GameTime gameTime)
     {
-        keyboardController.Update();
-        mouseController.Update();
+        keyboardController.Update(gameTime);
+        mouseController.Update(gameTime);
+        collisionController.Update(gameTime);
         scene.Update(gameTime);
 
         base.Update(gameTime);
@@ -106,7 +98,12 @@ public class MonoZeldaGame : Game
         if (scene is MainMenu)
         {
             // TODO: Passing MonoZeldaGame smells. It's used by some things to LoadContent, SpriteDict multiple AddSprite()
-            LoadScene(new DungeonScene(GraphicsDevice, graphicsDeviceManager, commandManager, this, collidableManager));
+            LoadScene(new DungeonScene(GraphicsDevice, graphicsDeviceManager, commandManager, this, collisionController));
         }
+    }
+
+    public CollisionController GetCollisionController() 
+    {
+        return collisionController;
     }
 }

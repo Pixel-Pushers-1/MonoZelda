@@ -1,15 +1,15 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Input;
-using PixelPushers.MonoZelda.Controllers;
 using PixelPushers.MonoZelda.Tiles;
 
 namespace PixelPushers.MonoZelda.Commands;
 
 public class ItemCycleCommand : ICommand
 {
-    IController controller;
     ICycleable cycleable;
     int cycleAddition;
+
+    public MonoZeldaGame Game { get; set; }
 
     public ItemCycleCommand()
     {
@@ -20,7 +20,7 @@ public class ItemCycleCommand : ICommand
         cycleable = item;
     }
     
-    public GameState Execute(Keys PressedKey)
+    public void Execute(Keys PressedKey)
     {
         // Update the currentItem based on the value of cycleAddition
         if (cycleable != null)
@@ -34,12 +34,9 @@ public class ItemCycleCommand : ICommand
                 cycleable.Previous();
             }
         }
-
-        // Keep GameState the same inside the controller
-        return controller.GameState;
     }
 
-    public GameState UnExecute()
+    public void UnExecute()
     {
         throw new NotImplementedException();
     }
@@ -48,10 +45,4 @@ public class ItemCycleCommand : ICommand
     {
         this.cycleAddition = cycleAddition;
     }
-
-    public void SetController(IController controller)
-    {
-        this.controller = controller;
-    }
-
 }

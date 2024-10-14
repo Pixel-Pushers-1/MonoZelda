@@ -4,12 +4,11 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Enemies;
 using PixelPushers.MonoZelda.Link;
 using PixelPushers.MonoZelda.Commands;
-using PixelPushers.MonoZelda.Items;
 using PixelPushers.MonoZelda.Sprites;
-using PixelPushers.MonoZelda.Tiles;
 using PixelPushers.MonoZelda.Link.Projectiles;
 using MonoZelda.Link;
 using MonoZelda.Collision;
+using PixelPushers.MonoZelda.Controllers;
 
 namespace PixelPushers.MonoZelda.Scenes;
 
@@ -22,25 +21,25 @@ internal class DungeonScene : IScene
 
     private PlayerCollision playerCollision;
     private EnemyCycler enemyCycler;
-    CollidablesManager collidableManager;
+    private CollisionController collisionController;
 
-    public DungeonScene(GraphicsDevice graphicsDevice, GraphicsDeviceManager gManager, CommandManager cManager, MonoZeldaGame game, CollidablesManager collidableManager) 
+    public DungeonScene(GraphicsDevice graphicsDevice, GraphicsDeviceManager gManager, CommandManager cManager, MonoZeldaGame game, CollisionController collisionController) 
     {
         this.graphicsDevice = graphicsDevice;
         commandManager = cManager;
         player = new Player();
-        this.collidableManager = collidableManager;
-        Collidable playerHitbox = new Collidable(new Rectangle(100, 100, 50, 50), graphicsDevice);
-        this.collidableManager.AddHitbox(playerHitbox);
-        playerCollision = new PlayerCollision(player, playerHitbox, this.collidableManager);
+        this.collisionController = collisionController;
+        Collidable playerHitbox = new Collidable(new Rectangle(100, 100, 50, 50), graphicsDevice, CollidableType.Player);
+        this.collisionController.AddCollidable(playerHitbox);
+        playerCollision = new PlayerCollision(player, playerHitbox, this.collisionController);
 
         //create some sample hitboxes
-        Collidable itemHitbox1 = new Collidable(new Rectangle(100, 200, 50, 50), graphicsDevice);
-        this.collidableManager.AddHitbox(itemHitbox1);
-        Collidable itemHitbox2 = new Collidable(new Rectangle(200, 200, 100, 100), graphicsDevice);
-        this.collidableManager.AddHitbox(itemHitbox2);
-        Collidable itemHitbox3 = new Collidable(new Rectangle(350, 250, 50, 50), graphicsDevice);
-        this.collidableManager.AddHitbox(itemHitbox3);
+        Collidable itemHitbox1 = new Collidable(new Rectangle(100, 200, 50, 50), graphicsDevice, CollidableType.Item);
+        this.collisionController.AddCollidable(itemHitbox1);
+        Collidable itemHitbox2 = new Collidable(new Rectangle(200, 200, 100, 100), graphicsDevice, CollidableType.Item);
+        this.collisionController.AddCollidable(itemHitbox2);
+        Collidable itemHitbox3 = new Collidable(new Rectangle(350, 250, 50, 50), graphicsDevice, CollidableType.Item);
+        this.collisionController.AddCollidable(itemHitbox3);
 
 
     }

@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Diagnostics;
 using Microsoft.Xna.Framework.Input;
 using MonoZelda.Enemies;
-using PixelPushers.MonoZelda.Controllers;
 
 namespace PixelPushers.MonoZelda.Commands;
 
 public class EnemyCycleCommand : ICommand
 {
-    IController controller;
     EnemyCycler enemyCycler;
     int cycleAddition;
+
+    public MonoZeldaGame Game { get; set; }
+
     public EnemyCycleCommand()
     {
     }
@@ -20,19 +20,17 @@ public class EnemyCycleCommand : ICommand
         this.enemyCycler = enemyCycler;
     }
 
-    public GameState Execute(Keys PressedKey)
+    public void Execute(Keys PressedKey)
     {
         if (enemyCycler == null)
-            return controller.GameState;
+            return;
 
         // Apply cycle addition to enemy list
         enemyCycler.SetCycle(cycleAddition);
 
-        // Keep GameState the same inside the controller
-        return controller.GameState;
     }
 
-    public GameState UnExecute()
+    public void UnExecute()
     {
         throw new NotImplementedException();
     }
@@ -45,10 +43,5 @@ public class EnemyCycleCommand : ICommand
     public void SetCycler(EnemyCycler enemyCycler)
     {
         this.enemyCycler = enemyCycler;
-    }
-
-    public void SetController(IController controller)
-    {
-        this.controller = controller;
     }
 }

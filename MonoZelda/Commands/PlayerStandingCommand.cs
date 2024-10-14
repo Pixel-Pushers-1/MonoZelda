@@ -1,15 +1,15 @@
 ﻿using System;
 using PixelPushers.MonoZelda.Link;
-using PixelPushers.MonoZelda.Controllers;
 using Microsoft.Xna.Framework.Input;
 
 namespace PixelPushers.MonoZelda.Commands
 {
     public class PlayerStandingCommand : ICommand
     {
-        private IController controller;
         private Player player;
         private Direction lastDirection;
+
+        public MonoZeldaGame Game { get; set; }
 
         public PlayerStandingCommand()
         {
@@ -26,7 +26,7 @@ namespace PixelPushers.MonoZelda.Commands
             get { return lastDirection; }
         }
 
-        public GameState Execute(Keys PressedKey)
+        public void Execute(Keys PressedKey)
         {
             // call player standing method
             if (player != null)
@@ -34,19 +34,12 @@ namespace PixelPushers.MonoZelda.Commands
                 lastDirection = player.PlayerDirection;
                 player.StandingPlayer(this);
             }
-
-            return controller.GameState;
         }
 
-        public GameState UnExecute()
+        public void UnExecute()
         {
             // Implement if you need to reverse this command
             throw new NotImplementedException();
-        }
-
-        public void SetController(IController controller)
-        {
-            this.controller = controller;
-        }  
+        } 
     }
 }

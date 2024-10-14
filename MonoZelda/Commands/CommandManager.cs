@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using Microsoft.Xna.Framework.Input;
-using PixelPushers.MonoZelda.Controllers;
 
 namespace PixelPushers.MonoZelda.Commands;
 
@@ -48,9 +46,9 @@ public class CommandManager
         }
     }
 
-    public GameState Execute(CommandEnum commandName,Keys PressedKey)
+    public void Execute(CommandEnum commandName,Keys PressedKey)
     {
-        return commandMap[commandName].Execute(PressedKey);
+        commandMap[commandName].Execute(PressedKey);
     }
 
     public bool ReplaceCommand(CommandEnum commandName, ICommand command)
@@ -76,14 +74,6 @@ public class CommandManager
         {
             commandMap[commandName] = command;
             return true;
-        }
-    }
-
-    public void SetController(IController controller)
-    {
-        foreach (ICommand command in commandMap.Values)
-        {
-            command.SetController(controller);
         }
     }
 }

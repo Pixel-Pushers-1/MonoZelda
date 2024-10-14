@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Diagnostics;
 using PixelPushers.MonoZelda.Link;
-using PixelPushers.MonoZelda.Controllers;
 using Microsoft.Xna.Framework.Input;
 
 namespace PixelPushers.MonoZelda.Commands;
 
 public class PlayerAttackCommand : ICommand
 {
-    private IController controller;
     private int attackIdx;
     private Player player; 
+
+    public MonoZeldaGame Game { get; set; }
 
     public PlayerAttackCommand()
     {
@@ -34,7 +33,7 @@ public class PlayerAttackCommand : ICommand
         }
     }
 
-    public GameState Execute(Keys PressedKey)
+    public void Execute(Keys PressedKey)
     {
         // SetAttackIndex
         SetAttackIndex(PressedKey);
@@ -43,18 +42,10 @@ public class PlayerAttackCommand : ICommand
         {
             player.AttackingPlayer();
         }
-
-        // Keep GameState the same inside the controller
-        return controller.GameState;
     }
 
-    public GameState UnExecute()
+    public void UnExecute()
     {
         throw new NotImplementedException();
-    }
-
-    public void SetController(IController controller)
-    {
-        this.controller = controller;
     }
 }
