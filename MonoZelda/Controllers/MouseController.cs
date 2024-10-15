@@ -31,19 +31,11 @@ public class MouseController : IController
     {
         MouseState = Mouse.GetState();
 
-        // Mouse input logic goes here
-        //if (MouseState.LeftButton == ButtonState.Pressed)
-        //{
-        //    newState = commandManager.Execute(CommandEnum.LoadRoomCommand, Keys.None);
-        //}
-
-        //// Setting new Game State of mouse controller if needed
-        //if (gameState != newState)
-        //{
-        //    gameState = newState;
-        //    return true;
-        //}
-        //return false;
+        //Mouse input logic goes here
+        if (MouseState.LeftButton == ButtonState.Pressed)
+        {
+            _commandManager.Execute(CommandEnum.LoadRoomCommand, Keys.None);
+        }
     }
 
 }

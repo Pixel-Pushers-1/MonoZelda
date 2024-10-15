@@ -42,7 +42,7 @@ internal class DungeonScene : IScene
     {
         // TODO: This belongs in the Scene that Loads room scenes.
         var room = dungeonLoader.LoadRoom(roomName);
-        //commandManager.ReplaceCommand(CommandEnum.LoadRoomCommand, new LoadRoomCommand(game, room));
+        commandManager.ReplaceCommand(CommandEnum.LoadRoomCommand, new LoadRoomCommand(game, room));
         // TODO: Make Rooms a subscene... Decorator pattern? hopefully not -js
 
         // create projectile object and spriteDict
