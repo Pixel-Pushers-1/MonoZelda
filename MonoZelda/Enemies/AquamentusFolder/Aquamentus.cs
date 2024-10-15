@@ -3,6 +3,7 @@ using PixelPushers.MonoZelda.Sprites;
 using System;
 using System.Collections.Generic;
 using PixelPushers.MonoZelda;
+using Microsoft.Xna.Framework.Content;
 
 namespace MonoZelda.Enemies.AquamentusFolder
 {
@@ -24,7 +25,7 @@ namespace MonoZelda.Enemies.AquamentusFolder
         private double attackDelay;
         private int moveDelay;
 
-        public Aquamentus(SpriteDict spriteDict, GraphicsDeviceManager graphics, MonoZeldaGame game)
+        public Aquamentus(SpriteDict spriteDict, GraphicsDeviceManager graphics, ContentManager contentManager)
         {
             aquamentusSpriteDict = spriteDict;
             stateMachine = new AquamentusStateMachine();
@@ -33,9 +34,9 @@ namespace MonoZelda.Enemies.AquamentusFolder
             spawnY = 3 * graphics.PreferredBackBufferHeight / 5;
             pos = new(spawnX, spawnY);
             moveDelay = rnd.Next(1, 4);
-            fireballs.Add(new AquamentusFireball(pos, game, midAngle + 45));
-            fireballs.Add(new AquamentusFireball(pos, game, midAngle));
-            fireballs.Add(new AquamentusFireball(pos, game, midAngle - 45));
+            fireballs.Add(new AquamentusFireball(pos, contentManager, midAngle + 45));
+            fireballs.Add(new AquamentusFireball(pos, contentManager, midAngle));
+            fireballs.Add(new AquamentusFireball(pos, contentManager, midAngle - 45));
             fireballs.ForEach(fireball => fireball.FireballSpriteDict.Enabled = false);
 
         }

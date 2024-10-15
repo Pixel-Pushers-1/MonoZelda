@@ -67,7 +67,7 @@ public class BoomerangBlue : Projectile, IProjectile
             InitialPosition = projectilePosition;
         }
     }
-    public void updateProjectile()
+    public void UpdateProjectile()
     {
         if (tilesTraveled < 5)
         {

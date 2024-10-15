@@ -3,13 +3,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace PixelPushers.MonoZelda.Commands;
 
-public enum OneShot
-{
-    YES,
-    NO,
-}
-
-public enum CommandEnum
+public enum CommandType
 {
     // Commands for entire project
     ExitCommand,
@@ -25,37 +19,29 @@ public enum CommandEnum
 
 public class CommandManager
 {
-    Dictionary<CommandEnum, ICommand> commandMap;
+    Dictionary<CommandType, ICommand> commandMap;
     public CommandManager()
     {
-        commandMap = new Dictionary<CommandEnum, ICommand>();
-        AddCommand(CommandEnum.ExitCommand, new ExitCommand());
-        AddCommand(CommandEnum.PlayerAttackCommand, new PlayerAttackCommand());
-        AddCommand(CommandEnum.PlayerMoveCommand, new PlayerMoveCommand());
-        AddCommand(CommandEnum.PlayerUseItemCommand, new PlayerUseItemCommand());
-        AddCommand(CommandEnum.PlayerStandingCommand, new PlayerStandingCommand());
-        AddCommand(CommandEnum.ResetCommand, new ResetCommand());
-        AddCommand(CommandEnum.StartGameCommand, new StartGameCommand());
+        commandMap = new Dictionary<CommandType, ICommand>();
+        AddCommand(CommandType.ExitCommand, new ExitCommand());
+        AddCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand());
+        AddCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());
+        AddCommand(CommandType.PlayerUseItemCommand, new PlayerUseItemCommand());
+        AddCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
+        AddCommand(CommandType.ResetCommand, new ResetCommand());
+        AddCommand(CommandType.StartGameCommand, new StartGameCommand());
     }
 
-    public Dictionary<CommandEnum, ICommand> CommandMap
+    public void Execute(CommandType commandType, Keys PressedKey)
     {
-        get
+        commandMap[commandType].Execute(PressedKey);
+    }
+
+    public bool ReplaceCommand(CommandType commandType, ICommand command)
+    {
+        if (commandMap.ContainsKey(commandType))
         {
-            return commandMap;
-        }
-    }
-
-    public void Execute(CommandEnum commandName,Keys PressedKey)
-    {
-        commandMap[commandName].Execute(PressedKey);
-    }
-
-    public bool ReplaceCommand(CommandEnum commandName, ICommand command)
-    {
-        if (commandMap.ContainsKey(commandName))
-        {
-            commandMap[commandName] = command;
+            commandMap[commandType] = command;
             return true;
         }
         else
@@ -64,7 +50,7 @@ public class CommandManager
         }
     }
 
-    public bool AddCommand(CommandEnum commandName, ICommand command)
+    private bool AddCommand(CommandType commandName, ICommand command)
     {
         if (commandMap.ContainsKey(commandName))
         {

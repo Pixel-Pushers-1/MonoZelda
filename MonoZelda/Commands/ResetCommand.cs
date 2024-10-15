@@ -1,31 +1,29 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 
 namespace PixelPushers.MonoZelda.Commands;
 
 public class ResetCommand : ICommand
 {
-
-    public MonoZeldaGame Game { get; set; }
+    private MonoZeldaGame game;
 
     public ResetCommand()
     {
+        //empty
     }
 
     public ResetCommand(MonoZeldaGame game)
     {
-        Game = game;
+        this.game = game;
     }
 
     public void Execute(Keys PressedKey)
     {
-        Game?.GetCollisionController().Reset();
-        Game?.StartMenu();
+        game?.GetCollisionController().Reset();
+        game?.StartMenu();
     }
 
     public void UnExecute()
     {
-        throw new NotImplementedException();
+        //empty
     }
 }

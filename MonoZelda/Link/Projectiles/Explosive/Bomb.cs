@@ -31,7 +31,7 @@ public class Bomb : Projectile, IProjectile
         Finished = reachedDistance();
     }
 
-    public void updateProjectile()
+    public void UpdateProjectile()
     {
         if (timer < 14)
         {

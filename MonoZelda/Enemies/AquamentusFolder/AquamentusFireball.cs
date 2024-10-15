@@ -1,25 +1,23 @@
 ﻿using System;
 using PixelPushers.MonoZelda.Sprites;
-using PixelPushers.MonoZelda;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 
 namespace MonoZelda.Enemies.AquamentusFolder
 {
     public class AquamentusFireball
     {
         private Point pos;
-        private readonly MonoZeldaGame myGame;
         public SpriteDict FireballSpriteDict { get; private set; }
 
         private int speed = 4;
         private double angle;
 
-        public AquamentusFireball(Point pos, MonoZeldaGame game, int newAngle)
+        public AquamentusFireball(Point pos, ContentManager contentManager, int newAngle)
         {
             this.pos = pos;
-            string enemyCsvFileName = "Content/Source Rect CSVs/Sprite Source Rects - Enemies.csv";
-            FireballSpriteDict = new(game.Content.Load<Texture2D>("Sprites/enemies"), enemyCsvFileName, 0, new Point(100, 100));
+            FireballSpriteDict = new(contentManager.Load<Texture2D>("Sprites/enemies"), SpriteCSVData.Enemies, 0, new Point(100, 100));
             FireballSpriteDict.SetSprite("fireball");
             angle = newAngle;
             if (angle <= 180)

@@ -1,17 +1,15 @@
-﻿using System;
-using PixelPushers.MonoZelda.Link;
+﻿using PixelPushers.MonoZelda.Link;
 using Microsoft.Xna.Framework.Input;
 
 namespace PixelPushers.MonoZelda.Commands;
 
 public class PlayerTakeDamageCommand : ICommand
 {
-    int damage;
     private Player player;
 
-    public MonoZeldaGame Game { get; set; }
     public PlayerTakeDamageCommand()
     {
+        //empty
     }
 
     public PlayerTakeDamageCommand(Player player)
@@ -25,16 +23,11 @@ public class PlayerTakeDamageCommand : ICommand
             return;
 
         // Apply damage to player
-        player.PlayerTakeDamage();
+        player.TakeDamage();
     }
 
     public void UnExecute()
     {
-        throw new NotImplementedException();
-    }
-
-    public void SetDamage(int damage) 
-    {
-        this.damage = damage;
+        //empty
     }
 }

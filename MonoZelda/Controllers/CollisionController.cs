@@ -57,10 +57,7 @@ public class CollisionController : IController
     private bool IsColliding(Collidable collidableA, Collidable collidableB)
     {
         // Implement collision check logic (From Collision detection and bounding boxes)
-        if (collidableA.Intersects(collidableB)) {
-            return true;
-        }
-        return false;
+        return collidableA.Intersects(collidableB);
     }
 
     // Handle what happens when two objects collide

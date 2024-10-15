@@ -21,6 +21,11 @@ namespace MonoZelda.Collision
             SpriteDrawer.RegisterDrawable(this, int.MaxValue, true);
         }
 
+        ~CollisionHitboxDraw()
+        {
+            SpriteDrawer.UnregisterDrawable(this);
+        }
+
         private void CreateTexture(GraphicsDevice graphicsDevice)
         {
             texture = new Texture2D(graphicsDevice, 1, 1);

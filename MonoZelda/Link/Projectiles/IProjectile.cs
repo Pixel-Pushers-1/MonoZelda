@@ -2,7 +2,7 @@
 
 public interface IProjectile
 {
-	void updateProjectile();
+	void UpdateProjectile();
 
 	bool hasFinished();
 

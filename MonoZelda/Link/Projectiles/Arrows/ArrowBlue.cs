@@ -59,7 +59,7 @@ public class ArrowBlue : Projectile, IProjectile
         }
     }
 
-    public void updateProjectile()
+    public void UpdateProjectile()
     {
         if (tilesTraveled < 5)
         {

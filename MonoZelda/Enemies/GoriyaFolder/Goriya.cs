@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using PixelPushers.MonoZelda;
 using PixelPushers.MonoZelda.Sprites;
 
@@ -22,7 +23,7 @@ namespace MonoZelda.Enemies.GoriyaFolder
         private double startTime;
         private double attackDelay;
 
-        public Goriya(SpriteDict spriteDict, GraphicsDeviceManager graphics, MonoZeldaGame game)
+        public Goriya(SpriteDict spriteDict, GraphicsDeviceManager graphics, ContentManager contentManager)
         {
             this.graphics = graphics;
             this.goriyaSpriteDict = spriteDict;
@@ -30,7 +31,7 @@ namespace MonoZelda.Enemies.GoriyaFolder
             spawnX = 3 * graphics.PreferredBackBufferWidth / 5;
             spawnY = 3 * graphics.PreferredBackBufferHeight / 5;
             pos = new(spawnX, spawnY);
-            boomerang = new GoriyaBoomerang(pos,game);
+            boomerang = new GoriyaBoomerang(pos, contentManager);
             boomerang.BoomerangSpriteDict.Enabled = false;
         }
 

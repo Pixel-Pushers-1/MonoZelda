@@ -7,13 +7,10 @@ namespace PixelPushers.MonoZelda.Commands
     public class PlayerStandingCommand : ICommand
     {
         private Player player;
-        private Direction lastDirection;
-
-        public MonoZeldaGame Game { get; set; }
 
         public PlayerStandingCommand()
         {
-            
+            //empty
         }
 
         public PlayerStandingCommand(Player player)
@@ -21,25 +18,18 @@ namespace PixelPushers.MonoZelda.Commands
             this.player = player;   
         }
 
-        public Direction PlayerDirection
-        {
-            get { return lastDirection; }
-        }
-
         public void Execute(Keys PressedKey)
         {
             // call player standing method
             if (player != null)
             {
-                lastDirection = player.PlayerDirection;
-                player.StandingPlayer(this);
+                player.StandStill(this);
             }
         }
 
         public void UnExecute()
         {
-            // Implement if you need to reverse this command
-            throw new NotImplementedException();
+            //empty
         } 
     }
 }
