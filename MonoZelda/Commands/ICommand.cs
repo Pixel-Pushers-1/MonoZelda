@@ -4,6 +4,6 @@ namespace PixelPushers.MonoZelda.Commands;
 
 public interface ICommand
 {
-    void Execute(Keys PressedKey);
+    void Execute(params object[] metadata);
     void UnExecute();
 }

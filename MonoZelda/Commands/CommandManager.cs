@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Input;
 using MonoZelda.Commands;
-using PixelPushers.MonoZelda.Controllers;
 
 namespace PixelPushers.MonoZelda.Commands;
 
@@ -36,9 +34,9 @@ public class CommandManager
         AddCommand(CommandType.LoadRoomCommand, new LoadRoomCommand());
     }
 
-    public void Execute(CommandType commandType, Keys PressedKey)
+    public void Execute(CommandType commandType, params object[] metadata)
     {
-        commandMap[commandType].Execute(PressedKey);
+        commandMap[commandType].Execute(metadata);
     }
 
     public bool ReplaceCommand(CommandType commandType, ICommand command)

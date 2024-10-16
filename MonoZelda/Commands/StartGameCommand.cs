@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework.Input;
-
-namespace PixelPushers.MonoZelda.Commands;
+﻿namespace PixelPushers.MonoZelda.Commands;
 
 public class StartGameCommand : ICommand
 {
@@ -16,7 +14,7 @@ public class StartGameCommand : ICommand
         this.game = game;
     }
 
-    public void Execute(Keys PressedKey)
+    public void Execute(params object[] metadata)
     {
         game?.StartDungeon();
     }
