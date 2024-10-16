@@ -30,6 +30,7 @@ public class DungeonScene : IScene
     private PlayerCollision playerCollision;
     private CollisionController collisionController;
 
+
     public DungeonScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room) 
     {
         this.graphicsDevice = graphicsDevice;
@@ -42,6 +43,12 @@ public class DungeonScene : IScene
     {
         // Need to wait for LoadContent because MonoZeldaGame is going to clear everything before calling this.
         LoadRoom(contentManager);
+
+        //create player and player collision
+        player = new Player();
+        Collidable playerHitbox = new Collidable(new Rectangle(100, 100, 50, 50), graphicsDevice, CollidableType.Player);
+        collisionController.AddCollidable(playerHitbox);
+        playerCollision = new PlayerCollision(player, playerHitbox, collisionController);
 
         //create player and player collision
         player = new Player();
