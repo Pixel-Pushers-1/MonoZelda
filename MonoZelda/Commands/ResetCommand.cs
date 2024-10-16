@@ -16,7 +16,7 @@ public class ResetCommand : ICommand
         this.game = game;
     }
 
-    public void Execute(Keys PressedKey)
+    public void Execute(params object[] metadata)
     {
         game?.GetCollisionController().Reset();
         game?.StartMenu();

@@ -17,7 +17,7 @@ public class PlayerTakeDamageCommand : ICommand
         this.player = player;
     }
 
-    public void Execute(Keys PressedKey)
+    public void Execute(params object[] metadata)
     {
         if (player == null)
             return;

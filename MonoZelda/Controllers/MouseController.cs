@@ -24,7 +24,7 @@ public class MouseController : IController
         // Mouse input logic goes here
         if (OneShotPressed(MouseButton.Left))
         {
-            _commandManager.Execute(CommandType.LoadRoomCommand, Keys.None);
+            _commandManager.Execute(CommandType.LoadRoomCommand, CurrentMouseState);
         }
 
         PreviousMouseState = CurrentMouseState;

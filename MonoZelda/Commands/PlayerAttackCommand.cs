@@ -17,7 +17,7 @@ public class PlayerAttackCommand : ICommand
         this.player = player;
     }
 
-    public void Execute(Keys PressedKey)
+    public void Execute(params object[] metadata)
     {
         player?.Attack();
     }

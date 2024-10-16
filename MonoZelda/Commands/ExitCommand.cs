@@ -16,7 +16,7 @@ public class ExitCommand : ICommand
         this.game = game;
     }
 
-    public void Execute(Keys PressedKey)
+    public void Execute(params object[] metadata)
     {
         game.Exit();
     }

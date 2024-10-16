@@ -18,7 +18,7 @@ namespace PixelPushers.MonoZelda.Commands
             this.player = player;   
         }
 
-        public void Execute(Keys PressedKey)
+        public void Execute(params object[] metadata)
         {
             // call player standing method
             if (player != null)

@@ -21,8 +21,9 @@ public class PlayerMoveCommand : ICommand
 
     public Direction PlayerDirection { get; private set; }
 
-    public void Execute(Keys pressedKey)
+    public void Execute(params object[] metadata)
     {
+        Keys pressedKey = (Keys) metadata[0];
         SetPlayerDirection(pressedKey);
         player?.Move(this);
     }

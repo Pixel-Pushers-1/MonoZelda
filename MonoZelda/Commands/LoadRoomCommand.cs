@@ -2,8 +2,6 @@
 using MonoZelda.Dungeons;
 using PixelPushers.MonoZelda;
 using PixelPushers.MonoZelda.Commands;
-using PixelPushers.MonoZelda.Controllers;
-using System.Numerics;
 
 namespace MonoZelda.Commands
 {
@@ -11,8 +9,6 @@ namespace MonoZelda.Commands
     {
         private MonoZeldaGame game;
         private IDungeonRoom room;
-
-        public MouseState MouseState {get;set;}
 
         public LoadRoomCommand() { }
 
@@ -22,8 +18,9 @@ namespace MonoZelda.Commands
             this.room = room;
         }
 
-        public void Execute(Keys PressedKey)
+        public void Execute(params object[] metadata)
         {
+            MouseState mouseState = (MouseState) metadata[0];
             if(room == null || game == null)
             {
                 return;
@@ -33,11 +30,10 @@ namespace MonoZelda.Commands
             var doors = room.GetDoors();
 
             // CommandManager dosn't expose a method to get commands, so we can't assign this in the mouse controller
-            MouseState = Mouse.GetState();
 
             foreach (var door in doors)
             {
-                if (door.Bounds.Contains(MouseState.X, MouseState.Y) && !string.IsNullOrEmpty(door.Destination))
+                if (door.Bounds.Contains(mouseState.X, mouseState.Y) && !string.IsNullOrEmpty(door.Destination))
                 {
                     game.LoadDungeon(door.Destination);
                     return;

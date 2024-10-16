@@ -30,12 +30,13 @@ public class PlayerUseItemCommand : ICommand
         projectiles.EnableDict();
     }
 
-    public void Execute(Keys PressedKey)
+    public void Execute(params object[] metadata)
     {
+        Keys pressedKey = (Keys) metadata[0];
         // create projectile
         if(!projectileManager.ProjectileFired)
         {
-            CreateProjectile(PressedKey);
+            CreateProjectile(pressedKey);
         }
 
         // animate player throw projectile
