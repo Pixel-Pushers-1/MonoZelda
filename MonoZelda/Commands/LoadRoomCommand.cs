@@ -2,6 +2,8 @@
 using MonoZelda.Dungeons;
 using PixelPushers.MonoZelda;
 using PixelPushers.MonoZelda.Commands;
+using PixelPushers.MonoZelda.Controllers;
+using System.Numerics;
 
 namespace MonoZelda.Commands
 {
