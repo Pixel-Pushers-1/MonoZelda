@@ -64,7 +64,7 @@ public class CollisionController : IController
     private void HandleCollision(Collidable collidableA, Collidable collidableB)
     {
         // Example collision response: print a message
-        Console.WriteLine($"{collidableA} collided with {collidableB}");
+        // Console.WriteLine($"{collidableA} collided with {collidableB}");
 
         // Handle all different types of collision (Method will be rather large)
     }
