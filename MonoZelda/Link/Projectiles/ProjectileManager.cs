@@ -43,7 +43,7 @@ public class ProjectileManager
     {
         return keyProjectileMap[PressedKey];
     }
-    public void setProjectile(IProjectile projectile)
+    public void SetProjectile(IProjectile projectile)
     {
         itemFired = projectile;
         projectileFired = true;
@@ -55,7 +55,7 @@ public class ProjectileManager
         {
             if (!itemFired.hasFinished())
             {
-                itemFired.updateProjectile();
+                itemFired.UpdateProjectile();
             }
             else
             {

@@ -1,29 +1,28 @@
 ﻿using Microsoft.Xna.Framework.Input;
-using System;
 
 namespace PixelPushers.MonoZelda.Commands;
 
 public class StartGameCommand : ICommand
 {
-    public MonoZeldaGame Game { get; set; }
+    private MonoZeldaGame game;
 
     public StartGameCommand()
-    {
-
+    { 
+        //empty
     }
 
     public StartGameCommand(MonoZeldaGame game)
     {
-        Game = game;
+        this.game = game;
     }
 
     public void Execute(Keys PressedKey)
     {
-        Game?.StartDungeon();
+        game?.StartDungeon();
     }
 
     public void UnExecute()
     {
-        throw new NotImplementedException();
+        //empty
     }
 }

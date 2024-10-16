@@ -8,10 +8,9 @@ namespace PixelPushers.MonoZelda;
 
 public class MainMenu : IScene
 {
-    Texture2D _titleTexture;
     GraphicsDevice _graphicsDevice;
 
-    enum MenuSprite { title  }
+    enum MenuSprite { title }
 
     public MainMenu(GraphicsDevice graphicsDevice)
     {

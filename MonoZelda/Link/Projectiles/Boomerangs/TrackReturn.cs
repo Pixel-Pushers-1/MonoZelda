@@ -33,9 +33,9 @@ public class TrackReturn
     private bool updatedReturnPosition()
     {
         bool playerPositionUpdated = false;
-        if(returnPosition != player.getPlayerPosition())
+        if(returnPosition != player.GetPlayerPosition())
         {
-            returnPosition = player.getPlayerPosition();
+            returnPosition = player.GetPlayerPosition();
             playerPositionUpdated = true;
         }
         return playerPositionUpdated;
@@ -43,7 +43,7 @@ public class TrackReturn
 
     private Vector2 playerPositionUnitVector()
     {
-        Vector2 playerPosition = player.getPlayerPosition();
+        Vector2 playerPosition = player.GetPlayerPosition();
         Vector2 playerPathVector = new Vector2((playerPosition.X - Origin.X), (playerPosition.Y - Origin.Y));
 
         float magnitudePath = playerPathVector.Length();
@@ -69,7 +69,7 @@ public class TrackReturn
     public bool Returned(Vector2 ProjectilePosition)
     {
         bool returned = false;
-        Vector2 playerPos = player.getPlayerPosition();
+        Vector2 playerPos = player.GetPlayerPosition();
         Vector2 distanceBoomerangPlayer = new Vector2((playerPos.X - ProjectilePosition.X),(playerPos.Y - ProjectilePosition.Y));
 
         if(distanceBoomerangPlayer.Length() < 48f)

@@ -6,7 +6,6 @@ namespace PixelPushers.MonoZelda.Controllers;
 
 public class MouseController : IController
 {
-    private MouseState _mouseState;
     private CommandManager _commandManager;
 
     public MouseController(CommandManager commandManager)
@@ -15,17 +14,7 @@ public class MouseController : IController
     }
 
     // Properties
-    public MouseState MouseState
-    {
-        get
-        {
-            return _mouseState;
-        }
-        set
-        {
-            _mouseState = value;
-        }
-    }
+    public MouseState MouseState { get; private set; }
 
     public void Update(GameTime gameTime)
     {

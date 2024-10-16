@@ -4,13 +4,21 @@ using Microsoft.Xna.Framework;
 
 namespace PixelPushers.MonoZelda.Link;
 
-public class Player : IPlayer
+public enum Direction {
+    Up,
+    Down,
+    Left,
+    Right
+}
+
+public class Player
 {
     private Direction playerDirection;
     private SpriteDict playerSpriteDict;
     private Vector2 playerPostition;
     private float playerSpeed = 4.0f;
-    private int frames;
+    private int frameTimer;
+
     public Player()
     {
         playerPostition = new Vector2(100, 100);
@@ -21,42 +29,47 @@ public class Player : IPlayer
         playerSpriteDict = spriteDict;
     }
 
-    public void MovePlayer(PlayerMoveCommand moveCommand)
+    public void Move(PlayerMoveCommand moveCommand)
     {
-        if(frames == 0)
-        {
-            playerDirection = moveCommand.PlayerDirection;
-            playerPostition += playerSpeed * moveCommand.PlayerVector;
-            switch (playerDirection)
-            {
-                case Direction.Up:
-                    playerSpriteDict.SetSprite("walk_up");
-                    break;
-                case Direction.Down:
-                    playerSpriteDict.SetSprite("walk_down");
-                    break;
-                case Direction.Left:
-                    playerSpriteDict.SetSprite("walk_left");
-                    break;
-                case Direction.Right:
-                    playerSpriteDict.SetSprite("walk_right");
-                    break;
-            }
-            playerSpriteDict.Position = playerPostition.ToPoint();
+        if (frameTimer > 0) {
+            frameTimer--;
+            return;
         }
-        else
-        {
-            frames--;
-        }
-        
 
+        playerDirection = moveCommand.PlayerDirection;
+        Vector2 movement = new();
+        switch (playerDirection) {
+            case Direction.Up: {
+                movement = new Vector2(0, -1);
+                playerSpriteDict.SetSprite("walk_up");
+                break;
+            }
+            case Direction.Down: {
+                movement = new Vector2(0, 1);
+                playerSpriteDict.SetSprite("walk_down");
+                break;
+            }
+            case Direction.Left: {
+                movement = new Vector2(-1, 0);
+                playerSpriteDict.SetSprite("walk_left");
+                break;
+            }
+            case Direction.Right: {
+                movement = new Vector2(1, 0);
+                playerSpriteDict.SetSprite("walk_right");
+                break;
+            }
+        }
+
+        //apply movement to player and sprite
+        playerPostition += playerSpeed * movement;
+        playerSpriteDict.Position = playerPostition.ToPoint();
     }
-    public void StandingPlayer(PlayerStandingCommand standCommand)
-    {
         
-        if(frames == 0)
+    public void StandStill(PlayerStandingCommand standCommand)
+    {
+        if(frameTimer == 0)
         {
-            playerDirection = standCommand.PlayerDirection;
             switch (playerDirection)
             {
                 case Direction.Up:
@@ -75,17 +88,17 @@ public class Player : IPlayer
         }
         else
         {
-            frames--;
+            frameTimer--;
         }
 
         playerSpriteDict.Position = playerPostition.ToPoint();
     }
 
-    public void AttackingPlayer()
+    public void Attack()
     {
-        if (frames == 0)
+        if (frameTimer == 0)
         {
-            frames = 20;
+            frameTimer = 20;
             switch (playerDirection)
             {
                 case Direction.Up:
@@ -104,16 +117,16 @@ public class Player : IPlayer
         }
         else
         {
-            frames--;
+            frameTimer--;
         }
         
     }
 
-    public void PlayerUseItem()
+    public void UseItem()
     {
-        if(frames == 0)
+        if(frameTimer == 0)
         {
-            frames = 20;
+            frameTimer = 20;
             switch (playerDirection)
             {
                 case Direction.Up:
@@ -132,17 +145,17 @@ public class Player : IPlayer
         }
         else
         {
-            frames--;
+            frameTimer--;
         }
         
     }
 
 
-    public void PlayerTakeDamage()
+    public void TakeDamage()
     {
-        if (frames == 0)
+        if (frameTimer == 0)
         {
-            frames = 20;
+            frameTimer = 20;
             switch (playerDirection)
             {
                 case Direction.Up:
@@ -161,7 +174,7 @@ public class Player : IPlayer
         }
         else
         {
-            frames--;
+            frameTimer--;
         }
         
     }
@@ -171,7 +184,7 @@ public class Player : IPlayer
         get { return playerDirection; }
     }
 
-    public Vector2 getPlayerPosition()
+    public Vector2 GetPlayerPosition()
     {
         return playerPostition;
     }

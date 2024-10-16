@@ -43,25 +43,25 @@ public class Projectile
         {
             case Direction.Up:
                 offset = new Vector2(0, -(Dimension.Y / 2) * 4);
-                projectilePosition = player.getPlayerPosition() + (new Vector2(0, -32)) + offset;
+                projectilePosition = player.GetPlayerPosition() + (new Vector2(0, -32)) + offset;
                 break;
             case Direction.Down:
                 offset = new Vector2(0, (Dimension.Y / 2) * 4);
-                projectilePosition = player.getPlayerPosition() + (new Vector2(0, 32)) + offset;
+                projectilePosition = player.GetPlayerPosition() + (new Vector2(0, 32)) + offset;
                 break;
             case Direction.Left:
                 offset = new Vector2(-(Dimension.X / 2) * 4, 0);
-                projectilePosition = player.getPlayerPosition() + (new Vector2(-32, 0)) + offset;
+                projectilePosition = player.GetPlayerPosition() + (new Vector2(-32, 0)) + offset;
                 break;
             case Direction.Right:
                 offset = new Vector2((Dimension.X / 2) * 4, 0);
-                projectilePosition = player.getPlayerPosition() + (new Vector2(32, 0)) + offset;
+                projectilePosition = player.GetPlayerPosition() + (new Vector2(32, 0)) + offset;
                 break;
         }
         return projectilePosition;
     }
 
-    public void enableDict()
+    public void EnableDict()
     {
         projectileDict.Enabled = true;
     }

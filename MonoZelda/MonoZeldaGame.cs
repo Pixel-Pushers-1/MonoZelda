@@ -4,7 +4,6 @@ using PixelPushers.MonoZelda.Controllers;
 using PixelPushers.MonoZelda.Sprites;
 using PixelPushers.MonoZelda.Commands;
 using PixelPushers.MonoZelda.Scenes;
-using System.Diagnostics.Tracing;
 
 namespace PixelPushers.MonoZelda;
 
@@ -28,9 +27,9 @@ public class MonoZeldaGame : Game
         commandManager = new CommandManager();
 
         // Commands that use MonoZeldaGame reference
-        commandManager.ReplaceCommand(CommandEnum.ExitCommand, new ExitCommand(this));
-        commandManager.ReplaceCommand(CommandEnum.StartGameCommand, new StartGameCommand(this));
-        commandManager.ReplaceCommand(CommandEnum.ResetCommand, new ResetCommand(this));
+        commandManager.ReplaceCommand(CommandType.ExitCommand, new ExitCommand(this));
+        commandManager.ReplaceCommand(CommandType.StartGameCommand, new StartGameCommand(this));
+        commandManager.ReplaceCommand(CommandType.ResetCommand, new ResetCommand(this));
 
         keyboardController = new KeyboardController(commandManager);
         mouseController = new MouseController(commandManager);
@@ -97,8 +96,7 @@ public class MonoZeldaGame : Game
         // Preventing the StartCommand from activating when it shouldn't. -js
         if (scene is MainMenu)
         {
-            // TODO: Passing MonoZeldaGame smells. It's used by some things to LoadContent, SpriteDict multiple AddSprite()
-            LoadScene(new DungeonScene(GraphicsDevice, graphicsDeviceManager, commandManager, this, collisionController));
+            LoadScene(new DungeonScene(GraphicsDevice, commandManager, collisionController));
         }
     }
 

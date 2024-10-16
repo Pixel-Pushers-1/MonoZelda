@@ -42,15 +42,14 @@ internal static class SpriteDrawer
         //optimization: only sort list after all initial SpriteDicts are added
     }
 
-    public static void RemoveDrawable(IDrawable iDrawable)
+    public static void UnregisterDrawable(IDrawable iDrawable)
     {
         drawables.RemoveAll(x => x.iDrawable == iDrawable);
     }
 
     public static void Reset()
     {
-        //remove all non-gizmos
-        drawables.RemoveAll(x => !x.isGizmo);
+        drawables.Clear();
     }
 
     public static void Draw(SpriteBatch spriteBatch, GameTime gameTime)

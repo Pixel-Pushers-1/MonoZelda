@@ -1,28 +1,28 @@
-﻿using System;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 
 namespace PixelPushers.MonoZelda.Commands;
 
 public class ExitCommand : ICommand
 {
-    public MonoZeldaGame Game { get; set; }
+    private MonoZeldaGame game;
 
     public ExitCommand()
     {
+        //empty
     }
 
     public ExitCommand(MonoZeldaGame game)
     {
-        Game = game;
+        this.game = game;
     }
 
     public void Execute(Keys PressedKey)
     {
-        Game.Exit();
+        game.Exit();
     }
 
     public void UnExecute()
     {
-        throw new NotImplementedException();
+        //empty
     }
 }

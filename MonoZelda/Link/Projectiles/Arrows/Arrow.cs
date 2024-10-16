@@ -58,7 +58,7 @@ public class Arrow : Projectile, IProjectile
         }
     }
 
-    public void updateProjectile()
+    public void UpdateProjectile()
     {
         if (tilesTraveled < 3)
         {
