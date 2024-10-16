@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using PixelPushers.MonoZelda.Commands;
 using Microsoft.Xna.Framework;
-using System;
 using MonoZelda.Collision;
 
 namespace PixelPushers.MonoZelda.Controllers;

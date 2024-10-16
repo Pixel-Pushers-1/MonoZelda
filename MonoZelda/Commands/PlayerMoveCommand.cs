@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using PixelPushers.MonoZelda.Link;
+﻿using PixelPushers.MonoZelda.Link;
 using Microsoft.Xna.Framework.Input;
 
 namespace PixelPushers.MonoZelda.Commands;
