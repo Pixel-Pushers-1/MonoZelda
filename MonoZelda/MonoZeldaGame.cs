@@ -6,8 +6,6 @@ using PixelPushers.MonoZelda.Commands;
 using PixelPushers.MonoZelda.Scenes;
 using MonoZelda.Commands;
 using MonoZelda.Scenes;
-using MonoZelda.Dungeons;
-using MonoZelda.Sprites;
 
 namespace PixelPushers.MonoZelda;
 

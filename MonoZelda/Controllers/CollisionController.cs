@@ -11,9 +11,21 @@ public class CollisionController : IController
     private List<Collidable> _gameObjects;
     private CommandManager _commandManager;
 
+    private Dictionary<(CollidableType, CollidableType), CommandType>_collisionCommandDictionary;
+
     public CollisionController(CommandManager commandManager)
     {
         _commandManager = commandManager;
+
+        _collisionCommandDictionary = new Dictionary<(CollidableType, CollidableType), CommandType>
+        {
+            {(CollidableType.Player, CollidableType.Item), CommandType.PlayerItemCollisionCommand},
+            {(CollidableType.Player, CollidableType.Enemy), CommandType.PlayerEnemyCollisionCommand},
+            {(CollidableType.Player, CollidableType.Projectile), CommandType.PlayerProjectileCollisionCommand},
+            {(CollidableType.Player, CollidableType.Static), CommandType.PlayerStaticCollisionCommand},
+            {(CollidableType.Enemy, CollidableType.Projectile), CommandType.EnemyProjectileCollisionCommand},
+            {(CollidableType.Enemy, CollidableType.Static), CommandType.EnemyStaticCollisionCommand},
+        };
 
         _gameObjects = new List<Collidable>();
     }
@@ -30,8 +42,11 @@ public class CollisionController : IController
                 // Check for a collision between objA and objB
                 if (IsColliding(collidableA, collidableB))
                 {
+                    // Grab the metadata we need to know about the collision
+                    object[] metadata = GetMetadata(collidableA, collidableB);
+
                     // Handle the collision response for both objects
-                    HandleCollision(collidableA, collidableB);
+                    HandleCollision(collidableA, collidableB, metadata);
                 }
             }
         }
@@ -60,12 +75,22 @@ public class CollisionController : IController
     }
 
     // Handle what happens when two objects collide
-    private void HandleCollision(Collidable collidableA, Collidable collidableB)
+    private void HandleCollision(Collidable collidableA, Collidable collidableB, params object[] metadata)
     {
-        // Example collision response: print a message
-        // Console.WriteLine($"{collidableA} collided with {collidableB}");
+        if (_collisionCommandDictionary.ContainsKey((collidableA.type, collidableB.type)))
+        {
+            _commandManager.Execute(_collisionCommandDictionary[(collidableA.type, collidableB.type)], metadata);
+        }
+        else if (_collisionCommandDictionary.ContainsKey((collidableB.type, collidableA.type)))
+        {
+            _commandManager.Execute(_collisionCommandDictionary[(collidableB.type, collidableA.type)], metadata);
+        }
+    }
 
-        // Handle all different types of collision (Method will be rather large)
+    private object[] GetMetadata(Collidable collidableA, Collidable collidableB)
+    {
+        // We need to implement this method to give back information about the collision
+        return null;
     }
 }
 
