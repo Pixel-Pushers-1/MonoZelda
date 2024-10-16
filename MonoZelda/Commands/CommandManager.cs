@@ -15,6 +15,12 @@ public enum CommandType
     PlayerStandingCommand,
     StartGameCommand,
     LoadRoomCommand,
+    PlayerItemCollisionCommand,
+    PlayerEnemyCollisionCommand,
+    PlayerProjectileCollisionCommand,
+    PlayerStaticCollisionCommand,
+    EnemyProjectileCollisionCommand,
+    EnemyStaticCollisionCommand,
     None
 }
 
@@ -32,6 +38,14 @@ public class CommandManager
         AddCommand(CommandType.ResetCommand, new ResetCommand());
         AddCommand(CommandType.StartGameCommand, new StartGameCommand());
         AddCommand(CommandType.LoadRoomCommand, new LoadRoomCommand());
+        AddCommand(CommandType.PlayerItemCollisionCommand, new PlayerItemCollisionCommand());
+        AddCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand());
+        AddCommand(CommandType.PlayerProjectileCollisionCommand, new PlayerProjectileCollisionCommand());
+        AddCommand(CommandType.PlayerStaticCollisionCommand, new PlayerStaticCollisionCommand());
+        AddCommand(CommandType.EnemyProjectileCollisionCommand, new EnemyProjectileCollisionCommand());
+        AddCommand(CommandType.EnemyStaticCollisionCommand, new EnemyStaticCollisionCommand());
+        
+
     }
 
     public void Execute(CommandType commandType, params object[] metadata)
