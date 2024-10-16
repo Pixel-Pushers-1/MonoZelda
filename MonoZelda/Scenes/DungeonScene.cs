@@ -1,13 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Enemies;
 using PixelPushers.MonoZelda.Link;
 using PixelPushers.MonoZelda.Commands;
 using PixelPushers.MonoZelda.Sprites;
 using PixelPushers.MonoZelda.Link.Projectiles;
-using MonoZelda.Link;
-using MonoZelda.Collision;
+using MonoZelda.Scenes;
+using PixelPushers.MonoZelda.Collision;
 using PixelPushers.MonoZelda.Controllers;
 using System;
 using MonoZelda.Dungeons;
@@ -29,6 +28,8 @@ public class DungeonScene : IScene
 
     private PlayerCollision playerCollision;
     private CollisionController collisionController;
+    private ItemFactory itemFactory;
+    private string roomName;
 
 
     public DungeonScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room) 
@@ -55,6 +56,22 @@ public class DungeonScene : IScene
         projectileDict.Enabled = false;
         var projectiles = new Projectile(projectileDict, player);
         projectileManager = new ProjectileManager();
+
+        // Creating player collidable
+        Collidable playerHitbox = new Collidable(new Rectangle(100, 100, 50, 50), graphicsDevice, "Player");
+        collisionController.AddCollidable(playerHitbox);
+        playerCollision = new PlayerCollision(player, playerHitbox, this.collisionController);
+
+        // Temporary itemFactory object to create item according to the room number
+        itemFactory = new ItemFactory(graphicsDevice, collisionController);
+
+        //spawn some temporary items for item hitbox testing
+        var compassDict = new SpriteDict(contentManager.Load<Texture2D>("Sprites/items"), SpriteCSVData.Items, 0, new Point(0, 0));
+        IItem Compass = itemFactory.CreateItem<Compass>();
+        Compass.itemSpawn(compassDict, new Point(128, 448));
+        var keyDict = new SpriteDict(contentManager.Load<Texture2D>("Sprites/items"), SpriteCSVData.Items, 0, new Point(0, 0));
+        IItem Key = itemFactory.CreateItem<Key>();
+        Key.itemSpawn(keyDict, new Point(448, 448));
 
         // replace required commands
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(player));
@@ -137,7 +154,7 @@ public class DungeonScene : IScene
         {
             projectileManager.executeProjectile();
         }
-        // not doing anything currently
+
         playerCollision.Update();
     }
 }

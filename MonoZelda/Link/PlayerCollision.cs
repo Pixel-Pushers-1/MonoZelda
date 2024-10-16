@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
+﻿using Microsoft.Xna.Framework;
+using PixelPushers.MonoZelda.Collision;
 using PixelPushers.MonoZelda.Controllers;
-using PixelPushers.MonoZelda.Link;
 
 namespace MonoZelda.Link;
 
