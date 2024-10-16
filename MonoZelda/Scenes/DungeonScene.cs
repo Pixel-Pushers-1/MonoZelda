@@ -50,12 +50,6 @@ public class DungeonScene : IScene
         collisionController.AddCollidable(playerHitbox);
         playerCollision = new PlayerCollision(player, playerHitbox, collisionController);
 
-        //create player and player collision
-        player = new Player();
-        Collidable playerHitbox = new Collidable(new Rectangle(100, 100, 50, 50), graphicsDevice, CollidableType.Player);
-        collisionController.AddCollidable(playerHitbox);
-        playerCollision = new PlayerCollision(player, playerHitbox, collisionController);
-
         // create projectile object and spriteDict
         var projectileDict = new SpriteDict(contentManager.Load<Texture2D>("Sprites/player"), SpriteCSVData.Projectiles, 0, new Point(0, 0));
         projectileDict.Enabled = false;
