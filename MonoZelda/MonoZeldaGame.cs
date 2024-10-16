@@ -4,6 +4,10 @@ using PixelPushers.MonoZelda.Controllers;
 using PixelPushers.MonoZelda.Sprites;
 using PixelPushers.MonoZelda.Commands;
 using PixelPushers.MonoZelda.Scenes;
+using MonoZelda.Commands;
+using MonoZelda.Scenes;
+using MonoZelda.Dungeons;
+using MonoZelda.Sprites;
 
 namespace PixelPushers.MonoZelda;
 
@@ -15,6 +19,7 @@ public class MonoZeldaGame : Game
     private MouseController mouseController;
     private CollisionController collisionController;
     private CommandManager commandManager;
+    private IDungeonRoomLoader dungeonLoader;
 
     private IScene scene;
 
@@ -42,6 +47,8 @@ public class MonoZeldaGame : Game
         graphicsDeviceManager.PreferredBackBufferWidth = 1024;
         graphicsDeviceManager.PreferredBackBufferHeight = 896;
         graphicsDeviceManager.ApplyChanges();
+
+        dungeonLoader = new HTTPRoomParser(Content, graphicsDeviceManager.GraphicsDevice);
 
         base.Initialize();
     }
@@ -96,8 +103,17 @@ public class MonoZeldaGame : Game
         // Preventing the StartCommand from activating when it shouldn't. -js
         if (scene is MainMenu)
         {
-            LoadScene(new DungeonScene(GraphicsDevice, commandManager, collisionController));
+            // TODO: Passing MonoZeldaGame smells. It's used by some things to LoadContent, SpriteDict multiple AddSprite()
+            LoadDungeon("Room1");
         }
+    }
+
+    public void LoadDungeon(string roomName)
+    {
+        var room = dungeonLoader.LoadRoom(roomName);
+        commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this, room));
+
+        LoadScene(new DungeonScene(GraphicsDevice, commandManager, collisionController, room));
     }
 
     public CollisionController GetCollisionController() 

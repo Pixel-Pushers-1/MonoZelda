@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
+using MonoZelda.Commands;
+using PixelPushers.MonoZelda.Controllers;
 
 namespace PixelPushers.MonoZelda.Commands;
 
@@ -14,6 +16,7 @@ public enum CommandType
     ResetCommand,
     PlayerStandingCommand,
     StartGameCommand,
+    LoadRoomCommand,
     None
 }
 
@@ -30,6 +33,7 @@ public class CommandManager
         AddCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
         AddCommand(CommandType.ResetCommand, new ResetCommand());
         AddCommand(CommandType.StartGameCommand, new StartGameCommand());
+        AddCommand(CommandType.LoadRoomCommand, new LoadRoomCommand());
     }
 
     public void Execute(CommandType commandType, Keys PressedKey)
