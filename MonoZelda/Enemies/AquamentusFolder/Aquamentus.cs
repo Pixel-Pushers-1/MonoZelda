@@ -1,8 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using PixelPushers.MonoZelda.Sprites;
+using MonoZelda.Sprites;
 using System;
 using System.Collections.Generic;
-using PixelPushers.MonoZelda;
 using Microsoft.Xna.Framework.Content;
 
 namespace MonoZelda.Enemies.AquamentusFolder

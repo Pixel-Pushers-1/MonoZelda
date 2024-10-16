@@ -1,8 +1,8 @@
-﻿using PixelPushers.MonoZelda.Link;
-using PixelPushers.MonoZelda.Link.Projectiles;
+﻿using MonoZelda.Link;
+using MonoZelda.Link.Projectiles;
 using Microsoft.Xna.Framework.Input;
 
-namespace PixelPushers.MonoZelda.Commands;
+namespace MonoZelda.Commands;
 
 public class PlayerUseItemCommand : ICommand
 {

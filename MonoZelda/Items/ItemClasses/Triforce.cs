@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using PixelPushers.MonoZelda.Collision;
-using PixelPushers.MonoZelda.Sprites;
+using MonoZelda.Collision;
+using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
-using PixelPushers.MonoZelda.Controllers;
+using MonoZelda.Controllers;
 
-namespace PixelPushers.MonoZelda.Items.ItemClasses;
+namespace MonoZelda.Items.ItemClasses;
 
 public class Triforce : IItem
 {
@@ -33,7 +33,7 @@ public class Triforce : IItem
 
     public void itemSpawn(SpriteDict triforceDict, Point spawnPosition)
     {
-        triforceCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 64, 64), graphicsDevice, "Triforce");
+        triforceCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 64, 64), graphicsDevice, CollidableType.Item);
         triforceDict.Position = spawnPosition;
         triforceDict.SetSprite("triforce");
         collisionController.AddCollidable(triforceCollidable);

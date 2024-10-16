@@ -1,13 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PixelPushers.MonoZelda.Controllers;
-using PixelPushers.MonoZelda.Sprites;
-using PixelPushers.MonoZelda.Commands;
-using PixelPushers.MonoZelda.Scenes;
+using MonoZelda.Controllers;
+using MonoZelda.Sprites;
 using MonoZelda.Commands;
 using MonoZelda.Scenes;
 
-namespace PixelPushers.MonoZelda;
+namespace MonoZelda;
 
 public enum GameState
 {

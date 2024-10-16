@@ -1,6 +1,6 @@
-﻿namespace PixelPushers.MonoZelda.Items;
+﻿namespace MonoZelda.Items;
 
-public enum ItemType
+public enum ItemList
 {
     Compass,
     Map,

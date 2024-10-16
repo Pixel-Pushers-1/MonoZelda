@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace PixelPushers.MonoZelda.Sprites;
+namespace MonoZelda.Sprites;
 
 public class SpriteDict : IDrawable
 {

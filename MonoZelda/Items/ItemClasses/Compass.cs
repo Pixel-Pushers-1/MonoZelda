@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using PixelPushers.MonoZelda.Collision;
-using PixelPushers.MonoZelda.Sprites;
-using PixelPushers.MonoZelda.Controllers;
+using MonoZelda.Collision;
+using MonoZelda.Sprites;
+using MonoZelda.Controllers;
 
-namespace PixelPushers.MonoZelda.Items.ItemClasses;
+namespace MonoZelda.Items.ItemClasses;
 
 public class Compass : IItem
 {
@@ -33,7 +33,7 @@ public class Compass : IItem
 
     public void itemSpawn(SpriteDict compassDict, Point spawnPosition)
     {
-        compassCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 64, 64), graphicsDevice, "Compass");
+        compassCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 64, 64), graphicsDevice, CollidableType.Item);
         compassDict.Position = spawnPosition;
         compassDict.SetSprite("compass");
         collisionController.AddCollidable(compassCollidable);

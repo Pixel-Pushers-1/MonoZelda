@@ -1,7 +1,7 @@
-﻿using PixelPushers.MonoZelda.Sprites;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 
-namespace PixelPushers.MonoZelda.Items.ItemClasses;
+namespace MonoZelda.Items.ItemClasses;
 
 public interface IItem
 {

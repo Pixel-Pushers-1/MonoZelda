@@ -1,8 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using PixelPushers.MonoZelda;
-using PixelPushers.MonoZelda.Sprites;
+using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies.GoriyaFolder
 {

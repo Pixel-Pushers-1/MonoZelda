@@ -1,11 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Input;
-using PixelPushers.MonoZelda.Commands;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 
-namespace PixelPushers.MonoZelda.Link.Projectiles;
+namespace MonoZelda.Link.Projectiles;
 
 public class ProjectileManager
 {

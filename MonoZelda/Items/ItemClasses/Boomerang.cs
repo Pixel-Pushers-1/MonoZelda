@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using PixelPushers.MonoZelda.Collision;
-using PixelPushers.MonoZelda.Sprites;
+using MonoZelda.Collision;
+using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
-using PixelPushers.MonoZelda.Controllers;
+using MonoZelda.Controllers;
 
-namespace PixelPushers.MonoZelda.Items.ItemClasses;
+namespace MonoZelda.Items.ItemClasses;
 
 public class Boomerang : IItem
 {
@@ -33,7 +33,7 @@ public class Boomerang : IItem
 
     public void itemSpawn(SpriteDict boomerangDict, Point spawnPosition)
     {
-        boomerangCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 32), graphicsDevice, "Boomerang");
+        boomerangCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 32), graphicsDevice, CollidableType.Item);
         boomerangDict.Position = spawnPosition;
         boomerangDict.SetSprite("boomerang");
         collisionController.AddCollidable(boomerangCollidable);

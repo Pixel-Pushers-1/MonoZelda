@@ -1,9 +1,8 @@
-﻿using PixelPushers.MonoZelda.Sprites;
-using PixelPushers.MonoZelda.Commands;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace PixelPushers.MonoZelda.Link.Projectiles.Fire;
+namespace MonoZelda.Link.Projectiles.Fire;
 
 public class CandleBlue : Projectile, IProjectile
 {

@@ -1,11 +1,9 @@
-﻿using PixelPushers.MonoZelda.Link;
-using PixelPushers.MonoZelda.Sprites;
-using PixelPushers.MonoZelda.Commands;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using System;
-using PixelPushers.MonoZelda.Link.Projectiles;
 
-namespace PixelPushers.MonoZelda.Link.Projectiles.Arrows;
+
+namespace MonoZelda.Link.Projectiles.Arrows;
 
 public class Arrow : Projectile, IProjectile
 {

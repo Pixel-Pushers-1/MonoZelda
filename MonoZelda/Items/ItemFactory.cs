@@ -1,12 +1,11 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using PixelPushers.MonoZelda.Scenes;
-using PixelPushers.MonoZelda.Collision;
-using PixelPushers.MonoZelda.Items.ItemClasses;
+using MonoZelda.Scenes;
+using MonoZelda.Collision;
+using MonoZelda.Items.ItemClasses;
 using System;
-using System.Collections.Generic;
-using PixelPushers.MonoZelda.Controllers;
+using MonoZelda.Controllers;
 
-namespace PixelPushers.MonoZelda.Items;
+namespace MonoZelda.Items;
 
 public class ItemFactory
 {

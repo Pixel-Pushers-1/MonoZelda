@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework.Input;
-
-namespace PixelPushers.MonoZelda.Commands;
+﻿namespace MonoZelda.Commands;
 
 public interface ICommand
 {

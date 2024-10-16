@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using PixelPushers.MonoZelda.Commands;
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
+using MonoZelda.Commands;
 
-namespace PixelPushers.MonoZelda.Controllers;
+namespace MonoZelda.Controllers;
 
 public class CollisionController : IController
 {

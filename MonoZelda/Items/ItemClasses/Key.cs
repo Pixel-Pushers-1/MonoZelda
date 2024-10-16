@@ -1,11 +1,10 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using PixelPushers.MonoZelda.Collision;
-using PixelPushers.MonoZelda.Sprites;
+using MonoZelda.Collision;
+using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
-using System.Threading;
-using PixelPushers.MonoZelda.Controllers;
+using MonoZelda.Controllers;
 
-namespace PixelPushers.MonoZelda.Items.ItemClasses;
+namespace MonoZelda.Items.ItemClasses;
 
 public class Key : IItem
 {
@@ -34,7 +33,7 @@ public class Key : IItem
 
     public void itemSpawn(SpriteDict keyDict, Point spawnPosition)
     {
-        keyCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, "Key");
+        keyCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, CollidableType.Item);
         keyDict.Position = spawnPosition;
         keyDict.SetSprite("key_0");
         collisionController.AddCollidable(keyCollidable);

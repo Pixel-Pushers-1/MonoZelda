@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using PixelPushers.MonoZelda.Sprites;
+using MonoZelda.Sprites;
 
-namespace PixelPushers.MonoZelda.Collision
+namespace MonoZelda.Collision
 {
     public class CollisionHitboxDraw : IDrawable
     {

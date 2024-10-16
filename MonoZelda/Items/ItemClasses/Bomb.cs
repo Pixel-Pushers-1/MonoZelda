@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using PixelPushers.MonoZelda.Collision;
-using PixelPushers.MonoZelda.Sprites;
+using MonoZelda.Collision;
+using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
-using PixelPushers.MonoZelda.Controllers;
+using MonoZelda.Controllers;
 
-namespace PixelPushers.MonoZelda.Items.ItemClasses;
+namespace MonoZelda.Items.ItemClasses;
 public class Bomb : IItem
 {
     private CollisionController collisionController;
@@ -32,7 +32,7 @@ public class Bomb : IItem
 
     public void itemSpawn(SpriteDict bombDict, Point spawnPosition)
     {
-        bombCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, "Bomb");
+        bombCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, CollidableType.Item);
         bombDict.Position = spawnPosition;
         bombDict.SetSprite("bomb");
         collisionController.AddCollidable(bombCollidable);

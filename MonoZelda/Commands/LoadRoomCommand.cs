@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using MonoZelda.Dungeons;
-using PixelPushers.MonoZelda;
-using PixelPushers.MonoZelda.Commands;
 
 namespace MonoZelda.Commands
 {

@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using PixelPushers.MonoZelda.Commands;
+using MonoZelda.Commands;
 using System.Collections.Generic;
 
-namespace PixelPushers.MonoZelda.Controllers;
+namespace MonoZelda.Controllers;
 
 public class KeyboardController : IController
 {

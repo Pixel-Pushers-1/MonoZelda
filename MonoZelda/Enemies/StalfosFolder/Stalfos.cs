@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using MonoZelda.Enemies.GoriyaFolder;
-using PixelPushers.MonoZelda;
-using PixelPushers.MonoZelda.Sprites;
+using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies.StalfosFolder
 {

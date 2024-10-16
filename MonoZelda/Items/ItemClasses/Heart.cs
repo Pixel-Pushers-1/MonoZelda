@@ -1,9 +1,10 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using PixelPushers.MonoZelda.Collision;
-using PixelPushers.MonoZelda.Sprites;
+using MonoZelda.Collision;
+using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
-using PixelPushers.MonoZelda.Controllers;
-namespace PixelPushers.MonoZelda.Items.ItemClasses;
+using MonoZelda.Controllers;
+
+namespace MonoZelda.Items.ItemClasses;
 
 public class Heart : IItem
 {
@@ -32,7 +33,7 @@ public class Heart : IItem
 
     public void itemSpawn(SpriteDict heartDict, Point spawnPosition)
     {
-        heartCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 32), graphicsDevice, "Heart");
+        heartCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 32), graphicsDevice, CollidableType.Item);
         heartDict.Position = spawnPosition;
         heartDict.SetSprite("heart_full");
         collisionController.AddCollidable(heartCollidable);

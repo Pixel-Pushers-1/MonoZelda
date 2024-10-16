@@ -1,10 +1,7 @@
-﻿using PixelPushers.MonoZelda.Link;
-using PixelPushers.MonoZelda.Sprites;
-using PixelPushers.MonoZelda.Commands;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
-using PixelPushers.MonoZelda.Link.Projectiles;
 
-namespace PixelPushers.MonoZelda.Link.Projectiles.Explosive;
+namespace MonoZelda.Link.Projectiles.Explosive;
 
 public class Bomb : Projectile, IProjectile
 {

@@ -1,10 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using PixelPushers.MonoZelda.Scenes;
-using PixelPushers.MonoZelda.Sprites;
+using MonoZelda.Sprites;
 
-namespace PixelPushers.MonoZelda;
+namespace MonoZelda.Scenes;
 
 public class MainMenu : IScene
 {

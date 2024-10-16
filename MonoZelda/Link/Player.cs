@@ -1,8 +1,8 @@
-﻿using PixelPushers.MonoZelda.Commands;
-using PixelPushers.MonoZelda.Sprites;
+﻿using MonoZelda.Commands;
+using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 
-namespace PixelPushers.MonoZelda.Link;
+namespace MonoZelda.Link;
 
 public enum Direction {
     Up,

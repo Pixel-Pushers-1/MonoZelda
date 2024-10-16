@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using MonoZelda.Commands;
 
-namespace PixelPushers.MonoZelda.Commands;
+namespace MonoZelda.Commands;
 
 public enum CommandType
 {

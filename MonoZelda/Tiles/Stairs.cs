@@ -1,5 +1,5 @@
 ﻿
-namespace PixelPushers.MonoZelda.Tiles
+namespace MonoZelda.Tiles
 {
     internal class Stairs : TileBase
     {

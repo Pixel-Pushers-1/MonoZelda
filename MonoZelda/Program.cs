@@ -1,3 +1,3 @@
 ﻿
-using var game = new PixelPushers.MonoZelda.MonoZeldaGame();
+using var game = new MonoZelda.MonoZeldaGame();
 game.Run();

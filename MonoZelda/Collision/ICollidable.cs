@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace PixelPushers.MonoZelda.Collision
+namespace MonoZelda.Collision
 {
     public interface ICollidable
     {

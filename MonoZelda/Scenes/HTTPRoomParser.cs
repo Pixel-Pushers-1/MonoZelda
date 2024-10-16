@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -13,11 +12,10 @@ using MonoZelda.Collision;
 using MonoZelda.Dungeons;
 using MonoZelda.Enemies;
 using MonoZelda.Scenes;
+using MonoZelda.Items;
 using MonoZelda.Sprites;
-using PixelPushers.MonoZelda.Items;
-using PixelPushers.MonoZelda.Sprites;
 
-namespace PixelPushers.MonoZelda.Scenes;
+namespace MonoZelda.Scenes;
 
 public class HTTPRoomParser : IDungeonRoomLoader
 {
@@ -49,7 +47,7 @@ public class HTTPRoomParser : IDungeonRoomLoader
             // First row contains the room definition
             string[] row = textFieldParser.ReadFields();
 
-            IDungeonRoom room;
+            //IDungeonRoom room;
 
             if (row.Length > 1)
             {

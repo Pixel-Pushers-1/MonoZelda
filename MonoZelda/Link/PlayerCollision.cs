@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using PixelPushers.MonoZelda.Collision;
-using PixelPushers.MonoZelda.Controllers;
+using MonoZelda.Collision;
+using MonoZelda.Controllers;
 
 namespace MonoZelda.Link;
 

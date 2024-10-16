@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using PixelPushers.MonoZelda.Collision;
-using PixelPushers.MonoZelda.Sprites;
+using MonoZelda.Collision;
+using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
-using PixelPushers.MonoZelda.Controllers;
+using MonoZelda.Controllers;
 
-namespace PixelPushers.MonoZelda.Items.ItemClasses;
+namespace MonoZelda.Items.ItemClasses;
 
 public class BluePotion : IItem
 {
@@ -33,7 +33,7 @@ public class BluePotion : IItem
 
     public void itemSpawn(SpriteDict bluepotionDict, Point spawnPosition)
     {
-        bluepotionCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, "BluePotion");
+        bluepotionCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, CollidableType.Item);
         bluepotionDict.Position = spawnPosition;
         bluepotionDict.SetSprite("potion_blue");
         collisionController.AddCollidable(bluepotionCollidable);

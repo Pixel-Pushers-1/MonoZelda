@@ -1,4 +1,4 @@
-﻿namespace PixelPushers.MonoZelda.Commands;
+﻿namespace MonoZelda.Commands;
 
 public class EnemyStaticCollisionCommand : ICommand
 {

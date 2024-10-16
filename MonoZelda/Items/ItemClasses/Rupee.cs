@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using PixelPushers.MonoZelda.Collision;
-using PixelPushers.MonoZelda.Sprites;
+using MonoZelda.Collision;
+using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
-using PixelPushers.MonoZelda.Controllers;
+using MonoZelda.Controllers;
 
-namespace PixelPushers.MonoZelda.Items.ItemClasses;
+namespace MonoZelda.Items.ItemClasses;
 
 public class Rupee : IItem
 {
@@ -33,7 +33,7 @@ public class Rupee : IItem
 
     public void itemSpawn(SpriteDict rupeeDict, Point spawnPosition)
     {
-        rupeeCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, "Rupee");
+        rupeeCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, CollidableType.Item);
         rupeeDict.Position = spawnPosition;
         rupeeDict.SetSprite("rupee");
         collisionController.AddCollidable(rupeeCollidable);
