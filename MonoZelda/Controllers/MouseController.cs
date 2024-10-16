@@ -14,25 +14,42 @@ public class MouseController : IController
     }
 
     // Properties
-    public MouseState MouseState { get; private set; }
+    public MouseState CurrentMouseState { get; private set; }
+    public MouseState PreviousMouseState { get; private set; }
 
     public void Update(GameTime gameTime)
     {
-        MouseState = Mouse.GetState();
+        CurrentMouseState = Mouse.GetState();
 
         // Mouse input logic goes here
-        if (MouseState.LeftButton == ButtonState.Pressed)
+        if (OneShotPressed(MouseButton.Left))
         {
-            newState = commandManager.Execute(CommandEnum.LoadRoomCommand, Keys.None);
+            _commandManager.Execute(CommandType.LoadRoomCommand, Keys.None);
         }
 
-        // Setting new Game State of mouse controller if needed
-        if (gameState != newState)
-        {
-            gameState = newState;
-            return true;
-        }
-        return false;
+        PreviousMouseState = CurrentMouseState;
     }
 
+    private bool OneShotPressed(MouseButton key)
+    {
+        // Why does MouseState not have GetKey() for button :( -js
+        switch (key)
+        {
+            case MouseButton.Left:
+                return CurrentMouseState.LeftButton == ButtonState.Pressed && PreviousMouseState.LeftButton == ButtonState.Released;
+            case MouseButton.Right:
+                return CurrentMouseState.RightButton == ButtonState.Pressed && PreviousMouseState.RightButton == ButtonState.Released;
+            case MouseButton.Middle:
+                return CurrentMouseState.MiddleButton == ButtonState.Pressed && PreviousMouseState.MiddleButton == ButtonState.Released;
+            default:
+                return false;
+        }
+    }
+
+    private enum MouseButton
+    {
+        Left,
+        Right,
+        Middle
+    }
 }

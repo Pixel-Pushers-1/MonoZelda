@@ -4,6 +4,10 @@ using PixelPushers.MonoZelda.Controllers;
 using PixelPushers.MonoZelda.Sprites;
 using PixelPushers.MonoZelda.Commands;
 using PixelPushers.MonoZelda.Scenes;
+using MonoZelda.Commands;
+using MonoZelda.Scenes;
+using MonoZelda.Dungeons;
+using MonoZelda.Sprites;
 
 namespace PixelPushers.MonoZelda;
 
@@ -15,6 +19,7 @@ public class MonoZeldaGame : Game
     private MouseController mouseController;
     private CollisionController collisionController;
     private CommandManager commandManager;
+    private IDungeonRoomLoader dungeonLoader;
 
     private IScene scene;
 
@@ -43,7 +48,7 @@ public class MonoZeldaGame : Game
         graphicsDeviceManager.PreferredBackBufferHeight = 896;
         graphicsDeviceManager.ApplyChanges();
 
-        dungeonLoader = new(Content, collidableManager, graphicsDeviceManager.GraphicsDevice);
+        dungeonLoader = new HTTPRoomParser(Content, graphicsDeviceManager.GraphicsDevice);
 
         base.Initialize();
     }
@@ -84,7 +89,6 @@ public class MonoZeldaGame : Game
     {
         // Clean state to start a new scene
         SpriteDrawer.Reset();
-        collidableManager.Clear();
         this.scene = scene;
         scene.LoadContent(Content);
     }
@@ -106,9 +110,10 @@ public class MonoZeldaGame : Game
 
     public void LoadDungeon(string roomName)
     {
-        // TODO: Some of these overlaods will go away when we get instanced SpriteDicts. -js
-        LoadScene(new DungeonScene(roomName, dungeonLoader, GraphicsDevice, graphicsDeviceManager, commandManager, this, collidableManager));
-        }
+        var room = dungeonLoader.LoadRoom(roomName);
+        commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this, room));
+
+        LoadScene(new DungeonScene(GraphicsDevice, commandManager, collisionController, room));
     }
 
     public CollisionController GetCollisionController() 

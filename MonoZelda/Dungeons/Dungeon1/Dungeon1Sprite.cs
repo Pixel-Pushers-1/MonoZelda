@@ -1,7 +1,7 @@
 ﻿
 namespace MonoZelda.Dungeons;
 
-internal enum Dungeon1Sprite
+public enum Dungeon1Sprite
 {
     room_exterior,
     wall_north,
@@ -84,5 +84,6 @@ internal enum Dungeon1Sprite
     room_42,
     room_43,
     room_item,
-    room_passage
+    room_passage,
+    unknown
 }

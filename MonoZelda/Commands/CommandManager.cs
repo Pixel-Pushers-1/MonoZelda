@@ -25,15 +25,15 @@ public class CommandManager
     Dictionary<CommandType, ICommand> commandMap;
     public CommandManager()
     {
-        commandMap = new Dictionary<CommandEnum, ICommand>();
-        AddCommand(CommandEnum.ExitCommand, new ExitCommand());
-        AddCommand(CommandEnum.PlayerAttackCommand, new PlayerAttackCommand());
-        AddCommand(CommandEnum.PlayerMoveCommand, new PlayerMoveCommand());
-        AddCommand(CommandEnum.PlayerUseItemCommand, new PlayerUseItemCommand());
-        AddCommand(CommandEnum.PlayerStandingCommand, new PlayerStandingCommand());
-        AddCommand(CommandEnum.ResetCommand, new ResetCommand());
-        AddCommand(CommandEnum.StartGameCommand, new StartGameCommand());
-        AddCommand(CommandEnum.LoadRoomCommand, new LoadRoomCommand());
+        commandMap = new Dictionary<CommandType, ICommand>();
+        AddCommand(CommandType.ExitCommand, new ExitCommand());
+        AddCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand());
+        AddCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());
+        AddCommand(CommandType.PlayerUseItemCommand, new PlayerUseItemCommand());
+        AddCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
+        AddCommand(CommandType.ResetCommand, new ResetCommand());
+        AddCommand(CommandType.StartGameCommand, new StartGameCommand());
+        AddCommand(CommandType.LoadRoomCommand, new LoadRoomCommand());
     }
 
     public void Execute(CommandType commandType, Keys PressedKey)

@@ -9,7 +9,7 @@ namespace MonoZelda.Collision
         Item,
         Enemy,
         Projectile,
-
+        Static
     }
     public class Collidable : ICollidable
     {

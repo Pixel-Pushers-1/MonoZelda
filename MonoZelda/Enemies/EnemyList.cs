@@ -4,13 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MonoZelda.Collision;
-
-public enum CollisionTileRect
+namespace MonoZelda.Enemies
 {
-    top,
-    right,
-    bottom,
-    left,
-    full
+    public enum EnemyList
+    {
+    }
 }

@@ -2,8 +2,6 @@
 using MonoZelda.Dungeons;
 using PixelPushers.MonoZelda;
 using PixelPushers.MonoZelda.Commands;
-using PixelPushers.MonoZelda.Controllers;
-using System.Numerics;
 
 namespace MonoZelda.Commands
 {
@@ -22,11 +20,11 @@ namespace MonoZelda.Commands
             this.room = room;
         }
 
-        public GameState Execute(Keys PressedKey)
+        public void Execute(Keys PressedKey)
         {
             if(room == null || game == null)
             {
-                return GameState.None;
+                return;
             }
 
             // TODO: Logic in the command is bad but this is temporary
@@ -40,18 +38,12 @@ namespace MonoZelda.Commands
                 if (door.Bounds.Contains(MouseState.X, MouseState.Y) && !string.IsNullOrEmpty(door.Destination))
                 {
                     game.LoadDungeon(door.Destination);
-                    return GameState.None;
+                    return;
                 }
             }
-
-            return GameState.None;
         }
 
-        public void SetController(IController controller)
-        {
-        }
-
-        public GameState UnExecute()
+        public void UnExecute()
         {
             throw new System.NotImplementedException();
         }

@@ -2,7 +2,7 @@
 
 namespace MonoZelda.Scenes
 {
-    internal interface IDungeonRoomLoader
+    public interface IDungeonRoomLoader
     {
         public IDungeonRoom LoadRoom(string roomName);
     }
