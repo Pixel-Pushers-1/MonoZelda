@@ -4,7 +4,7 @@ namespace   MonoZelda.Commands;
 
 public class PlayerAttackCommand : ICommand
 {
-    private Player player; 
+    private Player player;
 
     public PlayerAttackCommand()
     {

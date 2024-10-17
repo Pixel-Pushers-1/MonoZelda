@@ -5,7 +5,7 @@ public class StartGameCommand : ICommand
     private MonoZeldaGame game;
 
     public StartGameCommand()
-    { 
+    {
         //empty
     }
 

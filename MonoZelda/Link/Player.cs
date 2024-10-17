@@ -1,6 +1,7 @@
 ﻿using MonoZelda.Commands;
 using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
+using MonoZelda.Commands;
 
 namespace MonoZelda.Link;
 

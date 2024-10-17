@@ -32,9 +32,9 @@ public class PlayerUseItemCommand : ICommand
 
     public void Execute(params object[] metadata)
     {
-        Keys pressedKey = (Keys) metadata[0];
+        Keys pressedKey = (Keys)metadata[0];
         // create projectile
-        if(!projectileManager.ProjectileFired)
+        if (!projectileManager.ProjectileFired)
         {
             CreateProjectile(pressedKey);
         }

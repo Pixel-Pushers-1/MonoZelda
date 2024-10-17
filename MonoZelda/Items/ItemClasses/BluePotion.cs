@@ -25,13 +25,13 @@ public class BluePotion : IItem
         }
     }
 
-    public BluePotion(CollisionController collisionController, GraphicsDevice graphicsDevice)
+    public BluePotion(GraphicsDevice graphicsDevice)
     {
         this.collisionController = collisionController;
         this.graphicsDevice = graphicsDevice;   
     }
 
-    public void itemSpawn(SpriteDict bluepotionDict, Point spawnPosition)
+    public void itemSpawn(SpriteDict bluepotionDict, Point spawnPosition, CollisionController collisionController)
     {
         bluepotionCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, CollidableType.Item);
         bluepotionDict.Position = spawnPosition;

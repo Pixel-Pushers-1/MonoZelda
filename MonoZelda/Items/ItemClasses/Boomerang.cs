@@ -25,13 +25,13 @@ public class Boomerang : IItem
         }
     }
 
-    public Boomerang(CollisionController collisionController, GraphicsDevice graphicsDevice)
+    public Boomerang(GraphicsDevice graphicsDevice)
     {
         this.collisionController = collisionController;
         this.graphicsDevice = graphicsDevice;
     }
 
-    public void itemSpawn(SpriteDict boomerangDict, Point spawnPosition)
+    public void itemSpawn(SpriteDict boomerangDict, Point spawnPosition, CollisionController collisionController)
     {
         boomerangCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 32), graphicsDevice, CollidableType.Item);
         boomerangDict.Position = spawnPosition;

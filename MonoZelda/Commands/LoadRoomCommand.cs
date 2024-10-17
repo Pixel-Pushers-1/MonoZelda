@@ -18,8 +18,8 @@ namespace MonoZelda.Commands
 
         public void Execute(params object[] metadata)
         {
-            MouseState mouseState = (MouseState) metadata[0];
-            if(room == null || game == null)
+            MouseState mouseState = (MouseState)metadata[0];
+            if (room == null || game == null)
             {
                 return;
             }

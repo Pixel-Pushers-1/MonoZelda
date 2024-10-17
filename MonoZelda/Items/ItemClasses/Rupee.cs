@@ -25,13 +25,13 @@ public class Rupee : IItem
         }
     }
 
-    public Rupee(CollisionController collisionController, GraphicsDevice graphicsDevice)
+    public Rupee(GraphicsDevice graphicsDevice)
     {
         this.collisionController = collisionController;
         this.graphicsDevice = graphicsDevice;
     }
 
-    public void itemSpawn(SpriteDict rupeeDict, Point spawnPosition)
+    public void itemSpawn(SpriteDict rupeeDict, Point spawnPosition, CollisionController collisionController)
     {
         rupeeCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, CollidableType.Item);
         rupeeDict.Position = spawnPosition;

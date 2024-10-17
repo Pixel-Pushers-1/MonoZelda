@@ -25,13 +25,13 @@ public class Fairy : IItem
         }
     }
 
-    public Fairy(CollisionController collisionController, GraphicsDevice graphicsDevice)
+    public Fairy(GraphicsDevice graphicsDevice)
     {
         this.collisionController = collisionController;
         this.graphicsDevice = graphicsDevice;
     }
 
-    public void itemSpawn(SpriteDict fairyDict, Point spawnPosition)
+    public void itemSpawn(SpriteDict fairyDict, Point spawnPosition, CollisionController collisionController)
     {
         fairyCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, CollidableType.Item);
         fairyDict.Position = spawnPosition;

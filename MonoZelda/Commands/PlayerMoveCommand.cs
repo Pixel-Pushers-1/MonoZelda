@@ -5,7 +5,7 @@ namespace MonoZelda.Commands;
 
 public class PlayerMoveCommand : ICommand
 {
-    private Player player; 
+    private Player player;
 
     public PlayerMoveCommand()
     {
@@ -22,7 +22,7 @@ public class PlayerMoveCommand : ICommand
 
     public void Execute(params object[] metadata)
     {
-        Keys pressedKey = (Keys) metadata[0];
+        Keys pressedKey = (Keys)metadata[0];
         SetPlayerDirection(pressedKey);
         player?.Move(this);
     }
@@ -32,18 +32,23 @@ public class PlayerMoveCommand : ICommand
         //empty
     }
 
-    private void SetPlayerDirection(Keys pressedKey) {
-        if (pressedKey == Keys.W || pressedKey == Keys.Up) {
-            PlayerDirection = Direction.Up; 
+    private void SetPlayerDirection(Keys pressedKey)
+    {
+        if (pressedKey == Keys.W || pressedKey == Keys.Up)
+        {
+            PlayerDirection = Direction.Up;
         }
-        else if (pressedKey == Keys.S || pressedKey == Keys.Down) {
-            PlayerDirection = Direction.Down; 
+        else if (pressedKey == Keys.S || pressedKey == Keys.Down)
+        {
+            PlayerDirection = Direction.Down;
         }
-        else if (pressedKey == Keys.A || pressedKey == Keys.Left) {
-            PlayerDirection = Direction.Left; 
+        else if (pressedKey == Keys.A || pressedKey == Keys.Left)
+        {
+            PlayerDirection = Direction.Left;
         }
-        else if (pressedKey == Keys.D || pressedKey == Keys.Right) {
-            PlayerDirection = Direction.Right; 
+        else if (pressedKey == Keys.D || pressedKey == Keys.Right)
+        {
+            PlayerDirection = Direction.Right;
         }
     }
 }

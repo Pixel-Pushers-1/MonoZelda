@@ -25,13 +25,13 @@ public class Key : IItem
         }
     }
 
-    public Key(CollisionController collisionController, GraphicsDevice graphicsDevice)
+    public Key(GraphicsDevice graphicsDevice)
     {
         this.collisionController = collisionController;
         this.graphicsDevice = graphicsDevice;
     }
 
-    public void itemSpawn(SpriteDict keyDict, Point spawnPosition)
+    public void itemSpawn(SpriteDict keyDict, Point spawnPosition, CollisionController collisionController)
     {
         keyCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, CollidableType.Item);
         keyDict.Position = spawnPosition;
