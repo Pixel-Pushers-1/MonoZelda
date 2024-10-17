@@ -8,7 +8,6 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Map : IItem
 {
-    private CollisionController collisionController;
     private Collidable mapCollidable;
     private GraphicsDevice graphicsDevice;
     private bool itemPickedUp;
@@ -25,18 +24,18 @@ public class Map : IItem
         }
     }
 
-    public Map(CollisionController collisionController, GraphicsDevice graphicsDevice)
+    public Map(GraphicsDevice graphicsDevice)
     {
-        this.collisionController = collisionController;
         this.graphicsDevice = graphicsDevice;
     }
 
-    public void itemSpawn(SpriteDict mapDict, Point spawnPosition)
+    public void itemSpawn(SpriteDict mapDict, Point spawnPosition, CollisionController collisionController)
     {
         mapCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, CollidableType.Item);
+        collisionController.AddCollidable(mapCollidable);
+        mapCollidable.setSpriteDict(mapDict);
         mapDict.Position = spawnPosition;
         mapDict.SetSprite("map");
-        collisionController.AddCollidable(mapCollidable);
     }
 }
 

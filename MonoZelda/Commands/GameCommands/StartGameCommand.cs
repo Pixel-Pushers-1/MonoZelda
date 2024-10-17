@@ -1,22 +1,22 @@
-﻿namespace MonoZelda.Commands;
+﻿namespace MonoZelda.Commands.GameCommands;
 
-public class PlayerStaticCollisionCommand : ICommand
+public class StartGameCommand : ICommand
 {
     private MonoZeldaGame game;
 
-    public PlayerStaticCollisionCommand()
+    public StartGameCommand()
     {
         //empty
     }
 
-    public PlayerStaticCollisionCommand(MonoZeldaGame game)
+    public StartGameCommand(MonoZeldaGame game)
     {
         this.game = game;
     }
 
     public void Execute(params object[] metadata)
     {
-        // ADD EXECUTE LOGIC HERE
+        game?.StartDungeon();
     }
 
     public void UnExecute()

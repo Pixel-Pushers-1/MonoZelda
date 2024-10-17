@@ -4,7 +4,7 @@ public enum ItemList
 {
     Compass,
     Map,
-    key,
+    Key,
     HeartContainer,
     Triforce,
     Boomerang,

@@ -1,6 +1,6 @@
 ﻿using MonoZelda.Link;
 
-namespace MonoZelda.Commands
+namespace MonoZelda.Commands.GameCommands
 {
     public class PlayerStandingCommand : ICommand
     {
@@ -13,7 +13,7 @@ namespace MonoZelda.Commands
 
         public PlayerStandingCommand(Player player)
         {
-            this.player = player;   
+            this.player = player;
         }
 
         public void Execute(params object[] metadata)
@@ -28,6 +28,6 @@ namespace MonoZelda.Commands
         public void UnExecute()
         {
             //empty
-        } 
+        }
     }
 }

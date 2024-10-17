@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using MonoZelda.Dungeons;
 
-namespace MonoZelda.Commands
+namespace MonoZelda.Commands.GameCommands
 {
     internal class LoadRoomCommand : ICommand
     {
@@ -18,8 +18,8 @@ namespace MonoZelda.Commands
 
         public void Execute(params object[] metadata)
         {
-            MouseState mouseState = (MouseState) metadata[0];
-            if(room == null || game == null)
+            MouseState mouseState = (MouseState)metadata[0];
+            if (room == null || game == null)
             {
                 return;
             }

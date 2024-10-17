@@ -91,7 +91,14 @@ public class CollisionController : IController
     private object[] GetMetadata(Collidable collidableA, Collidable collidableB)
     {
         // We need to implement this method to give back information about the collision
-        return null;
+        var metadata = new object[]
+        {
+            collidableA,
+            collidableB,
+            this,
+        };
+
+        return metadata;
     }
 
     internal void Clear()
