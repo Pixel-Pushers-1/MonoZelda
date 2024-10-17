@@ -1,15 +1,15 @@
-﻿namespace MonoZelda.Commands;
+﻿namespace MonoZelda.Commands.CollisionCommands;
 
-public class PlayerItemCollisionCommand : ICommand
+public class EnemyProjectileCollisionCommand : ICommand
 {
     private MonoZeldaGame game;
 
-    public PlayerItemCollisionCommand()
+    public EnemyProjectileCollisionCommand()
     {
         //empty
     }
 
-    public PlayerItemCollisionCommand(MonoZeldaGame game)
+    public EnemyProjectileCollisionCommand(MonoZeldaGame game)
     {
         this.game = game;
     }

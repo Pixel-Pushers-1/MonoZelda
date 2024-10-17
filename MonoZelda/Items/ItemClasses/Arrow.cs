@@ -8,7 +8,6 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Arrow : IItem
 {
-    private CollisionController collisionController;
     private Collidable arrowCollidable;
     private GraphicsDevice graphicsDevice;
     private bool itemPickedUp;
@@ -25,13 +24,12 @@ public class Arrow : IItem
         }
     }
 
-    public Arrow(CollisionController collisionController, GraphicsDevice graphicsDevice)
+    public Arrow(GraphicsDevice graphicsDevice)
     {
-        this.collisionController = collisionController;
         this.graphicsDevice = graphicsDevice;
     }
 
-    public void itemSpawn(SpriteDict arrowDict, Point spawnPosition)
+    public void itemSpawn(SpriteDict arrowDict, Point spawnPosition, CollisionController collisionController)
     {
         arrowCollidable = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 32, 64), graphicsDevice, CollidableType.Item);
         arrowDict.Position = spawnPosition;

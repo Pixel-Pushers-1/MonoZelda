@@ -11,9 +11,8 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Dungeons;
 using MonoZelda.Enemies;
-using MonoZelda.Scenes;
-using MonoZelda.Items;
 using MonoZelda.Sprites;
+using MonoZelda.Items;
 
 namespace MonoZelda.Scenes;
 
