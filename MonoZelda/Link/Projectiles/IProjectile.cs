@@ -1,4 +1,4 @@
-﻿namespace PixelPushers.MonoZelda.Link.Projectiles;
+﻿namespace MonoZelda.Link.Projectiles;
 
 public interface IProjectile
 {

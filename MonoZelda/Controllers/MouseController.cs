@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using PixelPushers.MonoZelda.Commands;
+using MonoZelda.Commands;
 
-namespace PixelPushers.MonoZelda.Controllers;
+namespace MonoZelda.Controllers;
 
 public class MouseController : IController
 {

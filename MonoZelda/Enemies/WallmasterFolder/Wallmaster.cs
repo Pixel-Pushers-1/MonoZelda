@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using PixelPushers.MonoZelda.Sprites;
+using MonoZelda.Sprites;
 using System;
 
 namespace MonoZelda.Enemies.WallmasterFolder

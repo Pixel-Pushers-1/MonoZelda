@@ -1,13 +1,12 @@
-﻿using PixelPushers.MonoZelda.Sprites;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
-using PixelPushers.MonoZelda.Commands;
-using PixelPushers.MonoZelda.Link.Projectiles.Arrows;
-using PixelPushers.MonoZelda.Link.Projectiles.Explosive;
-using PixelPushers.MonoZelda.Link.Projectiles.Fire;
-using PixelPushers.MonoZelda.Link.Projectiles.Boomerangs;
+using MonoZelda.Link.Projectiles.Arrows;
+using MonoZelda.Link.Projectiles.Explosive;
+using MonoZelda.Link.Projectiles.Fire;
+using MonoZelda.Link.Projectiles.Boomerangs;
 using System;
 
-namespace PixelPushers.MonoZelda.Link.Projectiles;
+namespace MonoZelda.Link.Projectiles;
 
 public class Projectile
 {

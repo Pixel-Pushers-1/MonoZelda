@@ -1,9 +1,8 @@
-﻿using PixelPushers.MonoZelda.Sprites;
-using PixelPushers.MonoZelda.Commands;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace PixelPushers.MonoZelda.Link.Projectiles.Boomerangs;
+namespace MonoZelda.Link.Projectiles.Boomerangs;
 
 public class BoomerangBlue : Projectile, IProjectile
 {

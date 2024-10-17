@@ -1,23 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Enemies;
-using PixelPushers.MonoZelda.Link;
-using PixelPushers.MonoZelda.Commands;
-using PixelPushers.MonoZelda.Sprites;
-using PixelPushers.MonoZelda.Link.Projectiles;
 using MonoZelda.Link;
-using MonoZelda.Collision;
-using PixelPushers.MonoZelda.Controllers;
-using System;
-using MonoZelda.Dungeons;
 using MonoZelda.Commands;
-using MonoZelda.Scenes;
 using MonoZelda.Sprites;
-using Microsoft.VisualBasic.FileIO;
-using System.Collections.Generic;
+using MonoZelda.Link.Projectiles;
+using MonoZelda.Collision;
+using MonoZelda.Controllers;
+using MonoZelda.Dungeons;
+using MonoZelda.Items;
 
-namespace PixelPushers.MonoZelda.Scenes;
+namespace MonoZelda.Scenes;
 
 public class DungeonScene : IScene
 {
@@ -29,6 +22,8 @@ public class DungeonScene : IScene
 
     private PlayerCollision playerCollision;
     private CollisionController collisionController;
+    private ItemFactory itemFactory;
+    private string roomName;
 
 
     public DungeonScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room) 
@@ -60,7 +55,7 @@ public class DungeonScene : IScene
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(player));
         commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(player));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(player));
-        commandManager.ReplaceCommand(CommandType.PlayerUseItemCommand, new PlayerUseItemCommand(projectiles,projectileManager, player));
+        commandManager.ReplaceCommand(CommandType.PlayerUseItemCommand, new PlayerUseItemCommand(projectiles, projectileManager, player));
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(player));
 
         // create spritedict to pass into player controller
@@ -75,6 +70,7 @@ public class DungeonScene : IScene
         Collidable itemHitbox3 = new Collidable(new Rectangle(350, 250, 50, 50), graphicsDevice, CollidableType.Item);
         collisionController.AddCollidable(itemHitbox3);
     }
+
 
     private void LoadRoom(ContentManager contentManager)
     {
@@ -137,7 +133,7 @@ public class DungeonScene : IScene
         {
             projectileManager.executeProjectile();
         }
-        // not doing anything currently
+
         playerCollision.Update();
     }
 }

@@ -1,7 +1,6 @@
-﻿
-using System;
+﻿using System;
 
-namespace PixelPushers.MonoZelda.Tiles;
+namespace MonoZelda.Tiles;
 
 internal interface IInteractiveTile : ITile
 {

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using PixelPushers.MonoZelda.Commands;
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
+using MonoZelda.Commands;
 
-namespace PixelPushers.MonoZelda.Controllers;
+namespace MonoZelda.Controllers;
 
 public class CollisionController : IController
 {
@@ -36,6 +36,7 @@ public class CollisionController : IController
         {
             for (int j = i + 1; j < _gameObjects.Count; j++)
             {
+                // Debug Statement
                 Collidable collidableA = _gameObjects[i];
                 Collidable collidableB = _gameObjects[j];
 
@@ -91,6 +92,11 @@ public class CollisionController : IController
     {
         // We need to implement this method to give back information about the collision
         return null;
+    }
+
+    internal void Clear()
+    {
+        _gameObjects.Clear();
     }
 }
 

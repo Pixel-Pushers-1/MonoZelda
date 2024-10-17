@@ -1,13 +1,20 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PixelPushers.MonoZelda.Controllers;
-using PixelPushers.MonoZelda.Sprites;
-using PixelPushers.MonoZelda.Commands;
-using PixelPushers.MonoZelda.Scenes;
+using MonoZelda.Controllers;
+using MonoZelda.Sprites;
 using MonoZelda.Commands;
 using MonoZelda.Scenes;
 
-namespace PixelPushers.MonoZelda;
+namespace MonoZelda;
+
+public enum GameState
+{
+    Title,
+    Start,
+    Reset,
+    Quit,
+    None
+}
 
 public class MonoZeldaGame : Game
 {
@@ -27,6 +34,7 @@ public class MonoZeldaGame : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
 
+        // create Command Manager
         commandManager = new CommandManager();
 
         // Commands that use MonoZeldaGame reference
@@ -34,6 +42,7 @@ public class MonoZeldaGame : Game
         commandManager.ReplaceCommand(CommandType.StartGameCommand, new StartGameCommand(this));
         commandManager.ReplaceCommand(CommandType.ResetCommand, new ResetCommand(this));
 
+        // create controller objects
         keyboardController = new KeyboardController(commandManager);
         mouseController = new MouseController(commandManager);
         collisionController = new CollisionController(commandManager);
@@ -87,6 +96,7 @@ public class MonoZeldaGame : Game
     {
         // Clean state to start a new scene
         SpriteDrawer.Reset();
+        collisionController.Clear();
         this.scene = scene;
         scene.LoadContent(Content);
     }

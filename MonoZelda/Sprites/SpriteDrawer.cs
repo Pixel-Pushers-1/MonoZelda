@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace PixelPushers.MonoZelda.Sprites;
+namespace MonoZelda.Sprites;
 
 internal static class SpriteDrawer
 {

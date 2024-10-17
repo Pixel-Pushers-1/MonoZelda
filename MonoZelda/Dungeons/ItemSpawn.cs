@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using PixelPushers.MonoZelda.Items;
+using MonoZelda.Items;
 
 namespace MonoZelda.Dungeons
 {

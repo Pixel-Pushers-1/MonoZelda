@@ -1,9 +1,7 @@
 ﻿using System;
-using System.ComponentModel.Design;
-using System.Net.NetworkInformation;
 using Microsoft.Xna.Framework;
 
-namespace PixelPushers.MonoZelda.Link.Projectiles.Boomerangs;
+namespace MonoZelda.Link.Projectiles.Boomerangs;
 
 public class TrackReturn
 {

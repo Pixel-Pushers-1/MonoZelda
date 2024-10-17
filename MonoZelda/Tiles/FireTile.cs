@@ -1,7 +1,7 @@
-﻿using PixelPushers.MonoZelda.Sprites;
+﻿using MonoZelda.Sprites;
 using System;
 
-namespace PixelPushers.MonoZelda.Tiles;
+namespace MonoZelda.Tiles;
 
 internal class FireTile : TileBase, IInteractiveTile
 {

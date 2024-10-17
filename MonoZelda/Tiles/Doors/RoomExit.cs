@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PixelPushers.MonoZelda.Tiles;
+namespace MonoZelda.Tiles;
 
 internal class RoomExit : TileBase, IInteractiveTile
 {

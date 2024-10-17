@@ -1,6 +1,6 @@
-﻿using PixelPushers.MonoZelda.Link;
+﻿using MonoZelda.Link;
 
-namespace PixelPushers.MonoZelda.Commands
+namespace MonoZelda.Commands
 {
     public class PlayerStandingCommand : ICommand
     {

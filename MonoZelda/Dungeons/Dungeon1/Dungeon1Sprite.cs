@@ -1,5 +1,4 @@
-﻿
-namespace MonoZelda.Dungeons;
+﻿namespace MonoZelda.Dungeons;
 
 public enum Dungeon1Sprite
 {

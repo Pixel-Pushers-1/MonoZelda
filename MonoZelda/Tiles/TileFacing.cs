@@ -1,6 +1,4 @@
-﻿
-
-namespace PixelPushers.MonoZelda.Tiles;
+﻿namespace MonoZelda.Tiles;
 
 internal enum TileFacing
 {

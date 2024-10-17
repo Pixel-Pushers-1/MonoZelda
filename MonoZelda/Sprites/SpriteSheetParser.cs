@@ -1,8 +1,7 @@
 ﻿using Microsoft.VisualBasic.FileIO;
 using Microsoft.Xna.Framework;
 
-namespace PixelPushers.MonoZelda.Sprites;
-
+namespace MonoZelda.Sprites;
 
 internal static class SpriteSheetParser
 {
