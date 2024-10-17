@@ -1,4 +1,4 @@
-﻿namespace MonoZelda.Commands.GameCommands;
+﻿namespace MonoZelda.Commands;
 
 public class ResetCommand : ICommand
 {

@@ -1,4 +1,4 @@
-﻿namespace MonoZelda.Commands.CollisionCommands;
+﻿namespace MonoZelda.Commands;
 
 public class PlayerEnemyCollisionCommand : ICommand
 {

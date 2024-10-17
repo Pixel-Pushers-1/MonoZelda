@@ -1,7 +1,7 @@
 ﻿using MonoZelda.Link;
 using Microsoft.Xna.Framework.Input;
 
-namespace MonoZelda.Commands.GameCommands;
+namespace MonoZelda.Commands;
 
 public class PlayerMoveCommand : ICommand
 {
