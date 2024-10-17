@@ -21,6 +21,7 @@ public class DungeonScene : IScene
     private PlayerCollision playerCollision;
     private CollisionController collisionController;
     private ItemFactory itemFactory;
+    private IDungeonRoom room;
     private string roomName;
 
 

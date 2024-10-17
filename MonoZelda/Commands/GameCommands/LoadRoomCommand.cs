@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using MonoZelda.Dungeons;
 
-namespace MonoZelda.Commands
+namespace MonoZelda.Commands.GameCommands
 {
     internal class LoadRoomCommand : ICommand
     {

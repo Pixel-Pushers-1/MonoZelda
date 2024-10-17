@@ -2,7 +2,7 @@
 using MonoZelda.Link.Projectiles;
 using Microsoft.Xna.Framework.Input;
 
-namespace MonoZelda.Commands;
+namespace MonoZelda.Commands.GameCommands;
 
 public class PlayerUseItemCommand : ICommand
 {

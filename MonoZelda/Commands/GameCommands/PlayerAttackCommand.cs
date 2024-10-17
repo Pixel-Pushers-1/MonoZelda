@@ -1,6 +1,6 @@
 ﻿using MonoZelda.Link;
 
-namespace   MonoZelda.Commands;
+namespace MonoZelda.Commands.GameCommands;
 
 public class PlayerAttackCommand : ICommand
 {
