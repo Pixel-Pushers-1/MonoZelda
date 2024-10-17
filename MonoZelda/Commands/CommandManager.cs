@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using MonoZelda.Commands.GameCommands;
+using MonoZelda.Commands.CollisionCommands;
 
 namespace MonoZelda.Commands;
 

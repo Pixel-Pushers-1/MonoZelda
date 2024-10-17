@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoZelda.Sprites;
 
 namespace MonoZelda.Collision
 {
@@ -15,6 +16,7 @@ namespace MonoZelda.Collision
     {
         public CollidableType type { get; set; }
         public Rectangle Bounds { get; set; }
+        public SpriteDict CollidableDict { get; private set; }
 
         private readonly CollisionHitboxDraw hitbox;
 
@@ -46,6 +48,11 @@ namespace MonoZelda.Collision
         public override string ToString()
         {
             return $"{type}";
+        }
+
+        public void setSpriteDict(SpriteDict collidableDict)
+        {
+            CollidableDict = collidableDict;
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿<<<<<<< HEAD
-using MonoZelda.Sprites;
-=======
 ﻿using MonoZelda.Sprites;
->>>>>>> Om-K-ItemsSpawning
 using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
 

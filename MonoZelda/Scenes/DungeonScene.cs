@@ -9,6 +9,7 @@ using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Items;
+using MonoZelda.Commands.GameCommands;
 
 namespace MonoZelda.Scenes;
 

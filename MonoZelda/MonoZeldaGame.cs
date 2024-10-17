@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
 using MonoZelda.Commands;
+using MonoZelda.Commands.GameCommands;
 using MonoZelda.Scenes;
 
 namespace MonoZelda;
