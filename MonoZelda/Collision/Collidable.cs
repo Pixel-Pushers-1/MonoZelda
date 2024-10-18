@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Collision
@@ -18,9 +19,13 @@ namespace MonoZelda.Collision
 
         private readonly CollisionHitboxDraw hitbox;
 
-        public Collidable(Rectangle bounds, CollidableType type)
+        private CollisionHitboxDraw collisionHitBoxDrawer;
+
+
+        public Collidable(Rectangle bounds, GraphicsDevice graphicsDevice, CollidableType type)
         {
             Bounds = bounds;
+            collisionHitBoxDrawer = new(this, graphicsDevice);
             this.type = type;
         }
 

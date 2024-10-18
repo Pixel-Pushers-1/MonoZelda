@@ -86,6 +86,6 @@ public class CandleBlue : Projectile, IProjectile
     public Rectangle getCollisionRectangle()
     {
         Point spawnPosition = projectilePosition.ToPoint();
-        return new Rectangle(spawnPosition.X, spawnPosition.Y, 16, 16);
+        return new Rectangle(spawnPosition.X - 64 / 2, spawnPosition.Y - 64 / 2, 64, 64);
     }
 }

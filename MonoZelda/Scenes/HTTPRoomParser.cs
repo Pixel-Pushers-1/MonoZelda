@@ -22,9 +22,13 @@ public class HTTPRoomParser : IDungeonRoomLoader
 
     private Texture2D _dungeonTexture;
 
-    public HTTPRoomParser(ContentManager contentManager)
+    private GraphicsDevice _graphicsDevice;
+
+    public HTTPRoomParser(ContentManager contentManager, GraphicsDevice graphicsDevice)
     {
         _dungeonTexture = contentManager.Load<Texture2D>(TextureData.Blocks);
+        _graphicsDevice = graphicsDevice;
+
     }
 
     public IDungeonRoom LoadRoom(string roomName)

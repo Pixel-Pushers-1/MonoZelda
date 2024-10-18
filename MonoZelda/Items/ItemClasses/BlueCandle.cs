@@ -10,6 +10,7 @@ public class BlueCandle : IItem
 {
     private Collidable bluecandleCollidable;
     private bool itemPickedUp;
+    private GraphicsDevice graphicsDevice;
 
     public bool ItemPickedUp
     {
@@ -23,13 +24,14 @@ public class BlueCandle : IItem
         }
     }
 
-    public BlueCandle()
+    public BlueCandle(GraphicsDevice graphicsDevice)
     {
+        this.graphicsDevice = graphicsDevice;
     }
 
     public void itemSpawn(SpriteDict bluecandleDict, Point spawnPosition, CollisionController collisionController)
     {
-        bluecandleCollidable = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 28, 60), CollidableType.Item);
+        bluecandleCollidable = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 28, 60), graphicsDevice, CollidableType.Item);
         collisionController.AddCollidable(bluecandleCollidable);
         bluecandleCollidable.setSpriteDict(bluecandleDict);
         bluecandleDict.Position = spawnPosition;

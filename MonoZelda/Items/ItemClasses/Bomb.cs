@@ -9,6 +9,7 @@ public class Bomb : IItem
 {
     private Collidable bombCollidable;
     private bool itemPickedUp;
+    private GraphicsDevice graphicsDevice;  
 
     public bool ItemPickedUp
     {
@@ -24,11 +25,12 @@ public class Bomb : IItem
 
     public Bomb(GraphicsDevice graphicsDevice)  
     {
+        this.graphicsDevice = graphicsDevice;
     }
 
     public void itemSpawn(SpriteDict bombDict, Point spawnPosition, CollisionController collisionController)
     {
-        bombCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), CollidableType.Item);
+        bombCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice, CollidableType.Item);
         collisionController.AddCollidable(bombCollidable);
         bombCollidable.setSpriteDict(bombDict);
         bombDict.Position = spawnPosition;

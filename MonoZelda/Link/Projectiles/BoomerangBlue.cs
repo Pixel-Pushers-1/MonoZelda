@@ -103,6 +103,6 @@ public class BoomerangBlue : Projectile, IProjectile
     public Rectangle getCollisionRectangle()
     {
         Point spawnPosition = projectilePosition.ToPoint();
-        return new Rectangle(spawnPosition.X, spawnPosition.Y, 8, 8);
+        return new Rectangle(spawnPosition.X - 32 / 2, spawnPosition.Y - 32 / 2, 32, 32);
     }
 }

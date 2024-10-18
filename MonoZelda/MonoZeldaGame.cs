@@ -56,7 +56,7 @@ public class MonoZeldaGame : Game
         graphicsDeviceManager.PreferredBackBufferHeight = 896;
         graphicsDeviceManager.ApplyChanges();
 
-        dungeonLoader = new HTTPRoomParser(Content);
+        dungeonLoader = new HTTPRoomParser(Content,GraphicsDevice);
 
         base.Initialize();
     }

@@ -65,6 +65,6 @@ public class Bomb : Projectile, IProjectile
     public Rectangle getCollisionRectangle()
     {
         Point spawnPosition = projectilePosition.ToPoint();
-        return new Rectangle(spawnPosition.X, spawnPosition.Y, 8, 16);
+        return new Rectangle(spawnPosition.X - 32 / 2, spawnPosition.Y - 64 / 2, 32, 64);
     }
 }
