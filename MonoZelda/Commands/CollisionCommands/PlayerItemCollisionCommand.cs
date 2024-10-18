@@ -27,13 +27,15 @@ public class PlayerItemCollisionCommand : ICommand
         if (collidableA.type == CollidableType.Item)
         {
             SpriteDict collidableDict = collidableA.CollidableDict;
-            collidableDict.Enabled = false;
+            collidableDict.Unregister();
+            collidableA.UnregisterHitbox();
             collisionController.RemoveCollidable(collidableA);
         }
         else
         {
             SpriteDict collidableDict = collidableB.CollidableDict;
-            collidableDict.Enabled = false;
+            collidableDict.Unregister();
+            collidableB.UnregisterHitbox();
             collisionController.RemoveCollidable(collidableB);
         }
     }
