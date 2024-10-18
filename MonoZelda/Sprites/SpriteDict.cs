@@ -22,6 +22,10 @@ public class SpriteDict : IDrawable
         SpriteDrawer.RegisterDrawable(this, priority);
     }
 
+    public void Unregister() {
+        SpriteDrawer.UnregisterDrawable(this);
+    }
+
     public void Add(Sprite sprite, string name)
     {
         dict.Add(name, sprite);

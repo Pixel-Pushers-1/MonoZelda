@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Commands;
+using MonoZelda.Link;
 
 namespace MonoZelda.Controllers;
 
@@ -90,13 +92,32 @@ public class CollisionController : IController
 
     private object[] GetMetadata(Collidable collidableA, Collidable collidableB)
     {
-        // We need to implement this method to give back information about the collision
-        var metadata = new object[]
-        {
-            collidableA,
-            collidableB,
-            this,
-        };
+        //convention: collidableA, collidableB, CollisionController, direction, intersection area
+        var metadata = new object[5];
+        metadata[0] = collidableA;
+        metadata[1] = collidableB;
+        metadata[2] = this;
+
+        //calculate intersection direction
+        Direction direction;
+        Rectangle intersect = collidableA.GetIntersectionArea(collidableB);
+        Point aCenter = collidableA.Bounds.Center;
+        Point bCenter = collidableB.Bounds.Center;
+
+        if (intersect.Width <= intersect.Height) {
+            //left-right collision
+            int dx = bCenter.X - aCenter.X;
+            direction = dx < 0 ? Direction.Left : Direction.Right;
+        }
+        else {
+            //up-down collision
+            int dy = bCenter.Y - aCenter.Y;
+            direction = dy < 0 ? Direction.Up : Direction.Down;
+        }
+
+        //set direction and intersection information
+        metadata[3] = direction;
+        metadata[4] = intersect;
 
         return metadata;
     }

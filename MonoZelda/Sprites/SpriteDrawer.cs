@@ -25,7 +25,7 @@ internal static class SpriteDrawer
         public bool isGizmo;
     }
 
-    public static bool DrawGizmos { get; set; } = true;
+    public static bool DrawGizmos { get; set; } = false;
 
     private static readonly List<Drawable> drawables = new();
     private static readonly DictComparator comparator = new();

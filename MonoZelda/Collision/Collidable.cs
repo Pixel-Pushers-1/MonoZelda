@@ -26,6 +26,10 @@ namespace MonoZelda.Collision
             this.type = type;
         }
 
+        public void UnregisterHitbox() {
+            hitbox.Unregister();
+        }
+
         public bool Intersects(ICollidable other)
         {
             return Bounds.Intersects(other.Bounds);

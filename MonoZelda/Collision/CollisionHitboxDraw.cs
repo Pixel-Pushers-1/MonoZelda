@@ -19,7 +19,11 @@ namespace MonoZelda.Collision
             SpriteDrawer.RegisterDrawable(this, int.MaxValue, true);
         }
 
-        ~CollisionHitboxDraw()
+        ~CollisionHitboxDraw() {
+            Unregister();
+        }
+
+        public void Unregister()
         {
             SpriteDrawer.UnregisterDrawable(this);
         }
