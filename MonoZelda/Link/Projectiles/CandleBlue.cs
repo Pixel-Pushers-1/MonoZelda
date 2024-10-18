@@ -1,25 +1,25 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MonoZelda.Sprites;
+using Microsoft.Xna.Framework;
 using System;
-using MonoZelda.Sprites;
 
-namespace MonoZelda.Link.Projectiles.Arrows;
+namespace MonoZelda.Link.Projectiles;
 
-public class ArrowBlue : Projectile, IProjectile
+public class CandleBlue : Projectile, IProjectile
 {
-
     private bool Finished;
-    private Vector2 InitialPosition;
-    private SpriteDict projectileDict;
-    private Player player;
     private float projectileSpeed = 4f;
     private int tilesTraveled;
-    private Vector2 Dimension = new Vector2(8, 16);
+    private Vector2 InitialPosition;
+    private Vector2 Dimension = new Vector2(16, 16);
+    private SpriteDict projectileDict;
+    private Player player;
 
-    public ArrowBlue(SpriteDict projectileDict, Player player) : base(projectileDict, player)
+    public CandleBlue(SpriteDict projectileDict, Player player) : base(projectileDict, player)
     {
         this.projectileDict = projectileDict;
         this.player = player;
         Finished = false;
+        SetProjectileSprite("fire");
         tilesTraveled = 0;
         InitialPosition = SetInitialPosition(Dimension);
     }
@@ -30,19 +30,15 @@ public class ArrowBlue : Projectile, IProjectile
         {
             case Direction.Up:
                 projectilePosition += projectileSpeed * new Vector2(0, -1);
-                SetProjectileSprite("arrow_blue_up");
                 break;
             case Direction.Down:
                 projectilePosition += projectileSpeed * new Vector2(0, 1);
-                SetProjectileSprite("arrow_blue_down");
                 break;
             case Direction.Left:
                 projectilePosition += projectileSpeed * new Vector2(-1, 0);
-                SetProjectileSprite("arrow_blue_left");
                 break;
             case Direction.Right:
                 projectilePosition += projectileSpeed * new Vector2(1, 0);
-                SetProjectileSprite("arrow_blue_right");
                 break;
         }
     }
@@ -55,33 +51,26 @@ public class ArrowBlue : Projectile, IProjectile
             InitialPosition = projectilePosition;
         }
     }
-
     public void UpdateProjectile()
     {
-        if (tilesTraveled < 5)
+        if (tilesTraveled < 2)
         {
             updatePosition();
             projectileDict.Position = projectilePosition.ToPoint();
             updateTilesTraveled();
         }
-        else if (tilesTraveled == 5)
-        {
-            SetProjectileSprite("poof");
-            tilesTraveled = 6;
-        }
-        else if (tilesTraveled == 6)
+        else if (tilesTraveled == 2)
         {
             projectileDict.Enabled = false;
             Finished = reachedDistance();
         }
-
     }
 
     public bool reachedDistance()
     {
         bool reachedDistance = false;
 
-        if (tilesTraveled == 6)
+        if (tilesTraveled == 2)
         {
             reachedDistance = true;
         }
@@ -92,5 +81,11 @@ public class ArrowBlue : Projectile, IProjectile
     public bool hasFinished()
     {
         return Finished;
+    }
+
+    public Rectangle getCollisionRectangle()
+    {
+        Point spawnPosition = projectilePosition.ToPoint();
+        return new Rectangle(spawnPosition.X - 64 / 2, spawnPosition.Y - 64 / 2, 64, 64);
     }
 }

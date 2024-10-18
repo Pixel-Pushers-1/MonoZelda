@@ -1,4 +1,6 @@
-﻿namespace MonoZelda.Link.Projectiles;
+﻿using Microsoft.Xna.Framework;
+
+namespace MonoZelda.Link.Projectiles;
 
 public interface IProjectile
 {
@@ -7,4 +9,6 @@ public interface IProjectile
 	bool hasFinished();
 
 	bool reachedDistance();
+
+	Rectangle getCollisionRectangle();
 }

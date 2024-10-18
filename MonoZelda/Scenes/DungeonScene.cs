@@ -9,6 +9,7 @@ using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Items;
+using MonoZelda.Commands.GameCommands;
 
 namespace MonoZelda.Scenes;
 
@@ -18,11 +19,10 @@ public class DungeonScene : IScene
     private CommandManager commandManager;
     private Player player;
     private ProjectileManager projectileManager;
-    private IDungeonRoom room;
-
     private PlayerCollision playerCollision;
     private CollisionController collisionController;
     private ItemFactory itemFactory;
+    private IDungeonRoom room;
     private string roomName;
 
 
@@ -49,7 +49,7 @@ public class DungeonScene : IScene
         var projectileDict = new SpriteDict(contentManager.Load<Texture2D>("Sprites/player"), SpriteCSVData.Projectiles, 0, new Point(0, 0));
         projectileDict.Enabled = false;
         var projectiles = new Projectile(projectileDict, player);
-        projectileManager = new ProjectileManager();
+        projectileManager = new ProjectileManager(collisionController, graphicsDevice);
 
         // replace required commands
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(player));
@@ -61,30 +61,25 @@ public class DungeonScene : IScene
         // create spritedict to pass into player controller
         var playerSpriteDict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Player), SpriteCSVData.Player, 1, new Point(100, 100));
         player.SetPlayerSpriteDict(playerSpriteDict);
-
-        //create some sample hitboxes
-        Collidable itemHitbox1 = new Collidable(new Rectangle(100, 200, 50, 50), graphicsDevice, CollidableType.Item);
-        collisionController.AddCollidable(itemHitbox1);
-        Collidable itemHitbox2 = new Collidable(new Rectangle(200, 200, 100, 100), graphicsDevice, CollidableType.Item);
-        collisionController.AddCollidable(itemHitbox2);
-        Collidable itemHitbox3 = new Collidable(new Rectangle(350, 250, 50, 50), graphicsDevice, CollidableType.Item);
-        collisionController.AddCollidable(itemHitbox3);
     }
+
 
 
     private void LoadRoom(ContentManager contentManager)
     {
         LoadRoomTextures(contentManager);
         CreateStaticColliders();
-        SpawnItems();
+        SpawnItems(contentManager);
         SpawnEnemies();
     }
 
-    private void SpawnItems()
+    private void SpawnItems(ContentManager contentManager)
     {
-        foreach(var itemSpwan in room.GetItemSpawns())
+        // Create itemFactory object
+        itemFactory = new ItemFactory(collisionController, contentManager, graphicsDevice);
+        foreach (var itemSpawn in room.GetItemSpawns())
         {
-            // TODO: Spawn the item
+            itemFactory.CreateItem(itemSpawn.ItemType, itemSpawn.Position);
         }
     }
 

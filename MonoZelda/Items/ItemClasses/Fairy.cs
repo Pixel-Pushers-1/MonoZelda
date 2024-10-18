@@ -8,10 +8,9 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Fairy : IItem
 {
-    private CollisionController collisionController;
     private Collidable fairyCollidable;
-    private GraphicsDevice graphicsDevice;
     private bool itemPickedUp;
+    private GraphicsDevice graphicsDevice;
 
     public bool ItemPickedUp
     {
@@ -25,18 +24,18 @@ public class Fairy : IItem
         }
     }
 
-    public Fairy(CollisionController collisionController, GraphicsDevice graphicsDevice)
+    public Fairy(GraphicsDevice graphicsDevice)
     {
-        this.collisionController = collisionController;
         this.graphicsDevice = graphicsDevice;
     }
 
-    public void itemSpawn(SpriteDict fairyDict, Point spawnPosition)
+    public void itemSpawn(SpriteDict fairyDict, Point spawnPosition, CollisionController collisionController)
     {
-        fairyCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, CollidableType.Item);
+        fairyCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice, CollidableType.Item);
+        collisionController.AddCollidable(fairyCollidable);
+        fairyCollidable.setSpriteDict(fairyDict);
         fairyDict.Position = spawnPosition;
         fairyDict.SetSprite("fairy");
-        collisionController.AddCollidable(fairyCollidable);
     }
 
 }

@@ -8,10 +8,9 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Triforce : IItem
 {
-    private CollisionController collisionController;
     private Collidable triforceCollidable;
-    private GraphicsDevice graphicsDevice;
     private bool itemPickedUp;
+    private GraphicsDevice graphicsDevice;
 
     public bool ItemPickedUp
     {
@@ -25,18 +24,17 @@ public class Triforce : IItem
         }
     }
 
-    public Triforce(CollisionController collisionController, GraphicsDevice graphicsDevice)
+    public Triforce()
     {
-        this.collisionController = collisionController;
-        this.graphicsDevice = graphicsDevice;
     }
 
-    public void itemSpawn(SpriteDict triforceDict, Point spawnPosition)
+    public void itemSpawn(SpriteDict triforceDict, Point spawnPosition, CollisionController collisionController)
     {
-        triforceCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 64, 64), graphicsDevice, CollidableType.Item);
+        triforceCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 60, 60), graphicsDevice, CollidableType.Item);
+        collisionController.AddCollidable(triforceCollidable);
+        triforceCollidable.setSpriteDict(triforceDict);
         triforceDict.Position = spawnPosition;
         triforceDict.SetSprite("triforce");
-        collisionController.AddCollidable(triforceCollidable);
     }
 
 }

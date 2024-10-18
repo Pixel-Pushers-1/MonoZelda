@@ -2,29 +2,36 @@
 using Microsoft.Xna.Framework;
 using System;
 
-namespace MonoZelda.Link.Projectiles.Fire;
+namespace MonoZelda.Link.Projectiles;
 
-public class CandleBlue : Projectile, IProjectile
+public class BoomerangBlue : Projectile, IProjectile
 {
     private bool Finished;
-    private Vector2 InitialPosition;
-    private SpriteDict projectileDict;
-    private Player player;
     private float projectileSpeed = 4f;
     private int tilesTraveled;
-    private Vector2 Dimension = new Vector2(16, 16);
+    private Vector2 InitialPosition;
+    private Vector2 Dimension = new Vector2(8, 8);
+    private SpriteDict projectileDict;
+    private Player player;
+    private TrackReturn tracker;
 
-    public CandleBlue(SpriteDict projectileDict, Player player) : base(projectileDict, player)
+    public BoomerangBlue(SpriteDict projectileDict, Player player) : base(projectileDict, player)
     {
         this.projectileDict = projectileDict;
         this.player = player;
         Finished = false;
-        SetProjectileSprite("fire");
         tilesTraveled = 0;
+        SetProjectileSprite("boomerang_blue");
         InitialPosition = SetInitialPosition(Dimension);
+        UseTrackReturn();
     }
 
-    private void updatePosition()
+    private void UseTrackReturn()
+    {
+        tracker = TrackReturn.CreateInstance(this, player, projectileSpeed);
+    }
+
+    private void Forward()
     {
         switch (playerDirection)
         {
@@ -41,7 +48,15 @@ public class CandleBlue : Projectile, IProjectile
                 projectilePosition += projectileSpeed * new Vector2(1, 0);
                 break;
         }
+        updateTilesTraveled();
     }
+
+    private void ReturnToPlayer()
+    {
+        tracker.CheckResetOrigin(projectilePosition);
+        projectilePosition += tracker.getProjectileNextPosition();
+    }
+
     private void updateTilesTraveled()
     {
         double tolerance = 0.000001;
@@ -53,24 +68,26 @@ public class CandleBlue : Projectile, IProjectile
     }
     public void UpdateProjectile()
     {
-        if (tilesTraveled < 2)
+        if (tilesTraveled < 5)
         {
-            updatePosition();
-            projectileDict.Position = projectilePosition.ToPoint();
-            updateTilesTraveled();
+            Forward();
         }
-        else if (tilesTraveled == 2)
+        else if (!reachedDistance())
         {
-            projectileDict.Enabled = false;
+            ReturnToPlayer();
+        }
+        else
+        {
             Finished = reachedDistance();
+            projectileDict.Enabled = false;
         }
+        projectileDict.Position = projectilePosition.ToPoint();
     }
 
     public bool reachedDistance()
     {
         bool reachedDistance = false;
-
-        if (tilesTraveled == 2)
+        if (tracker.Returned(projectilePosition))
         {
             reachedDistance = true;
         }
@@ -81,5 +98,11 @@ public class CandleBlue : Projectile, IProjectile
     public bool hasFinished()
     {
         return Finished;
+    }
+
+    public Rectangle getCollisionRectangle()
+    {
+        Point spawnPosition = projectilePosition.ToPoint();
+        return new Rectangle(spawnPosition.X - 32 / 2, spawnPosition.Y - 32 / 2, 32, 32);
     }
 }

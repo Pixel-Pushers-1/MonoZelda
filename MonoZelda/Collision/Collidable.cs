@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoZelda.Sprites;
 
 namespace MonoZelda.Collision
 {
-
     public enum CollidableType {
         Player,
         Item,
@@ -15,6 +15,7 @@ namespace MonoZelda.Collision
     {
         public CollidableType type { get; set; }
         public Rectangle Bounds { get; set; }
+        public SpriteDict CollidableDict { get; private set; }
 
         private readonly CollisionHitboxDraw hitbox;
 
@@ -35,17 +36,14 @@ namespace MonoZelda.Collision
             return Rectangle.Intersect(Bounds, other.Bounds);
         }
 
-        public void SetGizmoColor(Color color) {
-            hitbox.GizmoColor = color;
-        }
-
-        public void SetGizmoThickness(int thickness) {
-            hitbox.Thickness = thickness;
-        }
-
         public override string ToString()
         {
             return $"{type}";
+        }
+
+        public void setSpriteDict(SpriteDict collidableDict)
+        {
+            CollidableDict = collidableDict;
         }
     }
 }

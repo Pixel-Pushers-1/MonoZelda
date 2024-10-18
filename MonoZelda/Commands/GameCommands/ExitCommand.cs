@@ -1,22 +1,22 @@
-﻿namespace MonoZelda.Commands;
+﻿namespace MonoZelda.Commands.GameCommands;
 
-public class EnemyStaticCollisionCommand : ICommand
+public class ExitCommand : ICommand
 {
     private MonoZeldaGame game;
 
-    public EnemyStaticCollisionCommand()
+    public ExitCommand()
     {
         //empty
     }
 
-    public EnemyStaticCollisionCommand(MonoZeldaGame game)
+    public ExitCommand(MonoZeldaGame game)
     {
         this.game = game;
     }
 
     public void Execute(params object[] metadata)
     {
-        // ADD EXECUTE LOGIC HERE
+        game.Exit();
     }
 
     public void UnExecute()

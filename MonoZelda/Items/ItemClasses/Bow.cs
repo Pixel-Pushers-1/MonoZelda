@@ -7,10 +7,9 @@ using MonoZelda.Controllers;
 namespace MonoZelda.Items.ItemClasses;
 public class Bow : IItem
 {
-    private CollisionController collisionController;
     private Collidable bowCollidable;
-    private GraphicsDevice graphicsDevice;  
     private bool itemPickedUp;
+    private GraphicsDevice graphicsDevice;
 
     public bool ItemPickedUp
     {
@@ -24,18 +23,18 @@ public class Bow : IItem
         }
     }
 
-    public Bow(CollisionController collisionController, GraphicsDevice graphicsDevice)
+    public Bow(GraphicsDevice graphicsDevice)
     {
-        this.collisionController = collisionController;
         this.graphicsDevice = graphicsDevice;
     }
 
-    public void itemSpawn(SpriteDict bowDict, Point spawnPosition)
+    public void itemSpawn(SpriteDict bowDict, Point spawnPosition, CollisionController collisionController)
     {
-        bowCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, CollidableType.Item);
+        bowCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice, CollidableType.Item);
+        collisionController.AddCollidable(bowCollidable);
+        bowCollidable.setSpriteDict(bowDict);
         bowDict.Position = spawnPosition;
         bowDict.SetSprite("bow");
-        collisionController.AddCollidable(bowCollidable);
     }
 
 }

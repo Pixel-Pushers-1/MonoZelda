@@ -11,7 +11,6 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Dungeons;
 using MonoZelda.Enemies;
-using MonoZelda.Scenes;
 using MonoZelda.Items;
 using MonoZelda.Sprites;
 
@@ -22,12 +21,14 @@ public class HTTPRoomParser : IDungeonRoomLoader
     private static readonly HttpClient httpClient = new HttpClient();
 
     private Texture2D _dungeonTexture;
+
     private GraphicsDevice _graphicsDevice;
 
     public HTTPRoomParser(ContentManager contentManager, GraphicsDevice graphicsDevice)
     {
         _dungeonTexture = contentManager.Load<Texture2D>(TextureData.Blocks);
         _graphicsDevice = graphicsDevice;
+
     }
 
     public IDungeonRoom LoadRoom(string roomName)

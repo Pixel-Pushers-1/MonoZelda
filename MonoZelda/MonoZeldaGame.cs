@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
 using MonoZelda.Commands;
+using MonoZelda.Commands.GameCommands;
 using MonoZelda.Scenes;
 
 namespace MonoZelda;
@@ -55,7 +56,7 @@ public class MonoZeldaGame : Game
         graphicsDeviceManager.PreferredBackBufferHeight = 896;
         graphicsDeviceManager.ApplyChanges();
 
-        dungeonLoader = new HTTPRoomParser(Content, graphicsDeviceManager.GraphicsDevice);
+        dungeonLoader = new HTTPRoomParser(Content,GraphicsDevice);
 
         base.Initialize();
     }
