@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using MonoZelda.Commands;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace MonoZelda.Controllers;
 
@@ -24,6 +25,7 @@ public class KeyboardController : IController
             {new (Keys.Right, false), CommandType.PlayerMoveCommand},
             {new (Keys.A, false), CommandType.PlayerMoveCommand},
             {new (Keys.Left, false), CommandType.PlayerMoveCommand},
+            {new (Keys.G, true), CommandType.ToggleGizmosCommand},
             {new (Keys.D1, true), CommandType.PlayerUseItemCommand},
             {new (Keys.D2, true), CommandType.PlayerUseItemCommand},
             {new (Keys.D3, true), CommandType.PlayerUseItemCommand},
@@ -49,15 +51,15 @@ public class KeyboardController : IController
         // Iterate keyCommandDictionary to check input
         foreach (var keyCommandPair in _keyCommandDictionary)
         {
-            (Keys key, bool oneShot) keyOneShot = keyCommandPair.Key;
-            if (!keyOneShot.oneShot && (CurrentKeyboardState.IsKeyDown(keyOneShot.key) || keyOneShot.key == Keys.None))
+            (Keys key, bool oneShot) = keyCommandPair.Key;
+            if (!oneShot && (CurrentKeyboardState.IsKeyDown(key) || key == Keys.None))
             {
-                _commandManager.Execute(keyCommandPair.Value, keyOneShot.key);
+                _commandManager.Execute(keyCommandPair.Value, key);
                 break;
             }
-            else if(keyOneShot.oneShot && OneShotPressed(keyOneShot.key))
+            else if(oneShot && OneShotPressed(key))
             {
-                _commandManager.Execute(keyCommandPair.Value, keyOneShot.key);
+                _commandManager.Execute(keyCommandPair.Value, key);
                 break;
             }
         }

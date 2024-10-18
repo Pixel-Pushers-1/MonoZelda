@@ -25,7 +25,7 @@ internal static class SpriteDrawer
         public bool isGizmo;
     }
 
-    public static bool DrawGizmos { get; set; } = true;
+    public static bool DrawGizmos { get; set; } = false;
 
     private static readonly List<Drawable> drawables = new();
     private static readonly DictComparator comparator = new();
@@ -44,9 +44,6 @@ internal static class SpriteDrawer
 
     public static void UnregisterDrawable(IDrawable iDrawable)
     {
-        foreach (var x in drawables.FindAll(x => x.iDrawable == iDrawable)) {
-            System.Diagnostics.Debug.WriteLine(x);
-        }
         drawables.RemoveAll(x => x.iDrawable == iDrawable);
     }
 
