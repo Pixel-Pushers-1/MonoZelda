@@ -19,13 +19,10 @@ namespace MonoZelda.Collision
 
         private readonly CollisionHitboxDraw hitbox;
 
-        private CollisionHitboxDraw collisionHitBoxDrawer;
-
-
         public Collidable(Rectangle bounds, GraphicsDevice graphicsDevice, CollidableType type)
         {
             Bounds = bounds;
-            collisionHitBoxDrawer = new(this, graphicsDevice);
+            hitbox = new CollisionHitboxDraw(this, graphicsDevice);
             this.type = type;
         }
 
