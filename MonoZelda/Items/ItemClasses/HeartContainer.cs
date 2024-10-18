@@ -9,7 +9,6 @@ namespace MonoZelda.Items.ItemClasses;
 public class HeartContainer : IItem
 {
     private Collidable heartcontainerCollidable;
-    private GraphicsDevice graphicsDevice;
     private bool itemPickedUp;
 
     public bool ItemPickedUp
@@ -24,14 +23,13 @@ public class HeartContainer : IItem
         }
     }
 
-    public HeartContainer(GraphicsDevice graphicsDevice)
+    public HeartContainer()
     {
-        this.graphicsDevice = graphicsDevice;
     }
 
     public void itemSpawn(SpriteDict heartcontainerDict, Point spawnPosition, CollisionController collisionController)
     {
-        heartcontainerCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 64, 64), graphicsDevice, CollidableType.Item);
+        heartcontainerCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 60, 60), CollidableType.Item);
         collisionController.AddCollidable(heartcontainerCollidable);
         heartcontainerCollidable.setSpriteDict(heartcontainerDict);
         heartcontainerDict.Position = spawnPosition;

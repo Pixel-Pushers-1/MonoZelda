@@ -1,16 +1,16 @@
 ﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 
-namespace MonoZelda.Link.Projectiles.Explosive;
+namespace MonoZelda.Link.Projectiles;
 
 public class Bomb : Projectile, IProjectile
 {
     private bool Finished;
+    private int timer;
     private Vector2 InitialPosition;
+    private Vector2 Dimension = new Vector2(8, 16);
     private SpriteDict projectileDict;
     private Player player;
-    private int timer;
-    private Vector2 Dimension = new Vector2(8, 16);
 
     public Bomb(SpriteDict projectileDict, Player player) : base(projectileDict, player)
     {
@@ -60,5 +60,11 @@ public class Bomb : Projectile, IProjectile
     public bool hasFinished()
     {
         return Finished;
+    }
+
+    public Rectangle getCollisionRectangle()
+    {
+        Point spawnPosition = projectilePosition.ToPoint();
+        return new Rectangle(spawnPosition.X, spawnPosition.Y, 8, 16);
     }
 }

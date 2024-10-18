@@ -1,9 +1,5 @@
 ﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
-using MonoZelda.Link.Projectiles.Arrows;
-using MonoZelda.Link.Projectiles.Explosive;
-using MonoZelda.Link.Projectiles.Fire;
-using MonoZelda.Link.Projectiles.Boomerangs;
 using System;
 
 namespace MonoZelda.Link.Projectiles;
@@ -37,59 +33,36 @@ public class Projectile
     protected Vector2 SetInitialPosition(Vector2 Dimension)
     {
         playerDirection = player.PlayerDirection;
-        Vector2 offset = new Vector2(0, 0);
+        Vector2 positionInitializer = new Vector2();
         switch (playerDirection)
         {
             case Direction.Up:
-                offset = new Vector2(0, -(Dimension.Y / 2) * 4);
-                projectilePosition = player.GetPlayerPosition() + (new Vector2(0, -32)) + offset;
+                positionInitializer.Y = (-(Dimension.Y / 2) * 4) - 32;
                 break;
             case Direction.Down:
-                offset = new Vector2(0, (Dimension.Y / 2) * 4);
-                projectilePosition = player.GetPlayerPosition() + (new Vector2(0, 32)) + offset;
+                positionInitializer.Y = ((Dimension.Y / 2) * 4) + 32; ;
                 break;
             case Direction.Left:
-                offset = new Vector2(-(Dimension.X / 2) * 4, 0);
-                projectilePosition = player.GetPlayerPosition() + (new Vector2(-32, 0)) + offset;
+                positionInitializer.X = -((Dimension.X / 2) * 4) - 32;
                 break;
             case Direction.Right:
-                offset = new Vector2((Dimension.X / 2) * 4, 0);
-                projectilePosition = player.GetPlayerPosition() + (new Vector2(32, 0)) + offset;
+                positionInitializer.X = ((Dimension.X / 2) * 4) + 32;
                 break;
         }
+        projectilePosition = player.GetPlayerPosition() + positionInitializer;
         return projectilePosition;
+    }
+
+    public IProjectile GetProjectileObject(ProjectileType currentProjectile)
+    {
+        var projectileType = Type.GetType($"MonoZelda.Link.Projectiles.{currentProjectile}");
+        IProjectile launchProjectile = (IProjectile)Activator.CreateInstance(projectileType, projectileDict, player);
+
+        return launchProjectile;
     }
 
     public void EnableDict()
     {
         projectileDict.Enabled = true;
-    }
-
-
-    public IProjectile GetProjectileObject(ProjectileType currentProjectile)
-    {
-        IProjectile launchProjectile = null;
-        switch (currentProjectile)
-        {
-            case ProjectileType.arrow_green:
-                launchProjectile = new Arrow(projectileDict,player);
-                break;
-            case ProjectileType.arrow_blue:
-                launchProjectile = new ArrowBlue(projectileDict,player);
-                break;
-            case ProjectileType.boomerang_green:
-                launchProjectile = new Boomerang(projectileDict,player);
-                break;
-            case ProjectileType.boomerang_blue:
-                launchProjectile = new BoomerangBlue(projectileDict, player);
-                break;
-            case ProjectileType.bomb:
-                launchProjectile = new Bomb(projectileDict,player);
-                break;
-            case ProjectileType.candle_blue:
-                launchProjectile = new CandleBlue(projectileDict,player);
-                break;
-        }
-        return launchProjectile;
     }
 }

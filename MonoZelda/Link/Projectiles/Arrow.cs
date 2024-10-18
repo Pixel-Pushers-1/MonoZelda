@@ -2,61 +2,50 @@
 using Microsoft.Xna.Framework;
 using System;
 
-namespace MonoZelda.Link.Projectiles.Boomerangs;
 
-public class BoomerangBlue : Projectile, IProjectile
+namespace MonoZelda.Link.Projectiles;
+
+public class Arrow : Projectile, IProjectile
 {
     private bool Finished;
-    private Vector2 InitialPosition;
-    private SpriteDict projectileDict;
-    private Player player;
     private float projectileSpeed = 4f;
     private int tilesTraveled;
-    private Vector2 Dimension = new Vector2(8, 8);
-    private TrackReturn tracker;
+    private Vector2 InitialPosition;
+    private Vector2 Dimension = new Vector2(8, 16);
+    private SpriteDict projectileDict;
+    private Player player;
 
-    public BoomerangBlue(SpriteDict projectileDict, Player player) : base(projectileDict, player)
+    public Arrow(SpriteDict projectileDict, Player player) : base(projectileDict, player)
     {
         this.projectileDict = projectileDict;
         this.player = player;
         Finished = false;
         tilesTraveled = 0;
-        SetProjectileSprite("boomerang_blue");
         InitialPosition = SetInitialPosition(Dimension);
-        UseTrackReturn();
     }
 
-    private void UseTrackReturn()
-    {
-        tracker = TrackReturn.CreateInstance(this, player, projectileSpeed);
-    }
-
-    private void Forward()
+    private void updatePosition()
     {
         switch (playerDirection)
         {
             case Direction.Up:
                 projectilePosition += projectileSpeed * new Vector2(0, -1);
+                SetProjectileSprite("arrow_green_up");
                 break;
             case Direction.Down:
                 projectilePosition += projectileSpeed * new Vector2(0, 1);
+                SetProjectileSprite("arrow_green_down");
                 break;
             case Direction.Left:
                 projectilePosition += projectileSpeed * new Vector2(-1, 0);
+                SetProjectileSprite("arrow_green_left");
                 break;
             case Direction.Right:
                 projectilePosition += projectileSpeed * new Vector2(1, 0);
+                SetProjectileSprite("arrow_green_right");
                 break;
         }
-        updateTilesTraveled();
     }
-
-    private void ReturnToPlayer()
-    {
-        tracker.CheckResetOrigin(projectilePosition);
-        projectilePosition += tracker.getProjectileNextPosition();
-    }
-
     private void updateTilesTraveled()
     {
         double tolerance = 0.000001;
@@ -66,28 +55,33 @@ public class BoomerangBlue : Projectile, IProjectile
             InitialPosition = projectilePosition;
         }
     }
+
     public void UpdateProjectile()
     {
-        if (tilesTraveled < 5)
+        if (tilesTraveled < 3)
         {
-            Forward();
+            updatePosition();
+            projectileDict.Position = projectilePosition.ToPoint();
+            updateTilesTraveled();
         }
-        else if (!reachedDistance())
+        else if (tilesTraveled == 3)
         {
-            ReturnToPlayer();
+            SetProjectileSprite("poof");
+            tilesTraveled = 4;
         }
-        else
+        else if (tilesTraveled == 4)
         {
-            Finished = reachedDistance();
             projectileDict.Enabled = false;
+            Finished = reachedDistance();
         }
-        projectileDict.Position = projectilePosition.ToPoint();
+
     }
 
     public bool reachedDistance()
     {
         bool reachedDistance = false;
-        if (tracker.Returned(projectilePosition))
+
+        if (tilesTraveled == 4)
         {
             reachedDistance = true;
         }
@@ -99,4 +93,12 @@ public class BoomerangBlue : Projectile, IProjectile
     {
         return Finished;
     }
+
+    public Rectangle getCollisionRectangle()
+    {
+        Point spawnPosition = projectilePosition.ToPoint();
+        return new Rectangle(spawnPosition.X, spawnPosition.Y, 8, 16);
+    }
 }
+
+

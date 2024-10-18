@@ -41,7 +41,7 @@ public class DungeonScene : IScene
 
         //create player and player collision
         player = new Player();
-        Collidable playerHitbox = new Collidable(new Rectangle(100, 100, 50, 50), graphicsDevice, CollidableType.Player);
+        Collidable playerHitbox = new Collidable(new Rectangle(100, 100, 50, 50), CollidableType.Player);
         collisionController.AddCollidable(playerHitbox);
         playerCollision = new PlayerCollision(player, playerHitbox, collisionController);
 
@@ -49,7 +49,7 @@ public class DungeonScene : IScene
         var projectileDict = new SpriteDict(contentManager.Load<Texture2D>("Sprites/player"), SpriteCSVData.Projectiles, 0, new Point(0, 0));
         projectileDict.Enabled = false;
         var projectiles = new Projectile(projectileDict, player);
-        projectileManager = new ProjectileManager();
+        projectileManager = new ProjectileManager(collisionController);
 
         // replace required commands
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(player));
@@ -76,7 +76,7 @@ public class DungeonScene : IScene
     private void SpawnItems(ContentManager contentManager)
     {
         // Create itemFactory object
-        itemFactory = new ItemFactory(graphicsDevice, collisionController, contentManager);
+        itemFactory = new ItemFactory(collisionController, contentManager);
         foreach (var itemSpawn in room.GetItemSpawns())
         {
             itemFactory.CreateItem(itemSpawn.ItemType, itemSpawn.Position);
@@ -96,7 +96,7 @@ public class DungeonScene : IScene
         var colliderRects = room.GetStaticColliders();
         foreach (var rect in colliderRects)
         {
-            var collidable = new Collidable(rect, graphicsDevice, CollidableType.Static);
+            var collidable = new Collidable(rect, CollidableType.Static);
             collisionController.AddCollidable(collidable);
         }
     }

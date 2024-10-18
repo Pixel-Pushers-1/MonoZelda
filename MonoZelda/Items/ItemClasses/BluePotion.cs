@@ -9,7 +9,6 @@ namespace MonoZelda.Items.ItemClasses;
 public class BluePotion : IItem
 {
     private Collidable bluepotionCollidable;
-    private GraphicsDevice graphicsDevice;
     private bool itemPickedUp;
 
     public bool ItemPickedUp
@@ -24,14 +23,13 @@ public class BluePotion : IItem
         }
     }
 
-    public BluePotion(GraphicsDevice graphicsDevice)
-    {
-        this.graphicsDevice = graphicsDevice;   
+    public BluePotion()
+    {  
     }
 
     public void itemSpawn(SpriteDict bluepotionDict, Point spawnPosition, CollisionController collisionController)
     {
-        bluepotionCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, CollidableType.Item);
+        bluepotionCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), CollidableType.Item);
         collisionController.AddCollidable(bluepotionCollidable);
         bluepotionCollidable.setSpriteDict(bluepotionDict);
         bluepotionDict.Position = spawnPosition;

@@ -9,7 +9,6 @@ namespace MonoZelda.Items.ItemClasses;
 public class Map : IItem
 {
     private Collidable mapCollidable;
-    private GraphicsDevice graphicsDevice;
     private bool itemPickedUp;
 
     public bool ItemPickedUp
@@ -24,14 +23,13 @@ public class Map : IItem
         }
     }
 
-    public Map(GraphicsDevice graphicsDevice)
+    public Map()
     {
-        this.graphicsDevice = graphicsDevice;
     }
 
     public void itemSpawn(SpriteDict mapDict, Point spawnPosition, CollisionController collisionController)
     {
-        mapCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 64), graphicsDevice, CollidableType.Item);
+        mapCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), CollidableType.Item);
         collisionController.AddCollidable(mapCollidable);
         mapCollidable.setSpriteDict(mapDict);
         mapDict.Position = spawnPosition;

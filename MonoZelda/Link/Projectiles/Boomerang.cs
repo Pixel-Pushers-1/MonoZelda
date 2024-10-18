@@ -2,17 +2,17 @@
 using Microsoft.Xna.Framework;
 using System;
 
-namespace MonoZelda.Link.Projectiles.Boomerangs;
+namespace MonoZelda.Link.Projectiles;
 
 public class Boomerang : Projectile, IProjectile
 {
     private bool Finished;
-    private Vector2 InitialPosition;
-    private SpriteDict projectileDict;
-    private Player player;
     private float projectileSpeed = 4f;
     private int tilesTraveled;
+    private Vector2 InitialPosition;
     private Vector2 Dimension = new Vector2(8, 8);
+    private SpriteDict projectileDict;
+    private Player player;
     private TrackReturn tracker;
 
     public Boomerang(SpriteDict projectileDict, Player player) : base(projectileDict, player)
@@ -99,5 +99,11 @@ public class Boomerang : Projectile, IProjectile
     public bool hasFinished()
     {
         return Finished;
+    }
+
+    public Rectangle getCollisionRectangle()
+    {
+        Point spawnPosition = projectilePosition.ToPoint();
+        return new Rectangle(spawnPosition.X, spawnPosition.Y, 8, 8);
     }
 }

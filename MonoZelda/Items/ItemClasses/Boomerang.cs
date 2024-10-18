@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
+﻿using MonoZelda.Collision;
 using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
@@ -8,9 +7,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Boomerang : IItem
 {
-    private CollisionController collisionController;
     private Collidable boomerangCollidable;
-    private GraphicsDevice graphicsDevice;
     private bool itemPickedUp;
 
     public bool ItemPickedUp
@@ -25,15 +22,13 @@ public class Boomerang : IItem
         }
     }
 
-    public Boomerang(GraphicsDevice graphicsDevice)
+    public Boomerang()
     {
-        this.collisionController = collisionController;
-        this.graphicsDevice = graphicsDevice;
     }
 
     public void itemSpawn(SpriteDict boomerangDict, Point spawnPosition, CollisionController collisionController)
     {
-        boomerangCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 32, 32), graphicsDevice, CollidableType.Item);
+        boomerangCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 28), CollidableType.Item);
         collisionController.AddCollidable(boomerangCollidable);
         boomerangCollidable.setSpriteDict(boomerangDict);
         boomerangDict.Position = spawnPosition;

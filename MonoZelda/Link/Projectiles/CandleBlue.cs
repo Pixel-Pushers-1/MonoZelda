@@ -2,17 +2,17 @@
 using Microsoft.Xna.Framework;
 using System;
 
-namespace MonoZelda.Link.Projectiles.Fire;
+namespace MonoZelda.Link.Projectiles;
 
 public class CandleBlue : Projectile, IProjectile
 {
     private bool Finished;
-    private Vector2 InitialPosition;
-    private SpriteDict projectileDict;
-    private Player player;
     private float projectileSpeed = 4f;
     private int tilesTraveled;
+    private Vector2 InitialPosition;
     private Vector2 Dimension = new Vector2(16, 16);
+    private SpriteDict projectileDict;
+    private Player player;
 
     public CandleBlue(SpriteDict projectileDict, Player player) : base(projectileDict, player)
     {
@@ -81,5 +81,11 @@ public class CandleBlue : Projectile, IProjectile
     public bool hasFinished()
     {
         return Finished;
+    }
+
+    public Rectangle getCollisionRectangle()
+    {
+        Point spawnPosition = projectilePosition.ToPoint();
+        return new Rectangle(spawnPosition.X, spawnPosition.Y, 16, 16);
     }
 }
