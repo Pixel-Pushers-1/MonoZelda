@@ -62,6 +62,12 @@ namespace MonoZelda.Enemies.EnemyClasses
             throw new NotImplementedException();
         }
 
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
+            ContentManager contentManager)
+        {
+            throw new NotImplementedException();
+        }
+
         public void DisableProjectile()
         {
             fireballs.ForEach(fireball => fireball.FireballSpriteDict.Enabled = false);

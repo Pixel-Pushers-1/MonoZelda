@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
@@ -106,6 +107,12 @@ namespace MonoZelda.Enemies.EnemyClasses
                 pos = stateMachine.Update(pos);
                 gelSpriteDict.Position = pos;
             }
+        }
+
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
+            ContentManager contentManager)
+        {
+            throw new NotImplementedException();
         }
 
         public void DisableProjectile()
