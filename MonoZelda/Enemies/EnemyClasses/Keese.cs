@@ -1,8 +1,11 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using MonoZelda.Collision;
+using MonoZelda.Controllers;
+using MonoZelda.Enemies.KeeseFolder;
 using MonoZelda.Sprites;
 
-namespace MonoZelda.Enemies.KeeseFolder
+namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Keese : IEnemy
     {
@@ -31,6 +34,9 @@ namespace MonoZelda.Enemies.KeeseFolder
         }
 
 
+        public Point Pos { get; set; }
+        public Collidable EnemyHitbox { get; set; }
+
         public void SetOgPos(GameTime gameTime) //sets to spawn position (eventually could be used for re-entering rooms)
         {
             pos.X = spawnX;
@@ -39,6 +45,11 @@ namespace MonoZelda.Enemies.KeeseFolder
             keeseSpriteDict.SetSprite("cloud");
             spawning = true;
             startTime = gameTime.TotalGameTime.TotalSeconds;
+        }
+
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        {
+            throw new NotImplementedException();
         }
 
         public void ChangeDirection()

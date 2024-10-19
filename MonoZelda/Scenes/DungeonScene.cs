@@ -10,6 +10,9 @@ using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Items;
 using MonoZelda.Commands.GameCommands;
+using MonoZelda.Enemies;
+using MonoZelda.Enemies.AquamentusFolder;
+using System.Collections.Generic;
 
 namespace MonoZelda.Scenes;
 
@@ -22,6 +25,9 @@ public class DungeonScene : IScene
     private PlayerCollision playerCollision;
     private CollisionController collisionController;
     private ItemFactory itemFactory;
+    private EnemyFactory enemyFactory;
+    private List<IEnemy> enemies = new();
+    private List<EnemyCollision> enemyCollisions = new();
     private IDungeonRoom room;
     private string roomName;
 
@@ -70,7 +76,7 @@ public class DungeonScene : IScene
         LoadRoomTextures(contentManager);
         CreateStaticColliders();
         SpawnItems(contentManager);
-        SpawnEnemies();
+        SpawnEnemies(contentManager);
     }
 
     private void SpawnItems(ContentManager contentManager)
@@ -83,11 +89,17 @@ public class DungeonScene : IScene
         }
     }
 
-    private void SpawnEnemies()
+    private void SpawnEnemies(ContentManager contentManager)
     {
+        enemyFactory = new EnemyFactory(collisionController, contentManager, graphicsDevice);
         foreach(var enemySpawn in room.GetEnemySpawns())
         {
-            // TODO: Spawn the enemy
+            enemies.Add(enemyFactory.CreateEnemy(enemySpawn.EnemyType, enemySpawn.Position));
+        }
+
+        foreach (var enemy in enemies)
+        {
+            enemyCollisions.Add(new EnemyCollision(enemy, collisionController));
         }
     }
 
@@ -128,6 +140,8 @@ public class DungeonScene : IScene
         {
             projectileManager.executeProjectile();
         }
+        enemies.ForEach(enemy => enemy.Update(gameTime));
+        enemyCollisions.ForEach(enemyCollision => enemyCollision.Update());
 
         playerCollision.Update();
     }

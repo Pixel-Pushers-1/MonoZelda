@@ -4,7 +4,7 @@ namespace MonoZelda.Enemies.StalfosFolder
 {
     public class StalfosStateMachine
     {
-        public enum Direction { Left, Right, Up, Down }
+        public enum Direction { Left, Right, Up, Down, None }
 
         private Direction stalfosDirection;
 
@@ -13,33 +13,21 @@ namespace MonoZelda.Enemies.StalfosFolder
             stalfosDirection = newDirection;
         }
 
-        public Point Update(Point position, GraphicsDeviceManager graphics)
+        public Point Update(Point position)
         {
             switch (stalfosDirection)
             {
                 case Direction.Left:
-                    if (position.X >= 0 + 64)
-                    {
-                        position.X -= 1;
-                    }
+                    position.X -= 1;
                     break;
                 case Direction.Right:
-                    if (position.X <= graphics.PreferredBackBufferWidth - 64)
-                    {
-                        position.X += 1;
-                    }
+                    position.X += 1;
                     break;
                 case Direction.Up:
-                    if (position.Y >= 0 + 32)
-                    {
-                        position.Y -= 1;
-                    }
+                    position.Y -= 1;
                     break;
                 case Direction.Down:
-                    if (position.Y <= graphics.PreferredBackBufferHeight - 32)
-                    {
-                        position.Y += 1;
-                    }
+                    position.Y += 1;
                     break;
             }
             return position;

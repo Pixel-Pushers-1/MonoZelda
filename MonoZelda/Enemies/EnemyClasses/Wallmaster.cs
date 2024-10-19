@@ -1,8 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoZelda.Enemies.WallmasterFolder;
 using MonoZelda.Sprites;
 using System;
+using MonoZelda.Collision;
+using MonoZelda.Controllers;
 
-namespace MonoZelda.Enemies.WallmasterFolder
+namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Wallmaster : IEnemy
     {
@@ -28,6 +31,9 @@ namespace MonoZelda.Enemies.WallmasterFolder
             pos = new(spawnX, spawnY);
         }
 
+        public Point Pos { get; set; }
+        public Collidable EnemyHitbox { get; set; }
+
         public void SetOgPos(GameTime gameTime)
         {
             pos.X = spawnX;
@@ -36,6 +42,11 @@ namespace MonoZelda.Enemies.WallmasterFolder
             wallmasterSpriteDict.SetSprite("cloud");
             spawning = true;
             startTime = gameTime.TotalGameTime.TotalSeconds;
+        }
+
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        {
+            throw new NotImplementedException();
         }
 
         public void DisableProjectile()

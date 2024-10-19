@@ -1,9 +1,12 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using MonoZelda.Collision;
+using MonoZelda.Controllers;
+using MonoZelda.Enemies.GoriyaFolder;
 using MonoZelda.Sprites;
 
-namespace MonoZelda.Enemies.GoriyaFolder
+namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Goriya : IEnemy
     {
@@ -25,7 +28,7 @@ namespace MonoZelda.Enemies.GoriyaFolder
         public Goriya(SpriteDict spriteDict, GraphicsDeviceManager graphics, ContentManager contentManager)
         {
             this.graphics = graphics;
-            this.goriyaSpriteDict = spriteDict;
+            goriyaSpriteDict = spriteDict;
             stateMachine = new GoriyaStateMachine();
             spawnX = 3 * graphics.PreferredBackBufferWidth / 5;
             spawnY = 3 * graphics.PreferredBackBufferHeight / 5;
@@ -34,6 +37,9 @@ namespace MonoZelda.Enemies.GoriyaFolder
             boomerang.BoomerangSpriteDict.Enabled = false;
         }
 
+
+        public Point Pos { get; set; }
+        public Collidable EnemyHitbox { get; set; }
 
         public void SetOgPos(GameTime gameTime) //sets to spawn position (eventually could be used for re-entering rooms)
         {
@@ -44,6 +50,11 @@ namespace MonoZelda.Enemies.GoriyaFolder
             spawning = true;
             attackDelay = gameTime.TotalGameTime.TotalSeconds;
             startTime = gameTime.TotalGameTime.TotalSeconds;
+        }
+
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        {
+            throw new NotImplementedException();
         }
 
         public void DisableProjectile()
@@ -74,7 +85,7 @@ namespace MonoZelda.Enemies.GoriyaFolder
         public void Attack(GameTime gameTime)
         {
             boomerang.BoomerangSpriteDict.Enabled = true;
-            boomerang.Update(gameTime,direction,attackDelay);
+            boomerang.Update(gameTime, direction, attackDelay);
             if (gameTime.TotalGameTime.TotalSeconds >= attackDelay + 5)
             {
                 attackDelay = gameTime.TotalGameTime.TotalSeconds;

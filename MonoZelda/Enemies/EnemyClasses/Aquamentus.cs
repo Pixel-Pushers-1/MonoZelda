@@ -3,8 +3,11 @@ using MonoZelda.Sprites;
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
+using MonoZelda.Collision;
+using MonoZelda.Controllers;
+using MonoZelda.Enemies.AquamentusFolder;
 
-namespace MonoZelda.Enemies.AquamentusFolder
+namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Aquamentus : IEnemy
     {
@@ -40,6 +43,9 @@ namespace MonoZelda.Enemies.AquamentusFolder
 
         }
 
+        public Point Pos { get; set; }
+        public Collidable EnemyHitbox { get; set; }
+
         public void SetOgPos(GameTime gameTime)
         {
             pos.X = spawnX;
@@ -48,6 +54,11 @@ namespace MonoZelda.Enemies.AquamentusFolder
             aquamentusSpriteDict.SetSprite("cloud");
             spawning = true;
             startTime = gameTime.TotalGameTime.TotalSeconds;
+        }
+
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        {
+            throw new NotImplementedException();
         }
 
         public void DisableProjectile()
