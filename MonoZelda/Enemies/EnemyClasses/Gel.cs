@@ -1,47 +1,56 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using MonoZelda.Collision;
+using MonoZelda.Controllers;
+using MonoZelda.Enemies.GelFolder;
 using MonoZelda.Sprites;
 
-namespace MonoZelda.Enemies.ZolFolder
+namespace MonoZelda.Enemies.EnemyClasses
 {
-    public class Zol : IEnemy
+    public class Gel : IEnemy
     {
-        private readonly ZolStateMachine stateMachine;
-        private Point pos;
+        private readonly GelStateMachine stateMachine;
+        private Point pos; // will change later
         private readonly Random rnd = new();
-        private readonly SpriteDict zolSpriteDict;
-        private ZolStateMachine.Direction direction = ZolStateMachine.Direction.Left;
+        private readonly SpriteDict gelSpriteDict;
+        private GelStateMachine.Direction direction = GelStateMachine.Direction.Left;
         private readonly GraphicsDeviceManager graphics;
         private readonly int spawnX;
         private readonly int spawnY;
         private bool spawning;
 
         private double startTime = 0;
+        private int jumpCount;
         private bool readyToJump = true;
 
-        public Zol(SpriteDict spriteDict, GraphicsDeviceManager graphics)
+        public Gel(SpriteDict spriteDict, GraphicsDeviceManager graphics)
         {
             this.graphics = graphics;
-            this.zolSpriteDict = spriteDict;
-            stateMachine = new ZolStateMachine();
+            gelSpriteDict = spriteDict;
+            stateMachine = new GelStateMachine();
+            jumpCount = rnd.Next(1, 4);
             spawnX = 3 * graphics.PreferredBackBufferWidth / 5;
             spawnY = 3 * graphics.PreferredBackBufferHeight / 5;
             pos = new(spawnX, spawnY);
         }
 
 
+        public Point Pos { get; set; }
+        public Collidable EnemyHitbox { get; set; }
+
         public void SetOgPos(GameTime gameTime) //sets to spawn position (eventually could be used for re-entering rooms)
         {
             pos.X = spawnX;
             pos.Y = spawnY;
-            zolSpriteDict.Position = pos;
-            zolSpriteDict.SetSprite("cloud");
+            gelSpriteDict.Position = pos;
+            gelSpriteDict.SetSprite("cloud");
             spawning = true;
             startTime = gameTime.TotalGameTime.TotalSeconds;
         }
 
-        public void DisableProjectile()
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
+            throw new NotImplementedException();
         }
 
         public void ChangeDirection()
@@ -57,9 +66,9 @@ namespace MonoZelda.Enemies.ZolFolder
                 if (gameTime.TotalGameTime.TotalSeconds >= startTime + 0.3)
                 {
                     startTime = gameTime.TotalGameTime.TotalSeconds;
-                    spawning = false;
                     readyToJump = true;
-                    zolSpriteDict.SetSprite("zol_green");
+                    spawning = false;
+                    gelSpriteDict.SetSprite("gel_turquoise");
                 }
             }
             else if (readyToJump)
@@ -67,37 +76,41 @@ namespace MonoZelda.Enemies.ZolFolder
                 switch (rnd.Next(1, 5))
                 {
                     case 1:
-                        direction = ZolStateMachine.Direction.Left;
+                        direction = GelStateMachine.Direction.Left;
                         break;
                     case 2:
-                        direction = ZolStateMachine.Direction.Right;
+                        direction = GelStateMachine.Direction.Right;
                         break;
                     case 3:
-                        direction = ZolStateMachine.Direction.Up;
+                        direction = GelStateMachine.Direction.Up;
                         break;
                     case 4:
-                        direction = ZolStateMachine.Direction.Down;
+                        direction = GelStateMachine.Direction.Down;
                         break;
                 }
-
+                ChangeDirection();
                 startTime = gameTime.TotalGameTime.TotalSeconds;
                 readyToJump = false;
-                ChangeDirection();
             }
-            else if (gameTime.TotalGameTime.TotalSeconds >= startTime + 1)
+            else if (gameTime.TotalGameTime.TotalSeconds >= startTime + jumpCount)
             {
-                direction = ZolStateMachine.Direction.None;
+                direction = GelStateMachine.Direction.None;
                 ChangeDirection();
-                if (gameTime.TotalGameTime.TotalSeconds >= startTime + 2)
+                if (gameTime.TotalGameTime.TotalSeconds >= startTime + jumpCount + 0.75)
                 {
                     readyToJump = true;
+                    jumpCount = rnd.Next(1, 4);
                 }
             }
             else
             {
                 pos = stateMachine.Update(pos, graphics);
-                zolSpriteDict.Position = pos;
+                gelSpriteDict.Position = pos;
             }
+        }
+
+        public void DisableProjectile()
+        {
         }
     }
 }

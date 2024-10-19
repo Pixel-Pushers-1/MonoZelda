@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoZelda.Collision;
+using MonoZelda.Controllers;
 using MonoZelda.Sprites;
 
-namespace MonoZelda.Enemies.OldmanFolder
+namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Oldman : IEnemy
     {
@@ -20,6 +22,10 @@ namespace MonoZelda.Enemies.OldmanFolder
             pos = new(spawnX, spawnY);
 
         }
+
+        public Point Pos { get; set; }
+        public Collidable EnemyHitbox { get; set; }
+
         public void SetOgPos(GameTime gameTime)
         {
             pos.X = spawnX;
@@ -28,6 +34,11 @@ namespace MonoZelda.Enemies.OldmanFolder
             oldmanSpriteDict.SetSprite("cloud");
             spawning = true;
             startTime = gameTime.TotalGameTime.TotalSeconds;
+        }
+
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        {
+            throw new System.NotImplementedException();
         }
 
         public void ChangeDirection()

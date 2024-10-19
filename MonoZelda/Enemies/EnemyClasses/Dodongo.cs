@@ -1,16 +1,19 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using MonoZelda.Enemies.DodongoFolder;
 using MonoZelda.Sprites;
+using System;
+using MonoZelda.Collision;
+using MonoZelda.Controllers;
 
-namespace MonoZelda.Enemies.StalfosFolder
+namespace MonoZelda.Enemies.EnemyClasses
 {
-    public class Stalfos : IEnemy
+    public class Dodongo : IEnemy
     {
-        private readonly StalfosStateMachine stateMachine;
+        private readonly DodongoStateMachine stateMachine;
         private Point pos;
         private readonly Random rnd = new();
-        private SpriteDict stalfosSpriteDict;
-        private StalfosStateMachine.Direction direction = StalfosStateMachine.Direction.Left;
+        private readonly SpriteDict dodongoSpriteDict;
+        private DodongoStateMachine.Direction direction = DodongoStateMachine.Direction.Left;
         private readonly GraphicsDeviceManager graphics;
         private readonly int spawnX;
         private readonly int spawnY;
@@ -18,28 +21,33 @@ namespace MonoZelda.Enemies.StalfosFolder
 
         private double startTime = 0;
 
-        public Stalfos(SpriteDict spriteDict, GraphicsDeviceManager graphics)
+        public Dodongo(SpriteDict spriteDict, GraphicsDeviceManager graphics)
         {
-            stalfosSpriteDict = spriteDict;
-            stateMachine = new StalfosStateMachine();
+            dodongoSpriteDict = spriteDict;
+            stateMachine = new DodongoStateMachine();
             this.graphics = graphics;
             spawnX = 3 * graphics.PreferredBackBufferWidth / 5;
             spawnY = 3 * graphics.PreferredBackBufferHeight / 5;
             pos = new(spawnX, spawnY);
+            spawning = true;
         }
+
+        public Point Pos { get; set; }
+        public Collidable EnemyHitbox { get; set; }
 
         public void SetOgPos(GameTime gameTime)
         {
             pos.X = spawnX;
             pos.Y = spawnY;
-            stalfosSpriteDict.Position = pos;
-            stalfosSpriteDict.SetSprite("cloud");
+            dodongoSpriteDict.Position = pos;
+            dodongoSpriteDict.SetSprite("cloud");
             spawning = true;
             startTime = gameTime.TotalGameTime.TotalSeconds;
         }
 
-        public void DisableProjectile()
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
+            throw new NotImplementedException();
         }
 
         public void ChangeDirection()
@@ -47,16 +55,20 @@ namespace MonoZelda.Enemies.StalfosFolder
             switch (rnd.Next(1, 5))
             {
                 case 1:
-                    direction = StalfosStateMachine.Direction.Left;
+                    direction = DodongoStateMachine.Direction.Left;
+                    dodongoSpriteDict.SetSprite("dodongo_left");
                     break;
                 case 2:
-                    direction = StalfosStateMachine.Direction.Right;
+                    direction = DodongoStateMachine.Direction.Right;
+                    dodongoSpriteDict.SetSprite("dodongo_right");
                     break;
                 case 3:
-                    direction = StalfosStateMachine.Direction.Up;
+                    direction = DodongoStateMachine.Direction.Up;
+                    dodongoSpriteDict.SetSprite("dodongo_up");
                     break;
                 case 4:
-                    direction = StalfosStateMachine.Direction.Down;
+                    direction = DodongoStateMachine.Direction.Down;
+                    dodongoSpriteDict.SetSprite("dodongo_down");
                     break;
             }
             stateMachine.ChangeDirection(direction);
@@ -70,7 +82,7 @@ namespace MonoZelda.Enemies.StalfosFolder
                 {
                     startTime = gameTime.TotalGameTime.TotalSeconds;
                     spawning = false;
-                    stalfosSpriteDict.SetSprite("stalfos");
+                    ChangeDirection();
                 }
             }
             else if (gameTime.TotalGameTime.TotalSeconds >= startTime + 1)
@@ -81,8 +93,12 @@ namespace MonoZelda.Enemies.StalfosFolder
             else
             {
                 pos = stateMachine.Update(pos, graphics);
-                stalfosSpriteDict.Position = pos;
+                dodongoSpriteDict.Position = pos;
             }
+        }
+
+        public void DisableProjectile()
+        {
         }
     }
 }

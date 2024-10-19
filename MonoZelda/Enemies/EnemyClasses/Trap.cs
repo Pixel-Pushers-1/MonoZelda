@@ -1,7 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoZelda.Collision;
+using MonoZelda.Controllers;
+using MonoZelda.Enemies.TrapFolder;
 using MonoZelda.Sprites;
 
-namespace MonoZelda.Enemies.TrapFolder
+namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Trap : IEnemy
     {
@@ -26,8 +29,11 @@ namespace MonoZelda.Enemies.TrapFolder
             direction = attackDirection;
             spawnX = 3 * graphics.PreferredBackBufferWidth / 5;
             spawnY = 3 * graphics.PreferredBackBufferHeight / 5;
-            pos = new(spawnX,spawnY);
+            pos = new(spawnX, spawnY);
         }
+
+        public Point Pos { get; set; }
+        public Collidable EnemyHitbox { get; set; }
 
         public void SetOgPos(GameTime gameTime)
         {
@@ -37,6 +43,11 @@ namespace MonoZelda.Enemies.TrapFolder
             trapSpriteDict.Position = pos;
             spawning = true;
             startTime = gameTime.TotalGameTime.TotalSeconds;
+        }
+
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        {
+            throw new System.NotImplementedException();
         }
 
         public void DisableProjectile()
@@ -69,7 +80,8 @@ namespace MonoZelda.Enemies.TrapFolder
             {
                 direction = TrapStateMachine.Direction.Right;
                 stateMachine.ChangeSpeed(1);
-            }else if (pos.X >= spawnX)
+            }
+            else if (pos.X >= spawnX)
             {
                 direction = TrapStateMachine.Direction.Left;
                 stateMachine.ChangeSpeed(3);

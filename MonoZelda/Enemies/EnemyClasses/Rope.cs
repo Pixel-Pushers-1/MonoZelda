@@ -1,8 +1,11 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using MonoZelda.Collision;
+using MonoZelda.Controllers;
+using MonoZelda.Enemies.RopeFolder;
 using MonoZelda.Sprites;
 
-namespace MonoZelda.Enemies.RopeFolder
+namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Rope : IEnemy
     {
@@ -28,6 +31,9 @@ namespace MonoZelda.Enemies.RopeFolder
             pos = new(spawnX, spawnY);
         }
 
+        public Point Pos { get; set; }
+        public Collidable EnemyHitbox { get; set; }
+
         public void SetOgPos(GameTime gameTime)
         {
             pos.X = spawnX;
@@ -36,6 +42,11 @@ namespace MonoZelda.Enemies.RopeFolder
             ropeSpriteDict.SetSprite("cloud");
             spawning = true;
             startTime = gameTime.TotalGameTime.TotalSeconds;
+        }
+
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        {
+            throw new NotImplementedException();
         }
 
         public void ChangeDirection()
