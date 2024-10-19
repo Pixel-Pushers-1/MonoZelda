@@ -2,19 +2,18 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
-using MonoZelda.Enemies.KeeseFolder;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Keese : IEnemy
     {
-        private readonly KeeseStateMachine stateMachine;
+        private readonly DiagonalEnemyStateMachine stateMachine;
         private readonly Random rnd = new();
         private Point pos;
         private SpriteDict keeseSpriteDict;
-        private KeeseStateMachine.VertDirection vertDirection = KeeseStateMachine.VertDirection.None;
-        private KeeseStateMachine.HorDirection horDirection = KeeseStateMachine.HorDirection.None;
+        private DiagonalEnemyStateMachine.VertDirection vertDirection = DiagonalEnemyStateMachine.VertDirection.None;
+        private DiagonalEnemyStateMachine.HorDirection horDirection = DiagonalEnemyStateMachine.HorDirection.None;
         private readonly GraphicsDeviceManager graphics;
         private readonly int spawnX;
         private readonly int spawnY;
@@ -25,7 +24,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         public Keese(SpriteDict spriteDict, GraphicsDeviceManager graphics)
         {
             this.graphics = graphics;
-            stateMachine = new KeeseStateMachine();
+            stateMachine = new DiagonalEnemyStateMachine();
             keeseSpriteDict = spriteDict;
             keeseSpriteDict.SetSprite("keese_blue");
             spawnX = 3 * graphics.PreferredBackBufferWidth / 5;
@@ -63,13 +62,13 @@ namespace MonoZelda.Enemies.EnemyClasses
             switch (rnd.Next(1, 4))
             {
                 case 1:
-                    horDirection = KeeseStateMachine.HorDirection.Left;
+                    horDirection = DiagonalEnemyStateMachine.HorDirection.Left;
                     break;
                 case 2:
-                    horDirection = KeeseStateMachine.HorDirection.Right;
+                    horDirection = DiagonalEnemyStateMachine.HorDirection.Right;
                     break;
                 case 3:
-                    horDirection = KeeseStateMachine.HorDirection.None;
+                    horDirection = DiagonalEnemyStateMachine.HorDirection.None;
                     UpdateVertDirection();
                     break;
             }
@@ -80,13 +79,13 @@ namespace MonoZelda.Enemies.EnemyClasses
             switch (rnd.Next(1, 4))
             {
                 case 1:
-                    vertDirection = KeeseStateMachine.VertDirection.Up;
+                    vertDirection = DiagonalEnemyStateMachine.VertDirection.Up;
                     break;
                 case 2:
-                    vertDirection = KeeseStateMachine.VertDirection.Down;
+                    vertDirection = DiagonalEnemyStateMachine.VertDirection.Down;
                     break;
                 case 3:
-                    vertDirection = KeeseStateMachine.VertDirection.None;
+                    vertDirection = DiagonalEnemyStateMachine.VertDirection.None;
                     UpdateHorDirection();
                     break;
             }

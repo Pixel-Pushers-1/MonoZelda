@@ -2,18 +2,17 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
-using MonoZelda.Enemies.GelFolder;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Gel : IEnemy
     {
-        private readonly GelStateMachine stateMachine;
+        private readonly CardinalEnemyStateMachine stateMachine;
         private Point pos; // will change later
         private readonly Random rnd = new();
         private readonly SpriteDict gelSpriteDict;
-        private GelStateMachine.Direction direction = GelStateMachine.Direction.Left;
+        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.Left;
         private readonly GraphicsDeviceManager graphics;
         private readonly int spawnX;
         private readonly int spawnY;
@@ -27,7 +26,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
             this.graphics = graphics;
             gelSpriteDict = spriteDict;
-            stateMachine = new GelStateMachine();
+            stateMachine = new CardinalEnemyStateMachine();
             jumpCount = rnd.Next(1, 4);
             spawnX = 3 * graphics.PreferredBackBufferWidth / 5;
             spawnY = 3 * graphics.PreferredBackBufferHeight / 5;
@@ -76,16 +75,16 @@ namespace MonoZelda.Enemies.EnemyClasses
                 switch (rnd.Next(1, 5))
                 {
                     case 1:
-                        direction = GelStateMachine.Direction.Left;
+                        direction = CardinalEnemyStateMachine.Direction.Left;
                         break;
-                    case 2:
-                        direction = GelStateMachine.Direction.Right;
+                    case 2: 
+                        direction = CardinalEnemyStateMachine.Direction.Right;
                         break;
                     case 3:
-                        direction = GelStateMachine.Direction.Up;
+                        direction = CardinalEnemyStateMachine.Direction.Up;
                         break;
                     case 4:
-                        direction = GelStateMachine.Direction.Down;
+                        direction = CardinalEnemyStateMachine.Direction.Down;
                         break;
                 }
                 ChangeDirection();
@@ -94,7 +93,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
             else if (gameTime.TotalGameTime.TotalSeconds >= startTime + jumpCount)
             {
-                direction = GelStateMachine.Direction.None;
+                direction = CardinalEnemyStateMachine.Direction.None;
                 ChangeDirection();
                 if (gameTime.TotalGameTime.TotalSeconds >= startTime + jumpCount + 0.75)
                 {
@@ -104,7 +103,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
             else
             {
-                pos = stateMachine.Update(pos, graphics);
+                pos = stateMachine.Update(pos);
                 gelSpriteDict.Position = pos;
             }
         }

@@ -2,18 +2,17 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
-using MonoZelda.Enemies.RopeFolder;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Rope : IEnemy
     {
-        private readonly RopeStateMachine stateMachine;
+        private readonly CardinalEnemyStateMachine stateMachine;
         private Point pos;
         private readonly Random rnd = new();
         private readonly SpriteDict ropeSpriteDict;
-        private RopeStateMachine.Direction direction = RopeStateMachine.Direction.Left;
+        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.Left;
         private readonly GraphicsDeviceManager graphics;
         private readonly int spawnX;
         private readonly int spawnY;
@@ -24,7 +23,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         public Rope(SpriteDict spriteDict, GraphicsDeviceManager graphics)
         {
             ropeSpriteDict = spriteDict;
-            stateMachine = new RopeStateMachine();
+            stateMachine = new CardinalEnemyStateMachine();
             this.graphics = graphics;
             spawnX = 3 * graphics.PreferredBackBufferWidth / 5;
             spawnY = 3 * graphics.PreferredBackBufferHeight / 5;
@@ -56,10 +55,10 @@ namespace MonoZelda.Enemies.EnemyClasses
                 switch (rnd.Next(1, 3))
                 {
                     case 1:
-                        direction = RopeStateMachine.Direction.Up;
+                        direction = CardinalEnemyStateMachine.Direction.Up;
                         break;
                     case 2:
-                        direction = RopeStateMachine.Direction.Down;
+                        direction = CardinalEnemyStateMachine.Direction.Down;
                         break;
                 }
             }
@@ -68,11 +67,11 @@ namespace MonoZelda.Enemies.EnemyClasses
                 switch (rnd.Next(1, 3))
                 {
                     case 1:
-                        direction = RopeStateMachine.Direction.Left;
+                        direction = CardinalEnemyStateMachine.Direction.Left;
                         ropeSpriteDict.SetSprite("rope_left");
                         break;
                     case 2:
-                        direction = RopeStateMachine.Direction.Right;
+                        direction = CardinalEnemyStateMachine.Direction.Right;
                         ropeSpriteDict.SetSprite("rope_right");
                         break;
                 }
@@ -88,7 +87,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 {
                     startTime = gameTime.TotalGameTime.TotalSeconds;
                     spawning = false;
-                    direction = RopeStateMachine.Direction.Left;
+                    direction = CardinalEnemyStateMachine.Direction.Left;
                     ropeSpriteDict.SetSprite("rope_left");
                     ChangeDirection();
                 }
@@ -96,7 +95,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             else
             {
                 ChangeDirection();
-                pos = stateMachine.Update(pos, graphics);
+                pos = stateMachine.Update(pos);
                 ropeSpriteDict.Position = pos;
             }
         }

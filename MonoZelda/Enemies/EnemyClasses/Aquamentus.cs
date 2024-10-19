@@ -5,13 +5,13 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
-using MonoZelda.Enemies.AquamentusFolder;
+using MonoZelda.Enemies.EnemyProjectiles;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Aquamentus : IEnemy
     {
-        private readonly AquamentusStateMachine stateMachine;
+        private readonly CardinalEnemyStateMachine stateMachine;
         private Point pos;
         private readonly Random rnd = new();
         private readonly SpriteDict aquamentusSpriteDict;
@@ -19,6 +19,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         private readonly int spawnX;
         private readonly int spawnY;
         private bool spawning;
+        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.Left;
 
         private List<AquamentusFireball> fireballs = new();
         private int midAngle = 180;
@@ -30,7 +31,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         public Aquamentus(SpriteDict spriteDict, GraphicsDeviceManager graphics, ContentManager contentManager)
         {
             aquamentusSpriteDict = spriteDict;
-            stateMachine = new AquamentusStateMachine();
+            stateMachine = new CardinalEnemyStateMachine();
             this.graphics = graphics;
             spawnX = 3 * graphics.PreferredBackBufferWidth / 5;
             spawnY = 3 * graphics.PreferredBackBufferHeight / 5;
@@ -69,7 +70,15 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void ChangeDirection()
         {
-            stateMachine.ChangeDirection();
+            switch (direction)
+            {
+                case CardinalEnemyStateMachine.Direction.Left:
+                    stateMachine.ChangeDirection(CardinalEnemyStateMachine.Direction.Right);
+                    break;
+                case CardinalEnemyStateMachine.Direction.Right:
+                    stateMachine.ChangeDirection(CardinalEnemyStateMachine.Direction.Left);
+                    break;
+            }
         }
 
         public void Attack(GameTime gameTime)

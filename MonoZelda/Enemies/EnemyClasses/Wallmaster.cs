@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using MonoZelda.Enemies.WallmasterFolder;
 using MonoZelda.Sprites;
 using System;
 using MonoZelda.Collision;
@@ -9,11 +8,11 @@ namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Wallmaster : IEnemy
     {
-        private readonly WallmasterStateMachine stateMachine;
+        private readonly CardinalEnemyStateMachine stateMachine;
         private Point pos;
         private readonly Random rnd = new();
         private SpriteDict wallmasterSpriteDict;
-        private WallmasterStateMachine.Direction direction = WallmasterStateMachine.Direction.Left;
+        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.Left;
         private readonly GraphicsDeviceManager graphics;
         private readonly int spawnX;
         private readonly int spawnY;
@@ -24,7 +23,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         public Wallmaster(SpriteDict spriteDict, GraphicsDeviceManager graphics)
         {
             wallmasterSpriteDict = spriteDict;
-            stateMachine = new WallmasterStateMachine();
+            stateMachine = new CardinalEnemyStateMachine();
             this.graphics = graphics;
             spawnX = 3 * graphics.PreferredBackBufferWidth / 5;
             spawnY = 3 * graphics.PreferredBackBufferHeight / 5;
@@ -58,16 +57,16 @@ namespace MonoZelda.Enemies.EnemyClasses
             switch (rnd.Next(1, 5))
             {
                 case 1:
-                    direction = WallmasterStateMachine.Direction.Left;
+                    direction = CardinalEnemyStateMachine.Direction.Left;
                     break;
                 case 2:
-                    direction = WallmasterStateMachine.Direction.Right;
+                    direction = CardinalEnemyStateMachine.Direction.Right;
                     break;
                 case 3:
-                    direction = WallmasterStateMachine.Direction.Up;
+                    direction = CardinalEnemyStateMachine.Direction.Up;
                     break;
                 case 4:
-                    direction = WallmasterStateMachine.Direction.Down;
+                    direction = CardinalEnemyStateMachine.Direction.Down;
                     break;
             }
             stateMachine.ChangeDirection(direction);
@@ -92,7 +91,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
             else
             {
-                pos = stateMachine.Update(pos, graphics);
+                pos = stateMachine.Update(pos);
                 wallmasterSpriteDict.Position = pos;
             }
         }
