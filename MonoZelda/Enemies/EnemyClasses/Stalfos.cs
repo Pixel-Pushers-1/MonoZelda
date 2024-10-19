@@ -3,18 +3,17 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
-using MonoZelda.Enemies.StalfosFolder;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Stalfos : IEnemy
     {
-        private StalfosStateMachine stateMachine;
+        private CardinalEnemyStateMachine stateMachine;
         public Point Pos { get; set; }
         private readonly Random rnd = new();
         private SpriteDict stalfosSpriteDict;
-        private StalfosStateMachine.Direction direction = StalfosStateMachine.Direction.Left;
+        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.Left;
         private GraphicsDevice graphicsDevice;
         private bool spawning;
         public Collidable EnemyHitbox { get; set; }
@@ -26,13 +25,6 @@ namespace MonoZelda.Enemies.EnemyClasses
             this.graphicsDevice = graphicsDevice;
         }
 
-        public void SetOgPos(GameTime gameTime)
-        {
-            stalfosSpriteDict.SetSprite("cloud");
-            spawning = true;
-            startTime = gameTime.TotalGameTime.TotalSeconds;
-        }
-
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
             EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 60, 60), graphicsDevice, CollidableType.Item);
@@ -42,7 +34,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             enemyDict.SetSprite("stalfos");
             stalfosSpriteDict = enemyDict;
             Pos = spawnPosition;
-            stateMachine = new StalfosStateMachine();
+            stateMachine = new CardinalEnemyStateMachine();
         }
 
         public void DisableProjectile()
@@ -54,16 +46,16 @@ namespace MonoZelda.Enemies.EnemyClasses
             switch (rnd.Next(1, 5))
             {
                 case 1:
-                    direction = StalfosStateMachine.Direction.Left;
+                    direction = CardinalEnemyStateMachine.Direction.Left;
                     break;
                 case 2:
-                    direction = StalfosStateMachine.Direction.Right;
+                    direction = CardinalEnemyStateMachine.Direction.Right;
                     break;
                 case 3:
-                    direction = StalfosStateMachine.Direction.Up;
+                    direction = CardinalEnemyStateMachine.Direction.Up;
                     break;
                 case 4:
-                    direction = StalfosStateMachine.Direction.Down;
+                    direction = CardinalEnemyStateMachine.Direction.Down;
                     break;
             }
             stateMachine.ChangeDirection(direction);

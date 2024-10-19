@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using MonoZelda.Enemies.DodongoFolder;
 using MonoZelda.Sprites;
 using System;
 using MonoZelda.Collision;
@@ -9,11 +8,11 @@ namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Dodongo : IEnemy
     {
-        private readonly DodongoStateMachine stateMachine;
+        private readonly CardinalEnemyStateMachine stateMachine;
         private Point pos;
         private readonly Random rnd = new();
         private readonly SpriteDict dodongoSpriteDict;
-        private DodongoStateMachine.Direction direction = DodongoStateMachine.Direction.Left;
+        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.Left;
         private readonly GraphicsDeviceManager graphics;
         private readonly int spawnX;
         private readonly int spawnY;
@@ -24,7 +23,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         public Dodongo(SpriteDict spriteDict, GraphicsDeviceManager graphics)
         {
             dodongoSpriteDict = spriteDict;
-            stateMachine = new DodongoStateMachine();
+            stateMachine = new CardinalEnemyStateMachine();
             this.graphics = graphics;
             spawnX = 3 * graphics.PreferredBackBufferWidth / 5;
             spawnY = 3 * graphics.PreferredBackBufferHeight / 5;
@@ -55,19 +54,19 @@ namespace MonoZelda.Enemies.EnemyClasses
             switch (rnd.Next(1, 5))
             {
                 case 1:
-                    direction = DodongoStateMachine.Direction.Left;
+                    direction = CardinalEnemyStateMachine.Direction.Left;
                     dodongoSpriteDict.SetSprite("dodongo_left");
                     break;
                 case 2:
-                    direction = DodongoStateMachine.Direction.Right;
+                    direction = CardinalEnemyStateMachine.Direction.Right;
                     dodongoSpriteDict.SetSprite("dodongo_right");
                     break;
                 case 3:
-                    direction = DodongoStateMachine.Direction.Up;
+                    direction = CardinalEnemyStateMachine.Direction.Up;
                     dodongoSpriteDict.SetSprite("dodongo_up");
                     break;
                 case 4:
-                    direction = DodongoStateMachine.Direction.Down;
+                    direction = CardinalEnemyStateMachine.Direction.Down;
                     dodongoSpriteDict.SetSprite("dodongo_down");
                     break;
             }
@@ -92,7 +91,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
             else
             {
-                pos = stateMachine.Update(pos, graphics);
+                pos = stateMachine.Update(pos);
                 dodongoSpriteDict.Position = pos;
             }
         }

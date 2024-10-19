@@ -11,8 +11,6 @@ namespace MonoZelda.Enemies
 
         public Collidable EnemyHitbox { get; set; }
 
-        public void SetOgPos(GameTime gameTime);
-
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController);
 
         public void DisableProjectile();

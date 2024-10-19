@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 
-namespace MonoZelda.Enemies.AquamentusFolder
+namespace MonoZelda.Enemies.EnemyProjectiles
 {
     public class AquamentusFireball
     {

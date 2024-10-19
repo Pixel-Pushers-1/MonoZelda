@@ -23,39 +23,40 @@ namespace MonoZelda.Enemies.GoriyaFolder
             pos = newPos;
         }
 
-        public void Update(GameTime gameTime, GoriyaStateMachine.Direction attackDirection, double attackTime)
+        public void Update(GameTime gameTime, CardinalEnemyStateMachine.Direction attackDirection, double attackTime)
         {
             if (gameTime.TotalGameTime.TotalSeconds <= attackTime + 4)
             {
                 switch (attackDirection)
                 {
-                    case GoriyaStateMachine.Direction.Left:
+                    case CardinalEnemyStateMachine.Direction.Left:
                         pos.X -= speed;
                         break;
-                    case GoriyaStateMachine.Direction.Right:
+                    case CardinalEnemyStateMachine.Direction.Right:
                         pos.X += speed;
                         break;
-                    case GoriyaStateMachine.Direction.Up:
+                    case CardinalEnemyStateMachine.Direction.Up:
                         pos.Y -= speed;
                         break;
-                    case GoriyaStateMachine.Direction.Down:
+                    case CardinalEnemyStateMachine.Direction.Down:
                         pos.Y += speed;
                         break;
                 }
-            }else if (gameTime.TotalGameTime.TotalSeconds <= attackTime + 5)
+            }
+            else if (gameTime.TotalGameTime.TotalSeconds <= attackTime + 5)
             {
                 switch (attackDirection)
                 {
-                    case GoriyaStateMachine.Direction.Left:
+                    case CardinalEnemyStateMachine.Direction.Left:
                         pos.X += speed;
                         break;
-                    case GoriyaStateMachine.Direction.Right:
+                    case CardinalEnemyStateMachine.Direction.Right:
                         pos.X -= speed;
                         break;
-                    case GoriyaStateMachine.Direction.Up:
+                    case CardinalEnemyStateMachine.Direction.Up:
                         pos.Y += speed;
                         break;
-                    case GoriyaStateMachine.Direction.Down:
+                    case CardinalEnemyStateMachine.Direction.Down:
                         pos.Y -= speed;
                         break;
                 }

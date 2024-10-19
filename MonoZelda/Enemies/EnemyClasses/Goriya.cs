@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Enemies.GoriyaFolder;
@@ -10,14 +11,14 @@ namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Goriya : IEnemy
     {
-        private readonly GoriyaStateMachine stateMachine;
+        public Point Pos { get; set; }
+        public Collidable EnemyHitbox { get; set; }
+        private CardinalEnemyStateMachine stateMachine;
         private Point pos;
         private readonly Random rnd = new();
         private SpriteDict goriyaSpriteDict;
-        private GoriyaStateMachine.Direction direction = GoriyaStateMachine.Direction.Left;
-        private readonly GraphicsDeviceManager graphics;
-        private readonly int spawnX;
-        private readonly int spawnY;
+        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.Left;
+        private readonly GraphicsDevice graphicsDevice;
         private bool spawning;
 
         private GoriyaBoomerang boomerang;
@@ -25,36 +26,22 @@ namespace MonoZelda.Enemies.EnemyClasses
         private double startTime;
         private double attackDelay;
 
-        public Goriya(SpriteDict spriteDict, GraphicsDeviceManager graphics, ContentManager contentManager)
+        public Goriya(GraphicsDevice graphicsDevice)
         {
-            this.graphics = graphics;
-            goriyaSpriteDict = spriteDict;
-            stateMachine = new GoriyaStateMachine();
-            spawnX = 3 * graphics.PreferredBackBufferWidth / 5;
-            spawnY = 3 * graphics.PreferredBackBufferHeight / 5;
-            pos = new(spawnX, spawnY);
-            boomerang = new GoriyaBoomerang(pos, contentManager);
+            this.graphicsDevice = graphicsDevice;
             boomerang.BoomerangSpriteDict.Enabled = false;
-        }
-
-
-        public Point Pos { get; set; }
-        public Collidable EnemyHitbox { get; set; }
-
-        public void SetOgPos(GameTime gameTime) //sets to spawn position (eventually could be used for re-entering rooms)
-        {
-            pos.X = spawnX;
-            pos.Y = spawnY;
-            goriyaSpriteDict.Position = pos;
-            goriyaSpriteDict.SetSprite("cloud");
-            spawning = true;
-            attackDelay = gameTime.TotalGameTime.TotalSeconds;
-            startTime = gameTime.TotalGameTime.TotalSeconds;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
-            throw new NotImplementedException();
+            EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 60, 60), graphicsDevice, CollidableType.Item);
+            collisionController.AddCollidable(EnemyHitbox);
+            EnemyHitbox.setSpriteDict(enemyDict);
+            enemyDict.Position = spawnPosition;
+            enemyDict.SetSprite("goriya_red_left");
+            goriyaSpriteDict = enemyDict;
+            Pos = spawnPosition;
+            stateMachine = new CardinalEnemyStateMachine();
         }
 
         public void DisableProjectile()
@@ -67,16 +54,20 @@ namespace MonoZelda.Enemies.EnemyClasses
             switch (rnd.Next(1, 5))
             {
                 case 1:
-                    direction = GoriyaStateMachine.Direction.Left;
+                    direction = CardinalEnemyStateMachine.Direction.Left;
+                    goriyaSpriteDict.SetSprite("goriya_red_left");
                     break;
                 case 2:
-                    direction = GoriyaStateMachine.Direction.Right;
+                    direction = CardinalEnemyStateMachine.Direction.Right;
+                    goriyaSpriteDict.SetSprite("goriya_red_right");
                     break;
                 case 3:
-                    direction = GoriyaStateMachine.Direction.Up;
+                    direction = CardinalEnemyStateMachine.Direction.Up;
+                    goriyaSpriteDict.SetSprite("goriya_red_up");
                     break;
                 case 4:
-                    direction = GoriyaStateMachine.Direction.Down;
+                    direction = CardinalEnemyStateMachine.Direction.Down;
+                    goriyaSpriteDict.SetSprite("goriya_red_down");
                     break;
             }
             stateMachine.ChangeDirection(direction);
@@ -101,7 +92,6 @@ namespace MonoZelda.Enemies.EnemyClasses
                 {
                     startTime = gameTime.TotalGameTime.TotalSeconds;
                     spawning = false;
-                    stateMachine.UpdateSprite(goriyaSpriteDict);
                 }
             }
             else if (gameTime.TotalGameTime.TotalSeconds < attackDelay + 3)
@@ -110,10 +100,9 @@ namespace MonoZelda.Enemies.EnemyClasses
                 {
                     ChangeDirection();
                     startTime = gameTime.TotalGameTime.TotalSeconds;
-                    stateMachine.UpdateSprite(goriyaSpriteDict);
                 }
                 boomerang.Follow(pos);
-                pos = stateMachine.Update(pos, goriyaSpriteDict, graphics);
+                pos = stateMachine.Update(pos);
                 goriyaSpriteDict.Position = pos;
             }
             else

@@ -1,29 +1,28 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
-using MonoZelda.Enemies.TrapFolder;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Trap : IEnemy
     {
-        private readonly TrapStateMachine stateMachine;
+        private readonly CardinalEnemyStateMachine stateMachine;
         private Point pos;
         private readonly SpriteDict trapSpriteDict;
-        private TrapStateMachine.Direction direction;
+        private CardinalEnemyStateMachine.Direction direction;
         private readonly GraphicsDeviceManager graphics;
         private readonly int spawnX;
         private readonly int spawnY;
         private bool spawning;
 
         private double startTime;
-        private readonly TrapStateMachine.Direction attackDirection;
+        private readonly CardinalEnemyStateMachine.Direction attackDirection;
 
-        public Trap(SpriteDict spriteDict, GraphicsDeviceManager graphics, TrapStateMachine.Direction attackDirection)
+        public Trap(SpriteDict spriteDict, GraphicsDeviceManager graphics, CardinalEnemyStateMachine.Direction attackDirection)
         {
             trapSpriteDict = spriteDict;
-            stateMachine = new TrapStateMachine();
+            stateMachine = new CardinalEnemyStateMachine();
             this.graphics = graphics;
             this.attackDirection = attackDirection;
             direction = attackDirection;
@@ -58,16 +57,16 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
             switch (attackDirection)
             {
-                case TrapStateMachine.Direction.Left:
+                case CardinalEnemyStateMachine.Direction.Left:
                     LeftRight();
                     break;
-                case TrapStateMachine.Direction.Right:
+                case CardinalEnemyStateMachine.Direction.Right:
                     RightLeft();
                     break;
-                case TrapStateMachine.Direction.Up:
+                case CardinalEnemyStateMachine.Direction.Up:
                     UpDown();
                     break;
-                case TrapStateMachine.Direction.Down:
+                case CardinalEnemyStateMachine.Direction.Down:
                     DownUp();
                     break;
             }
@@ -78,12 +77,12 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
             if (pos.X <= 0 + 32)
             {
-                direction = TrapStateMachine.Direction.Right;
+                direction = CardinalEnemyStateMachine.Direction.Right;
                 stateMachine.ChangeSpeed(1);
             }
             else if (pos.X >= spawnX)
             {
-                direction = TrapStateMachine.Direction.Left;
+                direction = CardinalEnemyStateMachine.Direction.Left;
                 stateMachine.ChangeSpeed(3);
             }
 
@@ -93,12 +92,12 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
             if (pos.X >= graphics.PreferredBackBufferWidth - 32)
             {
-                direction = TrapStateMachine.Direction.Left;
+                direction = CardinalEnemyStateMachine.Direction.Left;
                 stateMachine.ChangeSpeed(1);
             }
             else if (pos.X <= spawnX)
             {
-                direction = TrapStateMachine.Direction.Right;
+                direction = CardinalEnemyStateMachine.Direction.Right;
                 stateMachine.ChangeSpeed(3);
             }
 
@@ -108,12 +107,12 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
             if (pos.Y <= 0 + 32)
             {
-                direction = TrapStateMachine.Direction.Down;
+                direction = CardinalEnemyStateMachine.Direction.Down;
                 stateMachine.ChangeSpeed(1);
             }
             else if (pos.Y >= spawnY)
             {
-                direction = TrapStateMachine.Direction.Up;
+                direction = CardinalEnemyStateMachine.Direction.Up;
                 stateMachine.ChangeSpeed(3);
             }
         }
@@ -122,12 +121,12 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
             if (pos.Y >= graphics.PreferredBackBufferHeight - 32)
             {
-                direction = TrapStateMachine.Direction.Up;
+                direction = CardinalEnemyStateMachine.Direction.Up;
                 stateMachine.ChangeSpeed(1);
             }
             else if (pos.Y <= spawnY)
             {
-                direction = TrapStateMachine.Direction.Down;
+                direction = CardinalEnemyStateMachine.Direction.Down;
                 stateMachine.ChangeSpeed(3);
             }
         }
@@ -146,7 +145,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             else
             {
                 ChangeDirection();
-                pos = stateMachine.Update(pos, graphics);
+                pos = stateMachine.Update(pos);
                 trapSpriteDict.Position = pos;
             }
         }

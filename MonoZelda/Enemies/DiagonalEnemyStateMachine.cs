@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace MonoZelda.Enemies.KeeseFolder;
+namespace MonoZelda.Enemies;
 
-public class KeeseStateMachine
+public class DiagonalEnemyStateMachine
 {
     public enum HorDirection
     {

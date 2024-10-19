@@ -11,7 +11,6 @@ using MonoZelda.Dungeons;
 using MonoZelda.Items;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Enemies;
-using MonoZelda.Enemies.AquamentusFolder;
 using System.Collections.Generic;
 
 namespace MonoZelda.Scenes;

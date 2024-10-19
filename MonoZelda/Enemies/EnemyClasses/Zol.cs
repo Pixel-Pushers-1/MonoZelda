@@ -2,18 +2,17 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
-using MonoZelda.Enemies.ZolFolder;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Zol : IEnemy
     {
-        private readonly ZolStateMachine stateMachine;
+        private readonly CardinalEnemyStateMachine stateMachine;
         private Point pos;
         private readonly Random rnd = new();
         private readonly SpriteDict zolSpriteDict;
-        private ZolStateMachine.Direction direction = ZolStateMachine.Direction.Left;
+        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.Left;
         private readonly GraphicsDeviceManager graphics;
         private readonly int spawnX;
         private readonly int spawnY;
@@ -26,7 +25,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
             this.graphics = graphics;
             zolSpriteDict = spriteDict;
-            stateMachine = new ZolStateMachine();
+            stateMachine = new CardinalEnemyStateMachine();
             spawnX = 3 * graphics.PreferredBackBufferWidth / 5;
             spawnY = 3 * graphics.PreferredBackBufferHeight / 5;
             pos = new(spawnX, spawnY);
@@ -78,16 +77,16 @@ namespace MonoZelda.Enemies.EnemyClasses
                 switch (rnd.Next(1, 5))
                 {
                     case 1:
-                        direction = ZolStateMachine.Direction.Left;
+                        direction = CardinalEnemyStateMachine.Direction.Left;
                         break;
                     case 2:
-                        direction = ZolStateMachine.Direction.Right;
+                        direction = CardinalEnemyStateMachine.Direction.Right;
                         break;
                     case 3:
-                        direction = ZolStateMachine.Direction.Up;
+                        direction = CardinalEnemyStateMachine.Direction.Up;
                         break;
                     case 4:
-                        direction = ZolStateMachine.Direction.Down;
+                        direction = CardinalEnemyStateMachine.Direction.Down;
                         break;
                 }
 
@@ -97,7 +96,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
             else if (gameTime.TotalGameTime.TotalSeconds >= startTime + 1)
             {
-                direction = ZolStateMachine.Direction.None;
+                direction = CardinalEnemyStateMachine.Direction.None;
                 ChangeDirection();
                 if (gameTime.TotalGameTime.TotalSeconds >= startTime + 2)
                 {
@@ -106,7 +105,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
             else
             {
-                pos = stateMachine.Update(pos, graphics);
+                pos = stateMachine.Update(pos);
                 zolSpriteDict.Position = pos;
             }
         }
