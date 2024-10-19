@@ -14,14 +14,14 @@ namespace MonoZelda.Enemies.EnemyClasses
         public Point Pos { get; set; }
         public Collidable EnemyHitbox { get; set; }
         private CardinalEnemyStateMachine stateMachine;
-        private Point pos;
         private readonly Random rnd = new();
         private SpriteDict goriyaSpriteDict;
         private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.Left;
         private readonly GraphicsDevice graphicsDevice;
         private bool spawning;
 
-        private GoriyaBoomerang boomerang;
+        private IEnemyProjectile projectile;
+        private EnemyProjectileCollision projectileCollision;
 
         private double startTime;
         private double attackDelay;
@@ -29,10 +29,9 @@ namespace MonoZelda.Enemies.EnemyClasses
         public Goriya(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
-            boomerang.BoomerangSpriteDict.Enabled = false;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager)
         {
             EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 60, 60), graphicsDevice, CollidableType.Item);
             collisionController.AddCollidable(EnemyHitbox);
@@ -42,11 +41,12 @@ namespace MonoZelda.Enemies.EnemyClasses
             goriyaSpriteDict = enemyDict;
             Pos = spawnPosition;
             stateMachine = new CardinalEnemyStateMachine();
+            projectile = new GoriyaBoomerang(spawnPosition, contentManager, graphicsDevice, collisionController);
+            projectileCollision = new EnemyProjectileCollision(projectile, collisionController);
         }
 
         public void DisableProjectile()
         {
-            boomerang.BoomerangSpriteDict.Enabled = false;
         }
 
         public void ChangeDirection()
@@ -75,12 +75,12 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Attack(GameTime gameTime)
         {
-            boomerang.BoomerangSpriteDict.Enabled = true;
-            boomerang.Update(gameTime, direction, attackDelay);
+            projectile.ViewProjectile(true);
+            projectile.Update(gameTime, direction, attackDelay);
             if (gameTime.TotalGameTime.TotalSeconds >= attackDelay + 5)
             {
                 attackDelay = gameTime.TotalGameTime.TotalSeconds;
-                boomerang.BoomerangSpriteDict.Enabled = false;
+                projectile.ViewProjectile(false);
             }
         }
 
@@ -101,14 +101,16 @@ namespace MonoZelda.Enemies.EnemyClasses
                     ChangeDirection();
                     startTime = gameTime.TotalGameTime.TotalSeconds;
                 }
-                boomerang.Follow(pos);
-                pos = stateMachine.Update(pos);
-                goriyaSpriteDict.Position = pos;
+                projectile.Follow(Pos);
+                Pos = stateMachine.Update(Pos);
+                goriyaSpriteDict.Position = Pos;
             }
             else
             {
                 Attack(gameTime);
             }
+            projectileCollision.Update();
+
         }
     }
 }

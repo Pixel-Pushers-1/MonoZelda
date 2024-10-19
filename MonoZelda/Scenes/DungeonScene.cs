@@ -27,6 +27,7 @@ public class DungeonScene : IScene
     private EnemyFactory enemyFactory;
     private List<IEnemy> enemies = new();
     private List<EnemyCollision> enemyCollisions = new();
+    private List<EnemyProjectileCollision> enemyProjectileCollisions = new();
     private IDungeonRoom room;
     private string roomName;
 

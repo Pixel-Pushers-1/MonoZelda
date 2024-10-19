@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
@@ -55,6 +56,12 @@ namespace MonoZelda.Enemies.EnemyClasses
                     oldmanSpriteDict.SetSprite("oldman");
                 }
             }
+        }
+
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
+            ContentManager contentManager)
+        {
+            throw new System.NotImplementedException();
         }
 
         public void DisableProjectile()
