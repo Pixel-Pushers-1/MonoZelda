@@ -10,6 +10,9 @@ using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Items;
 using MonoZelda.Commands.GameCommands;
+using MonoZelda.Enemies;
+using System.Collections.Generic;
+using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Commands.CollisionCommands;
 
 namespace MonoZelda.Scenes;
@@ -23,6 +26,11 @@ public class DungeonScene : IScene
     private PlayerCollision playerCollision;
     private CollisionController collisionController;
     private ItemFactory itemFactory;
+    private EnemyFactory enemyFactory;
+    private List<IEnemy> enemies = new();
+    private Dictionary<IEnemy, EnemyCollision> enemyDictionary = new();
+    private List<EnemyCollision> enemyCollisions = new();
+    private List<EnemyProjectileCollision> enemyProjectileCollisions = new();
     private IDungeonRoom room;
     private string roomName;
 
@@ -72,7 +80,7 @@ public class DungeonScene : IScene
         LoadRoomTextures(contentManager);
         CreateStaticColliders();
         SpawnItems(contentManager);
-        SpawnEnemies();
+        SpawnEnemies(contentManager);
     }
 
     private void SpawnItems(ContentManager contentManager)
@@ -85,11 +93,16 @@ public class DungeonScene : IScene
         }
     }
 
-    private void SpawnEnemies()
+    private void SpawnEnemies(ContentManager contentManager)
     {
+        enemyFactory = new EnemyFactory(collisionController, contentManager, graphicsDevice);
         foreach(var enemySpawn in room.GetEnemySpawns())
         {
-            // TODO: Spawn the enemy
+            enemies.Add(enemyFactory.CreateEnemy(enemySpawn.EnemyType, new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32)));
+        }
+        foreach (var enemy in enemies)
+        {
+            enemyDictionary.Add(enemy, new EnemyCollision(enemy, collisionController, enemy.Width, enemy.Height));
         }
     }
 
@@ -129,6 +142,12 @@ public class DungeonScene : IScene
         if(projectileManager.ProjectileFired == true)
         {
             projectileManager.executeProjectile();
+        }
+
+        foreach(KeyValuePair<IEnemy, EnemyCollision> entry in enemyDictionary)
+        {
+            entry.Key.Update(gameTime);
+            entry.Value.Update(entry.Key.Width, entry.Key.Height);
         }
 
         playerCollision.Update();
