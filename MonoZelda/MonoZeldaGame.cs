@@ -73,8 +73,8 @@ public class MonoZeldaGame : Game
     {
         keyboardController.Update(gameTime);
         mouseController.Update(gameTime);
-        collisionController.Update(gameTime);
         scene.Update(gameTime);
+        collisionController.Update(gameTime);
 
         base.Update(gameTime);
     }
