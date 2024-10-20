@@ -183,7 +183,11 @@ public class Player
     {
         get { return playerDirection; }
     }
-
+    public int FrameTimer
+    {
+        get { return frameTimer; }
+        set { frameTimer = value; }
+    }
     public Vector2 GetPlayerPosition()
     {
         return playerPostition;
