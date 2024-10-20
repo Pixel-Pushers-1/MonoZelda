@@ -65,6 +65,8 @@ public class ProjectileManager
         }
         else
         {
+            collisionController.RemoveCollidable(projectileCollidable);
+            projectileCollidable.UnregisterHitbox();
             projectileFired = false;
         }        
     }
