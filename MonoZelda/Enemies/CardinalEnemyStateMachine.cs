@@ -11,7 +11,7 @@ namespace MonoZelda.Enemies
         private int velocity = 1;
 
         public Point currentPosition { get; private set; }
-
+      
         public void ChangeDirection(Direction newDirection)
         {
             direction = newDirection;
