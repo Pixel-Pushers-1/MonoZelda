@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
@@ -9,51 +10,40 @@ namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Keese : IEnemy
     {
-        private readonly DiagonalEnemyStateMachine stateMachine;
+        private  DiagonalEnemyStateMachine stateMachine;
         private readonly Random rnd = new();
-        private Point pos;
+        public Point Pos { get; set; }
+        public Collidable EnemyHitbox { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
         private SpriteDict keeseSpriteDict;
         private DiagonalEnemyStateMachine.VertDirection vertDirection = DiagonalEnemyStateMachine.VertDirection.None;
         private DiagonalEnemyStateMachine.HorDirection horDirection = DiagonalEnemyStateMachine.HorDirection.None;
-        private readonly GraphicsDeviceManager graphics;
-        private readonly int spawnX;
-        private readonly int spawnY;
-        private bool spawning = true;
+        private readonly GraphicsDevice graphicsDevice;
+        private int pixelsMoved;
 
-        private double startTime = 0;
-
-        public Keese(SpriteDict spriteDict, GraphicsDeviceManager graphics)
+        public Keese(GraphicsDevice graphicsDevice)
         {
-            this.graphics = graphics;
+            this.graphicsDevice = graphicsDevice;
+        }
+
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
+            ContentManager contentManager)
+        {
+            EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 60, 60), graphicsDevice, CollidableType.Enemy);
+            collisionController.AddCollidable(EnemyHitbox);
+            EnemyHitbox.setSpriteDict(enemyDict);
+            enemyDict.Position = spawnPosition;
+            enemyDict.SetSprite("cloud");
+            keeseSpriteDict = enemyDict;
+            Pos = spawnPosition;
+            pixelsMoved = 0;
             stateMachine = new DiagonalEnemyStateMachine();
-            keeseSpriteDict = spriteDict;
-            keeseSpriteDict.SetSprite("keese_blue");
-            spawnX = 3 * graphics.PreferredBackBufferWidth / 5;
-            spawnY = 3 * graphics.PreferredBackBufferHeight / 5;
-            pos = new(spawnX, spawnY);
-        }
-
-
-        public Point Pos { get; set; }
-        public Collidable EnemyHitbox { get; set; }
-
-        public void SetOgPos(GameTime gameTime) //sets to spawn position (eventually could be used for re-entering rooms)
-        {
-            pos.X = spawnX;
-            pos.Y = spawnY;
-            keeseSpriteDict.Position = pos;
-            keeseSpriteDict.SetSprite("cloud");
-            spawning = true;
-            startTime = gameTime.TotalGameTime.TotalSeconds;
-        }
-
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
-        {
-            throw new NotImplementedException();
         }
 
         public void ChangeDirection()
         {
+            keeseSpriteDict.SetSprite("keese_blue");
             stateMachine.ChangeHorDirection(horDirection);
             stateMachine.ChangeVertDirection(vertDirection);
         }
@@ -94,39 +84,20 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Update(GameTime gameTime)
         {
-            if (spawning)
+            if (pixelsMoved >= 64)
             {
-                if (gameTime.TotalGameTime.TotalSeconds >= startTime + 0.3)
-                {
-                    startTime = gameTime.TotalGameTime.TotalSeconds;
-                    spawning = false;
-                    keeseSpriteDict.SetSprite("keese_blue");
-                }
-            }
-            else if (gameTime.TotalGameTime.TotalSeconds >= startTime + 1)
-            {
+                pixelsMoved = 0;
+
                 UpdateHorDirection();
                 UpdateVertDirection();
-
                 ChangeDirection();
-                startTime = gameTime.TotalGameTime.TotalSeconds;
             }
             else
             {
-
-                pos = stateMachine.Update(pos, graphics); //gets position updates from state machine
-                keeseSpriteDict.Position = pos; //updates sprite position
+                pixelsMoved++;
+                keeseSpriteDict.Position = Pos;
             }
-        }
-
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            ContentManager contentManager)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DisableProjectile()
-        {
+            Pos = stateMachine.Update(Pos);
         }
     }
 }

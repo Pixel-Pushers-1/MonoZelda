@@ -13,20 +13,19 @@ namespace MonoZelda.Enemies
 {
     public class EnemyCollision
     {
-        private readonly int width;
-        private readonly int height;
+        private int width;
+        private int height;
         private IEnemy enemy;
         private Collidable enemyHitbox;
         private CollisionController collisionController;
 
-        public EnemyCollision(IEnemy enemy, CollisionController collisionController)
+        public EnemyCollision(IEnemy enemy, CollisionController collisionController, int width, int height)
         {
             this.enemy = enemy;
             this.enemyHitbox = enemy.EnemyHitbox;
-            this.width = 64;
-            this.height = 64;
+            this.width = width;
+            this.height = height;
 
-            // Create initial hitbox for the player
             Point enemyPosition = enemy.Pos;
             Rectangle bounds = new Rectangle(
                 (int)enemyPosition.X - width / 2,
@@ -39,12 +38,14 @@ namespace MonoZelda.Enemies
             enemyHitbox.Bounds = bounds;
         }
 
-        public void Update()
+        public void Update(int width, int height)
         {
+            this.width = width;
+            this.height = height;
             UpdateBoundingBox();
         }
 
-        private void UpdateBoundingBox()
+        public void UpdateBoundingBox()
         {
             Point enemyPosition = enemy.Pos;
             Rectangle newBounds = new Rectangle(

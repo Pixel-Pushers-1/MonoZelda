@@ -12,6 +12,7 @@ using MonoZelda.Items;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Enemies;
 using System.Collections.Generic;
+using MonoZelda.Enemies.EnemyProjectiles;
 
 namespace MonoZelda.Scenes;
 
@@ -26,6 +27,7 @@ public class DungeonScene : IScene
     private ItemFactory itemFactory;
     private EnemyFactory enemyFactory;
     private List<IEnemy> enemies = new();
+    private Dictionary<IEnemy, EnemyCollision> enemyDictionary = new();
     private List<EnemyCollision> enemyCollisions = new();
     private List<EnemyProjectileCollision> enemyProjectileCollisions = new();
     private IDungeonRoom room;
@@ -94,12 +96,11 @@ public class DungeonScene : IScene
         enemyFactory = new EnemyFactory(collisionController, contentManager, graphicsDevice);
         foreach(var enemySpawn in room.GetEnemySpawns())
         {
-            enemies.Add(enemyFactory.CreateEnemy(enemySpawn.EnemyType, enemySpawn.Position));
+            enemies.Add(enemyFactory.CreateEnemy(enemySpawn.EnemyType, new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32)));
         }
-
         foreach (var enemy in enemies)
         {
-            enemyCollisions.Add(new EnemyCollision(enemy, collisionController));
+            enemyDictionary.Add(enemy, new EnemyCollision(enemy, collisionController, enemy.Width, enemy.Height));
         }
     }
 
@@ -140,8 +141,12 @@ public class DungeonScene : IScene
         {
             projectileManager.executeProjectile();
         }
-        enemies.ForEach(enemy => enemy.Update(gameTime));
-        enemyCollisions.ForEach(enemyCollision => enemyCollision.Update());
+
+        foreach(KeyValuePair<IEnemy, EnemyCollision> entry in enemyDictionary)
+        {
+            entry.Key.Update(gameTime);
+            entry.Value.Update(entry.Key.Width, entry.Key.Height);
+        }
 
         playerCollision.Update();
     }

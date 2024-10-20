@@ -14,16 +14,20 @@ namespace MonoZelda.Enemies.EnemyClasses
         public Point Pos { get; set; }
         private readonly Random rnd = new();
         private SpriteDict stalfosSpriteDict;
-        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.Left;
+        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.None;
         private GraphicsDevice graphicsDevice;
-        private bool spawning;
+        private int pixelsMoved;
         public Collidable EnemyHitbox { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
 
-        private double startTime = 0;
+        private int tileSize = 64;
 
         public Stalfos(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
+            Width = 64;
+            Height = 64;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager)
@@ -32,16 +36,12 @@ namespace MonoZelda.Enemies.EnemyClasses
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
-            enemyDict.SetSprite("stalfos");
+            enemyDict.SetSprite("cloud");
             stalfosSpriteDict = enemyDict;
             Pos = spawnPosition;
+            pixelsMoved = 0;
             stateMachine = new CardinalEnemyStateMachine();
         }
-
-        public void DisableProjectile()
-        {
-        }
-
         public void ChangeDirection()
         {
             switch (rnd.Next(1, 5))
@@ -59,30 +59,23 @@ namespace MonoZelda.Enemies.EnemyClasses
                     direction = CardinalEnemyStateMachine.Direction.Down;
                     break;
             }
+            stalfosSpriteDict.SetSprite("stalfos");
             stateMachine.ChangeDirection(direction);
         }
 
         public void Update(GameTime gameTime)
         {
-            if (spawning)
+            if (pixelsMoved >= tileSize)
             {
-                if (gameTime.TotalGameTime.TotalSeconds >= startTime + 0.3)
-                {
-                    startTime = gameTime.TotalGameTime.TotalSeconds;
-                    spawning = false;
-                    stalfosSpriteDict.SetSprite("stalfos");
-                }
-            }
-            else if (gameTime.TotalGameTime.TotalSeconds >= startTime + 1)
-            {
-                startTime = gameTime.TotalGameTime.TotalSeconds;
+                pixelsMoved = 0;
                 ChangeDirection();
             }
             else
             {
-                Pos = stateMachine.Update(Pos);
+                pixelsMoved++;
                 stalfosSpriteDict.Position = Pos;
             }
+            Pos = stateMachine.Update(Pos);
         }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace MonoZelda.Enemies
 {
@@ -11,7 +6,7 @@ namespace MonoZelda.Enemies
     {
         public enum Direction { Left, Right, Up, Down, None }
 
-        private Direction direction;
+        private Direction direction = Direction.None;
 
         private int velocity = 1;
 
@@ -42,6 +37,7 @@ namespace MonoZelda.Enemies
                     position.Y += velocity;
                     break;
             }
+
             return position;
         }
     }

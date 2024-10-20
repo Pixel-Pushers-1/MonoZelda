@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
@@ -9,77 +10,51 @@ namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Zol : IEnemy
     {
-        private readonly CardinalEnemyStateMachine stateMachine;
-        private Point pos;
-        private readonly Random rnd = new();
-        private readonly SpriteDict zolSpriteDict;
-        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.Left;
-        private readonly GraphicsDeviceManager graphics;
-        private readonly int spawnX;
-        private readonly int spawnY;
-        private bool spawning;
-
-        private double startTime = 0;
-        private bool readyToJump = true;
-
-        public Zol(SpriteDict spriteDict, GraphicsDeviceManager graphics)
-        {
-            this.graphics = graphics;
-            zolSpriteDict = spriteDict;
-            stateMachine = new CardinalEnemyStateMachine();
-            spawnX = 3 * graphics.PreferredBackBufferWidth / 5;
-            spawnY = 3 * graphics.PreferredBackBufferHeight / 5;
-            pos = new(spawnX, spawnY);
-        }
-
-
+        private CardinalEnemyStateMachine stateMachine;
         public Point Pos { get; set; }
         public Collidable EnemyHitbox { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        private readonly Random rnd = new();
+        private SpriteDict zolSpriteDict;
+        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.None;
+        private readonly GraphicsDevice graphicsDevice;
 
-        public void SetOgPos(GameTime gameTime) //sets to spawn position (eventually could be used for re-entering rooms)
-        {
-            pos.X = spawnX;
-            pos.Y = spawnY;
-            zolSpriteDict.Position = pos;
-            zolSpriteDict.SetSprite("cloud");
-            spawning = true;
-            startTime = gameTime.TotalGameTime.TotalSeconds;
-        }
+        private int tileSize = 64;
+        private int pixelsMoved;
+        private bool readyToJump;
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        public Zol(GraphicsDevice graphicsDevice)
         {
-            throw new NotImplementedException();
+            this.graphicsDevice = graphicsDevice;
+            Width = 64;
+            Height = 64;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
             ContentManager contentManager)
         {
-            throw new NotImplementedException();
+            EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, CollidableType.Enemy);
+            collisionController.AddCollidable(EnemyHitbox);
+            zolSpriteDict = enemyDict;
+            EnemyHitbox.setSpriteDict(zolSpriteDict);
+            zolSpriteDict.Position = spawnPosition;
+            zolSpriteDict.SetSprite("cloud");
+            Pos = spawnPosition;
+            pixelsMoved = 0;
+            readyToJump = false;
+            stateMachine = new CardinalEnemyStateMachine();
         }
-
-        public void DisableProjectile()
-        {
-        }
-
         public void ChangeDirection()
         {
             stateMachine.ChangeDirection(direction);
+            zolSpriteDict.SetSprite("zol_brown");
         }
 
 
-        public void Update(GameTime gameTime) //too long
+        public void Update(GameTime gameTime)
         {
-            if (spawning)
-            {
-                if (gameTime.TotalGameTime.TotalSeconds >= startTime + 0.3)
-                {
-                    startTime = gameTime.TotalGameTime.TotalSeconds;
-                    spawning = false;
-                    readyToJump = true;
-                    zolSpriteDict.SetSprite("zol_green");
-                }
-            }
-            else if (readyToJump)
+            if (readyToJump)
             {
                 switch (rnd.Next(1, 5))
                 {
@@ -96,24 +71,25 @@ namespace MonoZelda.Enemies.EnemyClasses
                         direction = CardinalEnemyStateMachine.Direction.Down;
                         break;
                 }
-
-                startTime = gameTime.TotalGameTime.TotalSeconds;
                 readyToJump = false;
                 ChangeDirection();
             }
-            else if (gameTime.TotalGameTime.TotalSeconds >= startTime + 1)
+            else if (pixelsMoved >= tileSize)
             {
                 direction = CardinalEnemyStateMachine.Direction.None;
                 ChangeDirection();
-                if (gameTime.TotalGameTime.TotalSeconds >= startTime + 2)
+                pixelsMoved++;
+                if (pixelsMoved >= tileSize + 30)
                 {
+                    pixelsMoved = 0;
                     readyToJump = true;
                 }
             }
             else
             {
-                pos = stateMachine.Update(pos);
-                zolSpriteDict.Position = pos;
+                pixelsMoved++;
+                Pos = stateMachine.Update(Pos);
+                zolSpriteDict.Position = Pos;
             }
         }
     }

@@ -1,78 +1,74 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
+using Point = Microsoft.Xna.Framework.Point;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Gel : IEnemy
     {
-        private readonly CardinalEnemyStateMachine stateMachine;
-        private Point pos; // will change later
-        private readonly Random rnd = new();
-        private readonly SpriteDict gelSpriteDict;
-        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.Left;
-        private readonly GraphicsDeviceManager graphics;
-        private readonly int spawnX;
-        private readonly int spawnY;
-        private bool spawning;
-
-        private double startTime = 0;
-        private int jumpCount;
-        private bool readyToJump = true;
-
-        public Gel(SpriteDict spriteDict, GraphicsDeviceManager graphics)
-        {
-            this.graphics = graphics;
-            gelSpriteDict = spriteDict;
-            stateMachine = new CardinalEnemyStateMachine();
-            jumpCount = rnd.Next(1, 4);
-            spawnX = 3 * graphics.PreferredBackBufferWidth / 5;
-            spawnY = 3 * graphics.PreferredBackBufferHeight / 5;
-            pos = new(spawnX, spawnY);
-        }
-
-
+        private CardinalEnemyStateMachine stateMachine;
         public Point Pos { get; set; }
         public Collidable EnemyHitbox { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        private readonly Random rnd = new();
+        private SpriteDict gelSpriteDict;
+        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.None;
+        private readonly GraphicsDevice graphicsDevice;
 
-        public void SetOgPos(GameTime gameTime) //sets to spawn position (eventually could be used for re-entering rooms)
+        private int tileSize = 64;
+        private int spawnTimer;
+        private int pixelsMoved;
+        private int jumpCount = 3;
+        private bool readyToJump;
+
+        public Gel(GraphicsDevice graphicsDevice)
         {
-            pos.X = spawnX;
-            pos.Y = spawnY;
-            gelSpriteDict.Position = pos;
-            gelSpriteDict.SetSprite("cloud");
-            spawning = true;
-            startTime = gameTime.TotalGameTime.TotalSeconds;
+            this.graphicsDevice = graphicsDevice;
+            Width = 64;
+            Height = 64;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
+            ContentManager contentManager)
         {
-            throw new NotImplementedException();
+            EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, CollidableType.Enemy);
+            collisionController.AddCollidable(EnemyHitbox);
+            gelSpriteDict = enemyDict;
+            EnemyHitbox.setSpriteDict(gelSpriteDict);
+            gelSpriteDict.Position = spawnPosition;
+            gelSpriteDict.SetSprite("cloud");
+            Pos = spawnPosition;
+            pixelsMoved = 0;
+            spawnTimer = 0;
+            readyToJump = false;
+            stateMachine = new CardinalEnemyStateMachine();
         }
 
         public void ChangeDirection()
         {
             stateMachine.ChangeDirection(direction);
+            gelSpriteDict.SetSprite("gel_turquoise");
         }
 
 
-        public void Update(GameTime gameTime) //too long
+        public void Update(GameTime gameTime)
         {
-            if (spawning)
+            if (spawnTimer > 63 && spawnTimer < 65)
             {
-                if (gameTime.TotalGameTime.TotalSeconds >= startTime + 0.3)
-                {
-                    startTime = gameTime.TotalGameTime.TotalSeconds;
-                    readyToJump = true;
-                    spawning = false;
-                    gelSpriteDict.SetSprite("gel_turquoise");
-                }
+                readyToJump = true;
+                Width = 32;
+                Height = 32;
             }
-            else if (readyToJump)
+            if (readyToJump)
             {
+                spawnTimer = 65;
                 switch (rnd.Next(1, 5))
                 {
                     case 1:
@@ -89,34 +85,28 @@ namespace MonoZelda.Enemies.EnemyClasses
                         break;
                 }
                 ChangeDirection();
-                startTime = gameTime.TotalGameTime.TotalSeconds;
                 readyToJump = false;
             }
-            else if (gameTime.TotalGameTime.TotalSeconds >= startTime + jumpCount)
+            else if (pixelsMoved >= tileSize*jumpCount)
             {
                 direction = CardinalEnemyStateMachine.Direction.None;
                 ChangeDirection();
-                if (gameTime.TotalGameTime.TotalSeconds >= startTime + jumpCount + 0.75)
+                pixelsMoved++;
+                if (pixelsMoved >= tileSize * jumpCount + 30)
                 {
                     readyToJump = true;
                     jumpCount = rnd.Next(1, 4);
+                    pixelsMoved = 0;
                 }
             }
             else
             {
-                pos = stateMachine.Update(pos);
-                gelSpriteDict.Position = pos;
+                pixelsMoved++;
+                spawnTimer++;
+                gelSpriteDict.Position = Pos;
             }
+            Pos = stateMachine.Update(Pos);
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            ContentManager contentManager)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DisableProjectile()
-        {
-        }
     }
 }

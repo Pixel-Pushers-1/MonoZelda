@@ -1,8 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies.GoriyaFolder
@@ -12,6 +14,7 @@ namespace MonoZelda.Enemies.GoriyaFolder
         public Point Pos { get; set; }
         public SpriteDict BoomerangSpriteDict { get; private set; }
         private int speed = 4;
+        private int pixelsMoved;
         public Collidable ProjectileHitbox { get; set; }
 
         public GoriyaBoomerang(Point pos, ContentManager contentManager, GraphicsDevice graphicsDevice, CollisionController collisionController)
@@ -31,13 +34,14 @@ namespace MonoZelda.Enemies.GoriyaFolder
         public void Follow(Point newPos)
         {
             Pos = newPos;
+            speed = Math.Abs(speed);
         }
 
-        public void Update(GameTime gameTime, CardinalEnemyStateMachine.Direction attackDirection, double attackTime)
+        public void Update(GameTime gameTime, CardinalEnemyStateMachine.Direction attackDirection, Point enemyPos)
         {
             var pos = new Point();
             pos = Pos;
-            if (gameTime.TotalGameTime.TotalSeconds <= attackTime + 4)
+            if ((Math.Abs(enemyPos.X - pos.X) <= 192 && Math.Abs(enemyPos.Y - pos.Y) <= 192 )|| speed < 0)
             {
                 switch (attackDirection)
                 {
@@ -55,23 +59,9 @@ namespace MonoZelda.Enemies.GoriyaFolder
                         break;
                 }
             }
-            else if (gameTime.TotalGameTime.TotalSeconds <= attackTime + 5)
+            else
             {
-                switch (attackDirection)
-                {
-                    case CardinalEnemyStateMachine.Direction.Left:
-                        pos.X += speed;
-                        break;
-                    case CardinalEnemyStateMachine.Direction.Right:
-                        pos.X -= speed;
-                        break;
-                    case CardinalEnemyStateMachine.Direction.Up:
-                        pos.Y += speed;
-                        break;
-                    case CardinalEnemyStateMachine.Direction.Down:
-                        pos.Y -= speed;
-                        break;
-                }
+                speed *= -1;
             }
 
             Pos = pos;
