@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace MonoZelda.Enemies.KeeseFolder;
+namespace MonoZelda.Enemies;
 
-public class KeeseStateMachine
+public class DiagonalEnemyStateMachine
 {
     public enum HorDirection
     {
@@ -31,22 +31,15 @@ public class KeeseStateMachine
         CurrentHor = newHor;
     }
 
-    public Point Update(Point position, GraphicsDeviceManager graphics)
+    public Point Update(Point position)
     {
         switch (CurrentVert)
         {
             case VertDirection.Up:
-                if (position.Y >= 0 + 32)
-                {
-                    position.Y -= 1;
-                }
-
+                position.Y -= 1;
                 break;
             case VertDirection.Down:
-                if (position.Y <= graphics.PreferredBackBufferHeight - 32)
-                {
-                    position.Y += 1;
-                }
+                position.Y += 1;
 
                 break;
         }
@@ -54,18 +47,10 @@ public class KeeseStateMachine
         switch (CurrentHor)
         {
             case HorDirection.Left:
-                if (position.X >= 0 + 32)
-                {
-                    position.X -= 1;
-                }
-
+                position.X -= 1;
                 break;
             case HorDirection.Right:
-                if (position.X <= graphics.PreferredBackBufferWidth - 32)
-                {
-                    position.X += 1;
-                }
-
+                position.X += 1;
                 break;
         }
 
