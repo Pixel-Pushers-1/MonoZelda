@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
-namespace MonoZelda.Enemies
+namespace MonoZelda.Enemies.EnemyProjectiles
 {
     public class EnemyProjectileCollision
     {
@@ -20,15 +20,15 @@ namespace MonoZelda.Enemies
         public EnemyProjectileCollision(IEnemyProjectile projectile, CollisionController collisionController)
         {
             this.projectile = projectile;
-            this.projectileHitbox = projectile.ProjectileHitbox;
-            this.width = 32;
-            this.height = 32;
+            projectileHitbox = projectile.ProjectileHitbox;
+            width = 32;
+            height = 32;
 
             // Create initial hitbox for the player
             Point projectilePos = projectile.Pos;
             Rectangle bounds = new Rectangle(
-                (int)projectilePos.X - width / 2,
-                (int)projectilePos.Y - height / 2,
+                projectilePos.X - width / 2,
+                projectilePos.Y - height / 2,
                 width,
                 height
             );
@@ -46,8 +46,8 @@ namespace MonoZelda.Enemies
         {
             Point projectilePos = projectile.Pos;
             Rectangle newBounds = new Rectangle(
-                (int)projectilePos.X - width / 2,
-                (int)projectilePos.Y - height / 2,
+                projectilePos.X - width / 2,
+                projectilePos.Y - height / 2,
                 width,
                 height
             );

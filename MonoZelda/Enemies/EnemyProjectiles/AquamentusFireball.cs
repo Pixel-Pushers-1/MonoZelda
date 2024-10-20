@@ -3,22 +3,28 @@ using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using MonoZelda.Collision;
+using MonoZelda.Controllers;
 
 namespace MonoZelda.Enemies.EnemyProjectiles
 {
-    public class AquamentusFireball
+    public class AquamentusFireball : IEnemyProjectile
     {
-        private Point pos;
+        public Collidable ProjectileHitbox { get; set; }
+        public Point Pos { get; set; }
+
         public SpriteDict FireballSpriteDict { get; private set; }
 
         private int speed = 4;
         private double angle;
 
-        public AquamentusFireball(Point pos, ContentManager contentManager, int newAngle)
+        public AquamentusFireball(Point pos, ContentManager contentManager, GraphicsDevice graphicsDevice, CollisionController collisionController, int newAngle)
         {
-            this.pos = pos;
+            Pos = pos;
             FireballSpriteDict = new(contentManager.Load<Texture2D>("Sprites/enemies"), SpriteCSVData.Enemies, 0, new Point(100, 100));
             FireballSpriteDict.SetSprite("fireball");
+            ProjectileHitbox = new Collidable(new Rectangle(pos.X, pos.Y, 30, 30), graphicsDevice, CollidableType.Projectile);
+            collisionController.AddCollidable(ProjectileHitbox);
             angle = newAngle;
             if (angle <= 180)
             {
@@ -37,14 +43,22 @@ namespace MonoZelda.Enemies.EnemyProjectiles
             }
         }
 
-        public void Follow(Point newPos)
+        public void ViewProjectile(bool view)
         {
-            pos.X = newPos.X;
-            pos.Y = newPos.Y - 48;
+            FireballSpriteDict.Enabled = view;
         }
 
-        public void Update()
+        public void Follow(Point newPos)
         {
+            Point pos = Pos;
+            pos.X = newPos.X;
+            pos.Y = newPos.Y - 48;
+            Pos = pos;
+        }
+
+        public void Update(GameTime gameTime, CardinalEnemyStateMachine.Direction attackDirection, Point enemyPos)
+        {
+            Point pos = Pos;
             pos.X -= speed;
             if (angle >= 1.5)
             {
@@ -56,8 +70,8 @@ namespace MonoZelda.Enemies.EnemyProjectiles
             }
 
             pos.Y -= (int)angle;
-
-            FireballSpriteDict.Position = pos;
+            Pos = pos;
+            FireballSpriteDict.Position = Pos;
         }
     }
 }

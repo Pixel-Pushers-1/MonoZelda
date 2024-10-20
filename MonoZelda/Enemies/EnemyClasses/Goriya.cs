@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Enemies.GoriyaFolder;
 using MonoZelda.Sprites;
 
@@ -13,40 +14,40 @@ namespace MonoZelda.Enemies.EnemyClasses
     {
         public Point Pos { get; set; }
         public Collidable EnemyHitbox { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
         private CardinalEnemyStateMachine stateMachine;
         private readonly Random rnd = new();
         private SpriteDict goriyaSpriteDict;
-        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.Left;
+        private CardinalEnemyStateMachine.Direction direction;
         private readonly GraphicsDevice graphicsDevice;
-        private bool spawning;
-
         private IEnemyProjectile projectile;
         private EnemyProjectileCollision projectileCollision;
-
-        private double startTime;
-        private double attackDelay;
+        private int pixelsMoved;
+        private int tilesMoved;
+        private int tileSize = 64;
 
         public Goriya(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
+            Width = 64;
+            Height = 64;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager)
         {
-            EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 60, 60), graphicsDevice, CollidableType.Item);
+            EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 60, 60), graphicsDevice, CollidableType.Enemy);
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
-            enemyDict.SetSprite("goriya_red_left");
+            enemyDict.SetSprite("cloud");
             goriyaSpriteDict = enemyDict;
             Pos = spawnPosition;
+            pixelsMoved = 0;
+            tilesMoved = 0;
             stateMachine = new CardinalEnemyStateMachine();
             projectile = new GoriyaBoomerang(spawnPosition, contentManager, graphicsDevice, collisionController);
             projectileCollision = new EnemyProjectileCollision(projectile, collisionController);
-        }
-
-        public void DisableProjectile()
-        {
         }
 
         public void ChangeDirection()
@@ -76,31 +77,28 @@ namespace MonoZelda.Enemies.EnemyClasses
         public void Attack(GameTime gameTime)
         {
             projectile.ViewProjectile(true);
-            projectile.Update(gameTime, direction, attackDelay);
-            if (gameTime.TotalGameTime.TotalSeconds >= attackDelay + 5)
+            projectile.Update(gameTime, direction, Pos);
+            pixelsMoved += 4;
+            if (pixelsMoved >= tileSize*6)
             {
-                attackDelay = gameTime.TotalGameTime.TotalSeconds;
                 projectile.ViewProjectile(false);
+                pixelsMoved = 0;
+                tilesMoved = 0;
             }
         }
 
-        public void Update(GameTime gameTime) //might eventually split this into multiple methods, controlling random movement is more extensive than I thought.
+        public void Update(GameTime gameTime)
         {
-            if (spawning)
+            if (tilesMoved < 3)
             {
-                if (gameTime.TotalGameTime.TotalSeconds >= startTime + 0.3)
+                if (pixelsMoved >= tileSize)
                 {
-                    startTime = gameTime.TotalGameTime.TotalSeconds;
-                    spawning = false;
-                }
-            }
-            else if (gameTime.TotalGameTime.TotalSeconds < attackDelay + 3)
-            {
-                if (gameTime.TotalGameTime.TotalSeconds >= startTime + 1)
-                {
+                    pixelsMoved = 0;
+                    tilesMoved++;
                     ChangeDirection();
-                    startTime = gameTime.TotalGameTime.TotalSeconds;
                 }
+
+                pixelsMoved++;
                 projectile.Follow(Pos);
                 Pos = stateMachine.Update(Pos);
                 goriyaSpriteDict.Position = Pos;

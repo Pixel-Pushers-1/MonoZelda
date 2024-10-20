@@ -1,45 +1,43 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
+using System;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Oldman : IEnemy
     {
-        private Point pos;
-        private SpriteDict oldmanSpriteDict;
-        private readonly int spawnX;
-        private readonly int spawnY;
-        private bool spawning;
-        private double startTime;
-
-        public Oldman(SpriteDict spriteDict, GraphicsDeviceManager graphics)
-        {
-            oldmanSpriteDict = spriteDict;
-            spawnX = 3 * graphics.PreferredBackBufferWidth / 5;
-            spawnY = 3 * graphics.PreferredBackBufferHeight / 5;
-            pos = new(spawnX, spawnY);
-
-        }
-
         public Point Pos { get; set; }
+        private SpriteDict oldmanSpriteDict;
+        private GraphicsDevice graphicsDevice;
         public Collidable EnemyHitbox { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
 
-        public void SetOgPos(GameTime gameTime)
+        private int spawnTimer;
+
+        public Oldman(GraphicsDevice graphicsDevice)
         {
-            pos.X = spawnX;
-            pos.Y = spawnY;
-            oldmanSpriteDict.Position = pos;
-            oldmanSpriteDict.SetSprite("cloud");
-            spawning = true;
-            startTime = gameTime.TotalGameTime.TotalSeconds;
+            this.graphicsDevice = graphicsDevice;
+            Width = 64;
+            Height = 64;
+
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
+            ContentManager contentManager)
         {
-            throw new System.NotImplementedException();
+            EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 60, 60), graphicsDevice, CollidableType.Enemy);
+            collisionController.AddCollidable(EnemyHitbox);
+            EnemyHitbox.setSpriteDict(enemyDict);
+            enemyDict.Position = spawnPosition;
+            enemyDict.SetSprite("cloud");
+            oldmanSpriteDict = enemyDict;
+            Pos = spawnPosition;
+            spawnTimer = 0;
         }
 
         public void ChangeDirection()
@@ -48,24 +46,14 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Update(GameTime gameTime)
         {
-            if (spawning)
+            if (spawnTimer >= 64)
             {
-                if (gameTime.TotalGameTime.TotalSeconds >= startTime + 0.3)
-                {
-                    spawning = false;
-                    oldmanSpriteDict.SetSprite("oldman");
-                }
+                oldmanSpriteDict.SetSprite("oldman");
             }
-        }
-
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            ContentManager contentManager)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void DisableProjectile()
-        {
+            else
+            {
+                spawnTimer++;
+            }
         }
     }
 }
