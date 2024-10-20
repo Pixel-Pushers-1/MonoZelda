@@ -1,5 +1,5 @@
-﻿using MonoZelda.Link;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
+using MonoZelda.Link;
 
 namespace MonoZelda.Commands.GameCommands;
 

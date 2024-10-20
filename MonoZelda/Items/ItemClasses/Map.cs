@@ -1,14 +1,14 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
 using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Collision.Collidables;
 
 namespace MonoZelda.Items.ItemClasses;
 
 public class Map : IItem
 {
-    private Collidable mapCollidable;
+    private ICollidable mapCollidable;
     private bool itemPickedUp;
     private GraphicsDevice graphicsDevice;
 
@@ -31,7 +31,7 @@ public class Map : IItem
 
     public void itemSpawn(SpriteDict mapDict, Point spawnPosition, CollisionController collisionController)
     {
-        mapCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice, CollidableType.Item);
+        mapCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice);
         collisionController.AddCollidable(mapCollidable);
         mapCollidable.setSpriteDict(mapDict);
         mapDict.Position = spawnPosition;

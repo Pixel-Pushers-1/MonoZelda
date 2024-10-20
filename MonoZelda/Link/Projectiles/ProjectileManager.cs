@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoZelda.Collision;
+using MonoZelda.Collision.Collidables;
 using MonoZelda.Controllers;
 using System.Collections.Generic;
 
@@ -11,7 +11,7 @@ public class ProjectileManager
     private bool projectileFired;
     private IProjectile itemFired;
     private CollisionController collisionController;
-    private Collidable projectileCollidable;
+    private ICollidable projectileCollidable;
     private GraphicsDevice graphicsDevice;
 
     private Dictionary<Keys, ProjectileType> keyProjectileMap = new Dictionary<Keys, ProjectileType>
@@ -52,7 +52,7 @@ public class ProjectileManager
     {
         itemFired = projectile;
         projectileFired = true;
-        projectileCollidable = new Collidable(projectile.getCollisionRectangle(),graphicsDevice, CollidableType.Projectile);
+        projectileCollidable = new ProjectileCollidable(projectile.getCollisionRectangle(),graphicsDevice);
         collisionController.AddCollidable(projectileCollidable);
     }
 
@@ -65,6 +65,8 @@ public class ProjectileManager
         }
         else
         {
+            collisionController.RemoveCollidable(projectileCollidable);
+            //projectileCollidable.UnregisterHitbox();
             projectileFired = false;
         }        
     }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using MonoZelda.Collision;
+using MonoZelda.Collision.Collidables;
 using MonoZelda.Controllers;
 
 namespace MonoZelda.Link;
@@ -9,10 +9,10 @@ public class PlayerCollision
     private readonly int width;
     private readonly int height;
     private Player player;
-    private Collidable playerHitbox;
+    private ICollidable playerHitbox;
     private CollisionController collisionController;
 
-    public PlayerCollision(Player player, Collidable playerHitbox, CollisionController collisionController)
+    public PlayerCollision(Player player, ICollidable playerHitbox, CollisionController collisionController)
     {
         this.player = player;
         this.playerHitbox = playerHitbox;

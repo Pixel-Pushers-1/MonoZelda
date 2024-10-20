@@ -14,14 +14,17 @@ public enum Direction {
 public class Player
 {
     private Direction playerDirection;
+    private Direction lastDirection;
     private SpriteDict playerSpriteDict;
     private Vector2 playerPostition;
     private float playerSpeed = 4.0f;
     private int frameTimer;
-
+    private bool colliding;
+    
     public Player()
     {
-        playerPostition = new Vector2(100, 100);
+        playerPostition = new Vector2(500, 500);
+        colliding = false;
     }
 
     public void SetPlayerSpriteDict(SpriteDict spriteDict)
@@ -177,6 +180,25 @@ public class Player
             frameTimer--;
         }
         
+    }
+
+    public bool StopPlayer()
+    {
+        if (!colliding)
+        {
+            playerSpeed = 0f;
+            lastDirection = playerDirection;
+            colliding = true;
+        }
+        return colliding;
+    }
+
+    public void UpdatePlayerStatus()
+    {
+        if (lastDirection != playerDirection)
+        {
+            playerSpeed = 4.0f;
+        }
     }
 
     public Direction PlayerDirection

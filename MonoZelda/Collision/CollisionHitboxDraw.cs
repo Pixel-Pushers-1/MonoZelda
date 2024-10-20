@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using MonoZelda.Sprites;
+using MonoZelda.Collision.Collidables;
 
 namespace MonoZelda.Collision
 {
@@ -9,10 +10,10 @@ namespace MonoZelda.Collision
         public Color GizmoColor { get; set; } = Color.White;
         public int Thickness { get; set; } = 1;
 
-        private Collidable collidable;
+        private ICollidable collidable;
         private Texture2D texture;
 
-        public CollisionHitboxDraw(Collidable collidable, GraphicsDevice graphicsDevice)
+        public CollisionHitboxDraw(ICollidable collidable, GraphicsDevice graphicsDevice)
         {
             this.collidable = collidable;
             CreateTexture(graphicsDevice);

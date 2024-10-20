@@ -1,14 +1,14 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
 using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Collision.Collidables;
 
 namespace MonoZelda.Items.ItemClasses;
 
 public class Heart : IItem
 {
-    private Collidable heartCollidable;
+    private ICollidable heartCollidable;
     private bool itemPickedUp;
     private GraphicsDevice graphicsDevice;
 
@@ -31,7 +31,7 @@ public class Heart : IItem
 
     public void itemSpawn(SpriteDict heartDict, Point spawnPosition, CollisionController collisionController)
     {
-        heartCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 28), graphicsDevice, CollidableType.Item);
+        heartCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 28), graphicsDevice);
         collisionController.AddCollidable(heartCollidable);
         heartCollidable.setSpriteDict(heartDict);
         heartDict.Position = spawnPosition;

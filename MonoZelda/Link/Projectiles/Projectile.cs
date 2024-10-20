@@ -30,6 +30,19 @@ public class Projectile
         return Math.Sqrt(Math.Pow(projectilePosition.X - initialPosition.X, 2) + Math.Pow(projectilePosition.Y - initialPosition.Y, 2));
     }
 
+    public void EnableDict()
+    {
+        projectileDict.Enabled = true;
+    }
+
+    public IProjectile GetProjectileObject(ProjectileType currentProjectile)
+    {
+        var projectileType = Type.GetType($"MonoZelda.Link.Projectiles.{currentProjectile}");
+        IProjectile launchProjectile = (IProjectile)Activator.CreateInstance(projectileType, projectileDict, player);
+
+        return launchProjectile;
+    }
+
     protected Vector2 SetInitialPosition(Vector2 Dimension)
     {
         playerDirection = player.PlayerDirection;
@@ -51,18 +64,5 @@ public class Projectile
         }
         projectilePosition = player.GetPlayerPosition() + positionInitializer;
         return projectilePosition;
-    }
-
-    public IProjectile GetProjectileObject(ProjectileType currentProjectile)
-    {
-        var projectileType = Type.GetType($"MonoZelda.Link.Projectiles.{currentProjectile}");
-        IProjectile launchProjectile = (IProjectile)Activator.CreateInstance(projectileType, projectileDict, player);
-
-        return launchProjectile;
-    }
-
-    public void EnableDict()
-    {
-        projectileDict.Enabled = true;
     }
 }

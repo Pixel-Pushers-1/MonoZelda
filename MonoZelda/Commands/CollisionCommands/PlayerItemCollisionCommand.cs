@@ -1,4 +1,4 @@
-﻿using MonoZelda.Collision;
+﻿using MonoZelda.Collision.Collidables;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
 
@@ -20,8 +20,8 @@ public class PlayerItemCollisionCommand : ICommand
 
     public void Execute(params object[] metadata)
     {
-        Collidable collidableA = (Collidable) metadata[0];
-        Collidable collidableB = (Collidable) metadata[1];
+        ICollidable collidableA = (ICollidable) metadata[0];
+        ICollidable collidableB = (ICollidable) metadata[1];
         CollisionController collisionController = (CollisionController) metadata[2];
 
         if (collidableA.type == CollidableType.Item)

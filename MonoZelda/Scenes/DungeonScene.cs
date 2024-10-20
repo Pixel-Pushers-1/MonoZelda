@@ -5,11 +5,11 @@ using MonoZelda.Link;
 using MonoZelda.Commands;
 using MonoZelda.Sprites;
 using MonoZelda.Link.Projectiles;
-using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Items;
 using MonoZelda.Commands.GameCommands;
+using MonoZelda.Collision.Collidables;
 
 namespace MonoZelda.Scenes;
 
@@ -41,7 +41,7 @@ public class DungeonScene : IScene
 
         //create player and player collision
         player = new Player();
-        Collidable playerHitbox = new Collidable(new Rectangle(100, 100, 50, 50), graphicsDevice, CollidableType.Player);
+        ICollidable playerHitbox = new PlayerCollidable(player,new Rectangle(100, 100, 50, 50), graphicsDevice);
         collisionController.AddCollidable(playerHitbox);
         playerCollision = new PlayerCollision(player, playerHitbox, collisionController);
 
@@ -96,7 +96,7 @@ public class DungeonScene : IScene
         var colliderRects = room.GetStaticColliders();
         foreach (var rect in colliderRects)
         {
-            var collidable = new Collidable(rect, graphicsDevice, CollidableType.Static);
+            ICollidable collidable = new StaticCollidable(rect, graphicsDevice);
             collisionController.AddCollidable(collidable);
         }
     }
@@ -128,7 +128,7 @@ public class DungeonScene : IScene
         {
             projectileManager.executeProjectile();
         }
-
+        player.UpdatePlayerStatus();
         playerCollision.Update();
     }
 }

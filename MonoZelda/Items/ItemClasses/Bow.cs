@@ -1,13 +1,13 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
 using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Collision.Collidables;
 
 namespace MonoZelda.Items.ItemClasses;
 public class Bow : IItem
 {
-    private Collidable bowCollidable;
+    private ICollidable bowCollidable;
     private bool itemPickedUp;
     private GraphicsDevice graphicsDevice;
 
@@ -30,7 +30,7 @@ public class Bow : IItem
 
     public void itemSpawn(SpriteDict bowDict, Point spawnPosition, CollisionController collisionController)
     {
-        bowCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice, CollidableType.Item);
+        bowCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice);
         collisionController.AddCollidable(bowCollidable);
         bowCollidable.setSpriteDict(bowDict);
         bowDict.Position = spawnPosition;
