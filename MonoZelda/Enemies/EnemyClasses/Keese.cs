@@ -39,6 +39,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Pos = spawnPosition;
             pixelsMoved = 0;
             stateMachine = new DiagonalEnemyStateMachine();
+            EnemyHitbox.setDiagonalEnemyStateMachine(stateMachine);
         }
 
         public void ChangeDirection()

@@ -56,6 +56,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Pos = spawnPosition;
             pixelsMoved = 0;
             stateMachine = new CardinalEnemyStateMachine();
+            EnemyHitbox.setEnemyStateMachine(stateMachine);
             stateMachine.ChangeDirection(CardinalEnemyStateMachine.Direction.Left);
             fireballs.Add(new AquamentusFireball(spawnPosition, contentManager, graphicsDevice, collisionController, midAngle + 45));
             fireballs.Add(new AquamentusFireball(spawnPosition, contentManager, graphicsDevice, collisionController, midAngle));

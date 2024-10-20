@@ -100,6 +100,11 @@ public class ArrowBlue : Projectile, IProjectile
         return Finished;
     }
 
+    public void FinishProjectile()
+    {
+        tilesTraveled = 6;
+    }
+
     public Rectangle getCollisionRectangle()
     {
         Point spawnPosition = projectilePosition.ToPoint();

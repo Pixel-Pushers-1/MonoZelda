@@ -101,6 +101,11 @@ public class Boomerang : Projectile, IProjectile
         return Finished;
     }
 
+    public void FinishProjectile()
+    {
+        tilesTraveled = 3;
+    }
+
     public Rectangle getCollisionRectangle()
     {
         Point spawnPosition = projectilePosition.ToPoint();

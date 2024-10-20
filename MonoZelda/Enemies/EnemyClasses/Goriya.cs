@@ -46,6 +46,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             pixelsMoved = 0;
             tilesMoved = 0;
             stateMachine = new CardinalEnemyStateMachine();
+            EnemyHitbox.setEnemyStateMachine(stateMachine);
             projectile = new GoriyaBoomerang(spawnPosition, contentManager, graphicsDevice, collisionController);
             projectileCollision = new EnemyProjectileCollision(projectile, collisionController);
         }

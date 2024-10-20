@@ -62,6 +62,11 @@ public class Bomb : Projectile, IProjectile
         return Finished;
     }
 
+    public void FinishProjectile()
+    {
+        // Empty
+    }
+
     public Rectangle getCollisionRectangle()
     {
         Point spawnPosition = projectilePosition.ToPoint();

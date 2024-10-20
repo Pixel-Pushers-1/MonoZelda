@@ -48,11 +48,17 @@ public class ProjectileManager
         return keyProjectileMap[PressedKey];
     }
 
+    public void destroyProjectile()
+    {
+        itemFired.FinishProjectile();
+    }
+
     public void SetProjectile(IProjectile projectile)
     {
         itemFired = projectile;
         projectileFired = true;
         projectileCollidable = new Collidable(projectile.getCollisionRectangle(),graphicsDevice, CollidableType.Projectile);
+        projectileCollidable.setProjectileManager(this);
         collisionController.AddCollidable(projectileCollidable);
     }
 

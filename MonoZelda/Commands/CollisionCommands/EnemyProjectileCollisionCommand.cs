@@ -1,4 +1,10 @@
-﻿namespace MonoZelda.Commands.CollisionCommands;
+﻿using Microsoft.Xna.Framework;
+using MonoZelda.Collision;
+using MonoZelda.Controllers;
+using MonoZelda.Link;
+using MonoZelda.Link.Projectiles;
+
+namespace MonoZelda.Commands.CollisionCommands;
 
 public class EnemyProjectileCollisionCommand : ICommand
 {
@@ -16,7 +22,21 @@ public class EnemyProjectileCollisionCommand : ICommand
 
     public void Execute(params object[] metadata)
     {
-        // ADD EXECUTE LOGIC HERE
+        Collidable collidableA = (Collidable)metadata[0];
+        Collidable collidableB = (Collidable)metadata[1];
+
+        if (collidableA.type == CollidableType.Projectile)
+        {
+            ProjectileManager projectileManager = collidableA.ProjectileManager;
+            if(projectileManager != null)
+                projectileManager.destroyProjectile();
+        }
+        else
+        {
+            ProjectileManager projectileManager = collidableB.ProjectileManager;
+            if (projectileManager != null)
+                projectileManager.destroyProjectile();
+        }
     }
 
     public void UnExecute()
