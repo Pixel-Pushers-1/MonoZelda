@@ -21,7 +21,7 @@ public class Player
 
     public Player()
     {
-        playerPostition = new Vector2(100, 100);
+        playerPostition = new Vector2(500, 500);
     }
 
     public void SetPlayerSpriteDict(SpriteDict spriteDict)
@@ -187,6 +187,11 @@ public class Player
     public Vector2 GetPlayerPosition()
     {
         return playerPostition;
+    }
+    public void SetPosition(Vector2 position)
+    {
+        playerPostition = position;
+        playerSpriteDict.Position = position.ToPoint();
     }
 
 }
