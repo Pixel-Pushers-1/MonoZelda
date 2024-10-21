@@ -46,6 +46,10 @@ namespace MonoZelda.Enemies.EnemyProjectiles
         public void ViewProjectile(bool view)
         {
             FireballSpriteDict.Enabled = view;
+            if(view == false && ProjectileHitbox != null)
+            {
+                ProjectileHitbox.UnregisterHitbox();
+            }
         }
 
         public void Follow(Point newPos)

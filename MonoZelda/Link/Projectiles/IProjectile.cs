@@ -6,6 +6,8 @@ public interface IProjectile
 {
 	void UpdateProjectile();
 
+	void FinishProjectile();
+
 	bool hasFinished();
 
 	bool reachedDistance();
