@@ -29,7 +29,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         private int tileSize = 64;
         private bool projectileActiveOrNot;
         private bool goriyaAlive;
-        private bool animatedDeath;
+        private int animatedDeath;
 
         public Goriya(GraphicsDevice graphicsDevice)
         {
@@ -38,7 +38,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Height = 64;
             projectileActiveOrNot = true;
             goriyaAlive = true;
-            animatedDeath = false;
+            animatedDeath = 0;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager)
@@ -99,10 +99,10 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
             if(goriyaAlive == false)
             {
-                if(animatedDeath == false)
+                if(animatedDeath < 4)
                 {
                     goriyaSpriteDict.SetSprite("death");
-                    animatedDeath = true;
+                    animatedDeath++;
                 }
                 else
                 {
@@ -132,11 +132,11 @@ namespace MonoZelda.Enemies.EnemyClasses
         }
         public void KillEnemy()
         {
-            if (goriyaAlive == true && animatedDeath == false)
+            if (goriyaAlive == true && animatedDeath < 4)
             {
                 goriyaAlive = false;
             }
-            else if(animatedDeath == true)
+            else if(animatedDeath == 4)
             {
                 projectileActiveOrNot = false;
                 goriyaSpriteDict.Enabled = false;
