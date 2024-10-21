@@ -1,7 +1,18 @@
 # MonoZelda
 Monogame implementation of OG Zelda by team Pixel Pushers
 
-Press the return key to start the game.
+## Controls
+Start Game -> Return
+Exit Game -> Q
+Reset Game -> R
+Move Up -> W or Up Arrow
+Move Down -> S or Down Arrow
+Move Right -> D or Right Arrow
+Move Left -> A or Left Arrow
+Toggle Hitboxes -> G
+Use Item -> D1 - D6
+Player Attack -> Z or N
+Change Room -> Left Click on Door
 
 ## Developers
 - Josh S
