@@ -30,7 +30,7 @@ public class PlayerEnemyProjectileCollisionCommand : ICommand
     private void handleCollision(Direction collisionDirection, IEnemyProjectile enemyProjectile)
     {
         Direction playerDirection = player.PlayerDirection;
-        if(playerDirection == collisionDirection)
+        if((int)playerDirection + (int)collisionDirection == 0)
         {
             // destroy or return projectile
         }
@@ -42,6 +42,7 @@ public class PlayerEnemyProjectileCollisionCommand : ICommand
 
     public void Execute(params object[] metadata)
     {
+        System.Diagnostics.Debug.WriteLine("In Here");
         Collidable collidableA = (Collidable)metadata[0];
         Collidable collidableB = (Collidable)metadata[1];
         CollisionController collisionController = (CollisionController)metadata[2];
