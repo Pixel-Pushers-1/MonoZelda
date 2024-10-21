@@ -12,7 +12,7 @@ namespace MonoZelda.Collision
         Enemy,
         Projectile,
         Static,
-        Trigger
+        Trigger,
         EnemyProjectile,
     }
     
