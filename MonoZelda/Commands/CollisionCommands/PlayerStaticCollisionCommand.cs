@@ -10,14 +10,15 @@ public class PlayerStaticCollisionCommand : ICommand
 {
     private MonoZeldaGame game;
     private Player player;
+    private PlayerCollision playerCollision;
     public PlayerStaticCollisionCommand()
     {
         //empty
     }
 
-    public PlayerStaticCollisionCommand(Player player)
+    public PlayerStaticCollisionCommand(PlayerCollision playerCollision)
     {
-        this.player = player;
+        this.playerCollision = playerCollision;
     }
 
     public void Execute(params object[] metadata)
@@ -27,26 +28,7 @@ public class PlayerStaticCollisionCommand : ICommand
         CollisionController collisionController = (CollisionController)metadata[2];
         Direction collisionDirection = (Direction)metadata[3];
         Rectangle intersection = (Rectangle)metadata[4];
-
-        Vector2 currentPos = player.GetPlayerPosition();
-
-        switch (collisionDirection)
-        {
-            case Direction.Left:
-                currentPos.X -= intersection.Width;
-                break;
-            case Direction.Right:
-                currentPos.X += intersection.Width;
-                break;
-            case Direction.Up:
-                currentPos.Y -= intersection.Height;
-                break;
-            case Direction.Down:
-                currentPos.Y += intersection.Height;
-                break;
-        }
-
-        player.SetPosition(currentPos);
+        playerCollision.HandleStaticCollision(collisionDirection, intersection);
     }
 
     public void UnExecute()

@@ -155,7 +155,7 @@ public class Player
     {
         if (frameTimer == 0)
         {
-            frameTimer = 20;
+            frameTimer = 10;
             switch (playerDirection)
             {
                 case Direction.Up:
@@ -183,7 +183,11 @@ public class Player
     {
         get { return playerDirection; }
     }
-
+    public int FrameTimer
+    {
+        get { return frameTimer; }
+        set { frameTimer = value; }
+    }
     public Vector2 GetPlayerPosition()
     {
         return playerPostition;
