@@ -21,6 +21,7 @@ public enum CommandType
     PlayerEnemyCollisionCommand,
     PlayerEnemyProjectileCollisionCommand,
     PlayerStaticCollisionCommand,
+    PlayerTriggerCollisionCommand,
     EnemyProjectileCollisionCommand,
     EnemyStaticCollisionCommand,
     ToggleGizmosCommand,
@@ -46,6 +47,7 @@ public class CommandManager
         AddCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand());
         AddCommand(CommandType.PlayerEnemyProjectileCollisionCommand, new PlayerEnemyProjectileCollisionCommand());
         AddCommand(CommandType.PlayerStaticCollisionCommand, new PlayerStaticCollisionCommand());
+        AddCommand(CommandType.PlayerTriggerCollisionCommand, new PlayerTriggerCollisionCommand());
         AddCommand(CommandType.EnemyProjectileCollisionCommand, new EnemyProjectileCollisionCommand());
         AddCommand(CommandType.EnemyStaticCollisionCommand, new EnemyStaticCollisionCommand());
         AddCommand(CommandType.ToggleGizmosCommand, new ToggleGizmosCommand());

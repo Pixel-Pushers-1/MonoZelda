@@ -62,7 +62,7 @@ public class WoodenSword : Projectile,IProjectile
     }
 
     public bool hasFinished()
-    {
+{
         return Finished;
     }
 
