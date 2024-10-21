@@ -11,8 +11,12 @@ Move Right -> D or Right Arrow
 Move Left -> A or Left Arrow
 Toggle Hitboxes -> G
 Use Item -> D1 - D6
+Fire Sword Beam -> T
 Player Attack -> Z or N
 Change Room -> Left Click on Door
+
+Note: For pushable blocks, keep pushing into the block for a few seconds for functionality 
+to work
 
 ## Developers
 - Josh S
