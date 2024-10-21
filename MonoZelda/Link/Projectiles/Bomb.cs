@@ -30,11 +30,11 @@ public class Bomb : Projectile, IProjectile
 
     public void UpdateProjectile()
     {
-        if (timer < 14)
+        if (timer < 90)
         {
             updatePosition();
         }
-        else if (timer == 15)
+        else if (timer >= 90 && timer < 100)
         {
             SetProjectileSprite("cloud");
         }
@@ -49,7 +49,7 @@ public class Bomb : Projectile, IProjectile
     public bool reachedDistance()
     {
         bool reachedDistance = false;
-        if (timer == 16)
+        if (timer == 100)
         {
             reachedDistance = true;
             projectileDict.Enabled = false;

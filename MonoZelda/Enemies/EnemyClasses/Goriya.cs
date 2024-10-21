@@ -99,7 +99,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
             if(goriyaAlive == false)
             {
-                if(animatedDeath < 4)
+                if(animatedDeath < 12)
                 {
                     goriyaSpriteDict.SetSprite("death");
                     animatedDeath++;
@@ -132,11 +132,11 @@ namespace MonoZelda.Enemies.EnemyClasses
         }
         public void KillEnemy()
         {
-            if (goriyaAlive == true && animatedDeath < 4)
+            if (goriyaAlive == true && animatedDeath < 12)
             {
                 goriyaAlive = false;
             }
-            else if(animatedDeath == 4)
+            else if(animatedDeath == 12)
             {
                 projectileActiveOrNot = false;
                 goriyaSpriteDict.Enabled = false;

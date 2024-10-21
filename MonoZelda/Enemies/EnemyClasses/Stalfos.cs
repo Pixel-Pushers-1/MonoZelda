@@ -72,7 +72,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
             if (stalfosAlive == false)
             {
-                if (animatedDeath < 4)
+                if (animatedDeath < 12)
                 {
                     stalfosSpriteDict.SetSprite("death");
                     animatedDeath++;
@@ -97,11 +97,11 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void KillEnemy()
         {
-            if (stalfosAlive == true && animatedDeath < 4)
+            if (stalfosAlive == true && animatedDeath < 12)
             {
                 stalfosAlive = false;
             }
-            else if (animatedDeath == 4)
+            else if (animatedDeath == 12)
             {
                 stalfosSpriteDict.Enabled = false;
                 EnemyHitbox.UnregisterHitbox();
