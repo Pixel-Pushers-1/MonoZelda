@@ -23,7 +23,7 @@ public class CollisionController : IController
         {
             {(CollidableType.Player, CollidableType.Item), CommandType.PlayerItemCollisionCommand},
             {(CollidableType.Player, CollidableType.Enemy), CommandType.PlayerEnemyCollisionCommand},
-            {(CollidableType.Player, CollidableType.Projectile), CommandType.PlayerProjectileCollisionCommand},
+            {(CollidableType.Player, CollidableType.EnemyProjectile), CommandType.PlayerEnemyProjectileCollisionCommand},
             {(CollidableType.Player, CollidableType.Static), CommandType.PlayerStaticCollisionCommand},
             {(CollidableType.Enemy, CollidableType.Projectile), CommandType.EnemyProjectileCollisionCommand},
             {(CollidableType.Enemy, CollidableType.Static), CommandType.EnemyStaticCollisionCommand},

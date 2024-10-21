@@ -61,7 +61,6 @@ public class CandleBlue : Projectile, IProjectile
         }
         else if (tilesTraveled == 2)
         {
-            projectileDict.Enabled = false;
             Finished = reachedDistance();
         }
     }
@@ -73,6 +72,7 @@ public class CandleBlue : Projectile, IProjectile
         if (tilesTraveled == 2)
         {
             reachedDistance = true;
+            projectileDict.Enabled = false;
         }
 
         return reachedDistance;

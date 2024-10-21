@@ -18,7 +18,7 @@ public enum CommandType
     LoadRoomCommand,
     PlayerItemCollisionCommand,
     PlayerEnemyCollisionCommand,
-    PlayerProjectileCollisionCommand,
+    PlayerEnemyProjectileCollisionCommand,
     PlayerStaticCollisionCommand,
     EnemyProjectileCollisionCommand,
     EnemyStaticCollisionCommand,
@@ -42,7 +42,7 @@ public class CommandManager
         AddCommand(CommandType.LoadRoomCommand, new LoadRoomCommand());
         AddCommand(CommandType.PlayerItemCollisionCommand, new PlayerItemCollisionCommand());
         AddCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand());
-        AddCommand(CommandType.PlayerProjectileCollisionCommand, new PlayerProjectileCollisionCommand());
+        AddCommand(CommandType.PlayerEnemyProjectileCollisionCommand, new PlayerEnemyProjectileCollisionCommand());
         AddCommand(CommandType.PlayerStaticCollisionCommand, new PlayerStaticCollisionCommand());
         AddCommand(CommandType.EnemyProjectileCollisionCommand, new EnemyProjectileCollisionCommand());
         AddCommand(CommandType.EnemyStaticCollisionCommand, new EnemyStaticCollisionCommand());
