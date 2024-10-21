@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoZelda.Trigger;
 using System.Collections.Generic;
 
 namespace MonoZelda.Dungeons
@@ -11,5 +12,6 @@ namespace MonoZelda.Dungeons
         List<Rectangle> GetStaticColliders();
         List<EnemySpawn> GetEnemySpawns();
         List<ItemSpawn> GetItemSpawns();
+        List<TriggerSpawn> GetTriggers();
     }
 }
