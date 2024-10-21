@@ -155,7 +155,7 @@ public class Player
     {
         if (frameTimer == 0)
         {
-            frameTimer = 20;
+            frameTimer = 10;
             switch (playerDirection)
             {
                 case Direction.Up:

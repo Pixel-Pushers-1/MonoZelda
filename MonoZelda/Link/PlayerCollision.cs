@@ -12,7 +12,7 @@ public class PlayerCollision
     private Player player;
     private Collidable playerHitbox;
     private CollisionController collisionController;
-    private const float KNOCKBACK_FORCE = 80f;
+    private const float KNOCKBACK_FORCE = 10f;
     private Vector2 knockbackVelocity;
 
     public PlayerCollision(Player player, Collidable playerHitbox, CollisionController collisionController)
@@ -81,8 +81,8 @@ public class PlayerCollision
         Vector2 currentPos = player.GetPlayerPosition();
         Vector2 knockbackDirection = GetKnockbackDirection(collisionDirection);
         knockbackVelocity = knockbackDirection * KNOCKBACK_FORCE;
-        player.FrameTimer = 10;
         ApplyKnockback();
+        player.TakeDamage();
     }
 
     private void ApplyKnockback()
