@@ -10,6 +10,9 @@ using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Items;
 using MonoZelda.Commands.GameCommands;
+using MonoZelda.Tiles;
+using MonoZelda.Trigger;
+using System.Collections.Generic;
 
 namespace MonoZelda.Scenes;
 
@@ -21,6 +24,7 @@ public class DungeonScene : IScene
     private ProjectileManager projectileManager;
     private PlayerCollision playerCollision;
     private CollisionController collisionController;
+    private List<ITrigger> triggers;
     private ItemFactory itemFactory;
     private IDungeonRoom room;
     private string roomName;
@@ -32,6 +36,7 @@ public class DungeonScene : IScene
         this.commandManager = commandManager;
         this.collisionController = collisionController;
         this.room = room;
+        triggers = new List<ITrigger>();
     }
 
     public void LoadContent(ContentManager contentManager)
@@ -69,8 +74,18 @@ public class DungeonScene : IScene
     {
         LoadRoomTextures(contentManager);
         CreateStaticColliders();
+        CreateTriggers(contentManager);
         SpawnItems(contentManager);
         SpawnEnemies();
+    }
+
+    private void CreateTriggers(ContentManager contentManager)
+    {
+        foreach(var trigger in room.GetTriggers())
+        {
+            var t = TriggerFactory.CreateTrigger(trigger.Type, collisionController, contentManager, trigger.Position, graphicsDevice);
+            triggers.Add(t);
+        }
     }
 
     private void SpawnItems(ContentManager contentManager)
@@ -124,7 +139,12 @@ public class DungeonScene : IScene
 
     public void Update(GameTime gameTime)
     {
-        if(projectileManager.ProjectileFired == true)
+        foreach(var trigger in triggers)
+        {
+            trigger.Update();
+        }
+
+        if (projectileManager.ProjectileFired == true)
         {
             projectileManager.executeProjectile();
         }

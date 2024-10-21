@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoZelda.Trigger;
+using System;
 using System.Collections.Generic;
 
 namespace MonoZelda.Dungeons
@@ -9,6 +11,7 @@ namespace MonoZelda.Dungeons
         private List<Rectangle> colliders;
         private List<ItemSpawn> itemSpawns;
         private List<EnemySpawn> enemySpawns;
+        private List<TriggerSpawn> triggers;
 
         public string RoomName { get; private set; }
         public Dungeon1Sprite RoomSprite { get; private set; }
@@ -22,11 +25,17 @@ namespace MonoZelda.Dungeons
             colliders = new List<Rectangle>();
             itemSpawns = new List<ItemSpawn>();
             enemySpawns = new List<EnemySpawn>();
+            triggers = new List<TriggerSpawn>();
         }
 
         public List<IDoor> GetDoors()
         {
             return doors;
+        }
+
+        public void AddTrigger(TriggerSpawn trigger)
+        {
+            triggers.Add(trigger);
         }
 
         public void AddItemSpawn(ItemSpawn itemSpawn)
@@ -57,6 +66,11 @@ namespace MonoZelda.Dungeons
         public List<ItemSpawn> GetItemSpawns()
         {
             return itemSpawns;
+        }
+
+        public List<TriggerSpawn> GetTriggers()
+        {
+            return triggers;
         }
     }
 }
