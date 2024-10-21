@@ -100,6 +100,11 @@ public class BoomerangBlue : Projectile, IProjectile
         return Finished;
     }
 
+    public void FinishProjectile()
+    {
+        tilesTraveled = 5;
+    }
+
     public Rectangle getCollisionRectangle()
     {
         Point spawnPosition = projectilePosition.ToPoint();

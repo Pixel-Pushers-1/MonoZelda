@@ -10,6 +10,7 @@ public class Arrow : Projectile, IProjectile
     private bool Finished;
     private float projectileSpeed = 4f;
     private int tilesTraveled;
+    private bool rotate;
     private Vector2 InitialPosition;
     private Vector2 Dimension = new Vector2(8, 16);
     private SpriteDict projectileDict;
@@ -20,6 +21,7 @@ public class Arrow : Projectile, IProjectile
         this.projectileDict = projectileDict;
         this.player = player;
         Finished = false;
+        rotate = false;
         tilesTraveled = 0;
         InitialPosition = SetInitialPosition(Dimension);
     }
@@ -31,18 +33,22 @@ public class Arrow : Projectile, IProjectile
             case Direction.Up:
                 projectilePosition += projectileSpeed * new Vector2(0, -1);
                 SetProjectileSprite("arrow_green_up");
+                rotate = false;
                 break;
             case Direction.Down:
                 projectilePosition += projectileSpeed * new Vector2(0, 1);
                 SetProjectileSprite("arrow_green_down");
+                rotate = false;
                 break;
             case Direction.Left:
                 projectilePosition += projectileSpeed * new Vector2(-1, 0);
                 SetProjectileSprite("arrow_green_left");
+                rotate = true;
                 break;
             case Direction.Right:
                 projectilePosition += projectileSpeed * new Vector2(1, 0);
                 SetProjectileSprite("arrow_green_right");
+                rotate = true;
                 break;
         }
     }
@@ -94,10 +100,22 @@ public class Arrow : Projectile, IProjectile
         return Finished;
     }
 
+    public void FinishProjectile()
+    {
+        tilesTraveled = 4;
+    }
+
     public Rectangle getCollisionRectangle()
     {
         Point spawnPosition = projectilePosition.ToPoint();
-        return new Rectangle(spawnPosition.X - 32 / 2, spawnPosition.Y - 64 / 2, 32, 64);
+        if (rotate)
+        {
+            return new Rectangle(spawnPosition.X - 64 / 2, spawnPosition.Y - 32 / 2, 64, 32);
+        }
+        else
+        {
+            return new Rectangle(spawnPosition.X - 32 / 2, spawnPosition.Y - 64 / 2, 32, 64);
+        }
     }
 }
 

@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoZelda.Enemies;
+using MonoZelda.Link.Projectiles;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Collision
@@ -9,6 +11,7 @@ namespace MonoZelda.Collision
         Item,
         Enemy,
         Projectile,
+        EnemyProjectile,
         Static
     }
     public class Collidable : ICollidable
@@ -16,6 +19,8 @@ namespace MonoZelda.Collision
         public CollidableType type { get; set; }
         public Rectangle Bounds { get; set; }
         public SpriteDict CollidableDict { get; private set; }
+        public IEnemy Enemy { get; private set; }   
+        public ProjectileManager ProjectileManager { get; private set; }
 
         private readonly CollisionHitboxDraw hitbox;
 
@@ -48,6 +53,15 @@ namespace MonoZelda.Collision
         public void setSpriteDict(SpriteDict collidableDict)
         {
             CollidableDict = collidableDict;
+        }
+
+        public void setEnemy(IEnemy enemy)
+        {
+            Enemy = enemy;
+        }
+        public void setProjectileManager(ProjectileManager projectileManager)
+        {
+            ProjectileManager = projectileManager;
         }
     }
 }

@@ -22,6 +22,8 @@ public class ProjectileManager
         {Keys.D4,ProjectileType.BoomerangBlue},
         {Keys.D5,ProjectileType.Bomb},
         {Keys.D6,ProjectileType.CandleBlue},
+        {Keys.Z, ProjectileType.WoodenSword},
+        {Keys.N, ProjectileType.WoodenSword}
     };
     
     public bool ProjectileFired
@@ -48,11 +50,17 @@ public class ProjectileManager
         return keyProjectileMap[PressedKey];
     }
 
+    public void destroyProjectile()
+    {
+        itemFired.FinishProjectile();
+    }
+
     public void SetProjectile(IProjectile projectile)
     {
         itemFired = projectile;
         projectileFired = true;
         projectileCollidable = new Collidable(projectile.getCollisionRectangle(),graphicsDevice, CollidableType.Projectile);
+        projectileCollidable.setProjectileManager(this);
         collisionController.AddCollidable(projectileCollidable);
     }
 
@@ -65,6 +73,8 @@ public class ProjectileManager
         }
         else
         {
+            collisionController.RemoveCollidable(projectileCollidable);
+            projectileCollidable.UnregisterHitbox();
             projectileFired = false;
         }        
     }

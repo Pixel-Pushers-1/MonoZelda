@@ -55,5 +55,10 @@ namespace MonoZelda.Enemies.EnemyClasses
                 spawnTimer++;
             }
         }
+
+        public void KillEnemy()
+        {
+            // oldman is immortal
+        }
     }
 }

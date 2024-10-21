@@ -49,6 +49,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             spawnTimer = 0;
             readyToJump = false;
             stateMachine = new CardinalEnemyStateMachine();
+            EnemyHitbox.setEnemy(this);
         }
 
         public void ChangeDirection()
@@ -74,7 +75,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                     case 1:
                         direction = CardinalEnemyStateMachine.Direction.Left;
                         break;
-                    case 2: 
+                    case 2:
                         direction = CardinalEnemyStateMachine.Direction.Right;
                         break;
                     case 3:
@@ -87,7 +88,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 ChangeDirection();
                 readyToJump = false;
             }
-            else if (pixelsMoved >= tileSize*jumpCount)
+            else if (pixelsMoved >= tileSize * jumpCount)
             {
                 direction = CardinalEnemyStateMachine.Direction.None;
                 ChangeDirection();
@@ -108,5 +109,11 @@ namespace MonoZelda.Enemies.EnemyClasses
             Pos = stateMachine.Update(Pos);
         }
 
+        public void KillEnemy()
+        {
+            gelSpriteDict.Enabled = false;
+            EnemyHitbox.UnregisterHitbox();
+        }
     }
 }
+
