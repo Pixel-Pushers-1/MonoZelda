@@ -22,6 +22,8 @@ namespace MonoZelda.Enemies
         public void ChangeDirection();
 
         public void Update(GameTime gameTime);
+
+        public void KillEnemy();
         
     }
 }

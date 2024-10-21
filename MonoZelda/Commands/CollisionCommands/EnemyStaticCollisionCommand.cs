@@ -21,30 +21,25 @@ public class EnemyStaticCollisionCommand : ICommand
         this.game = game;
     }
 
-    private void setPosition(Collidable enemyCollidable, Direction collisionDirection, Rectangle Intersection)
+    private void setPosition(IEnemy enemy, Direction collisionDirection, Rectangle Intersection)
     {
-        CardinalEnemyStateMachine enemyStateMachine = enemyCollidable.CardinalEnemyStateMachine;
-        Point currentPos = enemyStateMachine.currentPosition;
+        Point currentPos = enemy.Pos;
         switch (collisionDirection)
         {
             case Direction.Left:
-                enemyStateMachine.ChangeDirection(CardinalEnemyStateMachine.Direction.Left);
                 currentPos.X -= Intersection.Width;
                 break;
             case Direction.Right:
-                enemyStateMachine.ChangeDirection(CardinalEnemyStateMachine.Direction.Right);
                 currentPos.X += Intersection.Width;
                 break;
             case Direction.Up:
-                enemyStateMachine.ChangeDirection(CardinalEnemyStateMachine.Direction.Up);
                 currentPos.Y -= Intersection.Height;
                 break;
             case Direction.Down:
-                enemyStateMachine.ChangeDirection(CardinalEnemyStateMachine.Direction.Down);
                 currentPos.Y += Intersection.Height;
                 break;
         }
-        enemyStateMachine.Update(currentPos);
+        enemy.Pos = currentPos;
     }
 
     public void Execute(params object[] metadata)
@@ -57,11 +52,13 @@ public class EnemyStaticCollisionCommand : ICommand
 
         if(collidableA.type == CollidableType.Enemy)
         {
-            setPosition(collidableA, collisionDirection, intersection);
+            IEnemy enemy = collidableA.Enemy;
+            setPosition(enemy, collisionDirection, intersection);  
         }
         else
         {
-            setPosition(collidableB, collisionDirection, intersection);
+            IEnemy enemy = collidableB.Enemy;
+            setPosition(enemy, collisionDirection, intersection);
         }
     }
 

@@ -11,6 +11,7 @@ namespace MonoZelda.Collision
         Item,
         Enemy,
         Projectile,
+        EnemyProjectile,
         Static
     }
     public class Collidable : ICollidable
@@ -18,8 +19,7 @@ namespace MonoZelda.Collision
         public CollidableType type { get; set; }
         public Rectangle Bounds { get; set; }
         public SpriteDict CollidableDict { get; private set; }
-        public CardinalEnemyStateMachine CardinalEnemyStateMachine { get; private set; }
-        public DiagonalEnemyStateMachine DiagonalEnemyStateMachine { get; private set; }
+        public IEnemy Enemy { get; private set; }   
         public ProjectileManager ProjectileManager { get; private set; }
 
         private readonly CollisionHitboxDraw hitbox;
@@ -55,16 +55,10 @@ namespace MonoZelda.Collision
             CollidableDict = collidableDict;
         }
 
-        public void setEnemyStateMachine(CardinalEnemyStateMachine stateMachine)
+        public void setEnemy(IEnemy enemy)
         {
-            CardinalEnemyStateMachine = stateMachine;
+            Enemy = enemy;
         }
-
-        public void setDiagonalEnemyStateMachine(DiagonalEnemyStateMachine stateMachine)
-        {
-            DiagonalEnemyStateMachine = stateMachine;
-        }
-
         public void setProjectileManager(ProjectileManager projectileManager)
         {
             ProjectileManager = projectileManager;

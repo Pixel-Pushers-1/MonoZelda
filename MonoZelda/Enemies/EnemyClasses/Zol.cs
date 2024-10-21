@@ -44,7 +44,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             pixelsMoved = 0;
             readyToJump = false;
             stateMachine = new CardinalEnemyStateMachine();
-            EnemyHitbox.setEnemyStateMachine(stateMachine);
+            EnemyHitbox.setEnemy(this);
         }
         public void ChangeDirection()
         {
@@ -92,6 +92,12 @@ namespace MonoZelda.Enemies.EnemyClasses
                 Pos = stateMachine.Update(Pos);
                 zolSpriteDict.Position = Pos;
             }
+        }
+
+        public void KillEnemy()
+        {
+            zolSpriteDict.Enabled = false;
+            EnemyHitbox.UnregisterHitbox();
         }
     }
 }

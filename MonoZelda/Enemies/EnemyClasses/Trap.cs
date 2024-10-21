@@ -74,7 +74,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Pos = spawnPosition;
             pixelsMoved = 0;
             stateMachine = new CardinalEnemyStateMachine();
-            EnemyHitbox.setEnemyStateMachine(stateMachine);
+            EnemyHitbox.setEnemy(this);
         }
         public void ChangeDirection()
         {
@@ -82,6 +82,12 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Update(GameTime gameTime)
         {
+        }
+
+        public void KillEnemy()
+        {
+            trapSpriteDict.Enabled = false;
+            EnemyHitbox.UnregisterHitbox();
         }
     }
 }

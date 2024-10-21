@@ -39,7 +39,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Pos = spawnPosition;
             pixelsMoved = 0;
             stateMachine = new DiagonalEnemyStateMachine();
-            EnemyHitbox.setDiagonalEnemyStateMachine(stateMachine);
+            EnemyHitbox.setEnemy(this);
         }
 
         public void ChangeDirection()
@@ -99,6 +99,12 @@ namespace MonoZelda.Enemies.EnemyClasses
                 keeseSpriteDict.Position = Pos;
             }
             Pos = stateMachine.Update(Pos);
+        }
+
+        public void KillEnemy()
+        {
+            keeseSpriteDict.Enabled = false;
+            EnemyHitbox.UnregisterHitbox();
         }
     }
 }

@@ -41,7 +41,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Pos = spawnPosition;
             pixelsMoved = 0;
             stateMachine = new CardinalEnemyStateMachine();
-            EnemyHitbox.setEnemyStateMachine(stateMachine);
+            EnemyHitbox.setEnemy(this);
         }
         public void ChangeDirection()
         {
@@ -77,6 +77,12 @@ namespace MonoZelda.Enemies.EnemyClasses
                 stalfosSpriteDict.Position = Pos;
             }
             Pos = stateMachine.Update(Pos);
+        }
+
+        public void KillEnemy()
+        {
+            stalfosSpriteDict.Enabled = false;
+            EnemyHitbox.UnregisterHitbox();
         }
     }
 }

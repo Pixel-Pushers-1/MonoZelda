@@ -26,12 +26,14 @@ namespace MonoZelda.Enemies.EnemyClasses
         private int pixelsMoved;
         private int tilesMoved;
         private int tileSize = 64;
+        private bool projectileActiveOrNot;
 
         public Goriya(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
             Width = 64;
             Height = 64;
+            projectileActiveOrNot = true;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager)
@@ -46,9 +48,9 @@ namespace MonoZelda.Enemies.EnemyClasses
             pixelsMoved = 0;
             tilesMoved = 0;
             stateMachine = new CardinalEnemyStateMachine();
-            EnemyHitbox.setEnemyStateMachine(stateMachine);
             projectile = new GoriyaBoomerang(spawnPosition, contentManager, graphicsDevice, collisionController);
             projectileCollision = new EnemyProjectileCollision(projectile, collisionController);
+            EnemyHitbox.setEnemy(this);
         }
 
         public void ChangeDirection()
@@ -77,7 +79,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Attack(GameTime gameTime)
         {
-            projectile.ViewProjectile(true);
+            projectile.ViewProjectile(projectileActiveOrNot);
             projectile.Update(gameTime, direction, Pos);
             pixelsMoved += 4;
             if (pixelsMoved >= tileSize*6)
@@ -110,6 +112,13 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
             projectileCollision.Update();
 
+        }
+        public void KillEnemy()
+        {
+            projectileActiveOrNot = false;
+            goriyaSpriteDict.Enabled = false;
+            projectile.ViewProjectile(projectileActiveOrNot);
+            EnemyHitbox.UnregisterHitbox();
         }
     }
 }

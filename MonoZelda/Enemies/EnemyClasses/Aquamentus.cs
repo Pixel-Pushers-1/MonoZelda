@@ -31,10 +31,12 @@ namespace MonoZelda.Enemies.EnemyClasses
         private int tileSize = 64;
         private int moveDelay;
         private double attackDelay;
+        private bool projectileActiveOrNot;
 
         public Aquamentus(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
+            projectileActiveOrNot = true;
             pixelsMoved = 0;
             moveDelay = rnd.Next(1, 4);
             attackDelay = 0;
@@ -56,7 +58,6 @@ namespace MonoZelda.Enemies.EnemyClasses
             Pos = spawnPosition;
             pixelsMoved = 0;
             stateMachine = new CardinalEnemyStateMachine();
-            EnemyHitbox.setEnemyStateMachine(stateMachine);
             stateMachine.ChangeDirection(CardinalEnemyStateMachine.Direction.Left);
             fireballs.Add(new AquamentusFireball(spawnPosition, contentManager, graphicsDevice, collisionController, midAngle + 45));
             fireballs.Add(new AquamentusFireball(spawnPosition, contentManager, graphicsDevice, collisionController, midAngle));
@@ -65,6 +66,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             {
                 projectileDictionary.Add(projectile, new EnemyProjectileCollision(projectile, collisionController));
             }
+            EnemyHitbox.setEnemy(this);
         }
 
         public void ChangeDirection()
@@ -84,7 +86,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Attack(GameTime gameTime)
         {
-            fireballs.ForEach(fireball => fireball.ViewProjectile(true));
+            fireballs.ForEach(fireball => fireball.ViewProjectile(projectileActiveOrNot));
             fireballs.ForEach(fireball => fireball.Update(gameTime, CardinalEnemyStateMachine.Direction.Left, Pos));
             if (gameTime.TotalGameTime.TotalSeconds >= attackDelay + 4)
             {
@@ -132,6 +134,17 @@ namespace MonoZelda.Enemies.EnemyClasses
             {
                 entry.Value.Update();
             }
+        }
+
+        public void KillEnemy()
+        {
+            projectileActiveOrNot = false;
+            aquamentusSpriteDict.Enabled = false;
+            foreach(IEnemyProjectile projectile in fireballs)
+            {
+                projectile.ViewProjectile(projectileActiveOrNot);
+            }
+            EnemyHitbox.UnregisterHitbox();
         }
     }
 }
