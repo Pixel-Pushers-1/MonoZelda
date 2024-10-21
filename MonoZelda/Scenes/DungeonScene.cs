@@ -98,6 +98,15 @@ public class DungeonScene : IScene
         }
     }
 
+    private void CreateTriggers(ContentManager contentManager)
+    {
+        foreach(var trigger in room.GetTriggers())
+        {
+            var t = TriggerFactory.CreateTrigger(trigger.Type, collisionController, contentManager, trigger.Position, graphicsDevice);
+            triggers.Add(t);
+        }
+    }
+
     private void SpawnItems(ContentManager contentManager)
     {
         // Create itemFactory object
