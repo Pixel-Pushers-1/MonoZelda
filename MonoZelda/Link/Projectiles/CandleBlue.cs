@@ -83,6 +83,12 @@ public class CandleBlue : Projectile, IProjectile
         return Finished;
     }
 
+    public void FinishProjectile
+        ()
+    {
+        tilesTraveled = 2;
+    }
+
     public Rectangle getCollisionRectangle()
     {
         Point spawnPosition = projectilePosition.ToPoint();

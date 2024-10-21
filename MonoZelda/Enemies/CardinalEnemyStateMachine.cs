@@ -10,6 +10,8 @@ namespace MonoZelda.Enemies
 
         private int velocity = 1;
 
+        public Point currentPosition { get; private set; }
+      
         public void ChangeDirection(Direction newDirection)
         {
             direction = newDirection;
@@ -37,7 +39,7 @@ namespace MonoZelda.Enemies
                     position.Y += velocity;
                     break;
             }
-
+            currentPosition = position;
             return position;
         }
     }

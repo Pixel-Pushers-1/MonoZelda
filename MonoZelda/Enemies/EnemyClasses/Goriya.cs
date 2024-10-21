@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.SymbolStore;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,12 +27,18 @@ namespace MonoZelda.Enemies.EnemyClasses
         private int pixelsMoved;
         private int tilesMoved;
         private int tileSize = 64;
+        private bool projectileActiveOrNot;
+        private bool goriyaAlive;
+        private int animatedDeath;
 
         public Goriya(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
             Width = 64;
             Height = 64;
+            projectileActiveOrNot = true;
+            goriyaAlive = true;
+            animatedDeath = 0;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager)
@@ -48,6 +55,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             stateMachine = new CardinalEnemyStateMachine();
             projectile = new GoriyaBoomerang(spawnPosition, contentManager, graphicsDevice, collisionController);
             projectileCollision = new EnemyProjectileCollision(projectile, collisionController);
+            EnemyHitbox.setEnemy(this);
         }
 
         public void ChangeDirection()
@@ -76,7 +84,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Attack(GameTime gameTime)
         {
-            projectile.ViewProjectile(true);
+            projectile.ViewProjectile(projectileActiveOrNot);
             projectile.Update(gameTime, direction, Pos);
             pixelsMoved += 4;
             if (pixelsMoved >= tileSize*6)
@@ -89,7 +97,19 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Update(GameTime gameTime)
         {
-            if (tilesMoved < 3)
+            if(goriyaAlive == false)
+            {
+                if(animatedDeath < 12)
+                {
+                    goriyaSpriteDict.SetSprite("death");
+                    animatedDeath++;
+                }
+                else
+                {
+                    KillEnemy();
+                }
+            }
+            else if (tilesMoved < 3)
             {
                 if (pixelsMoved >= tileSize)
                 {
@@ -109,6 +129,20 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
             projectileCollision.Update();
 
+        }
+        public void KillEnemy()
+        {
+            if (goriyaAlive == true && animatedDeath < 12)
+            {
+                goriyaAlive = false;
+            }
+            else if(animatedDeath == 12)
+            {
+                projectileActiveOrNot = false;
+                goriyaSpriteDict.Enabled = false;
+                projectile.ViewProjectile(projectileActiveOrNot);
+                EnemyHitbox.UnregisterHitbox();
+            }
         }
     }
 }

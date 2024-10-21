@@ -42,6 +42,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Pos = spawnPosition;
             pixelsMoved = 0;
             stateMachine = new CardinalEnemyStateMachine();
+            EnemyHitbox.setEnemy(this);
         }
 
         public void ChangeDirection()
@@ -80,6 +81,12 @@ namespace MonoZelda.Enemies.EnemyClasses
                 ropeSpriteDict.Position = Pos;
             }
             Pos = stateMachine.Update(Pos);
+        }
+
+        public void KillEnemy()
+        {
+            ropeSpriteDict.Enabled = false;
+            EnemyHitbox.UnregisterHitbox();
         }
     }
 }
