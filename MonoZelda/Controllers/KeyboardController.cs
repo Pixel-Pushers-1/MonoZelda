@@ -32,6 +32,7 @@ public class KeyboardController : IController
             {new (Keys.D4, true), CommandType.PlayerUseItemCommand},
             {new (Keys.D5, true), CommandType.PlayerUseItemCommand},
             {new (Keys.D6, true), CommandType.PlayerUseItemCommand},
+            {new (Keys.T, true), CommandType.PlayerFireSwordBeam},    
             {new (Keys.Z, true), CommandType.PlayerAttackCommand},
             {new (Keys.N, true), CommandType.PlayerAttackCommand},
             {new (Keys.Q, false), CommandType.ExitCommand},

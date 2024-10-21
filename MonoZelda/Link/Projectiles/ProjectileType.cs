@@ -9,4 +9,5 @@ public enum ProjectileType
     BoomerangBlue,
     Bomb,
     CandleBlue,
+    WoodenSwordBeam,
 }
