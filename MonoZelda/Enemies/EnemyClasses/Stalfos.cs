@@ -22,12 +22,16 @@ namespace MonoZelda.Enemies.EnemyClasses
         public int Height { get; set; }
 
         private int tileSize = 64;
+        private bool stalfosAlive;
+        private int animatedDeath;
 
         public Stalfos(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
             Width = 64;
             Height = 64;
+            stalfosAlive = true;
+            animatedDeath = 0;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager)
@@ -41,6 +45,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Pos = spawnPosition;
             pixelsMoved = 0;
             stateMachine = new CardinalEnemyStateMachine();
+            EnemyHitbox.setEnemy(this);
         }
         public void ChangeDirection()
         {
@@ -65,7 +70,19 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Update(GameTime gameTime)
         {
-            if (pixelsMoved >= tileSize)
+            if (stalfosAlive == false)
+            {
+                if (animatedDeath < 12)
+                {
+                    stalfosSpriteDict.SetSprite("death");
+                    animatedDeath++;
+                }
+                else
+                {
+                    KillEnemy();
+                }
+            }
+            else if (pixelsMoved >= tileSize)
             {
                 pixelsMoved = 0;
                 ChangeDirection();
@@ -76,6 +93,19 @@ namespace MonoZelda.Enemies.EnemyClasses
                 stalfosSpriteDict.Position = Pos;
             }
             Pos = stateMachine.Update(Pos);
+        }
+
+        public void KillEnemy()
+        {
+            if (stalfosAlive == true && animatedDeath < 12)
+            {
+                stalfosAlive = false;
+            }
+            else if (animatedDeath == 12)
+            {
+                stalfosSpriteDict.Enabled = false;
+                EnemyHitbox.UnregisterHitbox();
+            }
         }
     }
 }
