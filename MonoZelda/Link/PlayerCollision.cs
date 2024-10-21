@@ -12,7 +12,7 @@ public class PlayerCollision
     private Player player;
     private Collidable playerHitbox;
     private CollisionController collisionController;
-    private const float KNOCKBACK_FORCE = 10f;
+    private const float KNOCKBACK_FORCE = 30f;
     private Vector2 knockbackVelocity;
 
     public PlayerCollision(Player player, Collidable playerHitbox, CollisionController collisionController)
