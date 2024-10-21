@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.SymbolStore;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,6 +28,8 @@ namespace MonoZelda.Enemies.EnemyClasses
         private int tilesMoved;
         private int tileSize = 64;
         private bool projectileActiveOrNot;
+        private bool goriyaAlive;
+        private bool animatedDeath;
 
         public Goriya(GraphicsDevice graphicsDevice)
         {
@@ -34,6 +37,8 @@ namespace MonoZelda.Enemies.EnemyClasses
             Width = 64;
             Height = 64;
             projectileActiveOrNot = true;
+            goriyaAlive = true;
+            animatedDeath = false;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager)
@@ -92,7 +97,19 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Update(GameTime gameTime)
         {
-            if (tilesMoved < 3)
+            if(goriyaAlive == false)
+            {
+                if(animatedDeath == false)
+                {
+                    goriyaSpriteDict.SetSprite("death");
+                    animatedDeath = true;
+                }
+                else
+                {
+                    KillEnemy();
+                }
+            }
+            else if (tilesMoved < 3)
             {
                 if (pixelsMoved >= tileSize)
                 {
@@ -115,10 +132,17 @@ namespace MonoZelda.Enemies.EnemyClasses
         }
         public void KillEnemy()
         {
-            projectileActiveOrNot = false;
-            goriyaSpriteDict.Enabled = false;
-            projectile.ViewProjectile(projectileActiveOrNot);
-            EnemyHitbox.UnregisterHitbox();
+            if (goriyaAlive == true && animatedDeath == false)
+            {
+                goriyaAlive = false;
+            }
+            else if(animatedDeath == true)
+            {
+                projectileActiveOrNot = false;
+                goriyaSpriteDict.Enabled = false;
+                projectile.ViewProjectile(projectileActiveOrNot);
+                EnemyHitbox.UnregisterHitbox();
+            }
         }
     }
 }

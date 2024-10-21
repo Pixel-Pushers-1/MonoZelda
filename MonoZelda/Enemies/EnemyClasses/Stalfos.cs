@@ -22,12 +22,16 @@ namespace MonoZelda.Enemies.EnemyClasses
         public int Height { get; set; }
 
         private int tileSize = 64;
+        private bool stalfosAlive;
+        private bool animatedDeath;
 
         public Stalfos(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
             Width = 64;
             Height = 64;
+            stalfosAlive = true;
+            animatedDeath = false;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager)
@@ -66,7 +70,19 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Update(GameTime gameTime)
         {
-            if (pixelsMoved >= tileSize)
+            if (stalfosAlive == false)
+            {
+                if (animatedDeath == false)
+                {
+                    stalfosSpriteDict.SetSprite("death");
+                    animatedDeath = true;
+                }
+                else
+                {
+                    KillEnemy();
+                }
+            }
+            else if (pixelsMoved >= tileSize)
             {
                 pixelsMoved = 0;
                 ChangeDirection();
@@ -81,8 +97,15 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void KillEnemy()
         {
-            stalfosSpriteDict.Enabled = false;
-            EnemyHitbox.UnregisterHitbox();
+            if (stalfosAlive == true && animatedDeath == false)
+            {
+                stalfosAlive = false;
+            }
+            else if (animatedDeath == true)
+            {
+                stalfosSpriteDict.Enabled = false;
+                EnemyHitbox.UnregisterHitbox();
+            }
         }
     }
 }
