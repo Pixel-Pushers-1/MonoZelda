@@ -14,9 +14,7 @@ using MonoZelda.Enemies;
 using System.Collections.Generic;
 using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Commands.CollisionCommands;
-using MonoZelda.Tiles;
 using MonoZelda.Trigger;
-using System.Collections.Generic;
 
 namespace MonoZelda.Scenes;
 
@@ -87,15 +85,6 @@ public class DungeonScene : IScene
         CreateTriggers(contentManager);
         SpawnItems(contentManager);
         SpawnEnemies(contentManager);
-    }
-
-    private void CreateTriggers(ContentManager contentManager)
-    {
-        foreach(var trigger in room.GetTriggers())
-        {
-            var t = TriggerFactory.CreateTrigger(trigger.Type, collisionController, contentManager, trigger.Position, graphicsDevice);
-            triggers.Add(t);
-        }
     }
 
     private void CreateTriggers(ContentManager contentManager)
