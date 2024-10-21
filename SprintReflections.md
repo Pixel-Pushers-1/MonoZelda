@@ -1,5 +1,6 @@
 # Pixel Pushers
-# Sprint 2 Reflection
+
+## Sprint 2 Reflection
 
 Our team demonstrated strong organization and proactivity in meeting the requirements of Sprint 2. As seen on our roadmap, most tasks were completed in a timely manner and were evenly distributed throughout the sprint. The player feature posed the most persistent challenge, as it was the most complex and had dependencies on several other aspects of the sprint.
 
@@ -12,3 +13,7 @@ Our team held weekly meetings on Monday evenings to share progress and discuss d
 Looking ahead to Sprint 3, we do not foresee any substantial changes to our process. We plan to start the next sprint in the same manner—by filling the task board with necessary items and dividing up the work amongst team members.
 
 Code reviews occurred organically as pull requests came in, as such, code metrics and code analysis were done in hindsight. We have identified a Github action that will run .Net code quality and style analysis for all pull requests to guarantee we are staying on top of those metrics.
+
+## Sprint 3 Reflection
+
+
