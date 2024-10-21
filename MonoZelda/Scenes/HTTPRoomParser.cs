@@ -13,6 +13,7 @@ using MonoZelda.Dungeons;
 using MonoZelda.Enemies;
 using MonoZelda.Items;
 using MonoZelda.Sprites;
+using MonoZelda.Trigger;
 
 namespace MonoZelda.Scenes;
 
@@ -150,6 +151,14 @@ public class HTTPRoomParser : IDungeonRoomLoader
                         {
                             var rect = GetCollisionRectangle(collisionRect, position, DungeonConstants.TileWidth, DungeonConstants.TileHeight);
                             room.AddStaticCollider(rect);
+                        }
+                        break;
+                    case "trigger":
+                        // Load trigger
+                        if (Enum.TryParse(enumValue, out TriggerType trigger))
+                        {
+                            var triggerSpawn = new TriggerSpawn(position, trigger);
+                            room.AddTrigger(triggerSpawn);
                         }
                         break;
                     default:
