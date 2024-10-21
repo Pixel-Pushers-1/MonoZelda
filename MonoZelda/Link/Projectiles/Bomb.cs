@@ -52,6 +52,7 @@ public class Bomb : Projectile, IProjectile
         if (timer == 100)
         {
             reachedDistance = true;
+            projectileDict.SetSprite("");
             projectileDict.Enabled = false;
         }
         return reachedDistance;

@@ -9,6 +9,7 @@ public enum CommandType
     // Commands for entire project
     ExitCommand,
     PlayerAttackCommand,
+    PlayerFireSwordBeam,
     PlayerMoveCommand,
     PlayerTakeDamageCommand,
     PlayerUseItemCommand,
@@ -18,7 +19,7 @@ public enum CommandType
     LoadRoomCommand,
     PlayerItemCollisionCommand,
     PlayerEnemyCollisionCommand,
-    PlayerProjectileCollisionCommand,
+    PlayerEnemyProjectileCollisionCommand,
     PlayerStaticCollisionCommand,
     PlayerTriggerCollisionCommand,
     EnemyProjectileCollisionCommand,
@@ -35,6 +36,7 @@ public class CommandManager
         commandMap = new Dictionary<CommandType, ICommand>();
         AddCommand(CommandType.ExitCommand, new ExitCommand());
         AddCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand());
+        AddCommand(CommandType.PlayerFireSwordBeam, new PlayerFireSwordBeam());
         AddCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());
         AddCommand(CommandType.PlayerUseItemCommand, new PlayerUseItemCommand());
         AddCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
@@ -43,7 +45,7 @@ public class CommandManager
         AddCommand(CommandType.LoadRoomCommand, new LoadRoomCommand());
         AddCommand(CommandType.PlayerItemCollisionCommand, new PlayerItemCollisionCommand());
         AddCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand());
-        AddCommand(CommandType.PlayerProjectileCollisionCommand, new PlayerProjectileCollisionCommand());
+        AddCommand(CommandType.PlayerEnemyProjectileCollisionCommand, new PlayerEnemyProjectileCollisionCommand());
         AddCommand(CommandType.PlayerStaticCollisionCommand, new PlayerStaticCollisionCommand());
         AddCommand(CommandType.PlayerTriggerCollisionCommand, new PlayerTriggerCollisionCommand());
         AddCommand(CommandType.EnemyProjectileCollisionCommand, new EnemyProjectileCollisionCommand());

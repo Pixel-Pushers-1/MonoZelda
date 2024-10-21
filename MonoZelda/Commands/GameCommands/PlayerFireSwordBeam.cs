@@ -1,22 +1,22 @@
 ﻿using Microsoft.Xna.Framework.Input;
-using MonoZelda.Link;
 using MonoZelda.Link.Projectiles;
+using MonoZelda.Link;
 
 namespace MonoZelda.Commands.GameCommands;
 
-public class PlayerAttackCommand : ICommand
+public class PlayerFireSwordBeam : ICommand
 {
     private Player player;
     private Projectile projectile;
     private ProjectileManager projectileManager;
     private IProjectile launchedProjectile;
 
-    public PlayerAttackCommand()
+    public PlayerFireSwordBeam()
     {
         //empty
     }
 
-    public PlayerAttackCommand(Projectile projectile, ProjectileManager projectileManager, Player player)
+    public PlayerFireSwordBeam(Projectile projectile, ProjectileManager projectileManager, Player player)
     {
         this.player = player;
         this.projectile = projectile;

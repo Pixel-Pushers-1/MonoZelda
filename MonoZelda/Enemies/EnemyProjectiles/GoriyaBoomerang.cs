@@ -15,15 +15,18 @@ namespace MonoZelda.Enemies.GoriyaFolder
         public SpriteDict BoomerangSpriteDict { get; private set; }
         private int speed = 4;
         private int pixelsMoved;
+        private CollisionController collisionController;
         public Collidable ProjectileHitbox { get; set; }
 
         public GoriyaBoomerang(Point pos, ContentManager contentManager, GraphicsDevice graphicsDevice, CollisionController collisionController)
         {
             this.Pos = pos;
+            this.collisionController = collisionController;
             BoomerangSpriteDict = new(contentManager.Load<Texture2D>(TextureData.Enemies), SpriteCSVData.Enemies, 0, new Point(0, 0));
             BoomerangSpriteDict.SetSprite("boomerang");
             ViewProjectile(false);
             ProjectileHitbox = new Collidable(new Rectangle(pos.X, pos.Y, 30, 30), graphicsDevice, CollidableType.EnemyProjectile);
+            ProjectileHitbox.setEnemyProjectile(this);
             collisionController.AddCollidable(ProjectileHitbox);
         }
         public void ViewProjectile(bool view)
@@ -31,6 +34,7 @@ namespace MonoZelda.Enemies.GoriyaFolder
             BoomerangSpriteDict.Enabled = view;
             if(view == false && ProjectileHitbox != null)
             {
+                collisionController.RemoveCollidable(ProjectileHitbox);
                 ProjectileHitbox.UnregisterHitbox();
             }
         }

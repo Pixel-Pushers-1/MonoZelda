@@ -25,6 +25,8 @@ namespace MonoZelda.Enemies.EnemyClasses
         public Keese(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
+            Height = 64;
+            Width = 64;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,

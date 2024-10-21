@@ -22,6 +22,7 @@ public class ProjectileManager
         {Keys.D4,ProjectileType.BoomerangBlue},
         {Keys.D5,ProjectileType.Bomb},
         {Keys.D6,ProjectileType.CandleBlue},
+        {Keys.T,ProjectileType.WoodenSwordBeam},
         {Keys.Z, ProjectileType.WoodenSword},
         {Keys.N, ProjectileType.WoodenSword}
     };

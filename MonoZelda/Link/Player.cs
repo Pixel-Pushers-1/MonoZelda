@@ -5,10 +5,10 @@ using MonoZelda.Commands.GameCommands;
 namespace MonoZelda.Link;
 
 public enum Direction {
-    Up,
-    Down,
-    Left,
-    Right
+    Up = 5,
+    Down = -5,
+    Left = 10,
+    Right = -10,
 }
 
 public class Player
