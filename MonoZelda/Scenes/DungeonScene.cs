@@ -70,7 +70,8 @@ public class DungeonScene : IScene
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(player));
         commandManager.ReplaceCommand(CommandType.PlayerUseItemCommand, new PlayerUseItemCommand(projectiles, projectileManager, player));
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(player));
-        commandManager.ReplaceCommand(CommandType.PlayerStaticCollisionCommand, new PlayerStaticCollisionCommand(player));
+        commandManager.ReplaceCommand(CommandType.PlayerStaticCollisionCommand, new PlayerStaticCollisionCommand(playerCollision));
+        commandManager.ReplaceCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand(playerCollision));
         commandManager.ReplaceCommand(CommandType.PlayerEnemyProjectileCollisionCommand, new PlayerEnemyProjectileCollisionCommand(player));
 
         // create spritedict to pass into player controller

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Enemies;
+using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Link.Projectiles;
 using MonoZelda.Sprites;
 
@@ -25,7 +26,6 @@ namespace MonoZelda.Collision
         public ProjectileManager ProjectileManager { get; private set; }
 
         public IEnemyProjectile EnemyProjectile { get; private set; }
-        public ProjectileManager ProjectileManager { get; private set; }
 
         private readonly CollisionHitboxDraw hitbox;
 
