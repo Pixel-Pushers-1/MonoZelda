@@ -2,18 +2,18 @@
 Monogame implementation of OG Zelda by team Pixel Pushers
 
 ## Controls
-Start Game -> Return
-Exit Game -> Q
-Reset Game -> R
-Move Up -> W or Up Arrow
-Move Down -> S or Down Arrow
-Move Right -> D or Right Arrow
-Move Left -> A or Left Arrow
-Toggle Hitboxes -> G
-Use Item -> D1 - D6
-Fire Sword Beam -> T
-Player Attack -> Z or N
-Change Room -> Left Click on Door
+- Start Game -> Return
+- Exit Game -> Q
+- Reset Game -> R
+- Move Up -> W or Up Arrow
+- Move Down -> S or Down Arrow
+- Move Right -> D or Right Arrow
+- Move Left -> A or Left Arrow
+- Toggle Hitboxes -> G
+- Use Item -> D1 - D6
+- Fire Sword Beam -> T
+- Player Attack -> Z or N
+- Change Room -> Left Click on Door
 
 # Special Notes
 - For pushable blocks, keep pushing into the block for a few seconds for functionality 
