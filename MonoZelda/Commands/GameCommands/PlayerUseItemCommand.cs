@@ -40,7 +40,7 @@ public class PlayerUseItemCommand : ICommand
         }
 
         // animate player throw projectile
-        if (player != null)
+        if (player != null && launchedProjectile != null)
         {
             player.UseItem();
             launchedProjectile.UpdateProjectile();
