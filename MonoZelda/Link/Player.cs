@@ -27,6 +27,7 @@ public class Player
     public void SetPlayerSpriteDict(SpriteDict spriteDict)
     {
         playerSpriteDict = spriteDict;
+        playerDirection = Direction.Down;
     }
 
     public void Move(PlayerMoveCommand moveCommand)
