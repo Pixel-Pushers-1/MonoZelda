@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace MonoZelda.Sprites;
 
@@ -40,6 +41,12 @@ public class SpriteDict : IDrawable
     public void SetSprite(string name)
     {
         currentSprite = name;
+    }
+
+    public double SetSpriteOneshot(string name)
+    {
+        currentSprite = name;
+        return dict[currentSprite].SetOneshot(true);
     }
 
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime)

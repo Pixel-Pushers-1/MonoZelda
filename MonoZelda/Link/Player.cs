@@ -1,6 +1,7 @@
 ﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
+using System.Diagnostics;
 
 namespace MonoZelda.Link;
 
@@ -17,7 +18,7 @@ public class Player
     private SpriteDict playerSpriteDict;
     private Vector2 playerPostition;
     private float playerSpeed = 4.0f;
-    private int frameTimer;
+    private double timer;
 
     public Player()
     {
@@ -31,8 +32,8 @@ public class Player
 
     public void Move(PlayerMoveCommand moveCommand)
     {
-        if (frameTimer > 0) {
-            frameTimer--;
+        if (timer > 0) {
+            timer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
             return;
         }
 
@@ -68,7 +69,7 @@ public class Player
         
     public void StandStill(PlayerStandingCommand standCommand)
     {
-        if(frameTimer == 0)
+        if(timer <= 0)
         {
             switch (playerDirection)
             {
@@ -86,9 +87,8 @@ public class Player
                     break;
             }
         }
-        else
-        {
-            frameTimer--;
+        else {
+            timer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         }
 
         playerSpriteDict.Position = playerPostition.ToPoint();
@@ -96,37 +96,56 @@ public class Player
 
     public void Attack()
     {
-        if (frameTimer == 0)
-        {
-            frameTimer = 20;
-            switch (playerDirection)
-            {
+        //if (frameTimer == 0)
+        //{
+        //    frameTimer = 20;
+        //    switch (playerDirection)
+        //    {
+        //        case Direction.Up:
+        //            playerSpriteDict.SetSprite("woodensword_up");
+        //            break;
+        //        case Direction.Down:
+        //            playerSpriteDict.SetSprite("woodensword_down");
+        //            break;
+        //        case Direction.Left:
+        //            playerSpriteDict.SetSprite("woodensword_left");
+        //            break;
+        //        case Direction.Right:
+        //            playerSpriteDict.SetSprite("woodensword_right");
+        //            break;
+        //    }
+        //}
+        //else
+        //{
+        //    frameTimer--;
+        //}
+
+        if (timer <= 0) {
+            switch (playerDirection) {
                 case Direction.Up:
-                    playerSpriteDict.SetSprite("woodensword_up");
-                    break;
+                timer = playerSpriteDict.SetSpriteOneshot("woodensword_up");
+                break;
                 case Direction.Down:
-                    playerSpriteDict.SetSprite("woodensword_down");
-                    break;
+                timer = playerSpriteDict.SetSpriteOneshot("woodensword_down");
+                break;
                 case Direction.Left:
-                    playerSpriteDict.SetSprite("woodensword_left");
-                    break;
+                timer = playerSpriteDict.SetSpriteOneshot("woodensword_left");
+                break;
                 case Direction.Right:
-                    playerSpriteDict.SetSprite("woodensword_right");
-                    break;
+                timer = playerSpriteDict.SetSpriteOneshot("woodensword_right");
+                break;
             }
         }
-        else
-        {
-            frameTimer--;
+        else {
+            timer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         }
-        
     }
 
     public void UseItem()
     {
-        if(frameTimer == 0)
+        if(timer <= 0)
         {
-            frameTimer = 20;
+            timer = 1;
             switch (playerDirection)
             {
                 case Direction.Up:
@@ -143,9 +162,8 @@ public class Player
                     break;
             }
         }
-        else
-        {
-            frameTimer--;
+        else {
+            timer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         }
         
     }
@@ -153,9 +171,9 @@ public class Player
 
     public void TakeDamage()
     {
-        if (frameTimer == 0)
+        if (timer <= 0)
         {
-            frameTimer = 10;
+            timer = 0.5;
             switch (playerDirection)
             {
                 case Direction.Up:
@@ -172,9 +190,8 @@ public class Player
                     break;
             }
         }
-        else
-        {
-            frameTimer--;
+        else {
+            timer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         }
         
     }
@@ -185,8 +202,8 @@ public class Player
     }
     public int FrameTimer
     {
-        get { return frameTimer; }
-        set { frameTimer = value; }
+        get { return (int) timer; }
+        set { timer = value; }
     }
     public Vector2 GetPlayerPosition()
     {
