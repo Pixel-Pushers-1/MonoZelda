@@ -80,7 +80,6 @@ public class Boomerang : Projectile, IProjectile
         else
         {
             Finished = reachedDistance();
-            projectileDict.Enabled = false;
         }
         projectileDict.Position = projectilePosition.ToPoint();
     }
@@ -91,6 +90,7 @@ public class Boomerang : Projectile, IProjectile
         if (tracker.Returned(projectilePosition))
         {
             reachedDistance = true;
+            projectileDict.Enabled = false;
         }
 
         return reachedDistance;

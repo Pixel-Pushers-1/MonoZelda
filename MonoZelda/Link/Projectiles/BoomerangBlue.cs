@@ -79,7 +79,6 @@ public class BoomerangBlue : Projectile, IProjectile
         else
         {
             Finished = reachedDistance();
-            projectileDict.Enabled = false;
         }
         projectileDict.Position = projectilePosition.ToPoint();
     }
@@ -90,6 +89,7 @@ public class BoomerangBlue : Projectile, IProjectile
         if (tracker.Returned(projectilePosition))
         {
             reachedDistance = true;
+            projectileDict.Enabled = false;
         }
 
         return reachedDistance;

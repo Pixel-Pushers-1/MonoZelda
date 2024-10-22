@@ -13,3 +13,11 @@ boomerang_blue,80,264,8,8,8,center
 bomb,144,256,16,16,1,center
 cloud,160,256,16,16,3,center
 fire,208,256,16,16,2,center
+woodensword_item_up,0,224,8,16,1,center
+woodensword_item_down,8,224,8,16,1,center
+woodensword_item_right,16,224,16,8,1,center
+woodensword_item_left,16,232,16,8,1,center
+woodensword_effect_NW,32,224,8,10,1,bottom right
+woodensword_effect_NE,40,224,8,10,1,bottom left
+woodensword_effect_SW,32,234,8,10,1,top right
+woodensword_effect_SE,40,234,8,10,1,top left

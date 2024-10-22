@@ -77,7 +77,6 @@ public class ArrowBlue : Projectile, IProjectile
         }
         else if (tilesTraveled == 6)
         {
-            projectileDict.Enabled = false;
             Finished = reachedDistance();
         }
 
@@ -90,6 +89,8 @@ public class ArrowBlue : Projectile, IProjectile
         if (tilesTraveled == 6)
         {
             reachedDistance = true;
+            projectileDict.SetSprite("");
+            projectileDict.Enabled = false;
         }
 
         return reachedDistance;
