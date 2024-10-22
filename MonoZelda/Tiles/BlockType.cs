@@ -1,4 +1,4 @@
-namespace PixelPushers.MonoZelda.Tiles;
+namespace MonoZelda.Tiles;
 
 public enum BlockType
 {

@@ -1,28 +1,34 @@
-﻿using PixelPushers.MonoZelda.Link;
-using PixelPushers.MonoZelda.Sprites;
-using PixelPushers.MonoZelda.Commands;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace PixelPushers.MonoZelda.Link.Projectiles;
+namespace MonoZelda.Link.Projectiles;
 
-public class BoomerangBlue : Projectile, ILaunch
+public class BoomerangBlue : Projectile, IProjectile
 {
     private bool Finished;
-    private Vector2 InitialPosition;
-    private SpriteDict projectileDict;
-    private Player player;
     private float projectileSpeed = 4f;
     private int tilesTraveled;
+    private Vector2 InitialPosition;
     private Vector2 Dimension = new Vector2(8, 8);
+    private SpriteDict projectileDict;
+    private Player player;
+    private TrackReturn tracker;
 
     public BoomerangBlue(SpriteDict projectileDict, Player player) : base(projectileDict, player)
     {
         this.projectileDict = projectileDict;
         this.player = player;
         Finished = false;
+        tilesTraveled = 0;
         SetProjectileSprite("boomerang_blue");
         InitialPosition = SetInitialPosition(Dimension);
+        UseTrackReturn();
+    }
+
+    private void UseTrackReturn()
+    {
+        tracker = TrackReturn.CreateInstance(this, player, projectileSpeed);
     }
 
     private void Forward()
@@ -30,39 +36,25 @@ public class BoomerangBlue : Projectile, ILaunch
         switch (playerDirection)
         {
             case Direction.Up:
-                projectilePosition += projectileSpeed * (new Vector2(0, -1));
+                projectilePosition += projectileSpeed * new Vector2(0, -1);
                 break;
             case Direction.Down:
-                projectilePosition += projectileSpeed * (new Vector2(0, 1));
+                projectilePosition += projectileSpeed * new Vector2(0, 1);
                 break;
             case Direction.Left:
-                projectilePosition += projectileSpeed * (new Vector2(-1, 0));
+                projectilePosition += projectileSpeed * new Vector2(-1, 0);
                 break;
             case Direction.Right:
-                projectilePosition += projectileSpeed * (new Vector2(1, 0));
+                projectilePosition += projectileSpeed * new Vector2(1, 0);
                 break;
         }
         updateTilesTraveled();
     }
 
-    private void Reverse()
+    private void ReturnToPlayer()
     {
-        switch (playerDirection)
-        {
-            case Direction.Up:
-                projectilePosition -= projectileSpeed * (new Vector2(0, -1));
-                break;
-            case Direction.Down:
-                projectilePosition -= projectileSpeed * (new Vector2(0, 1));
-                break;
-            case Direction.Left:
-                projectilePosition -= projectileSpeed * (new Vector2(-1, 0));
-                break;
-            case Direction.Right:
-                projectilePosition -= projectileSpeed * (new Vector2(1, 0));
-                break;
-        }
-        updateTilesTraveled();
+        tracker.CheckResetOrigin(projectilePosition);
+        projectilePosition += tracker.getProjectileNextPosition();
     }
 
     private void updateTilesTraveled()
@@ -74,20 +66,19 @@ public class BoomerangBlue : Projectile, ILaunch
             InitialPosition = projectilePosition;
         }
     }
-    public void Launch()
+    public void UpdateProjectile()
     {
         if (tilesTraveled < 5)
         {
             Forward();
         }
-        else if (tilesTraveled >= 5 && tilesTraveled < 10)
+        else if (!reachedDistance())
         {
-            Reverse();
+            ReturnToPlayer();
         }
         else
         {
             Finished = reachedDistance();
-            projectileDict.Enabled = false;
         }
         projectileDict.Position = projectilePosition.ToPoint();
     }
@@ -95,9 +86,10 @@ public class BoomerangBlue : Projectile, ILaunch
     public bool reachedDistance()
     {
         bool reachedDistance = false;
-        if (tilesTraveled == 10)
+        if (tracker.Returned(projectilePosition))
         {
             reachedDistance = true;
+            projectileDict.Enabled = false;
         }
 
         return reachedDistance;
@@ -106,5 +98,16 @@ public class BoomerangBlue : Projectile, ILaunch
     public bool hasFinished()
     {
         return Finished;
+    }
+
+    public void FinishProjectile()
+    {
+        tilesTraveled = 5;
+    }
+
+    public Rectangle getCollisionRectangle()
+    {
+        Point spawnPosition = projectilePosition.ToPoint();
+        return new Rectangle(spawnPosition.X - 32 / 2, spawnPosition.Y - 32 / 2, 32, 32);
     }
 }

@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
-using PixelPushers.MonoZelda.Sprites;
+using MonoZelda.Sprites;
 
-namespace PixelPushers.MonoZelda.Tiles;
+namespace MonoZelda.Tiles;
 
 internal static class TileFactory 
 {

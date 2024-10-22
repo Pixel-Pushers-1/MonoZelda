@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace PixelPushers.MonoZelda.Sprites;
+namespace MonoZelda.Sprites;
 
 public class Sprite
 {

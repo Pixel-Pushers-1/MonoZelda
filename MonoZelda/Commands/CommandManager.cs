@@ -1,92 +1,87 @@
 using System.Collections.Generic;
-using System.Diagnostics;
-using PixelPushers.MonoZelda.Controllers;
+using MonoZelda.Commands.GameCommands;
+using MonoZelda.Commands.CollisionCommands;
 
-namespace PixelPushers.MonoZelda.Commands;
+namespace MonoZelda.Commands;
 
-public enum CommandEnum
+public enum CommandType
 {
-    // Temporary Commands for Sprint2
-    BlockCycleCommand,
-    EnemyCycleCommand,
-    ItemCycleCommand,
     // Commands for entire project
     ExitCommand,
     PlayerAttackCommand,
+    PlayerFireSwordBeam,
     PlayerMoveCommand,
     PlayerTakeDamageCommand,
     PlayerUseItemCommand,
     ResetCommand,
     PlayerStandingCommand,
-    StartCommand,
+    StartGameCommand,
+    LoadRoomCommand,
+    PlayerItemCollisionCommand,
+    PlayerEnemyCollisionCommand,
+    PlayerEnemyProjectileCollisionCommand,
+    PlayerStaticCollisionCommand,
+    PlayerTriggerCollisionCommand,
+    EnemyProjectileCollisionCommand,
+    EnemyStaticCollisionCommand,
+    ToggleGizmosCommand,
     None
 }
 
 public class CommandManager
 {
-    Dictionary<CommandEnum, ICommand> commandMap;
+    Dictionary<CommandType, ICommand> commandMap;
     public CommandManager()
     {
-        commandMap = new Dictionary<CommandEnum, ICommand>();
-        AddCommand(CommandEnum.BlockCycleCommand, new BlockCycleCommand());
-        AddCommand(CommandEnum.EnemyCycleCommand, new EnemyCycleCommand());
-        AddCommand(CommandEnum.ItemCycleCommand, new ItemCycleCommand());
-        AddCommand(CommandEnum.ExitCommand, new ExitCommand());
-        AddCommand(CommandEnum.PlayerAttackCommand, new PlayerAttackCommand());
-        AddCommand(CommandEnum.PlayerMoveCommand, new PlayerMoveCommand());
-        AddCommand(CommandEnum.PlayerTakeDamageCommand, new PlayerTakeDamageCommand());
-        AddCommand(CommandEnum.PlayerUseItemCommand, new PlayerUseItemCommand());
-        AddCommand(CommandEnum.PlayerStandingCommand, new PlayerStandingCommand());
-        AddCommand(CommandEnum.ResetCommand, new ResetCommand());
-        AddCommand(CommandEnum.StartCommand, new StartGameCommand());
+        commandMap = new Dictionary<CommandType, ICommand>();
+        AddCommand(CommandType.ExitCommand, new ExitCommand());
+        AddCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand());
+        AddCommand(CommandType.PlayerFireSwordBeam, new PlayerFireSwordBeam());
+        AddCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());
+        AddCommand(CommandType.PlayerUseItemCommand, new PlayerUseItemCommand());
+        AddCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
+        AddCommand(CommandType.ResetCommand, new ResetCommand());
+        AddCommand(CommandType.StartGameCommand, new StartGameCommand());
+        AddCommand(CommandType.LoadRoomCommand, new LoadRoomCommand());
+        AddCommand(CommandType.PlayerItemCollisionCommand, new PlayerItemCollisionCommand());
+        AddCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand());
+        AddCommand(CommandType.PlayerEnemyProjectileCollisionCommand, new PlayerEnemyProjectileCollisionCommand());
+        AddCommand(CommandType.PlayerStaticCollisionCommand, new PlayerStaticCollisionCommand());
+        AddCommand(CommandType.PlayerTriggerCollisionCommand, new PlayerTriggerCollisionCommand());
+        AddCommand(CommandType.EnemyProjectileCollisionCommand, new EnemyProjectileCollisionCommand());
+        AddCommand(CommandType.EnemyStaticCollisionCommand, new EnemyStaticCollisionCommand());
+        AddCommand(CommandType.ToggleGizmosCommand, new ToggleGizmosCommand());
+
     }
 
-    public Dictionary<CommandEnum, ICommand> CommandMap
+    public void Execute(CommandType commandType, params object[] metadata)
     {
-        get
+        commandMap[commandType].Execute(metadata);
+    }
+
+    public bool ReplaceCommand(CommandType commandType, ICommand command)
+    {
+        if (commandMap.ContainsKey(commandType))
         {
-            return commandMap;
-        }
-    }
-
-    public GameState Execute(CommandEnum commandName)
-    {
-        return commandMap[commandName].Execute();
-    }
-
-    public bool ReplaceCommand(CommandEnum commandName, ICommand command)
-    {
-        if (commandMap.ContainsKey(commandName))
-        {
-            commandMap[commandName] = command;
+            commandMap[commandType] = command;
             return true;
         }
         else
         {
-            Debug.WriteLine("Command with same enum name not present in the dictionary.");
             return false;
         }
     }
 
-    public bool AddCommand(CommandEnum commandName, ICommand command)
+    private bool AddCommand(CommandType commandName, ICommand command)
     {
         if (commandMap.ContainsKey(commandName))
         {
-            Debug.WriteLine("Command with same enum name already present in the dictionary.");
             return false;
         }
         else
         {
             commandMap[commandName] = command;
             return true;
-        }
-    }
-
-    public void SetController(IController controller)
-    {
-        foreach (ICommand command in commandMap.Values)
-        {
-            command.SetController(controller);
         }
     }
 }

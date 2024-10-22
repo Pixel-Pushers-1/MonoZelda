@@ -1,14 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System.Diagnostics;
-using MonoZelda.Enemies;
-using PixelPushers.MonoZelda.Controllers;
-using PixelPushers.MonoZelda.Sprites;
-using PixelPushers.MonoZelda.Commands;
-using PixelPushers.MonoZelda.Scenes;
+using MonoZelda.Controllers;
+using MonoZelda.Sprites;
+using MonoZelda.Commands;
+using MonoZelda.Commands.GameCommands;
+using MonoZelda.Scenes;
 
-namespace PixelPushers.MonoZelda;
+namespace MonoZelda;
 
 public enum GameState
 {
@@ -16,6 +14,7 @@ public enum GameState
     Start,
     Reset,
     Quit,
+    None
 }
 
 public class MonoZeldaGame : Game
@@ -24,7 +23,9 @@ public class MonoZeldaGame : Game
     private SpriteBatch spriteBatch;
     private KeyboardController keyboardController;
     private MouseController mouseController;
+    private CollisionController collisionController;
     private CommandManager commandManager;
+    private IDungeonRoomLoader dungeonLoader;
 
     private IScene scene;
 
@@ -34,15 +35,18 @@ public class MonoZeldaGame : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
 
+        // create Command Manager
         commandManager = new CommandManager();
 
         // Commands that use MonoZeldaGame reference
-        commandManager.ReplaceCommand(CommandEnum.ExitCommand, new ExitCommand(this));
-        commandManager.ReplaceCommand(CommandEnum.StartCommand, new StartGameCommand(this));
-        commandManager.ReplaceCommand(CommandEnum.ResetCommand, new ResetCommand(this));
+        commandManager.ReplaceCommand(CommandType.ExitCommand, new ExitCommand(this));
+        commandManager.ReplaceCommand(CommandType.StartGameCommand, new StartGameCommand(this));
+        commandManager.ReplaceCommand(CommandType.ResetCommand, new ResetCommand(this));
 
+        // create controller objects
         keyboardController = new KeyboardController(commandManager);
         mouseController = new MouseController(commandManager);
+        collisionController = new CollisionController(commandManager);
     }
 
     protected override void Initialize()
@@ -52,22 +56,25 @@ public class MonoZeldaGame : Game
         graphicsDeviceManager.PreferredBackBufferHeight = 896;
         graphicsDeviceManager.ApplyChanges();
 
+        dungeonLoader = new HTTPRoomParser(Content,GraphicsDevice);
+
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
         spriteBatch = new SpriteBatch(GraphicsDevice);
-
+        
         // Start menu goes first
         StartMenu();
     }
 
     protected override void Update(GameTime gameTime)
     {
-        keyboardController.Update();
-        mouseController.Update();
+        keyboardController.Update(gameTime);
+        mouseController.Update(gameTime);
         scene.Update(gameTime);
+        collisionController.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -78,7 +85,7 @@ public class MonoZeldaGame : Game
 
         spriteBatch.Begin();
 
-        // SpriteDrawer draws all SpriteDicts
+        // SpriteDrawer draws all drawables
         SpriteDrawer.Draw(spriteBatch, gameTime);
 
         spriteBatch.End();
@@ -90,6 +97,7 @@ public class MonoZeldaGame : Game
     {
         // Clean state to start a new scene
         SpriteDrawer.Reset();
+        collisionController.Clear();
         this.scene = scene;
         scene.LoadContent(Content);
     }
@@ -105,7 +113,20 @@ public class MonoZeldaGame : Game
         if (scene is MainMenu)
         {
             // TODO: Passing MonoZeldaGame smells. It's used by some things to LoadContent, SpriteDict multiple AddSprite()
-            LoadScene(new DungeonScene(GraphicsDevice, graphicsDeviceManager, commandManager, this));
+            LoadDungeon("Room1");
         }
+    }
+
+    public void LoadDungeon(string roomName)
+    {
+        var room = dungeonLoader.LoadRoom(roomName);
+        commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this, room));
+
+        LoadScene(new DungeonScene(GraphicsDevice, commandManager, collisionController, room));
+    }
+
+    public CollisionController GetCollisionController() 
+    {
+        return collisionController;
     }
 }

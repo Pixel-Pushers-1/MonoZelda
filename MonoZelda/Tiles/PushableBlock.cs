@@ -1,5 +1,4 @@
-﻿
-namespace PixelPushers.MonoZelda.Tiles;
+﻿namespace MonoZelda.Tiles;
 
 internal class PushableBlock : TileBase, IPushable
 {

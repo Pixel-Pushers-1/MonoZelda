@@ -1,10 +1,7 @@
-﻿using PixelPushers.MonoZelda.Controllers;
-
-namespace PixelPushers.MonoZelda.Commands;
+﻿namespace MonoZelda.Commands;
 
 public interface ICommand
 {
-    GameState Execute();
-    GameState UnExecute();
-    void SetController(IController controller);
+    void Execute(params object[] metadata);
+    void UnExecute();
 }

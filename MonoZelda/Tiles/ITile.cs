@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace PixelPushers.MonoZelda.Tiles;
+namespace MonoZelda.Tiles;
 
 internal interface ITile
 {

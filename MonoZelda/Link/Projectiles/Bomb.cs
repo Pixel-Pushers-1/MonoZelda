@@ -1,18 +1,16 @@
-﻿using PixelPushers.MonoZelda.Link;
-using PixelPushers.MonoZelda.Sprites;
-using PixelPushers.MonoZelda.Commands;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 
-namespace PixelPushers.MonoZelda.Link.Projectiles;
+namespace MonoZelda.Link.Projectiles;
 
-public class Bomb : Projectile, ILaunch
+public class Bomb : Projectile, IProjectile
 {
     private bool Finished;
+    private int timer;
     private Vector2 InitialPosition;
+    private Vector2 Dimension = new Vector2(8, 16);
     private SpriteDict projectileDict;
     private Player player;
-    private int timer;
-    private Vector2 Dimension = new Vector2(8, 16);
 
     public Bomb(SpriteDict projectileDict, Player player) : base(projectileDict, player)
     {
@@ -30,13 +28,13 @@ public class Bomb : Projectile, ILaunch
         Finished = reachedDistance();
     }
 
-    public void Launch()
+    public void UpdateProjectile()
     {
-        if(timer < 14)
+        if (timer < 90)
         {
             updatePosition();
         }
-        else if(timer == 15)
+        else if (timer >= 90 && timer < 100)
         {
             SetProjectileSprite("cloud");
         }
@@ -45,15 +43,16 @@ public class Bomb : Projectile, ILaunch
             Finished = reachedDistance();
         }
         timer++;
-        
+
     }
 
     public bool reachedDistance()
     {
         bool reachedDistance = false;
-        if(timer == 16)
+        if (timer == 100)
         {
             reachedDistance = true;
+            projectileDict.SetSprite("");
             projectileDict.Enabled = false;
         }
         return reachedDistance;
@@ -62,5 +61,16 @@ public class Bomb : Projectile, ILaunch
     public bool hasFinished()
     {
         return Finished;
+    }
+
+    public void FinishProjectile()
+    {
+        // Empty
+    }
+
+    public Rectangle getCollisionRectangle()
+    {
+        Point spawnPosition = projectilePosition.ToPoint();
+        return new Rectangle(spawnPosition.X - 32 / 2, spawnPosition.Y - 64 / 2, 32, 64);
     }
 }

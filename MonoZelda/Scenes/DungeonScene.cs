@@ -1,71 +1,176 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MonoZelda.Link;
+using MonoZelda.Commands;
+using MonoZelda.Sprites;
+using MonoZelda.Link.Projectiles;
+using MonoZelda.Collision;
+using MonoZelda.Controllers;
+using MonoZelda.Dungeons;
+using MonoZelda.Items;
+using MonoZelda.Commands.GameCommands;
 using MonoZelda.Enemies;
-using PixelPushers.MonoZelda.Link;
-using PixelPushers.MonoZelda.Commands;
-using PixelPushers.MonoZelda.Items;
-using PixelPushers.MonoZelda.Sprites;
-using PixelPushers.MonoZelda.Tiles;
-using PixelPushers.MonoZelda.Link.Projectiles;
+using System.Collections.Generic;
+using MonoZelda.Enemies.EnemyProjectiles;
+using MonoZelda.Commands.CollisionCommands;
+using MonoZelda.Trigger;
 
-namespace PixelPushers.MonoZelda.Scenes;
+namespace MonoZelda.Scenes;
 
-internal class DungeonScene : IScene
+public class DungeonScene : IScene
 {
     private GraphicsDevice graphicsDevice;
     private CommandManager commandManager;
     private Player player;
+    private ProjectileManager projectileManager;
+    private PlayerCollision playerCollision;
+    private CollisionController collisionController;
+    private List<ITrigger> triggers;
+    private ItemFactory itemFactory;
+    private EnemyFactory enemyFactory;
+    private List<IEnemy> enemies = new();
+    private Dictionary<IEnemy, EnemyCollision> enemyDictionary = new();
+    private List<EnemyCollision> enemyCollisions = new();
+    private List<EnemyProjectileCollision> enemyProjectileCollisions = new();
+    private IDungeonRoom room;
+    private string roomName;
 
-    private EnemyCycler enemyCycler;
 
-    public DungeonScene(GraphicsDevice device, GraphicsDeviceManager gManager, CommandManager cManager, MonoZeldaGame game) 
+    public DungeonScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room) 
     {
-        graphicsDevice = device;
-        commandManager = cManager;
-
-        player = new Player();
-
-        enemyCycler = new EnemyCycler(commandManager, gManager, game);
-        var cycleCommand = new EnemyCycleCommand(enemyCycler);
-        commandManager.ReplaceCommand(CommandEnum.EnemyCycleCommand, cycleCommand);
+        this.graphicsDevice = graphicsDevice;
+        this.commandManager = commandManager;
+        this.collisionController = collisionController;
+        this.room = room;
+        triggers = new List<ITrigger>();
     }
 
     public void LoadContent(ContentManager contentManager)
     {
-        // Setup TileDemo
-        var tileDict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Blocks), SpriteCSVData.Blocks, 0, new Point(300, 300));
-        var demoTile = new TileCycleDemo(tileDict, new Point(300, 300));
+        // Need to wait for LoadContent because MonoZeldaGame is going to clear everything before calling this.
+        LoadRoom(contentManager);
 
-        //Setup ItemDemo
-        var itemDict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Items), SpriteCSVData.Items, 0, new Point(450, 100));
-        var demoItem = new ItemCycleDemo(itemDict, new Point(450, 100));
+        //create player and player collision
+        player = new Player();
+        Collidable playerHitbox = new Collidable(new Rectangle(100, 100, 50, 50), graphicsDevice, CollidableType.Player);
+        collisionController.AddCollidable(playerHitbox);
+        playerCollision = new PlayerCollision(player, playerHitbox, collisionController);
 
         // create projectile object and spriteDict
         var projectileDict = new SpriteDict(contentManager.Load<Texture2D>("Sprites/player"), SpriteCSVData.Projectiles, 0, new Point(0, 0));
         projectileDict.Enabled = false;
         var projectiles = new Projectile(projectileDict, player);
+        projectileManager = new ProjectileManager(collisionController, graphicsDevice);
 
-        // create the cycle commands
-        commandManager.ReplaceCommand(CommandEnum.BlockCycleCommand, new BlockCycleCommand(demoTile));
-        commandManager.ReplaceCommand(CommandEnum.ItemCycleCommand, new ItemCycleCommand(demoItem));
-        commandManager.ReplaceCommand(CommandEnum.PlayerMoveCommand, new PlayerMoveCommand(player));
-        commandManager.ReplaceCommand(CommandEnum.PlayerAttackCommand, new PlayerAttackCommand(player));
-        commandManager.ReplaceCommand(CommandEnum.PlayerStandingCommand, new PlayerStandingCommand(player));
-        commandManager.ReplaceCommand(CommandEnum.PlayerUseItemCommand, new PlayerUseItemCommand(projectiles,player));
-        commandManager.ReplaceCommand(CommandEnum.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(player));
+        // replace required commands
+        commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(player));
+        commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(projectiles, projectileManager, player));
+        commandManager.ReplaceCommand(CommandType.PlayerFireSwordBeam, new PlayerFireSwordBeam(projectiles, projectileManager, player));
+        commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(player));
+        commandManager.ReplaceCommand(CommandType.PlayerUseItemCommand, new PlayerUseItemCommand(projectiles, projectileManager, player));
+        commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(player));
+        commandManager.ReplaceCommand(CommandType.PlayerStaticCollisionCommand, new PlayerStaticCollisionCommand(playerCollision));
+        commandManager.ReplaceCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand(playerCollision));
+        commandManager.ReplaceCommand(CommandType.PlayerEnemyProjectileCollisionCommand, new PlayerEnemyProjectileCollisionCommand(player));
 
         // create spritedict to pass into player controller
         var playerSpriteDict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Player), SpriteCSVData.Player, 1, new Point(100, 100));
         player.SetPlayerSpriteDict(playerSpriteDict);
+    }
 
-        var enemySpriteDict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Enemies), SpriteCSVData.Enemies, 1, new Point(100, 100));
-        enemyCycler.SetSpriteDicts(enemySpriteDict);
+
+
+    private void LoadRoom(ContentManager contentManager)
+    {
+        LoadRoomTextures(contentManager);
+        CreateStaticColliders();
+        CreateTriggers(contentManager);
+        SpawnItems(contentManager);
+        SpawnEnemies(contentManager);
+    }
+
+    private void CreateTriggers(ContentManager contentManager)
+    {
+        foreach(var trigger in room.GetTriggers())
+        {
+            var t = TriggerFactory.CreateTrigger(trigger.Type, collisionController, contentManager, trigger.Position, graphicsDevice);
+            triggers.Add(t);
+        }
+    }
+
+    private void SpawnItems(ContentManager contentManager)
+    {
+        // Create itemFactory object
+        itemFactory = new ItemFactory(collisionController, contentManager, graphicsDevice);
+        foreach (var itemSpawn in room.GetItemSpawns())
+        {
+            itemFactory.CreateItem(itemSpawn.ItemType, itemSpawn.Position);
+        }
+    }
+
+    private void SpawnEnemies(ContentManager contentManager)
+    {
+        enemyFactory = new EnemyFactory(collisionController, contentManager, graphicsDevice);
+        foreach(var enemySpawn in room.GetEnemySpawns())
+        {
+            enemies.Add(enemyFactory.CreateEnemy(enemySpawn.EnemyType, new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32)));
+        }
+        foreach (var enemy in enemies)
+        {
+            enemyDictionary.Add(enemy, new EnemyCollision(enemy, collisionController, enemy.Width, enemy.Height));
+        }
+    }
+
+    private void CreateStaticColliders()
+    {
+        var colliderRects = room.GetStaticColliders();
+        foreach (var rect in colliderRects)
+        {
+            var collidable = new Collidable(rect, graphicsDevice, CollidableType.Static);
+            collisionController.AddCollidable(collidable);
+        }
+    }
+
+    private void LoadRoomTextures(ContentManager contentManager)
+    {
+        var dungeonTexture = contentManager.Load<Texture2D>(TextureData.Blocks);
+
+        // Room wall border
+        var r = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks, SpriteLayer.Background, DungeonConstants.DungeonPosition);
+        r.SetSprite(nameof(Dungeon1Sprite.room_exterior));
+
+        // Floor background
+        var f = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks, SpriteLayer.Background, DungeonConstants.BackgroundPosition);
+        f.SetSprite(room.RoomSprite.ToString());
+
+        // Doors
+        var doors = room.GetDoors();
+        foreach (var door in doors)
+        {
+            var doorDict = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks, SpriteLayer.Background, door.Position);
+            doorDict.SetSprite(door.DoorSprite.ToString());
+        }
     }
 
     public void Update(GameTime gameTime)
     {
-        enemyCycler.Update(gameTime);
-    }
+        foreach(var trigger in triggers)
+        {
+            trigger.Update();
+        }
 
+        if (projectileManager.ProjectileFired == true)
+        {
+            projectileManager.executeProjectile();
+        }
+
+        foreach(KeyValuePair<IEnemy, EnemyCollision> entry in enemyDictionary)
+        {
+            entry.Key.Update(gameTime);
+            entry.Value.Update(entry.Key.Width, entry.Key.Height);
+        }
+
+        playerCollision.Update();
+    }
 }

@@ -1,12 +1,9 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
 
-namespace PixelPushers.MonoZelda.Controllers;
+namespace MonoZelda.Controllers;
 
 public interface IController
 {
-    // Properties
-    GameState GameState { get; set; }
-
     // Methods
-    Boolean Update();
+    void Update(GameTime gameTime);
 }

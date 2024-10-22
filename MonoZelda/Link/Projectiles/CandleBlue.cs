@@ -1,20 +1,18 @@
-﻿using PixelPushers.MonoZelda.Link;
-using PixelPushers.MonoZelda.Sprites;
-using PixelPushers.MonoZelda.Commands;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace PixelPushers.MonoZelda.Link.Projectiles;
+namespace MonoZelda.Link.Projectiles;
 
-public class CandleBlue : Projectile, ILaunch
+public class CandleBlue : Projectile, IProjectile
 {
     private bool Finished;
-    private Vector2 InitialPosition;
-    private SpriteDict projectileDict;
-    private Player player;
     private float projectileSpeed = 4f;
     private int tilesTraveled;
+    private Vector2 InitialPosition;
     private Vector2 Dimension = new Vector2(16, 16);
+    private SpriteDict projectileDict;
+    private Player player;
 
     public CandleBlue(SpriteDict projectileDict, Player player) : base(projectileDict, player)
     {
@@ -31,16 +29,16 @@ public class CandleBlue : Projectile, ILaunch
         switch (playerDirection)
         {
             case Direction.Up:
-                projectilePosition += projectileSpeed * (new Vector2(0, -1));
+                projectilePosition += projectileSpeed * new Vector2(0, -1);
                 break;
             case Direction.Down:
-                projectilePosition += projectileSpeed * (new Vector2(0, 1));
+                projectilePosition += projectileSpeed * new Vector2(0, 1);
                 break;
             case Direction.Left:
-                projectilePosition += projectileSpeed * (new Vector2(-1, 0));
+                projectilePosition += projectileSpeed * new Vector2(-1, 0);
                 break;
             case Direction.Right:
-                projectilePosition += projectileSpeed * (new Vector2(1, 0));
+                projectilePosition += projectileSpeed * new Vector2(1, 0);
                 break;
         }
     }
@@ -53,7 +51,7 @@ public class CandleBlue : Projectile, ILaunch
             InitialPosition = projectilePosition;
         }
     }
-    public void Launch()
+    public void UpdateProjectile()
     {
         if (tilesTraveled < 2)
         {
@@ -63,7 +61,6 @@ public class CandleBlue : Projectile, ILaunch
         }
         else if (tilesTraveled == 2)
         {
-            projectileDict.Enabled = false;
             Finished = reachedDistance();
         }
     }
@@ -75,6 +72,7 @@ public class CandleBlue : Projectile, ILaunch
         if (tilesTraveled == 2)
         {
             reachedDistance = true;
+            projectileDict.Enabled = false;
         }
 
         return reachedDistance;
@@ -83,5 +81,17 @@ public class CandleBlue : Projectile, ILaunch
     public bool hasFinished()
     {
         return Finished;
+    }
+
+    public void FinishProjectile
+        ()
+    {
+        tilesTraveled = 2;
+    }
+
+    public Rectangle getCollisionRectangle()
+    {
+        Point spawnPosition = projectilePosition.ToPoint();
+        return new Rectangle(spawnPosition.X - 64 / 2, spawnPosition.Y - 64 / 2, 64, 64);
     }
 }

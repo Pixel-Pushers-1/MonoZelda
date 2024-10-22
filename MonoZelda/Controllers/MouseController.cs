@@ -1,59 +1,55 @@
-﻿using Microsoft.Xna.Framework.Input;
-using PixelPushers.MonoZelda.Commands;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using MonoZelda.Commands;
 
-namespace PixelPushers.MonoZelda.Controllers;
+namespace MonoZelda.Controllers;
 
 public class MouseController : IController
 {
-    private MouseState mouseState;
-    private GameState gameState;
-    private CommandManager commandManager;
+    private CommandManager _commandManager;
 
     public MouseController(CommandManager commandManager)
     {
-        gameState = GameState.Start;
-        this.commandManager = commandManager;
+        this._commandManager = commandManager;
     }
 
     // Properties
-    public MouseState MouseState
-    {
-        get
-        {
-            return mouseState;
-        }
-        set
-        {
-            mouseState = value;
-        }
-    }
+    public MouseState CurrentMouseState { get; private set; }
+    public MouseState PreviousMouseState { get; private set; }
 
-    public GameState GameState
+    public void Update(GameTime gameTime)
     {
-        get
-        {
-            return gameState;
-        }
-        set
-        {
-            gameState = value;
-        }
-    }
-
-    public bool Update()
-    {
-        MouseState = Mouse.GetState();
-        GameState newState = gameState;
+        CurrentMouseState = Mouse.GetState();
 
         // Mouse input logic goes here
-
-        // Setting new Game State of mouse controller if needed
-        if (gameState != newState)
+        if (OneShotPressed(MouseButton.Left))
         {
-            gameState = newState;
-            return true;
+            _commandManager.Execute(CommandType.LoadRoomCommand, CurrentMouseState);
         }
-        return false;
+
+        PreviousMouseState = CurrentMouseState;
     }
 
+    private bool OneShotPressed(MouseButton key)
+    {
+        // Why does MouseState not have GetKey() for button :( -js
+        switch (key)
+        {
+            case MouseButton.Left:
+                return CurrentMouseState.LeftButton == ButtonState.Pressed && PreviousMouseState.LeftButton == ButtonState.Released;
+            case MouseButton.Right:
+                return CurrentMouseState.RightButton == ButtonState.Pressed && PreviousMouseState.RightButton == ButtonState.Released;
+            case MouseButton.Middle:
+                return CurrentMouseState.MiddleButton == ButtonState.Pressed && PreviousMouseState.MiddleButton == ButtonState.Released;
+            default:
+                return false;
+        }
+    }
+
+    private enum MouseButton
+    {
+        Left,
+        Right,
+        Middle
+    }
 }

@@ -2,9 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace PixelPushers.MonoZelda.Sprites;
+namespace MonoZelda.Sprites;
 
-public class SpriteDict
+public class SpriteDict : IDrawable
 {
     public Point Position { get; set; }
     public bool Enabled { get; set; }
@@ -19,7 +19,11 @@ public class SpriteDict
         Position = position;
         this.Enabled = true;
         SpriteSheetParser.Parse(this, csvName);
-        SpriteDrawer.RegisterSpriteDict(this, priority);
+        SpriteDrawer.RegisterDrawable(this, priority);
+    }
+
+    public void Unregister() {
+        SpriteDrawer.UnregisterDrawable(this);
     }
 
     public void Add(Sprite sprite, string name)
