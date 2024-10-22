@@ -1,10 +1,6 @@
 # MonoZelda
 Monogame implementation of OG Zelda by team Pixel Pushers
 
-# Special Notes
-- Dungeon rooms are downloaded from Google sheets using an HTTP request. You must have an active internet connection to run the game. Please allow a few moments for the room to load in some cases.
-- Pushable blocks need to be pushed for one full second before they will move.
-
 ## Controls
 - Start Game -> Return
 - Exit Game -> Q
@@ -17,6 +13,11 @@ Monogame implementation of OG Zelda by team Pixel Pushers
 - Use Item -> D1 - D6
 - Player Attack -> Z or N
 - Change Room -> Left Click on Door
+
+# Special Notes
+- Dungeon rooms are downloaded from Google sheets using an HTTP request. You must have an active internet connection to run the game. Please allow a few moments for the room to load in some cases.
+- For pushable blocks, keep pushing into the block for a few seconds for functionality to work.
+
 
 ## Developers
 - Josh S
