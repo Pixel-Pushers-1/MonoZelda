@@ -15,8 +15,10 @@ Fire Sword Beam -> T
 Player Attack -> Z or N
 Change Room -> Left Click on Door
 
-Note: For pushable blocks, keep pushing into the block for a few seconds for functionality 
-to work
+# Special Notes
+- For pushable blocks, keep pushing into the block for a few seconds for functionality 
+to work.
+- Dungeon rooms are downloaded from Google sheets using an HTTP request. You must have an active internet connection to run the game. Please allow a few moments for the room to load in some cases.
 
 ## Developers
 - Josh S
