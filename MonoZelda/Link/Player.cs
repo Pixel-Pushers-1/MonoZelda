@@ -1,6 +1,7 @@
 ﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
+using System.Collections.Generic;
 
 namespace MonoZelda.Link;
 
@@ -15,169 +16,21 @@ public class Player
 {
     private Direction playerDirection;
     private SpriteDict playerSpriteDict;
-    private Vector2 playerPostition;
+    private Vector2 playerPosition;
     private float playerSpeed = 4.0f;
     private int frameTimer;
 
+    private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
+    {
+       { Direction.Up, "up" },
+       { Direction.Down, "down" },
+       { Direction.Left, "left" },
+       { Direction.Right, "right" }
+    };
+
     public Player()
     {
-        playerPostition = new Vector2(500, 500);
-    }
-
-    public void SetPlayerSpriteDict(SpriteDict spriteDict)
-    {
-        playerSpriteDict = spriteDict;
-        playerDirection = Direction.Down;
-    }
-
-    public void Move(PlayerMoveCommand moveCommand)
-    {
-        if (frameTimer > 0) {
-            frameTimer--;
-            return;
-        }
-
-        playerDirection = moveCommand.PlayerDirection;
-        Vector2 movement = new();
-        switch (playerDirection) {
-            case Direction.Up: {
-                movement = new Vector2(0, -1);
-                playerSpriteDict.SetSprite("walk_up");
-                break;
-            }
-            case Direction.Down: {
-                movement = new Vector2(0, 1);
-                playerSpriteDict.SetSprite("walk_down");
-                break;
-            }
-            case Direction.Left: {
-                movement = new Vector2(-1, 0);
-                playerSpriteDict.SetSprite("walk_left");
-                break;
-            }
-            case Direction.Right: {
-                movement = new Vector2(1, 0);
-                playerSpriteDict.SetSprite("walk_right");
-                break;
-            }
-        }
-
-        //apply movement to player and sprite
-        playerPostition += playerSpeed * movement;
-        playerSpriteDict.Position = playerPostition.ToPoint();
-    }
-        
-    public void StandStill(PlayerStandingCommand standCommand)
-    {
-        if(frameTimer == 0)
-        {
-            switch (playerDirection)
-            {
-                case Direction.Up:
-                    playerSpriteDict.SetSprite("standing_up");
-                    break;
-                case Direction.Down:
-                    playerSpriteDict.SetSprite("standing_down");
-                    break;
-                case Direction.Left:
-                    playerSpriteDict.SetSprite("standing_left");
-                    break;
-                case Direction.Right:
-                    playerSpriteDict.SetSprite("standing_right");
-                    break;
-            }
-        }
-        else
-        {
-            frameTimer--;
-        }
-
-        playerSpriteDict.Position = playerPostition.ToPoint();
-    }
-
-    public void Attack()
-    {
-        if (frameTimer == 0)
-        {
-            frameTimer = 20;
-            switch (playerDirection)
-            {
-                case Direction.Up:
-                    playerSpriteDict.SetSprite("woodensword_up");
-                    break;
-                case Direction.Down:
-                    playerSpriteDict.SetSprite("woodensword_down");
-                    break;
-                case Direction.Left:
-                    playerSpriteDict.SetSprite("woodensword_left");
-                    break;
-                case Direction.Right:
-                    playerSpriteDict.SetSprite("woodensword_right");
-                    break;
-            }
-        }
-        else
-        {
-            frameTimer--;
-        }
-        
-    }
-
-    public void UseItem()
-    {
-        if(frameTimer == 0)
-        {
-            frameTimer = 20;
-            switch (playerDirection)
-            {
-                case Direction.Up:
-                    playerSpriteDict.SetSprite("useitem_up");
-                    break;
-                case Direction.Down:
-                    playerSpriteDict.SetSprite("useitem_down");
-                    break;
-                case Direction.Left:
-                    playerSpriteDict.SetSprite("useitem_left");
-                    break;
-                case Direction.Right:
-                    playerSpriteDict.SetSprite("useitem_right");
-                    break;
-            }
-        }
-        else
-        {
-            frameTimer--;
-        }
-        
-    }
-
-
-    public void TakeDamage()
-    {
-        if (frameTimer == 0)
-        {
-            frameTimer = 10;
-            switch (playerDirection)
-            {
-                case Direction.Up:
-                    playerSpriteDict.SetSprite("hurt_up");
-                    break;
-                case Direction.Down:
-                    playerSpriteDict.SetSprite("hurt_down");
-                    break;
-                case Direction.Left:
-                    playerSpriteDict.SetSprite("hurt_left");
-                    break;
-                case Direction.Right:
-                    playerSpriteDict.SetSprite("hurt_right");
-                    break;
-            }
-        }
-        else
-        {
-            frameTimer--;
-        }
-        
+        playerPosition = new Vector2(500, 500);
     }
 
     public Direction PlayerDirection
@@ -191,12 +44,113 @@ public class Player
     }
     public Vector2 GetPlayerPosition()
     {
-        return playerPostition;
+        return playerPosition;
     }
+
     public void SetPosition(Vector2 position)
     {
-        playerPostition = position;
+        playerPosition = position;
         playerSpriteDict.Position = position.ToPoint();
     }
 
+    public void SetPlayerSpriteDict(SpriteDict spriteDict)
+    {
+        playerSpriteDict = spriteDict;
+        playerDirection = Direction.Down;
+    }
+
+    public void Move(PlayerMoveCommand moveCommand)
+    {
+        if (frameTimer > 0)
+        {
+            frameTimer--;
+            return;
+        }
+
+        playerDirection = moveCommand.PlayerDirection;
+
+        // Determine movement vector
+        Vector2 movement = playerDirection switch
+        {
+            Direction.Up => new Vector2(0, -1),
+            Direction.Down => new Vector2(0, 1),
+            Direction.Left => new Vector2(-1, 0),
+            Direction.Right => new Vector2(1, 0),
+            _ => Vector2.Zero
+        };
+
+        // Get direction string from the dictionary
+        if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
+        {
+            string spriteName = $"walk_{directionString}";
+            playerSpriteDict.SetSprite(spriteName);
+        }
+
+        // Apply movement to player and sprite
+        playerPosition += playerSpeed * movement;
+        playerSpriteDict.Position = playerPosition.ToPoint();
+    }
+        
+    public void StandStill(PlayerStandingCommand standCommand)
+    {
+        if (frameTimer == 0)
+        {
+            // Get direction string from the dictionary
+            if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
+            {
+                string spriteName = $"standing_{directionString}";
+                playerSpriteDict.SetSprite(spriteName);
+            }
+        }
+        else
+        {
+            frameTimer--;
+        }
+        playerSpriteDict.Position = playerPosition.ToPoint();
+    }
+
+    public void Attack()
+    {
+        if (frameTimer == 0)
+        {
+            frameTimer = 20;
+
+            // Get direction string from the dictionary
+            if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
+            {
+                string spriteName = $"woodensword_{directionString}";
+                playerSpriteDict.SetSprite(spriteName);
+            }
+        }
+    }
+
+    public void UseItem()
+    {
+        if (frameTimer == 0)
+        {
+            frameTimer = 20;
+
+            // Get direction string from the dictionary
+            if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
+            {
+                string spriteName = $"useitem_{directionString}";
+                playerSpriteDict.SetSprite(spriteName);
+            }
+        } 
+    }
+
+    public void TakeDamage()
+    {
+        if (frameTimer == 0)
+        {
+            frameTimer = 10;
+
+            // Get direction string from the dictionary
+            if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
+            {
+                string spriteName = $"hurt_{directionString}";
+                playerSpriteDict.SetSprite(spriteName);
+            }
+        }
+    }
 }

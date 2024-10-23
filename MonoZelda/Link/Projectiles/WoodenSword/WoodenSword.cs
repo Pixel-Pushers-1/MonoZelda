@@ -27,7 +27,6 @@ public class WoodenSword : Projectile,IProjectile
 
     private void updateRotate()
     {
-        Direction playerDirection = player.PlayerDirection;
         if (playerDirection == Direction.Right || playerDirection == Direction.Left)
         {
             rotate = true;
