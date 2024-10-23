@@ -7,13 +7,14 @@ namespace MonoZelda.Link.Projectiles;
 public class WoodenSwordBeam : Projectile, IProjectile
 {
     private bool Finished;
-    private float projectileSpeed = 8f;
+    private float PROJECTILE_SPEED = 8f;
+    private const int TILES_TO_TRAVEL = 5;
     private int tilesTraveled;
     private bool rotate;
-    private AnimateSwordBeamEnd animateSwordBeamEnd;
-    private Vector2 InitialPosition;
+    private Vector2 initialPosition;
     private Vector2 Dimension = new Vector2(8, 16);
     private SpriteDict projectileDict;
+    private AnimateSwordBeamEnd animateSwordBeamEnd;
 
     public WoodenSwordBeam(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection)
     : base(projectileDict, playerPosition, playerDirection)
@@ -22,7 +23,7 @@ public class WoodenSwordBeam : Projectile, IProjectile
         Finished = false;
         rotate = false;
         tilesTraveled = 0;
-        InitialPosition = SetInitialPosition(Dimension);
+        initialPosition = SetInitialPosition(Dimension);
     }
 
     private void AnimateSwordBeam()
@@ -41,7 +42,7 @@ public class WoodenSwordBeam : Projectile, IProjectile
             _ => Vector2.Zero
         };
 
-        projectilePosition += projectileSpeed * directionVector;
+        projectilePosition += PROJECTILE_SPEED * directionVector;
 
         string spriteName = $"woodensword_item_{playerDirection.ToString().ToLower()}";
         SetProjectileSprite(spriteName);
@@ -52,11 +53,13 @@ public class WoodenSwordBeam : Projectile, IProjectile
 
     private void updateTilesTraveled()
     {
-        double tolerance = 0.000001;
-        if (Math.Abs(CalculateDistance(InitialPosition) - 64f) < tolerance)
+        double distanceToTravel = 64f;
+        double cumulativeDistance = Vector2.Distance(projectilePosition, initialPosition);
+
+        if (cumulativeDistance >= distanceToTravel)
         {
             tilesTraveled++;
-            InitialPosition = projectilePosition;
+            initialPosition = projectilePosition;
         }
     }
 
@@ -81,17 +84,17 @@ public class WoodenSwordBeam : Projectile, IProjectile
 
     public void UpdateProjectile()
     {
-        if (tilesTraveled < 5)
+        if (tilesTraveled < TILES_TO_TRAVEL)
         {
             updatePosition();
         }
-        else if (tilesTraveled == 5)
+        else if (tilesTraveled == TILES_TO_TRAVEL)
         {
             //tilesTraveled = AnimateSwordBeamEnd.animate();
             projectileDict.SetSprite("poof");
             tilesTraveled = 6;
         }
-        else if (tilesTraveled == 6)
+        else
         {
             Finished = true;
             projectileDict.SetSprite("");

@@ -7,9 +7,10 @@ namespace MonoZelda.Link.Projectiles;
 public class BoomerangBlue : Projectile, IProjectile
 {
     private bool Finished;
-    private float projectileSpeed = 4f;
+    private const float PROJECTILE_SPEED = 6f;
+    private const int TILES_TO_TRAVEL = 5;
     private int tilesTraveled;
-    private Vector2 InitialPosition;
+    private Vector2 initialPosition;
     private Vector2 Dimension = new Vector2(8, 8);
     private SpriteDict projectileDict;
     private Player player;
@@ -22,14 +23,14 @@ public class BoomerangBlue : Projectile, IProjectile
         this.player = player;
         Finished = false;
         tilesTraveled = 0;
-        InitialPosition = SetInitialPosition(Dimension);
+        initialPosition = SetInitialPosition(Dimension);
         SetProjectileSprite("boomerang_blue");
         UseTrackReturn();
     }
 
     private void UseTrackReturn()
     {
-        tracker = TrackReturn.CreateInstance(this, player, projectileSpeed);
+        tracker = TrackReturn.CreateInstance(this, player, PROJECTILE_SPEED);
     }
 
     private void Forward()
@@ -43,7 +44,7 @@ public class BoomerangBlue : Projectile, IProjectile
             _ => Vector2.Zero
         };
 
-        projectilePosition += projectileSpeed * directionVector;
+        projectilePosition += PROJECTILE_SPEED * directionVector;
         updateTilesTraveled();
     }
 
@@ -55,11 +56,13 @@ public class BoomerangBlue : Projectile, IProjectile
 
     private void updateTilesTraveled()
     {
-        double tolerance = 0.000001;
-        if (Math.Abs(CalculateDistance(InitialPosition) - 64f) < tolerance)
+        double distanceToTravel = 64f;
+        double cumulativeDistance = Vector2.Distance(projectilePosition, initialPosition);
+
+        if (cumulativeDistance >= distanceToTravel)
         {
             tilesTraveled++;
-            InitialPosition = projectilePosition;
+            initialPosition = projectilePosition;
         }
     }
 
@@ -70,7 +73,7 @@ public class BoomerangBlue : Projectile, IProjectile
 
     public void FinishProjectile()
     {
-        tilesTraveled = 5;
+        tilesTraveled = TILES_TO_TRAVEL;
     }
 
     public Rectangle getCollisionRectangle()
@@ -81,7 +84,7 @@ public class BoomerangBlue : Projectile, IProjectile
 
     public void UpdateProjectile()
     {
-        if (tilesTraveled < 5)
+        if (tilesTraveled < TILES_TO_TRAVEL)
         {
             Forward();
         }

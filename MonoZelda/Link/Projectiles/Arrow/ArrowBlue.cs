@@ -7,10 +7,11 @@ namespace MonoZelda.Link.Projectiles;
 public class ArrowBlue : Projectile, IProjectile
 {
     private bool Finished;
-    private float projectileSpeed = 4f;
+    private const float PROJECTILE_SPEED = 6f;
+    private const int TILES_TO_TRAVEL = 5;
     private int tilesTraveled;
     private bool rotate;
-    private Vector2 InitialPosition;
+    private Vector2 initialPosition;
     private Vector2 Dimension = new Vector2(8, 16);
     private SpriteDict projectileDict;
 
@@ -21,7 +22,7 @@ public class ArrowBlue : Projectile, IProjectile
         Finished = false;
         rotate = false;
         tilesTraveled = 0;
-        InitialPosition = SetInitialPosition(Dimension);
+        initialPosition = SetInitialPosition(Dimension);
     }
 
     private void updatePosition()
@@ -35,7 +36,7 @@ public class ArrowBlue : Projectile, IProjectile
             _ => Vector2.Zero
         };
 
-        projectilePosition += projectileSpeed * directionVector;
+        projectilePosition += PROJECTILE_SPEED * directionVector;
 
         string spriteName = $"arrow_blue_{playerDirection.ToString().ToLower()}";
         SetProjectileSprite(spriteName);
@@ -46,11 +47,13 @@ public class ArrowBlue : Projectile, IProjectile
 
     private void updateTilesTraveled()
     {
-        double tolerance = 0.000001;
-        if (Math.Abs(CalculateDistance(InitialPosition) - 64f) < tolerance)
+        double distanceToTravel = 64f;
+        double cumulativeDistance = Vector2.Distance(projectilePosition, initialPosition);
+
+        if (cumulativeDistance >= distanceToTravel)
         {
             tilesTraveled++;
-            InitialPosition = projectilePosition;
+            initialPosition = projectilePosition;
         }
     }
 
@@ -61,7 +64,7 @@ public class ArrowBlue : Projectile, IProjectile
 
     public void FinishProjectile()
     {
-        tilesTraveled = 6;
+        tilesTraveled = TILES_TO_TRAVEL;
     }
 
     public Rectangle getCollisionRectangle()
@@ -75,16 +78,16 @@ public class ArrowBlue : Projectile, IProjectile
 
     public void UpdateProjectile()
     {
-        if (tilesTraveled < 5)
+        if (tilesTraveled < TILES_TO_TRAVEL)
         {
             updatePosition();
         }
-        else if (tilesTraveled == 5)
+        else if (tilesTraveled == TILES_TO_TRAVEL)
         {
             SetProjectileSprite("poof");
             tilesTraveled = 6;
         }
-        else if (tilesTraveled == 6)
+        else
         {
             Finished = true;
             projectileDict.SetSprite("");

@@ -7,6 +7,7 @@ public class Bomb : Projectile, IProjectile
 {
     private bool Finished;
     private int timer;
+    private const int EXPLODE_TIME = 90;
     private Vector2 InitialPosition;
     private Vector2 Dimension = new Vector2(8, 16);
     private SpriteDict projectileDict;
@@ -40,7 +41,7 @@ public class Bomb : Projectile, IProjectile
 
     public void UpdateProjectile()
     {
-        if (timer >= 90 && timer < 100)
+        if (timer >= EXPLODE_TIME && timer < 100)
         {
             SetProjectileSprite("cloud");
         }

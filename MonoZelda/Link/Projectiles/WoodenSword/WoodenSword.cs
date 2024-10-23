@@ -7,8 +7,8 @@ namespace MonoZelda.Link.Projectiles;
 public class WoodenSword : Projectile,IProjectile
 {
     private bool Finished;
-    private float projectileSpeed = 4f;
-    private int tilesTraveled;
+    private int timer;
+    private const int HITBOX_TIMER = 4;
     private bool rotate;
     private Vector2 InitialPosition;
     private Vector2 Dimension = new Vector2(8, 16);
@@ -21,7 +21,7 @@ public class WoodenSword : Projectile,IProjectile
         this.projectileDict = projectileDict;
         Finished = false;
         rotate = false;
-        tilesTraveled = 0;
+        timer = 0;
         InitialPosition = SetInitialPosition(Dimension);
     }
 
@@ -41,7 +41,7 @@ public class WoodenSword : Projectile,IProjectile
 
     public void FinishProjectile()
     {
-        tilesTraveled = 4;
+        timer = HITBOX_TIMER;
     }
 
     public Rectangle getCollisionRectangle()
@@ -56,12 +56,12 @@ public class WoodenSword : Projectile,IProjectile
     public void UpdateProjectile()
     {
         projectileDict.Enabled = false;
-        if (tilesTraveled < 4)
+        if (timer < HITBOX_TIMER)
         {
-            tilesTraveled++;
+            timer++;
             updateRotate();
         }
-        else if (tilesTraveled == 4)
+        else
         {
             Finished = true;
         }
