@@ -1,6 +1,7 @@
 ﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace MonoZelda.Link.Projectiles;
 
@@ -11,6 +12,17 @@ public class Projectile
     protected Vector2 playerPosition;
     protected Direction playerDirection;
 
+    private static readonly Dictionary<ProjectileType, Func<SpriteDict, Vector2, Direction, Player, IProjectile>> projectileConstructors = new()
+    {
+       { ProjectileType.Arrow, (dict, pos, dir, player) => new Arrow(dict, pos, dir) },
+       { ProjectileType.ArrowBlue, (dict, pos, dir, player) => new ArrowBlue(dict, pos, dir) },
+       { ProjectileType.Bomb, (dict, pos, dir, player) => new Bomb(dict, pos, dir) },
+       { ProjectileType.Boomerang, (dict, pos, dir, player) => new Boomerang(dict, pos, dir, player) },
+       { ProjectileType.BoomerangBlue, (dict, pos, dir, player) => new BoomerangBlue(dict, pos, dir, player) },
+       { ProjectileType.CandleBlue, (dict,pos,dir,player) => new CandleBlue(dict, pos, dir) },
+       { ProjectileType.WoodenSword, (dict,pos,dir,player) => new WoodenSword(dict, pos, dir) },
+       { ProjectileType.WoodenSwordBeam, (dict,pos,dir,player) => new WoodenSwordBeam(dict, pos, dir) }
+    };
     public Projectile(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection)
     {
         this.projectileDict = projectileDict;
@@ -49,24 +61,14 @@ public class Projectile
     {
         playerPosition = player.GetPlayerPosition();
         playerDirection = player.PlayerDirection;
-        var projectileType = Type.GetType($"MonoZelda.Link.Projectiles.{currentProjectile}");
 
-        // Get the constructor with the parameters projectileDict and player, if it exists
-        var constructorWithPlayer = projectileType.GetConstructor(new[] { typeof(SpriteDict), typeof(Vector2), typeof(Direction), typeof(Player) });
-
-        IProjectile launchProjectile;
-
-        if (constructorWithPlayer != null)
+        // Check if the projectile type exists in the dictionary
+        if (projectileConstructors.TryGetValue(currentProjectile, out var constructor))
         {
-            // Use constructor with player
-            launchProjectile = (IProjectile)Activator.CreateInstance(projectileType, projectileDict, playerPosition, playerDirection, player);
-        }
-        else
-        {
-            // Use constructor without player
-            launchProjectile = (IProjectile)Activator.CreateInstance(projectileType, projectileDict, playerPosition, playerDirection);
+            // Use the constructor to create the projectile
+            return constructor(projectileDict, playerPosition, playerDirection, player);
         }
 
-        return launchProjectile;
+        throw new ArgumentException($"Unknown projectile type: {currentProjectile}");
     }
 }
