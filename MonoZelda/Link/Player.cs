@@ -51,8 +51,6 @@ public class Player
     {
         playerPosition = position;
         playerSpriteDict.Position = position.ToPoint();
-        playerPosition = new Vector2(500, 500);
-        playerDirection = Direction.Down;
     }
 
     public void SetPlayerSpriteDict(SpriteDict spriteDict)
