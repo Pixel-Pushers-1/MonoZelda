@@ -23,7 +23,7 @@ public class PlayerSetProjectileCommand : ICommand
     public void Execute(params object[] metadata)
     {
         Keys pressedKey = (Keys)metadata[0];
-        projectileManager.setProjectile(pressedKey);
+        projectileManager.equipProjectile(pressedKey);
     }
 
     public void UnExecute()

@@ -60,7 +60,7 @@ public class ProjectileManager
         collisionController.AddCollidable(projectileCollidable);
     }
 
-    public void setProjectile(Keys pressedKey)
+    public void equipProjectile(Keys pressedKey)
     {
         equippedProjectile = keyProjectileMap[pressedKey];
     }
