@@ -23,11 +23,6 @@ public class Projectile
         projectileDict.SetSprite(projectileName);
     }
 
-    protected double CalculateDistance(Vector2 initialPosition)
-    {
-        return Math.Sqrt(Math.Pow(projectilePosition.X - initialPosition.X, 2) + Math.Pow(projectilePosition.Y - initialPosition.Y, 2));
-    }
-
     protected Vector2 SetInitialPosition(Vector2 Dimension)
     {
         Vector2 positionInitializer = new Vector2();
