@@ -11,18 +11,19 @@ public class Boomerang : Projectile, IProjectile
     private int tilesTraveled;
     private Vector2 InitialPosition;
     private Vector2 Dimension = new Vector2(8, 8);
-    private SpriteDict projectileDict;
     private Player player;
+    private SpriteDict projectileDict;
     private TrackReturn tracker;
 
-    public Boomerang(SpriteDict projectileDict, Player player) : base(projectileDict, player)
+    public Boomerang(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection, Player player)
+    : base(projectileDict, playerPosition, playerDirection)
     {
         this.projectileDict = projectileDict;
         this.player = player;
         Finished = false;
         tilesTraveled = 0;
-        SetProjectileSprite("boomerang");
         InitialPosition = SetInitialPosition(Dimension);
+        SetProjectileSprite("boomerang");
         UseTrackReturn();
     }
 
@@ -33,21 +34,16 @@ public class Boomerang : Projectile, IProjectile
 
     private void Forward()
     {
-        switch (playerDirection)
+        Vector2 directionVector = playerDirection switch
         {
-            case Direction.Up:
-                projectilePosition += projectileSpeed * new Vector2(0, -1);
-                break;
-            case Direction.Down:
-                projectilePosition += projectileSpeed * new Vector2(0, 1);
-                break;
-            case Direction.Left:
-                projectilePosition += projectileSpeed * new Vector2(-1, 0);
-                break;
-            case Direction.Right:
-                projectilePosition += projectileSpeed * new Vector2(1, 0);
-                break;
-        }
+            Direction.Up => new Vector2(0, -1),
+            Direction.Down => new Vector2(0, 1),
+            Direction.Left => new Vector2(-1, 0),
+            Direction.Right => new Vector2(1, 0),
+            _ => Vector2.Zero
+        };
+
+        projectilePosition += projectileSpeed * directionVector;
         updateTilesTraveled();
     }
 
@@ -67,35 +63,6 @@ public class Boomerang : Projectile, IProjectile
         }
     }
 
-    public void UpdateProjectile()
-    {
-        if (tilesTraveled < 3)
-        {
-            Forward();
-        }
-        else if (!reachedDistance())
-        {
-            ReturnToPlayer();
-        }
-        else
-        {
-            Finished = reachedDistance();
-        }
-        projectileDict.Position = projectilePosition.ToPoint();
-    }
-
-    public bool reachedDistance()
-    {
-        bool reachedDistance = false;
-        if (tracker.Returned(projectilePosition))
-        {
-            reachedDistance = true;
-            projectileDict.Enabled = false;
-        }
-
-        return reachedDistance;
-    }
-
     public bool hasFinished()
     {
         return Finished;
@@ -110,5 +77,24 @@ public class Boomerang : Projectile, IProjectile
     {
         Point spawnPosition = projectilePosition.ToPoint();
         return new Rectangle(spawnPosition.X - 32 / 2, spawnPosition.Y - 32 / 2, 32, 32);
+    }
+
+    public void UpdateProjectile()
+    {
+        if (tilesTraveled < 3)
+        {
+            Forward();
+        }
+        else if (!tracker.Returned(projectilePosition))
+        {
+            ReturnToPlayer();
+        }
+        else
+        {
+            Finished = true;
+            projectileDict.SetSprite("");
+            projectileDict.Enabled = false;
+        }
+        projectileDict.Position = projectilePosition.ToPoint();
     }
 }

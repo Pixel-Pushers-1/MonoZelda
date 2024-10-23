@@ -10,52 +10,16 @@ public class Bomb : Projectile, IProjectile
     private Vector2 InitialPosition;
     private Vector2 Dimension = new Vector2(8, 16);
     private SpriteDict projectileDict;
-    private Player player;
 
-    public Bomb(SpriteDict projectileDict, Player player) : base(projectileDict, player)
+    public Bomb(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection)
+    : base(projectileDict, playerPosition, playerDirection)
     {
         this.projectileDict = projectileDict;
-        this.player = player;
         Finished = false;
-        SetProjectileSprite("bomb");
         timer = 0;
         InitialPosition = SetInitialPosition(Dimension);
-    }
-
-    private void updatePosition()
-    {
-        projectileDict.Position = InitialPosition.ToPoint(); ;
-        Finished = reachedDistance();
-    }
-
-    public void UpdateProjectile()
-    {
-        if (timer < 90)
-        {
-            updatePosition();
-        }
-        else if (timer >= 90 && timer < 100)
-        {
-            SetProjectileSprite("cloud");
-        }
-        else
-        {
-            Finished = reachedDistance();
-        }
-        timer++;
-
-    }
-
-    public bool reachedDistance()
-    {
-        bool reachedDistance = false;
-        if (timer == 100)
-        {
-            reachedDistance = true;
-            projectileDict.SetSprite("");
-            projectileDict.Enabled = false;
-        }
-        return reachedDistance;
+        SetProjectileSprite("bomb");
+        projectileDict.Position = InitialPosition.ToPoint();
     }
 
     public bool hasFinished()
@@ -72,5 +36,20 @@ public class Bomb : Projectile, IProjectile
     {
         Point spawnPosition = projectilePosition.ToPoint();
         return new Rectangle(spawnPosition.X - 32 / 2, spawnPosition.Y - 64 / 2, 32, 64);
+    }
+
+    public void UpdateProjectile()
+    {
+        if (timer >= 90 && timer < 100)
+        {
+            SetProjectileSprite("cloud");
+        }
+        else if(timer == 100)
+        {
+            Finished = true;
+            projectileDict.SetSprite("");
+            projectileDict.Enabled = false;
+        }
+        timer++;
     }
 }

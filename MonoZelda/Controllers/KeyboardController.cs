@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Input;
 using MonoZelda.Commands;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace MonoZelda.Controllers;
 
@@ -26,13 +25,14 @@ public class KeyboardController : IController
             {new (Keys.A, false), CommandType.PlayerMoveCommand},
             {new (Keys.Left, false), CommandType.PlayerMoveCommand},
             {new (Keys.G, true), CommandType.ToggleGizmosCommand},
-            {new (Keys.D1, true), CommandType.PlayerUseItemCommand},
-            {new (Keys.D2, true), CommandType.PlayerUseItemCommand},
-            {new (Keys.D3, true), CommandType.PlayerUseItemCommand},
-            {new (Keys.D4, true), CommandType.PlayerUseItemCommand},
-            {new (Keys.D5, true), CommandType.PlayerUseItemCommand},
-            {new (Keys.D6, true), CommandType.PlayerUseItemCommand},
-            {new (Keys.T, true), CommandType.PlayerFireSwordBeam},    
+            {new (Keys.D1, true), CommandType.PlayerSetProjectileCommand},
+            {new (Keys.D2, true), CommandType.PlayerSetProjectileCommand},
+            {new (Keys.D3, true), CommandType.PlayerSetProjectileCommand},
+            {new (Keys.D4, true), CommandType.PlayerSetProjectileCommand},
+            {new (Keys.D5, true), CommandType.PlayerSetProjectileCommand},
+            {new (Keys.D6, true), CommandType.PlayerSetProjectileCommand},
+            {new (Keys.F,true), CommandType.PlayerFireProjectileCommand},
+            {new (Keys.T, true), CommandType.PlayerFireSwordBeamCommand},    
             {new (Keys.Z, true), CommandType.PlayerAttackCommand},
             {new (Keys.N, true), CommandType.PlayerAttackCommand},
             {new (Keys.Q, false), CommandType.ExitCommand},

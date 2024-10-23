@@ -6,18 +6,16 @@ namespace MonoZelda.Link.Projectiles;
 
 public class Projectile
 {
-
-    private ProjectileType currentProjectile;
     private SpriteDict projectileDict;
-    private Player player;
     protected Vector2 projectilePosition;
+    protected Vector2 playerPosition;
     protected Direction playerDirection;
 
-    public Projectile(SpriteDict projectileDict,Player player)
+    public Projectile(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection)
     {
         this.projectileDict = projectileDict;
-        this.player = player;
-        projectilePosition = new Vector2();
+        this.playerPosition = playerPosition;
+        this.playerDirection = playerDirection; 
     }
 
     protected void SetProjectileSprite(string projectileName)
@@ -32,7 +30,6 @@ public class Projectile
 
     protected Vector2 SetInitialPosition(Vector2 Dimension)
     {
-        playerDirection = player.PlayerDirection;
         Vector2 positionInitializer = new Vector2();
         switch (playerDirection)
         {
@@ -49,20 +46,32 @@ public class Projectile
                 positionInitializer.X = ((Dimension.X / 2) * 4) + 32;
                 break;
         }
-        projectilePosition = player.GetPlayerPosition() + positionInitializer;
+        projectilePosition = playerPosition + positionInitializer;
         return projectilePosition;
     }
 
-    public IProjectile GetProjectileObject(ProjectileType currentProjectile)
+    public IProjectile GetProjectileObject(ProjectileType currentProjectile, Player player)
     {
+        playerPosition = player.GetPlayerPosition();
+        playerDirection = player.PlayerDirection;
         var projectileType = Type.GetType($"MonoZelda.Link.Projectiles.{currentProjectile}");
-        IProjectile launchProjectile = (IProjectile)Activator.CreateInstance(projectileType, projectileDict, player);
+
+        // Get the constructor with the parameters projectileDict and player, if it exists
+        var constructorWithPlayer = projectileType.GetConstructor(new[] { typeof(SpriteDict), typeof(Vector2), typeof(Direction), typeof(Player) });
+
+        IProjectile launchProjectile;
+
+        if (constructorWithPlayer != null)
+        {
+            // Use constructor with player
+            launchProjectile = (IProjectile)Activator.CreateInstance(projectileType, projectileDict, playerPosition, playerDirection, player);
+        }
+        else
+        {
+            // Use constructor without player
+            launchProjectile = (IProjectile)Activator.CreateInstance(projectileType, projectileDict, playerPosition, playerDirection);
+        }
 
         return launchProjectile;
-    }
-
-    public void EnableDict()
-    {
-        projectileDict.Enabled = true;
     }
 }

@@ -15,10 +15,10 @@ public class WoodenSword : Projectile,IProjectile
     private SpriteDict projectileDict;
     private Player player;
 
-    public WoodenSword(SpriteDict projectileDict, Player player) : base(projectileDict, player)
+    public WoodenSword(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection)
+    : base(projectileDict, playerPosition, playerDirection)
     {
         this.projectileDict = projectileDict;
-        this.player = player;
         Finished = false;
         rotate = false;
         tilesTraveled = 0;
@@ -34,33 +34,6 @@ public class WoodenSword : Projectile,IProjectile
         }
     }
 
-    public void UpdateProjectile()
-    {
-        projectileDict.Enabled = false;
-        if (tilesTraveled < 4)
-        {
-            tilesTraveled++;
-            updateRotate();
-        }
-        else if(tilesTraveled == 4)
-        {
-            Finished = reachedDistance();
-        }
-
-    }
-
-    public bool reachedDistance()
-    {
-        bool reachedDistance = false;
-
-        if (tilesTraveled == 4)
-        {
-            reachedDistance = true;
-        }
-
-        return reachedDistance;
-    }
-
     public bool hasFinished()
 {
         return Finished;
@@ -74,13 +47,23 @@ public class WoodenSword : Projectile,IProjectile
     public Rectangle getCollisionRectangle()
     {
         Point spawnPosition = projectilePosition.ToPoint();
-        if (rotate)
+        int width = rotate ? 64 : 32;
+        int height = rotate ? 32 : 64;
+
+        return new Rectangle(spawnPosition.X - width / 2, spawnPosition.Y - height / 2, width, height);
+    }
+
+    public void UpdateProjectile()
+    {
+        projectileDict.Enabled = false;
+        if (tilesTraveled < 4)
         {
-            return new Rectangle(spawnPosition.X - 64 / 2, spawnPosition.Y - 32 / 2, 64, 32);
+            tilesTraveled++;
+            updateRotate();
         }
-        else
+        else if (tilesTraveled == 4)
         {
-            return new Rectangle(spawnPosition.X - 32 / 2, spawnPosition.Y - 64 / 2, 32, 64);
+            Finished = true;
         }
     }
 }

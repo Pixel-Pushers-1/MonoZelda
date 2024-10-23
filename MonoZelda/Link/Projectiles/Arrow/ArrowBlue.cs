@@ -13,12 +13,11 @@ public class ArrowBlue : Projectile, IProjectile
     private Vector2 InitialPosition;
     private Vector2 Dimension = new Vector2(8, 16);
     private SpriteDict projectileDict;
-    private Player player;
 
-    public ArrowBlue(SpriteDict projectileDict, Player player) : base(projectileDict, player)
+    public ArrowBlue(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection)
+    : base(projectileDict, playerPosition, playerDirection)
     {
         this.projectileDict = projectileDict;
-        this.player = player;
         Finished = false;
         rotate = false;
         tilesTraveled = 0;
@@ -27,29 +26,22 @@ public class ArrowBlue : Projectile, IProjectile
 
     private void updatePosition()
     {
-        switch (playerDirection)
+        Vector2 directionVector = playerDirection switch
         {
-            case Direction.Up:
-                projectilePosition += projectileSpeed * new Vector2(0, -1);
-                SetProjectileSprite("arrow_blue_up");
-                rotate = false;
-                break;
-            case Direction.Down:
-                projectilePosition += projectileSpeed * new Vector2(0, 1);
-                SetProjectileSprite("arrow_blue_down");
-                rotate = false;
-                break;
-            case Direction.Left:
-                projectilePosition += projectileSpeed * new Vector2(-1, 0);
-                SetProjectileSprite("arrow_blue_left");
-                rotate = true;
-                break;
-            case Direction.Right:
-                projectilePosition += projectileSpeed * new Vector2(1, 0);
-                SetProjectileSprite("arrow_blue_right");
-                rotate = true;
-                break;
-        }
+            Direction.Up => new Vector2(0, -1),
+            Direction.Down => new Vector2(0, 1),
+            Direction.Left => new Vector2(-1, 0),
+            Direction.Right => new Vector2(1, 0),
+            _ => Vector2.Zero
+        };
+
+        projectilePosition += projectileSpeed * directionVector;
+
+        string spriteName = $"arrow_blue_{playerDirection.ToString().ToLower()}";
+        SetProjectileSprite(spriteName);
+
+        rotate = (playerDirection == Direction.Left || playerDirection == Direction.Right);
+        updateTilesTraveled();
     }
 
     private void updateTilesTraveled()
@@ -60,40 +52,6 @@ public class ArrowBlue : Projectile, IProjectile
             tilesTraveled++;
             InitialPosition = projectilePosition;
         }
-    }
-
-    public void UpdateProjectile()
-    {
-        if (tilesTraveled < 5)
-        {
-            updatePosition();
-            projectileDict.Position = projectilePosition.ToPoint();
-            updateTilesTraveled();
-        }
-        else if (tilesTraveled == 5)
-        {
-            SetProjectileSprite("poof");
-            tilesTraveled = 6;
-        }
-        else if (tilesTraveled == 6)
-        {
-            Finished = reachedDistance();
-        }
-
-    }
-
-    public bool reachedDistance()
-    {
-        bool reachedDistance = false;
-
-        if (tilesTraveled == 6)
-        {
-            reachedDistance = true;
-            projectileDict.SetSprite("");
-            projectileDict.Enabled = false;
-        }
-
-        return reachedDistance;
     }
 
     public bool hasFinished()
@@ -109,13 +67,29 @@ public class ArrowBlue : Projectile, IProjectile
     public Rectangle getCollisionRectangle()
     {
         Point spawnPosition = projectilePosition.ToPoint();
-        if (rotate)
+        int width = rotate ? 64 : 32;
+        int height = rotate ? 32 : 64;
+
+        return new Rectangle(spawnPosition.X - width / 2, spawnPosition.Y - height / 2, width, height);
+    }
+
+    public void UpdateProjectile()
+    {
+        if (tilesTraveled < 5)
         {
-            return new Rectangle(spawnPosition.X - 64 / 2, spawnPosition.Y - 32 / 2, 64, 32);
+            updatePosition();
         }
-        else
+        else if (tilesTraveled == 5)
         {
-            return new Rectangle(spawnPosition.X - 32 / 2, spawnPosition.Y - 64 / 2, 32, 64);
+            SetProjectileSprite("poof");
+            tilesTraveled = 6;
         }
+        else if (tilesTraveled == 6)
+        {
+            Finished = true;
+            projectileDict.SetSprite("");
+            projectileDict.Enabled = false;
+        }
+        projectileDict.Position = projectilePosition.ToPoint();
     }
 }

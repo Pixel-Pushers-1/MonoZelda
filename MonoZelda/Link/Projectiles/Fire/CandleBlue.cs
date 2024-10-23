@@ -14,33 +14,29 @@ public class CandleBlue : Projectile, IProjectile
     private SpriteDict projectileDict;
     private Player player;
 
-    public CandleBlue(SpriteDict projectileDict, Player player) : base(projectileDict, player)
+    public CandleBlue(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection)
+    : base(projectileDict, playerPosition, playerDirection)
     {
         this.projectileDict = projectileDict;
-        this.player = player;
         Finished = false;
-        SetProjectileSprite("fire");
         tilesTraveled = 0;
         InitialPosition = SetInitialPosition(Dimension);
+        SetProjectileSprite("fire");
     }
 
     private void updatePosition()
     {
-        switch (playerDirection)
+        Vector2 directionVector = playerDirection switch
         {
-            case Direction.Up:
-                projectilePosition += projectileSpeed * new Vector2(0, -1);
-                break;
-            case Direction.Down:
-                projectilePosition += projectileSpeed * new Vector2(0, 1);
-                break;
-            case Direction.Left:
-                projectilePosition += projectileSpeed * new Vector2(-1, 0);
-                break;
-            case Direction.Right:
-                projectilePosition += projectileSpeed * new Vector2(1, 0);
-                break;
-        }
+            Direction.Up => new Vector2(0, -1),
+            Direction.Down => new Vector2(0, 1),
+            Direction.Left => new Vector2(-1, 0),
+            Direction.Right => new Vector2(1, 0),
+            _ => Vector2.Zero
+        };
+
+        projectilePosition += projectileSpeed * directionVector;
+        updateTilesTraveled();
     }
     private void updateTilesTraveled()
     {
@@ -51,40 +47,13 @@ public class CandleBlue : Projectile, IProjectile
             InitialPosition = projectilePosition;
         }
     }
-    public void UpdateProjectile()
-    {
-        if (tilesTraveled < 2)
-        {
-            updatePosition();
-            projectileDict.Position = projectilePosition.ToPoint();
-            updateTilesTraveled();
-        }
-        else if (tilesTraveled == 2)
-        {
-            Finished = reachedDistance();
-        }
-    }
-
-    public bool reachedDistance()
-    {
-        bool reachedDistance = false;
-
-        if (tilesTraveled == 2)
-        {
-            reachedDistance = true;
-            projectileDict.Enabled = false;
-        }
-
-        return reachedDistance;
-    }
 
     public bool hasFinished()
     {
         return Finished;
     }
 
-    public void FinishProjectile
-        ()
+    public void FinishProjectile()
     {
         tilesTraveled = 2;
     }
@@ -93,5 +62,20 @@ public class CandleBlue : Projectile, IProjectile
     {
         Point spawnPosition = projectilePosition.ToPoint();
         return new Rectangle(spawnPosition.X - 64 / 2, spawnPosition.Y - 64 / 2, 64, 64);
+    }
+
+    public void UpdateProjectile()
+    {
+        if (tilesTraveled < 2)
+        {
+            updatePosition();
+        }
+        else if (tilesTraveled == 2)
+        {
+            Finished = true;
+            projectileDict.SetSprite("");
+            projectileDict.Enabled = false;
+        }
+        projectileDict.Position = projectilePosition.ToPoint();
     }
 }

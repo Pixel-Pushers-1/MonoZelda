@@ -1,20 +1,20 @@
-﻿using Microsoft.Xna.Framework.Input;
-using MonoZelda.Link;
+﻿using MonoZelda.Link;
 using MonoZelda.Link.Projectiles;
+using Microsoft.Xna.Framework.Input;
 
 namespace MonoZelda.Commands.GameCommands;
 
-public class PlayerAttackCommand : ICommand
+public class PlayerFireProjectileCommand : ICommand
 {
     private Player player;
     private ProjectileManager projectileManager;
 
-    public PlayerAttackCommand()
+    public PlayerFireProjectileCommand()
     {
         //empty
     }
 
-    public PlayerAttackCommand(ProjectileManager projectileManager, Player player)
+    public PlayerFireProjectileCommand(ProjectileManager projectileManager, Player player)
     {
         this.player = player;
         this.projectileManager = projectileManager;
@@ -22,11 +22,13 @@ public class PlayerAttackCommand : ICommand
 
     public void Execute(params object[] metadata)
     {
-        // use sword projectile
+        Keys pressedKey = (Keys)metadata[0];
+
+        // fire equipped projectile
         if (projectileManager.ProjectileFired == false)
         {
-            projectileManager.useSword(player);
-            player?.Attack();
+            projectileManager.fireEquippedProjectile(player);
+            player?.UseItem();
         }
     }
 
