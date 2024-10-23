@@ -27,14 +27,6 @@ public class KeyboardController : IController
         _keyCommandDictionary = new Dictionary<(Keys key, bool oneShot), CommandType>
         {
             {new (Keys.Enter, true), CommandType.StartGameCommand},
-            {new (Keys.W, false), CommandType.PlayerMoveCommand},
-            {new (Keys.Up, false), CommandType.PlayerMoveCommand},
-            {new (Keys.S, false), CommandType.PlayerMoveCommand},
-            {new (Keys.Down, false), CommandType.PlayerMoveCommand},
-            {new (Keys.D, false), CommandType.PlayerMoveCommand},
-            {new (Keys.Right, false), CommandType.PlayerMoveCommand},
-            {new (Keys.A, false), CommandType.PlayerMoveCommand},
-            {new (Keys.Left, false), CommandType.PlayerMoveCommand},
             {new (Keys.G, true), CommandType.ToggleGizmosCommand},
             {new (Keys.D1, true), CommandType.PlayerUseItemCommand},
             {new (Keys.D2, true), CommandType.PlayerUseItemCommand},
@@ -72,9 +64,6 @@ public class KeyboardController : IController
         foreach (var keyCommandPair in _keyCommandDictionary)
         {
             (Keys key, bool oneShot) = keyCommandPair.Key;
-
-            if (_directionalKeys.Contains(key))
-                continue;
 
             if (!oneShot && CurrentKeyboardState.IsKeyDown(key))
             {
