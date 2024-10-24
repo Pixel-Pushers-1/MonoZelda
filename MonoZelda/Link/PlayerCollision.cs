@@ -10,12 +10,12 @@ public class PlayerCollision
     private readonly int width;
     private readonly int height;
     private Player player;
-    private Collidable playerHitbox;
+    private ICollidable playerHitbox;
     private CollisionController collisionController;
     private const float KNOCKBACK_FORCE = 30f;
     private Vector2 knockbackVelocity;
 
-    public PlayerCollision(Player player, Collidable playerHitbox, CollisionController collisionController)
+    public PlayerCollision(Player player, ICollidable playerHitbox, CollisionController collisionController)
     {
         this.player = player;
         this.playerHitbox = playerHitbox;

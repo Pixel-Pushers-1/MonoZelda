@@ -1,17 +1,46 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Enemies.EnemyProjectiles;
-using MonoZelda.Enemies;
-using MonoZelda.Link.Projectiles;
 using MonoZelda.Sprites;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 namespace MonoZelda.Collision;
 
-public class PlayerCollidable
+public class PlayerCollidable : ICollidable
 {
-    
+    public CollidableType type { get; set; }
+    public Rectangle Bounds { get; set; }
+    public SpriteDict CollidableDict { get; private set; }
+
+    private readonly CollisionHitboxDraw hitbox;
+
+    public PlayerCollidable(Rectangle bounds, GraphicsDevice graphicsDevice, CollidableType type)
+    {
+        Bounds = bounds;
+        hitbox = new CollisionHitboxDraw(this, graphicsDevice);
+        type = CollidableType.Player;
+    }
+
+    public void UnregisterHitbox()
+    {
+        hitbox.Unregister();
+    }
+
+    public bool Intersects(ICollidable other)
+    {
+        return Bounds.Intersects(other.Bounds);
+    }
+
+    public Rectangle GetIntersectionArea(ICollidable other)
+    {
+        return Rectangle.Intersect(Bounds, other.Bounds);
+    }
+
+    public override string ToString()
+    {
+        return $"{type}";
+    }
+
+    public void setSpriteDict(SpriteDict collidableDict)
+    {
+        CollidableDict = collidableDict;
+    }
 }

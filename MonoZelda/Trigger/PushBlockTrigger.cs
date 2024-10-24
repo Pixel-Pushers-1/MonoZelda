@@ -8,17 +8,16 @@ using MonoZelda.Sprites;
 using MonoZelda.Tiles;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 
 namespace MonoZelda.Trigger
 {
-    internal class PushBlockTrigger : Collidable, ITrigger
+    internal class PushBlockTrigger : TriggerCollidable, ITrigger
     {
         private static readonly int PUSH_DELAY = 30;
         private int pushCounter = 0;
         private Point destination;
         private CollisionController collisionManager;
-        private readonly Collidable staticCollider;
+        private readonly ICollidable staticCollider;
         private Direction pushDirection;
         private SpriteDict blockDict;
 
@@ -32,14 +31,14 @@ namespace MonoZelda.Trigger
         }
 
         public PushBlockTrigger(ContentManager contentManager, CollisionController colliderManager, Point position, GraphicsDevice graphicsDevice)
-            : base(new Rectangle(position, new Point(64, 64)), graphicsDevice, CollidableType.Trigger)
+            : base(new Rectangle(position, new Point(64, 64)), graphicsDevice)
         {
             collisionManager = colliderManager;
             TriggerActions = new List<ITrigger>();
 
             var rect = new Rectangle(position, new Point(64, 64));
 
-            staticCollider = new Collidable(rect, graphicsDevice, CollidableType.Static);
+            staticCollider = new StaticCollidable(rect, graphicsDevice);
             colliderManager.AddCollidable(staticCollider);
 
             // The trigger collider sits on top of the static collider
@@ -49,7 +48,6 @@ namespace MonoZelda.Trigger
             blockDict.SetSprite(BlockType.tile_block2.ToString());
             blockDict.Position = Bounds.Location;
             setSpriteDict(blockDict);
-
 
             destination = staticCollider.Bounds.Location;
         }

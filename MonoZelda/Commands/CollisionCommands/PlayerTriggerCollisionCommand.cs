@@ -1,7 +1,6 @@
 ﻿using MonoZelda.Trigger;
 using MonoZelda.Link;
 using System;
-using System.Collections.Generic;
 
 namespace MonoZelda.Commands.CollisionCommands
 {

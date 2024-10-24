@@ -1,25 +1,22 @@
-﻿
-using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Enemies.EnemyProjectiles;
-using MonoZelda.Enemies;
-using MonoZelda.Link.Projectiles;
+﻿using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 
 namespace MonoZelda.Collision;
 
-public class BoundaryCollidable : ICollidable
+public class TriggerCollidable : ICollidable
 {
     public CollidableType type { get; set; }
     public Rectangle Bounds { get; set; }
+    public SpriteDict CollidableDict { get; private set; }
 
     private readonly CollisionHitboxDraw hitbox;
 
-    public BoundaryCollidable(Rectangle bounds, GraphicsDevice graphicsDevice, CollidableType type)
+    public TriggerCollidable(Rectangle bounds, GraphicsDevice graphicsDevice)
     {
         Bounds = bounds;
         hitbox = new CollisionHitboxDraw(this, graphicsDevice);
-        this.type = type;
+        type = CollidableType.Trigger;
     }
 
     public void UnregisterHitbox()
@@ -40,5 +37,10 @@ public class BoundaryCollidable : ICollidable
     public override string ToString()
     {
         return $"{type}";
+    }
+
+    public void setSpriteDict(SpriteDict collidableDict)
+    {
+        CollidableDict = collidableDict;
     }
 }

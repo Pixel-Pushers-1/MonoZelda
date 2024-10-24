@@ -53,7 +53,7 @@ public class DungeonScene : IScene
 
         //create player and player collision
         player = new Player();
-        Collidable playerHitbox = new Collidable(new Rectangle(100, 100, 50, 50), graphicsDevice, CollidableType.Player);
+        ICollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50), graphicsDevice, CollidableType.Player);
         collisionController.AddCollidable(playerHitbox);
         playerCollision = new PlayerCollision(player, playerHitbox, collisionController);
 
