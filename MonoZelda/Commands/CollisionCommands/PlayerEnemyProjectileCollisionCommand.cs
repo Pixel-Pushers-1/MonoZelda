@@ -27,20 +27,20 @@ public class PlayerEnemyProjectileCollisionCommand : ICommand
 
         if (collidableA.type == CollidableType.Player)
         {
-            enemyProjectileCollidable = (EnemyProjectileCollidable)collidableA;
-            playerCollidable = (PlayerCollidable)collidableB;
+            enemyProjectileCollidable = (EnemyProjectileCollidable)collidableB;
+            playerCollidable = (PlayerCollidable)collidableA;
         }
         else
         {
-            enemyProjectileCollidable = (EnemyProjectileCollidable)collidableB;
-            playerCollidable = (PlayerCollidable)collidableA;
+            enemyProjectileCollidable = (EnemyProjectileCollidable)collidableA;
+            playerCollidable = (PlayerCollidable)collidableB;
         }
 
         EnemyProjectileCollisionManager enemyProjectileCollision = enemyProjectileCollidable.EnemyProjectileCollision;
         PlayerCollisionManager playerCollision = playerCollidable.PlayerCollision;
 
         playerCollision.HandleEnemyProjectileCollision(collisionDirection);
-        enemyProjectileCollision.DestroyProjectile();
+        //enemyProjectileCollision.DestroyProjectile();
     }
     public void UnExecute()
     {

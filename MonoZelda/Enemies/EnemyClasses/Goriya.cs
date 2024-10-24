@@ -27,7 +27,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         private int pixelsMoved;
         private int tilesMoved;
         private int tileSize = 64;
-        private bool projectileActiveOrNot;
+        private bool projectileActive;
         private bool goriyaAlive;
         private int animatedDeath;
 
@@ -36,7 +36,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             this.graphicsDevice = graphicsDevice;
             Width = 64;
             Height = 64;
-            projectileActiveOrNot = true;
+            projectileActive = true;
             goriyaAlive = true;
             animatedDeath = 0;
         }
@@ -83,12 +83,12 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Attack(GameTime gameTime)
         {
-            projectile.ViewProjectile(projectileActiveOrNot);
+            projectile.ViewProjectile(projectileActive, goriyaAlive);
             projectile.Update(gameTime, direction, Pos);
             pixelsMoved += 4;
             if (pixelsMoved >= tileSize*6)
             {
-                projectile.ViewProjectile(false);
+                projectile.ViewProjectile(false, goriyaAlive);
                 pixelsMoved = 0;
                 tilesMoved = 0;
             }
@@ -134,12 +134,12 @@ namespace MonoZelda.Enemies.EnemyClasses
             if (goriyaAlive == true && animatedDeath < 12)
             {
                 goriyaAlive = false;
+                projectileActive = false;
             }
             else if(animatedDeath == 12)
             {
-                projectileActiveOrNot = false;
                 goriyaSpriteDict.Enabled = false;
-                projectile.ViewProjectile(projectileActiveOrNot);
+                projectile.ViewProjectile(projectileActive, goriyaAlive);
                 EnemyHitbox.UnregisterHitbox();
             }
         }

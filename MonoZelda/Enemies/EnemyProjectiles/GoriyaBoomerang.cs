@@ -24,14 +24,14 @@ namespace MonoZelda.Enemies.GoriyaFolder
             this.collisionController = collisionController;
             BoomerangSpriteDict = new(contentManager.Load<Texture2D>(TextureData.Enemies), SpriteCSVData.Enemies, 0, new Point(0, 0));
             BoomerangSpriteDict.SetSprite("boomerang");
-            ViewProjectile(false);
+            ViewProjectile(false, true);
             ProjectileHitbox = new EnemyProjectileCollidable(new Rectangle(pos.X, pos.Y, 30, 30), graphicsDevice);
             collisionController.AddCollidable(ProjectileHitbox);
         }
-        public void ViewProjectile(bool view)
+        public void ViewProjectile(bool view, bool goriyaAlive)
         {
             BoomerangSpriteDict.Enabled = view;
-            if(view == false && ProjectileHitbox != null)
+            if(goriyaAlive == false)
             {
                 collisionController.RemoveCollidable(ProjectileHitbox);
                 ProjectileHitbox.UnregisterHitbox();
@@ -70,7 +70,6 @@ namespace MonoZelda.Enemies.GoriyaFolder
             {
                 speed *= -1;
             }
-
             Pos = pos;
             BoomerangSpriteDict.Position = Pos;
         }

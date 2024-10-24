@@ -56,10 +56,5 @@ namespace MonoZelda.Enemies.EnemyProjectiles
 
             projectileHitbox.Bounds = newBounds;
         }
-
-        public void DestroyProjectile()
-        {
-            projectile.ViewProjectile(false);
-        }
     }
 }

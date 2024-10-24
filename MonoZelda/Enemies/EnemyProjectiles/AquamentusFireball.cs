@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using System.Diagnostics.SymbolStore;
 
 namespace MonoZelda.Enemies.EnemyProjectiles
 {
@@ -13,6 +14,7 @@ namespace MonoZelda.Enemies.EnemyProjectiles
         public EnemyProjectileCollidable ProjectileHitbox { get; set; }
         public Point Pos { get; set; }
 
+        private CollisionController collisionController;
         public SpriteDict FireballSpriteDict { get; private set; }
 
         private int speed = 4;
@@ -41,13 +43,15 @@ namespace MonoZelda.Enemies.EnemyProjectiles
             {
                 angle /= 180;
             }
+            this.collisionController = collisionController; 
         }
 
-        public void ViewProjectile(bool view)
+        public void ViewProjectile(bool view, bool aquamentusAlive)
         {
             FireballSpriteDict.Enabled = view;
-            if(view == false && ProjectileHitbox != null)
+            if(aquamentusAlive == false)
             {
+                collisionController.RemoveCollidable(ProjectileHitbox);
                 ProjectileHitbox.UnregisterHitbox();
             }
         }

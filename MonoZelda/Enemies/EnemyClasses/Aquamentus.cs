@@ -31,12 +31,12 @@ namespace MonoZelda.Enemies.EnemyClasses
         private int tileSize = 64;
         private int moveDelay;
         private double attackDelay;
-        private bool projectileActiveOrNot;
+        private bool projectileActive;
 
         public Aquamentus(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
-            projectileActiveOrNot = true;
+            projectileActive = true;
             pixelsMoved = 0;
             moveDelay = rnd.Next(1, 4);
             attackDelay = 0;
@@ -85,7 +85,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Attack(GameTime gameTime)
         {
-            fireballs.ForEach(fireball => fireball.ViewProjectile(projectileActiveOrNot));
+            fireballs.ForEach(fireball => fireball.ViewProjectile(projectileActive, true));
             fireballs.ForEach(fireball => fireball.Update(gameTime, CardinalEnemyStateMachine.Direction.Left, Pos));
             if (gameTime.TotalGameTime.TotalSeconds >= attackDelay + 4)
             {
@@ -137,13 +137,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void KillEnemy()
         {
-            projectileActiveOrNot = false;
-            aquamentusSpriteDict.Enabled = false;
-            foreach(IEnemyProjectile projectile in fireballs)
-            {
-                projectile.ViewProjectile(projectileActiveOrNot);
-            }
-            EnemyHitbox.UnregisterHitbox();
+            // not implemented
         }
     }
 }
