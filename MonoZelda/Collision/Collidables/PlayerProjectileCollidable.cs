@@ -10,7 +10,7 @@ public class PlayerProjectileCollidable : ICollidable
     public CollidableType type { get; set; }
     public ProjectileType projectileType { get; set; }
     public Rectangle Bounds { get; set; }
-    public SpriteDict CollidableDict { get; private set; }
+    public SpriteDict CollidableDict { get; set; }
     public ProjectileManager ProjectileManager { get; private set; }
 
     private readonly CollisionHitboxDraw hitbox;

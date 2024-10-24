@@ -24,15 +24,15 @@ public class DungeonScene : IScene
     private CommandManager commandManager;
     private Player player;
     private ProjectileManager projectileManager;
-    private PlayerCollision playerCollision;
+    private PlayerCollisionManager playerCollision;
     private CollisionController collisionController;
     private List<ITrigger> triggers;
     private ItemFactory itemFactory;
     private EnemyFactory enemyFactory;
     private List<IEnemy> enemies = new();
-    private Dictionary<IEnemy, EnemyCollision> enemyDictionary = new();
-    private List<EnemyCollision> enemyCollisions = new();
-    private List<EnemyProjectileCollision> enemyProjectileCollisions = new();
+    private Dictionary<IEnemy, EnemyCollisionManager> enemyDictionary = new();
+    private List<EnemyCollisionManager> enemyCollisions = new();
+    private List<EnemyProjectileCollisionManager> enemyProjectileCollisions = new();
     private IDungeonRoom room;
     private string roomName;
 
@@ -51,11 +51,11 @@ public class DungeonScene : IScene
         // Need to wait for LoadContent because MonoZeldaGame is going to clear everything before calling this.
         LoadRoom(contentManager);
 
-        //create player and player collision
+        //create player and player collision manager
         player = new Player();
-        ICollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50), graphicsDevice);
+        PlayerCollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50), graphicsDevice);
         collisionController.AddCollidable(playerHitbox);
-        playerCollision = new PlayerCollision(player, playerHitbox, collisionController);
+        playerCollision = new PlayerCollisionManager(player, playerHitbox, collisionController);
 
         // create projectile object and spriteDict
         var projectileDict = new SpriteDict(contentManager.Load<Texture2D>("Sprites/player"), SpriteCSVData.Projectiles, 0, new Point(0, 0));
@@ -69,9 +69,6 @@ public class DungeonScene : IScene
         commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, player));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(player));
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(player));
-        commandManager.ReplaceCommand(CommandType.PlayerStaticCollisionCommand, new PlayerStaticRoomCollisionCommand(playerCollision));
-        commandManager.ReplaceCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand(playerCollision));
-        commandManager.ReplaceCommand(CommandType.PlayerEnemyProjectileCollisionCommand, new PlayerEnemyProjectileCollisionCommand(player));
 
         // create spritedict to pass into player controller
         var playerSpriteDict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Player), SpriteCSVData.Player, 1, new Point(100, 100));
@@ -115,7 +112,7 @@ public class DungeonScene : IScene
         }
         foreach (var enemy in enemies)
         {
-            enemyDictionary.Add(enemy, new EnemyCollision(enemy, collisionController, enemy.Width, enemy.Height));
+            enemyDictionary.Add(enemy, new EnemyCollisionManager(enemy, collisionController, enemy.Width, enemy.Height));
         }
     }
 
@@ -168,7 +165,7 @@ public class DungeonScene : IScene
             projectileManager.executeProjectile();
         }
 
-        foreach(KeyValuePair<IEnemy, EnemyCollision> entry in enemyDictionary)
+        foreach(KeyValuePair<IEnemy, EnemyCollisionManager> entry in enemyDictionary)
         {
             entry.Key.Update(gameTime);
             entry.Value.Update(entry.Key.Width, entry.Key.Height);

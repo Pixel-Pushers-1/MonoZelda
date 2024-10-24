@@ -23,7 +23,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.Left;
 
         private List<IEnemyProjectile> fireballs = new();
-        private Dictionary<IEnemyProjectile, EnemyProjectileCollision> projectileDictionary = new();
+        private Dictionary<IEnemyProjectile, EnemyProjectileCollisionManager> projectileDictionary = new();
         private int midAngle = 180;
 
         private Point spawnPoint;
@@ -64,9 +64,8 @@ namespace MonoZelda.Enemies.EnemyClasses
             fireballs.Add(new AquamentusFireball(spawnPosition, contentManager, graphicsDevice, collisionController, midAngle - 45));
             foreach (var projectile in fireballs)
             {
-                projectileDictionary.Add(projectile, new EnemyProjectileCollision(projectile, collisionController));
+                projectileDictionary.Add(projectile, new EnemyProjectileCollisionManager(projectile, collisionController));
             }
-            EnemyHitbox.setEnemy(this);
         }
 
         public void ChangeDirection()
@@ -130,7 +129,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 Attack(gameTime);
             }
 
-            foreach (KeyValuePair<IEnemyProjectile, EnemyProjectileCollision> entry in projectileDictionary)
+            foreach (KeyValuePair<IEnemyProjectile, EnemyProjectileCollisionManager> entry in projectileDictionary)
             {
                 entry.Value.Update();
             }

@@ -1,22 +1,21 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Link;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MonoZelda.Commands.CollisionCommands;
 
-public class PlayerEnemyCollisionCommand : ICommand
+public class PlayerStaticCollisionCommand : ICommand
 {
     private MonoZeldaGame game;
-    private PlayerCollisionManager playerCollisionManager;
 
-    public PlayerEnemyCollisionCommand()
+    public PlayerStaticCollisionCommand()
     {
         //empty
-    }
-
-    public PlayerEnemyCollisionCommand(PlayerCollisionManager playerCollisionManager)
-    {
-        this.playerCollisionManager = playerCollisionManager;
     }
 
     public void Execute(params object[] metadata)
@@ -38,7 +37,7 @@ public class PlayerEnemyCollisionCommand : ICommand
         }
 
         PlayerCollisionManager playerCollision = playerCollidable.PlayerCollision;
-        playerCollision.HandleEnemyCollision(collisionDirection);
+        playerCollision.HandleStaticCollision(collisionDirection, intersection);
     }
 
     public void UnExecute()

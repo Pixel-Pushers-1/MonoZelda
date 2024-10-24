@@ -23,7 +23,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         private CardinalEnemyStateMachine.Direction direction;
         private readonly GraphicsDevice graphicsDevice;
         private IEnemyProjectile projectile;
-        private EnemyProjectileCollision projectileCollision;
+        private EnemyProjectileCollisionManager projectileCollision;
         private int pixelsMoved;
         private int tilesMoved;
         private int tileSize = 64;
@@ -54,8 +54,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             tilesMoved = 0;
             stateMachine = new CardinalEnemyStateMachine();
             projectile = new GoriyaBoomerang(spawnPosition, contentManager, graphicsDevice, collisionController);
-            projectileCollision = new EnemyProjectileCollision(projectile, collisionController);
-            EnemyHitbox.setEnemy(this);
+            projectileCollision = new EnemyProjectileCollisionManager(projectile, collisionController);
         }
 
         public void ChangeDirection()

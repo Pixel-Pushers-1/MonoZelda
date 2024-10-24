@@ -10,8 +10,8 @@ public class EnemyProjectileCollidable : ICollidable
 {
     public CollidableType type { get; set; }
     public Rectangle Bounds { get; set; }
-    public SpriteDict CollidableDict { get; private set; }
-    public IEnemyProjectile EnemyProjectile { get; private set; }
+    public SpriteDict CollidableDict { get; set; }
+    public EnemyProjectileCollisionManager EnemyProjectileCollision { get; private set; }
 
     private readonly CollisionHitboxDraw hitbox;
 
@@ -20,6 +20,16 @@ public class EnemyProjectileCollidable : ICollidable
         Bounds = bounds;
         hitbox = new CollisionHitboxDraw(this, graphicsDevice);
         type = CollidableType.EnemyProjectile;
+    }
+
+    public void setCollisionManager(EnemyProjectileCollisionManager enemyProjectileCollision)
+    {
+        EnemyProjectileCollision = enemyProjectileCollision;
+    }
+
+    public void setSpriteDict(SpriteDict collidableDict)
+    {
+        CollidableDict = collidableDict;
     }
 
     public void UnregisterHitbox()
@@ -40,14 +50,5 @@ public class EnemyProjectileCollidable : ICollidable
     public override string ToString()
     {
         return $"{type}";
-    }
-
-    public void setSpriteDict(SpriteDict collidableDict)
-    {
-        CollidableDict = collidableDict;
-    }
-    public void setEnemyProjectile(IEnemyProjectile enemyProjectile)
-    {
-        EnemyProjectile = enemyProjectile;
     }
 }

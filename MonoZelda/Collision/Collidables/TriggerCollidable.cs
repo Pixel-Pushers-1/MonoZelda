@@ -8,7 +8,7 @@ public class TriggerCollidable : ICollidable
 {
     public CollidableType type { get; set; }
     public Rectangle Bounds { get; set; }
-    public SpriteDict CollidableDict { get; private set; }
+    public SpriteDict CollidableDict { get; set; }
 
     private readonly CollisionHitboxDraw hitbox;
 

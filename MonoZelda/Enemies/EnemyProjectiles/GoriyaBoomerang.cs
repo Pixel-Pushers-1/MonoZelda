@@ -26,7 +26,6 @@ namespace MonoZelda.Enemies.GoriyaFolder
             BoomerangSpriteDict.SetSprite("boomerang");
             ViewProjectile(false);
             ProjectileHitbox = new EnemyProjectileCollidable(new Rectangle(pos.X, pos.Y, 30, 30), graphicsDevice);
-            ProjectileHitbox.setEnemyProjectile(this);
             collisionController.AddCollidable(ProjectileHitbox);
         }
         public void ViewProjectile(bool view)

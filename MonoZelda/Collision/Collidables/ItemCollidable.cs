@@ -10,7 +10,7 @@ public class ItemCollidable : ICollidable
     public CollidableType type { get; set; }
     public ItemList itemType { get; set; }
     public Rectangle Bounds { get; set; }
-    public SpriteDict CollidableDict { get; private set; }
+    public SpriteDict CollidableDict { get; set; }
 
     private readonly CollisionHitboxDraw hitbox;
 

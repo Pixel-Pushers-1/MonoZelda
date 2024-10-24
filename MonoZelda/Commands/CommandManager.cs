@@ -21,8 +21,7 @@ public enum CommandType
     PlayerItemCollisionCommand,
     PlayerEnemyCollisionCommand,
     PlayerEnemyProjectileCollisionCommand,
-    PlayerStaticRoomCollisionCommand,
-    PlayerStaticBoundaryCollisionCommand,
+    PlayerStaticCollisionCommand,
     PlayerTriggerCollisionCommand,
     EnemyPlayerProjectileCollisionCommand,
     EnemyStaticRoomCollisionCommand,
@@ -52,8 +51,7 @@ public class CommandManager
         AddCommand(CommandType.PlayerItemCollisionCommand, new PlayerItemCollisionCommand());
         AddCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand());
         AddCommand(CommandType.PlayerEnemyProjectileCollisionCommand, new PlayerEnemyProjectileCollisionCommand());
-        AddCommand(CommandType.PlayerStaticRoomCollisionCommand, new PlayerStaticRoomCollisionCommand());
-        AddCommand(CommandType.PlayerStaticBoundaryCollisionCommand, new PlayerStaticBoundaryCollisionCommand());
+        AddCommand(CommandType.PlayerStaticCollisionCommand, new PlayerStaticCollisionCommand());
         AddCommand(CommandType.PlayerTriggerCollisionCommand, new PlayerTriggerCollisionCommand());
         AddCommand(CommandType.EnemyPlayerProjectileCollisionCommand, new EnemyPlayerProjectileCollisionCommand());
         AddCommand(CommandType.EnemyStaticRoomCollisionCommand, new EnemyStaticRoomCollisionCommand());

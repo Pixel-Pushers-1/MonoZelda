@@ -1,8 +1,8 @@
 ﻿using MonoZelda.Collision;
-using MonoZelda.Controllers;
 using Microsoft.Xna.Framework;
 using MonoZelda.Link;
 using MonoZelda.Enemies;
+using System.Collections.Generic;
 
 namespace MonoZelda.Commands.CollisionCommands;
 
@@ -15,50 +15,30 @@ public class EnemyStaticRoomCollisionCommand : ICommand
         //empty
     }
 
-    public EnemyStaticRoomCollisionCommand(MonoZeldaGame game)
-    {
-        this.game = game;
-    }
-
-    private void setPosition(IEnemy enemy, Direction collisionDirection, Rectangle Intersection)
-    {
-        Point currentPos = enemy.Pos;
-        switch (collisionDirection)
-        {
-            case Direction.Left:
-                currentPos.X -= Intersection.Width;
-                break;
-            case Direction.Right:
-                currentPos.X += Intersection.Width;
-                break;
-            case Direction.Up:
-                currentPos.Y -= Intersection.Height;
-                break;
-            case Direction.Down:
-                currentPos.Y += Intersection.Height;
-                break;
-        }
-        enemy.Pos = currentPos;
-    }
-
     public void Execute(params object[] metadata)
     {
-        Collidable collidableA = (Collidable)metadata[0];
-        Collidable collidableB = (Collidable)metadata[1];
-        CollisionController collisionController = (CollisionController)metadata[2];
+        ICollidable collidableA = (ICollidable)metadata[0];
+        ICollidable collidableB = (ICollidable)metadata[1];
         Direction collisionDirection = (Direction)metadata[3];
         Rectangle intersection = (Rectangle)metadata[4];
 
-        if(collidableA.type == CollidableType.Enemy)
+        EnemyCollidable enemyCollidable;
+
+        if (collidableA.type == CollidableType.Enemy)
         {
-            IEnemy enemy = collidableA.Enemy;
-            setPosition(enemy, collisionDirection, intersection);  
+            enemyCollidable = (EnemyCollidable)collidableA;
         }
         else
         {
-            IEnemy enemy = collidableB.Enemy;
-            setPosition(enemy, collisionDirection, intersection);
+            enemyCollidable = (EnemyCollidable)collidableB;
         }
+
+        if(enemyCollidable.enemyType != EnemyList.Keese)
+        {
+            EnemyCollisionManager enemyCollisionManager = enemyCollidable.EnemyCollision;
+            enemyCollisionManager.HandleStaticCollision(collisionDirection, intersection);
+        }
+
     }
 
     public void UnExecute()

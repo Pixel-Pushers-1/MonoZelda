@@ -1,18 +1,20 @@
 ﻿using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using Microsoft.Xna.Framework;
+using MonoZelda.Link;
 
 namespace MonoZelda.Enemies
 {
-    public class EnemyCollision
+    public class EnemyCollisionManager
     {
         private int width;
         private int height;
-        private IEnemy enemy;
         private EnemyCollidable enemyHitbox;
         private CollisionController collisionController;
 
-        public EnemyCollision(IEnemy enemy, CollisionController collisionController, int width, int height)
+        public IEnemy enemy { get; private set; }
+
+        public EnemyCollisionManager(IEnemy enemy, CollisionController collisionController, int width, int height)
         {
             this.enemy = enemy;
             this.enemyHitbox = enemy.EnemyHitbox;
@@ -29,6 +31,7 @@ namespace MonoZelda.Enemies
             this.collisionController = collisionController;
 
             enemyHitbox.Bounds = bounds;
+            enemyHitbox.setCollisionManager(this);
         }
 
         public void Update(int width, int height)
@@ -49,6 +52,27 @@ namespace MonoZelda.Enemies
             );
 
             enemyHitbox.Bounds = newBounds;
+        }
+
+        public void HandleStaticCollision(Direction collisionDirection, Rectangle intersection)
+        {
+            Point currentPos = enemy.Pos;
+            switch (collisionDirection)
+            {
+                case Direction.Left:
+                    currentPos.X -= intersection.Width;
+                    break;
+                case Direction.Right:
+                    currentPos.X += intersection.Width;
+                    break;
+                case Direction.Up:
+                    currentPos.Y -= intersection.Height;
+                    break;
+                case Direction.Down:
+                    currentPos.Y += intersection.Height;
+                    break;
+            }
+            enemy.Pos = currentPos;
         }
     }
 }

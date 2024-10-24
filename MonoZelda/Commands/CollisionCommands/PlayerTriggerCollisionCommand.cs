@@ -6,14 +6,9 @@ namespace MonoZelda.Commands.CollisionCommands
 {
     public class PlayerTriggerCollisionCommand : ICommand
     {
-
         public PlayerTriggerCollisionCommand()
         {
             //empty
-        }
-
-        public PlayerTriggerCollisionCommand(ITrigger trigger)
-        {
         }
 
         public void Execute(params object[] metadata)
