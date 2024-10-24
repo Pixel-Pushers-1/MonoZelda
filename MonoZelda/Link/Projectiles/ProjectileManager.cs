@@ -1,7 +1,9 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Sprites;
 using System.Collections.Generic;
 
 namespace MonoZelda.Link.Projectiles;
@@ -10,9 +12,12 @@ public class ProjectileManager
 {
     private bool projectileFired;
     private IProjectile itemFired;
+    private ProjectileType equippedProjectile;
     private CollisionController collisionController;
     private Collidable projectileCollidable;
     private GraphicsDevice graphicsDevice;
+    private Projectile projectile;
+    private SpriteDict projectileDict;
 
     private Dictionary<Keys, ProjectileType> keyProjectileMap = new Dictionary<Keys, ProjectileType>
     {
@@ -22,9 +27,6 @@ public class ProjectileManager
         {Keys.D4,ProjectileType.BoomerangBlue},
         {Keys.D5,ProjectileType.Bomb},
         {Keys.D6,ProjectileType.CandleBlue},
-        {Keys.T,ProjectileType.WoodenSwordBeam},
-        {Keys.Z, ProjectileType.WoodenSword},
-        {Keys.N, ProjectileType.WoodenSword}
     };
     
     public bool ProjectileFired
@@ -39,30 +41,51 @@ public class ProjectileManager
         }
     }
 
-    public ProjectileManager(CollisionController collisionController, GraphicsDevice graphicsDevice) 
+    public ProjectileManager(CollisionController collisionController, GraphicsDevice graphicsDevice, SpriteDict projectileDict) 
     {
         projectileFired = false;
+        projectileDict.Enabled = false;
         this.collisionController = collisionController;
         this.graphicsDevice = graphicsDevice;
-    }
-    
-    public ProjectileType getProjectileType(Keys PressedKey)
-    {
-        return keyProjectileMap[PressedKey];
+        this.projectileDict = projectileDict;
+        projectile = new Projectile(projectileDict, new Vector2(),Direction.Down);
     }
 
+    private void setupProjectile()
+    {
+        projectileFired = true;
+        projectileDict.Enabled = true;
+        projectileCollidable = new Collidable(itemFired.getCollisionRectangle(), graphicsDevice, CollidableType.Projectile);
+        projectileCollidable.setProjectileManager(this);
+        collisionController.AddCollidable(projectileCollidable);
+    }
+
+    public void equipProjectile(Keys pressedKey)
+    {
+        equippedProjectile = keyProjectileMap[pressedKey];
+    }
+    
     public void destroyProjectile()
     {
         itemFired.FinishProjectile();
     }
 
-    public void SetProjectile(IProjectile projectile)
+    public void useSword(Player player)
     {
-        itemFired = projectile;
-        projectileFired = true;
-        projectileCollidable = new Collidable(projectile.getCollisionRectangle(),graphicsDevice, CollidableType.Projectile);
-        projectileCollidable.setProjectileManager(this);
-        collisionController.AddCollidable(projectileCollidable);
+        itemFired = projectile.GetProjectileObject(ProjectileType.WoodenSword, player);
+        setupProjectile();
+    }
+
+    public void useSwordBeam(Player player)
+    {
+        itemFired = projectile.GetProjectileObject(ProjectileType.WoodenSwordBeam, player);
+        setupProjectile();
+    }
+
+    public void fireEquippedProjectile(Player player)
+    {
+        itemFired = projectile.GetProjectileObject(equippedProjectile, player);
+        setupProjectile();
     }
 
     public void executeProjectile()

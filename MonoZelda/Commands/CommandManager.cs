@@ -9,10 +9,11 @@ public enum CommandType
     // Commands for entire project
     ExitCommand,
     PlayerAttackCommand,
-    PlayerFireSwordBeam,
     PlayerMoveCommand,
     PlayerTakeDamageCommand,
-    PlayerUseItemCommand,
+    PlayerEquipProjectileCommand,
+    PlayerFireProjectileCommand,
+    PlayerFireSwordBeamCommand,
     ResetCommand,
     PlayerStandingCommand,
     StartGameCommand,
@@ -36,9 +37,10 @@ public class CommandManager
         commandMap = new Dictionary<CommandType, ICommand>();
         AddCommand(CommandType.ExitCommand, new ExitCommand());
         AddCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand());
-        AddCommand(CommandType.PlayerFireSwordBeam, new PlayerFireSwordBeam());
+        AddCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand());
         AddCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());
-        AddCommand(CommandType.PlayerUseItemCommand, new PlayerUseItemCommand());
+        AddCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand());
+        AddCommand(CommandType.PlayerEquipProjectileCommand, new PlayerEquipProjectileCommand());
         AddCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
         AddCommand(CommandType.ResetCommand, new ResetCommand());
         AddCommand(CommandType.StartGameCommand, new StartGameCommand());
