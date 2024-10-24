@@ -23,10 +23,14 @@ public class CollisionController : IController
             {(CollidableType.Player, CollidableType.Item), CommandType.PlayerItemCollisionCommand},
             {(CollidableType.Player, CollidableType.Enemy), CommandType.PlayerEnemyCollisionCommand},
             {(CollidableType.Player, CollidableType.EnemyProjectile), CommandType.PlayerEnemyProjectileCollisionCommand},
-            {(CollidableType.Player, CollidableType.Static), CommandType.PlayerStaticCollisionCommand},
+            {(CollidableType.Player, CollidableType.StaticRoom), CommandType.PlayerStaticRoomCollisionCommand},
+            {(CollidableType.Player, CollidableType.StaticBoundary), CommandType.PlayerStaticBoundaryCollisionCommand},
             {(CollidableType.Player, CollidableType.Trigger), CommandType.PlayerTriggerCollisionCommand},
-            {(CollidableType.Enemy, CollidableType.Projectile), CommandType.EnemyProjectileCollisionCommand},
-            {(CollidableType.Enemy, CollidableType.Static), CommandType.EnemyStaticCollisionCommand},
+            {(CollidableType.Enemy, CollidableType.PlayerProjectile), CommandType.EnemyPlayerProjectileCollisionCommand},
+            {(CollidableType.Enemy, CollidableType.StaticRoom), CommandType.EnemyStaticRoomCollisionCommand},
+            {(CollidableType.Enemy, CollidableType.StaticBoundary), CommandType.EnemyStaticBoundaryCollisionCommand},
+            {(CollidableType.PlayerProjectile, CollidableType.StaticRoom), CommandType.PlayerProjectileStaticRoomCollisionCommand},
+            {(CollidableType.PlayerProjectile, CollidableType.StaticBoundary), CommandType.PlayerProjectileStaticBoundaryCollisionCommand},
         };
 
         _gameObjects = new List<ICollidable>();

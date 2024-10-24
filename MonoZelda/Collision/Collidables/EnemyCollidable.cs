@@ -10,19 +10,19 @@ namespace MonoZelda.Collision;
 public class EnemyCollidable : ICollidable
 {
     public CollidableType type { get; set; }
+    public EnemyList enemyType { get; set; }
     public Rectangle Bounds { get; set; }
     public SpriteDict CollidableDict { get; private set; }
     public IEnemy Enemy { get; private set; }
 
-    public IEnemyProjectile EnemyProjectile { get; private set; }
-
     private readonly CollisionHitboxDraw hitbox;
 
-    public EnemyCollidable(Rectangle bounds, GraphicsDevice graphicsDevice, CollidableType type)
+    public EnemyCollidable(Rectangle bounds, GraphicsDevice graphicsDevice, EnemyList enemyType)
     {
         Bounds = bounds;
         hitbox = new CollisionHitboxDraw(this, graphicsDevice);
-        this.type = type;
+        type = CollidableType.Enemy;
+        this.enemyType = enemyType;
     }
 
     public void UnregisterHitbox()

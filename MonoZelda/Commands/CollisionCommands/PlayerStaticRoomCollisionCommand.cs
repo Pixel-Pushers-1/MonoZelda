@@ -6,17 +6,17 @@ using System.Diagnostics;
 
 namespace MonoZelda.Commands.CollisionCommands;
 
-public class PlayerStaticCollisionCommand : ICommand
+public class PlayerStaticRoomCollisionCommand : ICommand
 {
     private MonoZeldaGame game;
     private Player player;
     private PlayerCollision playerCollision;
-    public PlayerStaticCollisionCommand()
+    public PlayerStaticRoomCollisionCommand()
     {
         //empty
     }
 
-    public PlayerStaticCollisionCommand(PlayerCollision playerCollision)
+    public PlayerStaticRoomCollisionCommand(PlayerCollision playerCollision)
     {
         this.playerCollision = playerCollision;
     }

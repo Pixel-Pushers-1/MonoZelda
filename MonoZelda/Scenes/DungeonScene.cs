@@ -53,7 +53,7 @@ public class DungeonScene : IScene
 
         //create player and player collision
         player = new Player();
-        ICollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50), graphicsDevice, CollidableType.Player);
+        ICollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50), graphicsDevice);
         collisionController.AddCollidable(playerHitbox);
         playerCollision = new PlayerCollision(player, playerHitbox, collisionController);
 
@@ -69,7 +69,7 @@ public class DungeonScene : IScene
         commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, player));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(player));
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(player));
-        commandManager.ReplaceCommand(CommandType.PlayerStaticCollisionCommand, new PlayerStaticCollisionCommand(playerCollision));
+        commandManager.ReplaceCommand(CommandType.PlayerStaticCollisionCommand, new PlayerStaticRoomCollisionCommand(playerCollision));
         commandManager.ReplaceCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand(playerCollision));
         commandManager.ReplaceCommand(CommandType.PlayerEnemyProjectileCollisionCommand, new PlayerEnemyProjectileCollisionCommand(player));
 
@@ -121,10 +121,16 @@ public class DungeonScene : IScene
 
     private void CreateStaticColliders()
     {
-        var colliderRects = room.GetStaticColliders();
-        foreach (var rect in colliderRects)
+        var roomColliderRects = room.GetStaticRoomColliders();
+        foreach (var rect in roomColliderRects)
         {
-            var collidable = new Collidable(rect, graphicsDevice, CollidableType.Static);
+            var collidable = new StaticRoomCollidable(rect, graphicsDevice);
+            collisionController.AddCollidable(collidable);
+        }
+        var boundaryColliderRects = room.GetStaticBoundaryColliders();
+        foreach (var rect in boundaryColliderRects)
+        {
+            var collidable = new StaticBoundaryCollidable(rect, graphicsDevice);
             collisionController.AddCollidable(collidable);
         }
     }

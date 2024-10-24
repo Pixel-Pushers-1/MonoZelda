@@ -3,20 +3,19 @@ using MonoZelda.Controllers;
 using Microsoft.Xna.Framework;
 using MonoZelda.Link;
 using MonoZelda.Enemies;
-using Microsoft.VisualBasic;
 
 namespace MonoZelda.Commands.CollisionCommands;
 
-public class EnemyStaticCollisionCommand : ICommand
+public class EnemyStaticRoomCollisionCommand : ICommand
 {
     private MonoZeldaGame game;
 
-    public EnemyStaticCollisionCommand()
+    public EnemyStaticRoomCollisionCommand()
     {
         //empty
     }
 
-    public EnemyStaticCollisionCommand(MonoZeldaGame game)
+    public EnemyStaticRoomCollisionCommand(MonoZeldaGame game)
     {
         this.game = game;
     }

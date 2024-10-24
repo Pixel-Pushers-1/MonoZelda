@@ -7,16 +7,16 @@ using MonoZelda.Link.Projectiles;
 
 namespace MonoZelda.Commands.CollisionCommands;
 
-public class EnemyProjectileCollisionCommand : ICommand
+public class EnemyPlayerProjectileCollisionCommand : ICommand
 {
     private MonoZeldaGame game;
 
-    public EnemyProjectileCollisionCommand()
+    public EnemyPlayerProjectileCollisionCommand()
     {
         //empty
     }
 
-    public EnemyProjectileCollisionCommand(MonoZeldaGame game)
+    public EnemyPlayerProjectileCollisionCommand(MonoZeldaGame game)
     {
         this.game = game;
     }

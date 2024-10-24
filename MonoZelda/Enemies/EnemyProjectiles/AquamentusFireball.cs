@@ -10,7 +10,7 @@ namespace MonoZelda.Enemies.EnemyProjectiles
 {
     public class AquamentusFireball : IEnemyProjectile
     {
-        public Collidable ProjectileHitbox { get; set; }
+        public EnemyProjectileCollidable ProjectileHitbox { get; set; }
         public Point Pos { get; set; }
 
         public SpriteDict FireballSpriteDict { get; private set; }
@@ -23,7 +23,7 @@ namespace MonoZelda.Enemies.EnemyProjectiles
             Pos = pos;
             FireballSpriteDict = new(contentManager.Load<Texture2D>("Sprites/enemies"), SpriteCSVData.Enemies, 0, new Point(100, 100));
             FireballSpriteDict.SetSprite("fireball");
-            ProjectileHitbox = new Collidable(new Rectangle(pos.X, pos.Y, 30, 30), graphicsDevice, CollidableType.Projectile);
+            ProjectileHitbox = new EnemyProjectileCollidable(new Rectangle(pos.X, pos.Y, 30, 30), graphicsDevice);
             collisionController.AddCollidable(ProjectileHitbox);
             angle = newAngle;
             if (angle <= 180)

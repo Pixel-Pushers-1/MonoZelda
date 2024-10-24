@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace MonoZelda.Collision;
 
-public class StaticCollidable : ICollidable
+public class StaticRoomCollidable : ICollidable
 {
     public CollidableType type { get; set; }
     public Rectangle Bounds { get; set; }
@@ -12,11 +12,11 @@ public class StaticCollidable : ICollidable
 
     private readonly CollisionHitboxDraw hitbox;
 
-    public StaticCollidable(Rectangle bounds, GraphicsDevice graphicsDevice)
+    public StaticRoomCollidable(Rectangle bounds, GraphicsDevice graphicsDevice)
     {
         Bounds = bounds;
         hitbox = new CollisionHitboxDraw(this, graphicsDevice);
-        type = CollidableType.Static;
+        type = CollidableType.StaticRoom;
     }
 
     public void UnregisterHitbox()

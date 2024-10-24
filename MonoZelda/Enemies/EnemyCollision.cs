@@ -1,13 +1,6 @@
 ﻿using MonoZelda.Collision;
 using MonoZelda.Controllers;
-using MonoZelda.Link;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using System.Numerics;
 
 namespace MonoZelda.Enemies
 {
@@ -16,7 +9,7 @@ namespace MonoZelda.Enemies
         private int width;
         private int height;
         private IEnemy enemy;
-        private Collidable enemyHitbox;
+        private EnemyCollidable enemyHitbox;
         private CollisionController collisionController;
 
         public EnemyCollision(IEnemy enemy, CollisionController collisionController, int width, int height)

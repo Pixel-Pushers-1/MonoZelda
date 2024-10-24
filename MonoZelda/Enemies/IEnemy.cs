@@ -11,7 +11,7 @@ namespace MonoZelda.Enemies
     {
         public Point Pos { get; set; }
 
-        public Collidable EnemyHitbox { get; set; }
+        public EnemyCollidable EnemyHitbox { get; set; }
 
         public int Width { get; set; }
 

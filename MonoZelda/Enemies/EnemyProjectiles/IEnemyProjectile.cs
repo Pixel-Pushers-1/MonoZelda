@@ -5,7 +5,7 @@ namespace MonoZelda.Enemies.EnemyProjectiles;
 
 public interface IEnemyProjectile
 {
-    public Collidable ProjectileHitbox { get; set; }
+    public EnemyProjectileCollidable ProjectileHitbox { get; set; }
     public Point Pos { get; set; }
 
     public void ViewProjectile(bool view);

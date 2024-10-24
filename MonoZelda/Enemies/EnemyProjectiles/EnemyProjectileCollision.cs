@@ -14,7 +14,7 @@ namespace MonoZelda.Enemies.EnemyProjectiles
         private readonly int width;
         private readonly int height;
         private IEnemyProjectile projectile;
-        private Collidable projectileHitbox;
+        private EnemyProjectileCollidable projectileHitbox;
         private CollisionController collisionController;
 
         public EnemyProjectileCollision(IEnemyProjectile projectile, CollisionController collisionController)

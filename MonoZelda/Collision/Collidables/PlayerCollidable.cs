@@ -12,7 +12,7 @@ public class PlayerCollidable : ICollidable
 
     private readonly CollisionHitboxDraw hitbox;
 
-    public PlayerCollidable(Rectangle bounds, GraphicsDevice graphicsDevice, CollidableType type)
+    public PlayerCollidable(Rectangle bounds, GraphicsDevice graphicsDevice)
     {
         Bounds = bounds;
         hitbox = new CollisionHitboxDraw(this, graphicsDevice);

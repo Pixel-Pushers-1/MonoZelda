@@ -14,7 +14,7 @@ namespace MonoZelda.Enemies.EnemyClasses
     public class Goriya : IEnemy
     {
         public Point Pos { get; set; }
-        public Collidable EnemyHitbox { get; set; }
+        public EnemyCollidable EnemyHitbox { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         private CardinalEnemyStateMachine stateMachine;
@@ -43,7 +43,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager)
         {
-            EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 60, 60), graphicsDevice, CollidableType.Enemy);
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 60, 60), graphicsDevice, EnemyList.Goriya);
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;

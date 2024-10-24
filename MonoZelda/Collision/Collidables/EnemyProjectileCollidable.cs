@@ -11,16 +11,15 @@ public class EnemyProjectileCollidable : ICollidable
     public CollidableType type { get; set; }
     public Rectangle Bounds { get; set; }
     public SpriteDict CollidableDict { get; private set; }
-    public IEnemy Enemy { get; private set; }
     public IEnemyProjectile EnemyProjectile { get; private set; }
 
     private readonly CollisionHitboxDraw hitbox;
 
-    public EnemyProjectileCollidable(Rectangle bounds, GraphicsDevice graphicsDevice, CollidableType type)
+    public EnemyProjectileCollidable(Rectangle bounds, GraphicsDevice graphicsDevice)
     {
         Bounds = bounds;
         hitbox = new CollisionHitboxDraw(this, graphicsDevice);
-        this.type = type;
+        type = CollidableType.EnemyProjectile;
     }
 
     public void UnregisterHitbox()

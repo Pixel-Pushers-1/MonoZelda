@@ -38,7 +38,7 @@ namespace MonoZelda.Trigger
 
             var rect = new Rectangle(position, new Point(64, 64));
 
-            staticCollider = new StaticCollidable(rect, graphicsDevice);
+            staticCollider = new StaticRoomCollidable(rect, graphicsDevice);
             colliderManager.AddCollidable(staticCollider);
 
             // The trigger collider sits on top of the static collider
