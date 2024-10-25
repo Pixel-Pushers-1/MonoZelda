@@ -11,7 +11,7 @@ public class Collidable : ICollidable
 {
     public CollidableType type { get; set; }
     public Rectangle Bounds { get; set; }
-    public SpriteDict CollidableDict { get; private set; }
+    public SpriteDict CollidableDict { get; set; }
     public IEnemy Enemy { get; private set; }   
     public ProjectileManager ProjectileManager { get; private set; }
 

@@ -10,7 +10,6 @@ public enum CollidableType
     StaticRoom,
     StaticBoundary,
     Projectile,
-    EnemyProjectile,
     Static,
     Boundary,
     Trigger,
