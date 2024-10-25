@@ -5,6 +5,9 @@ using MonoZelda.Sprites;
 using MonoZelda.Commands;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Scenes;
+using MonoZelda.Dungeons.Loader;
+using MonoZelda.Dungeons;
+using MonoZelda.Dungeons.Parser;
 
 namespace MonoZelda;
 
@@ -25,7 +28,7 @@ public class MonoZeldaGame : Game
     private MouseController mouseController;
     private CollisionController collisionController;
     private CommandManager commandManager;
-    private IDungeonRoomLoader dungeonLoader;
+    private IDungeonRoomLoader dungeonManager;
 
     private IScene scene;
 
@@ -56,7 +59,9 @@ public class MonoZeldaGame : Game
         graphicsDeviceManager.PreferredBackBufferHeight = 896;
         graphicsDeviceManager.ApplyChanges();
 
-        dungeonLoader = new HTTPRoomParser(Content,GraphicsDevice);
+        var loader = new HTTPRoomStream(DungeonConstants.Dungeon1);
+        var tokenizer = new RoomTokenizer();
+        dungeonManager = new DungeonManager(loader, tokenizer);
 
         base.Initialize();
     }
@@ -119,7 +124,7 @@ public class MonoZeldaGame : Game
 
     public void LoadDungeon(string roomName)
     {
-        var room = dungeonLoader.LoadRoom(roomName);
+        var room = dungeonManager.LoadRoom(roomName);
         commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this, room));
 
         LoadScene(new DungeonScene(GraphicsDevice, commandManager, collisionController, room));
