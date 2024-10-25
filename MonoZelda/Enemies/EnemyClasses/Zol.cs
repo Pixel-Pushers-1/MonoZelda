@@ -12,7 +12,7 @@ namespace MonoZelda.Enemies.EnemyClasses
     {
         private CardinalEnemyStateMachine stateMachine;
         public Point Pos { get; set; }
-        public Collidable EnemyHitbox { get; set; }
+        public EnemyCollidable EnemyHitbox { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         private readonly Random rnd = new();
@@ -34,7 +34,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
             ContentManager contentManager)
         {
-            EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, CollidableType.Enemy);
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Zol);
             collisionController.AddCollidable(EnemyHitbox);
             zolSpriteDict = enemyDict;
             EnemyHitbox.setSpriteDict(zolSpriteDict);
@@ -44,7 +44,6 @@ namespace MonoZelda.Enemies.EnemyClasses
             pixelsMoved = 0;
             readyToJump = false;
             stateMachine = new CardinalEnemyStateMachine();
-            EnemyHitbox.setEnemy(this);
         }
         public void ChangeDirection()
         {

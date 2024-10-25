@@ -1,6 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using MonoZelda.Sprites;
-using System;
 
 namespace MonoZelda.Link.Projectiles;
 

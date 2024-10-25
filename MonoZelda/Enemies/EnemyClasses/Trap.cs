@@ -17,9 +17,9 @@ namespace MonoZelda.Enemies.EnemyClasses
         private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.None;
         private GraphicsDevice graphicsDevice;
         private int pixelsMoved;
-        public Collidable EnemyHitbox { get; set; }
-        private Collidable horizontalHitbox;
-        private Collidable verticalHitbox;
+        public EnemyCollidable EnemyHitbox { get; set; }
+        private EnemyCollidable horizontalHitbox;
+        private EnemyCollidable verticalHitbox;
         public int Width { get; set; }
         public int Height { get; set; }
 
@@ -37,10 +37,10 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
             trapSpriteDict = enemyDict;
             trapSpriteDict.Position = spawnPosition;
-            EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, CollidableType.Enemy);
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Trap);
             collisionController.AddCollidable(EnemyHitbox);
-            verticalHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, CollidableType.Enemy);
-            horizontalHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, CollidableType.Enemy);
+            verticalHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Trap);
+            horizontalHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Trap);
             if (spawnPosition.X < 400)
             {
                 if (spawnPosition.Y > 400)
@@ -74,7 +74,6 @@ namespace MonoZelda.Enemies.EnemyClasses
             Pos = spawnPosition;
             pixelsMoved = 0;
             stateMachine = new CardinalEnemyStateMachine();
-            EnemyHitbox.setEnemy(this);
         }
         public void ChangeDirection()
         {

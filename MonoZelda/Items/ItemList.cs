@@ -11,7 +11,7 @@ public enum ItemList
     Bow,
     Heart,
     Rupee,
-    Arrpw,
+    Arrow,
     Bomb,
     Fairy,
     Clock,

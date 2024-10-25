@@ -1,42 +1,44 @@
-﻿using MonoZelda.Collision;
-using MonoZelda.Controllers;
+﻿using Microsoft.Xna.Framework;
+using MonoZelda.Collision;
 using MonoZelda.Link;
-using System.Diagnostics;
-using Microsoft.Xna.Framework;
 
 namespace MonoZelda.Commands.CollisionCommands;
 
 public class PlayerEnemyCollisionCommand : ICommand
 {
     private MonoZeldaGame game;
-    private PlayerCollision playerCollision;
+    private PlayerCollisionManager playerCollisionManager;
+
     public PlayerEnemyCollisionCommand()
     {
         //empty
     }
 
-    public PlayerEnemyCollisionCommand(MonoZeldaGame game)
+    public PlayerEnemyCollisionCommand(PlayerCollisionManager playerCollisionManager)
     {
-        this.game = game;
-    }
-
-    public PlayerEnemyCollisionCommand(PlayerCollision playerCollision)
-    {
-        this.playerCollision = playerCollision;
+        this.playerCollisionManager = playerCollisionManager;
     }
 
     public void Execute(params object[] metadata)
     {
-        Debug.WriteLine("Hi");
-        Collidable collidableA = (Collidable)metadata[0];
-        Collidable collidableB = (Collidable)metadata[1];
-        CollisionController collisionController = (CollisionController)metadata[2];
+        ICollidable collidableA = (ICollidable)metadata[0];
+        ICollidable collidableB = (ICollidable)metadata[1];
         Direction collisionDirection = (Direction)metadata[3];
         Rectangle intersection = (Rectangle)metadata[4];
+
+        PlayerCollidable playerCollidable;
+
+        if (collidableA.type == CollidableType.Player)
+        {
+            playerCollidable = (PlayerCollidable)collidableA;
+        }
+        else
+        {
+            playerCollidable = (PlayerCollidable)collidableB;
+        }
+
+        PlayerCollisionManager playerCollision = playerCollidable.PlayerCollision;
         playerCollision.HandleEnemyCollision(collisionDirection);
-
-
-
     }
 
     public void UnExecute()

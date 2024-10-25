@@ -13,8 +13,8 @@ public class ProjectileManager
     private bool projectileFired;
     private IProjectile itemFired;
     private ProjectileType equippedProjectile;
+    private PlayerProjectileCollidable projectileCollidable;
     private CollisionController collisionController;
-    private Collidable projectileCollidable;
     private GraphicsDevice graphicsDevice;
     private Projectile projectile;
     private SpriteDict projectileDict;
@@ -51,11 +51,11 @@ public class ProjectileManager
         projectile = new Projectile(projectileDict, new Vector2(),Direction.Down);
     }
 
-    private void setupProjectile()
+    private void setupProjectile(ProjectileType equippedProjectile)
     {
         projectileFired = true;
         projectileDict.Enabled = true;
-        projectileCollidable = new Collidable(itemFired.getCollisionRectangle(), graphicsDevice, CollidableType.Projectile);
+        projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), graphicsDevice, equippedProjectile);
         projectileCollidable.setProjectileManager(this);
         collisionController.AddCollidable(projectileCollidable);
     }
@@ -73,19 +73,19 @@ public class ProjectileManager
     public void useSword(Player player)
     {
         itemFired = projectile.GetProjectileObject(ProjectileType.WoodenSword, player);
-        setupProjectile();
+        setupProjectile(ProjectileType.WoodenSword);
     }
 
     public void useSwordBeam(Player player)
     {
         itemFired = projectile.GetProjectileObject(ProjectileType.WoodenSwordBeam, player);
-        setupProjectile();
+        setupProjectile(ProjectileType.WoodenSwordBeam);
     }
 
     public void fireEquippedProjectile(Player player)
     {
         itemFired = projectile.GetProjectileObject(equippedProjectile, player);
-        setupProjectile();
+        setupProjectile(equippedProjectile);
     }
 
     public void executeProjectile()

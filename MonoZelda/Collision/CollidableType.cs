@@ -1,13 +1,13 @@
-﻿namespace MonoZelda.Collision;
+namespace MonoZelda.Collision;
 
 public enum CollidableType
 {
     Player,
     Item,
     Enemy,
-    Projectile,
+    PlayerProjectile,
     EnemyProjectile,
-    Static,
-    Boundary,
+    StaticRoom,
+    StaticBoundary,
     Trigger,
 }

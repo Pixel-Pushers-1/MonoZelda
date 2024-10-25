@@ -23,8 +23,11 @@ public enum CommandType
     PlayerEnemyProjectileCollisionCommand,
     PlayerStaticCollisionCommand,
     PlayerTriggerCollisionCommand,
-    EnemyProjectileCollisionCommand,
-    EnemyStaticCollisionCommand,
+    EnemyPlayerProjectileCollisionCommand,
+    EnemyStaticRoomCollisionCommand,
+    EnemyStaticBoundaryCollisionCommand,
+    PlayerProjectileStaticRoomCollisionCommand,
+    PlayerProjectileStaticBoundaryCollisionCommand,
     ToggleGizmosCommand,
     None
 }
@@ -50,10 +53,12 @@ public class CommandManager
         AddCommand(CommandType.PlayerEnemyProjectileCollisionCommand, new PlayerEnemyProjectileCollisionCommand());
         AddCommand(CommandType.PlayerStaticCollisionCommand, new PlayerStaticCollisionCommand());
         AddCommand(CommandType.PlayerTriggerCollisionCommand, new PlayerTriggerCollisionCommand());
-        AddCommand(CommandType.EnemyProjectileCollisionCommand, new EnemyProjectileCollisionCommand());
-        AddCommand(CommandType.EnemyStaticCollisionCommand, new EnemyStaticCollisionCommand());
+        AddCommand(CommandType.EnemyPlayerProjectileCollisionCommand, new EnemyPlayerProjectileCollisionCommand());
+        AddCommand(CommandType.EnemyStaticRoomCollisionCommand, new EnemyStaticRoomCollisionCommand());
+        AddCommand(CommandType.EnemyStaticBoundaryCollisionCommand, new EnemyStaticBoundaryCollisionCommand());
+        AddCommand(CommandType.PlayerProjectileStaticRoomCollisionCommand, new PlayerProjectileStaticRoomCollisionCommand());
+        AddCommand(CommandType.PlayerProjectileStaticBoundaryCollisionCommand, new PlayerProjectileStaticBoundaryCollisionCommand());
         AddCommand(CommandType.ToggleGizmosCommand, new ToggleGizmosCommand());
-
     }
 
     public void Execute(CommandType commandType, params object[] metadata)
