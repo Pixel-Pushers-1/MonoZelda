@@ -1,30 +1,32 @@
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoZelda.Enemies;
+using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Link.Projectiles;
 using MonoZelda.Sprites;
-using Microsoft.Xna.Framework;
 
 namespace MonoZelda.Collision;
 
-public class PlayerProjectileCollidable : ICollidable
+public class Collidable : ICollidable
 {
     public CollidableType type { get; set; }
-    public ProjectileType projectileType { get; set; }
     public Rectangle Bounds { get; set; }
-    public SpriteDict CollidableDict { get; set; }
+    public SpriteDict CollidableDict { get; private set; }
+    public IEnemy Enemy { get; private set; }   
     public ProjectileManager ProjectileManager { get; private set; }
+
+    public IEnemyProjectile EnemyProjectile { get; private set; }
 
     private readonly CollisionHitboxDraw hitbox;
 
-    public PlayerProjectileCollidable(Rectangle bounds, GraphicsDevice graphicsDevice, ProjectileType projectileType)
+    public Collidable(Rectangle bounds, GraphicsDevice graphicsDevice, CollidableType type)
     {
         Bounds = bounds;
         hitbox = new CollisionHitboxDraw(this, graphicsDevice);
-        type = CollidableType.PlayerProjectile;
-        this.projectileType = projectileType;
+        this.type = type;
     }
 
-    public void UnregisterHitbox()
-    {
+    public void UnregisterHitbox() {
         hitbox.Unregister();
     }
 
@@ -46,6 +48,16 @@ public class PlayerProjectileCollidable : ICollidable
     public void setSpriteDict(SpriteDict collidableDict)
     {
         CollidableDict = collidableDict;
+    }
+
+    public void setEnemy(IEnemy enemy)
+    {
+        Enemy = enemy;
+    }
+
+    public void setEnemyProjectile(IEnemyProjectile enemyProjectile)
+    {
+        EnemyProjectile = enemyProjectile;
     }
 
     public void setProjectileManager(ProjectileManager projectileManager)

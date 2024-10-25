@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Enemies;
 using MonoZelda.Sprites;

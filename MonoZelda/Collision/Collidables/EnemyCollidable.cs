@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Enemies;
 using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
@@ -59,5 +59,4 @@ public class EnemyCollidable : ICollidable
     {
         return $"{type}";
     }
-
 }
