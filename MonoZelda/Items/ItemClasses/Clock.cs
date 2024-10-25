@@ -8,7 +8,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Clock : IItem
 {
-    private Collidable clockCollidable;
+    private ItemCollidable clockCollidable;
     private bool itemPickedUp;
     private GraphicsDevice graphicsDevice;
 
@@ -31,7 +31,7 @@ public class Clock : IItem
 
     public void itemSpawn(SpriteDict clockDict, Point spawnPosition, CollisionController collisionController)
     {
-        clockCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 60, 60), graphicsDevice, CollidableType.Item);
+        clockCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 60, 60), graphicsDevice, ItemList.Clock);
         collisionController.AddCollidable(clockCollidable);
         clockCollidable.setSpriteDict(clockDict);
         clockDict.Position = spawnPosition;

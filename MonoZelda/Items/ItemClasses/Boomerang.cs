@@ -8,7 +8,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Boomerang : IItem
 {
-    private Collidable boomerangCollidable;
+    private ItemCollidable boomerangCollidable;
     private bool itemPickedUp;
     private GraphicsDevice graphicsDevice;
 
@@ -31,7 +31,7 @@ public class Boomerang : IItem
 
     public void itemSpawn(SpriteDict boomerangDict, Point spawnPosition, CollisionController collisionController)
     {
-        boomerangCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 28), graphicsDevice, CollidableType.Item);
+        boomerangCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 28), graphicsDevice, ItemList.Boomerang);
         collisionController.AddCollidable(boomerangCollidable);
         boomerangCollidable.setSpriteDict(boomerangDict);
         boomerangDict.Position = spawnPosition;

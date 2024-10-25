@@ -1,25 +1,23 @@
+﻿
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using MonoZelda.Sprites;
-using MonoZelda.Items;
 
 namespace MonoZelda.Collision;
 
-public class ItemCollidable : ICollidable
+public class StaticBoundaryCollidable : ICollidable
 {
     public CollidableType type { get; set; }
-    public ItemList itemType { get; set; }
     public Rectangle Bounds { get; set; }
     public SpriteDict CollidableDict { get; set; }
 
     private readonly CollisionHitboxDraw hitbox;
 
-    public ItemCollidable(Rectangle bounds, GraphicsDevice graphicsDevice, ItemList itemType)
+    public StaticBoundaryCollidable(Rectangle bounds, GraphicsDevice graphicsDevice)
     {
         Bounds = bounds;
         hitbox = new CollisionHitboxDraw(this, graphicsDevice);
-        type = CollidableType.Item;
-        this.itemType = itemType;
+        type = CollidableType.StaticBoundary;
     }
 
     public void UnregisterHitbox()
@@ -40,10 +38,5 @@ public class ItemCollidable : ICollidable
     public override string ToString()
     {
         return $"{type}";
-    }
-
-    public void setSpriteDict(SpriteDict collidableDict)
-    {
-        CollidableDict = collidableDict;
     }
 }

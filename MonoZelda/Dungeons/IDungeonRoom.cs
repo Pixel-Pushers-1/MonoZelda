@@ -9,7 +9,8 @@ namespace MonoZelda.Dungeons
         string RoomName { get; }
         Dungeon1Sprite RoomSprite { get; }
         List<IDoor> GetDoors();
-        List<Rectangle> GetStaticColliders();
+        List<Rectangle> GetStaticRoomColliders();
+        List<Rectangle> GetStaticBoundaryColliders();
         List<EnemySpawn> GetEnemySpawns();
         List<ItemSpawn> GetItemSpawns();
         List<TriggerSpawn> GetTriggers();

@@ -5,10 +5,10 @@ namespace MonoZelda.Enemies.EnemyProjectiles;
 
 public interface IEnemyProjectile
 {
-    public Collidable ProjectileHitbox { get; set; }
+    public EnemyProjectileCollidable ProjectileHitbox { get; set; }
     public Point Pos { get; set; }
 
-    public void ViewProjectile(bool view);
+    public void ViewProjectile(bool view, bool enemyAlive);
     public void Follow(Point newPos);
 
     public void Update(GameTime gameTime, CardinalEnemyStateMachine.Direction attackDirection, Point enemyPos);

@@ -14,7 +14,7 @@ namespace MonoZelda.Enemies.EnemyClasses
     public class Goriya : IEnemy
     {
         public Point Pos { get; set; }
-        public Collidable EnemyHitbox { get; set; }
+        public EnemyCollidable EnemyHitbox { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         private CardinalEnemyStateMachine stateMachine;
@@ -23,11 +23,11 @@ namespace MonoZelda.Enemies.EnemyClasses
         private CardinalEnemyStateMachine.Direction direction;
         private readonly GraphicsDevice graphicsDevice;
         private IEnemyProjectile projectile;
-        private EnemyProjectileCollision projectileCollision;
+        private EnemyProjectileCollisionManager projectileCollision;
         private int pixelsMoved;
         private int tilesMoved;
         private int tileSize = 64;
-        private bool projectileActiveOrNot;
+        private bool projectileActive;
         private bool goriyaAlive;
         private int animatedDeath;
 
@@ -36,14 +36,14 @@ namespace MonoZelda.Enemies.EnemyClasses
             this.graphicsDevice = graphicsDevice;
             Width = 64;
             Height = 64;
-            projectileActiveOrNot = true;
+            projectileActive = true;
             goriyaAlive = true;
             animatedDeath = 0;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager)
         {
-            EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 60, 60), graphicsDevice, CollidableType.Enemy);
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 60, 60), graphicsDevice, EnemyList.Goriya);
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
@@ -54,8 +54,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             tilesMoved = 0;
             stateMachine = new CardinalEnemyStateMachine();
             projectile = new GoriyaBoomerang(spawnPosition, contentManager, graphicsDevice, collisionController);
-            projectileCollision = new EnemyProjectileCollision(projectile, collisionController);
-            EnemyHitbox.setEnemy(this);
+            projectileCollision = new EnemyProjectileCollisionManager(projectile, collisionController);
         }
 
         public void ChangeDirection()
@@ -84,12 +83,12 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Attack(GameTime gameTime)
         {
-            projectile.ViewProjectile(projectileActiveOrNot);
+            projectile.ViewProjectile(projectileActive, goriyaAlive);
             projectile.Update(gameTime, direction, Pos);
             pixelsMoved += 4;
             if (pixelsMoved >= tileSize*6)
             {
-                projectile.ViewProjectile(false);
+                projectile.ViewProjectile(false, goriyaAlive);
                 pixelsMoved = 0;
                 tilesMoved = 0;
             }
@@ -135,12 +134,12 @@ namespace MonoZelda.Enemies.EnemyClasses
             if (goriyaAlive == true && animatedDeath < 12)
             {
                 goriyaAlive = false;
+                projectileActive = false;
             }
             else if(animatedDeath == 12)
             {
-                projectileActiveOrNot = false;
                 goriyaSpriteDict.Enabled = false;
-                projectile.ViewProjectile(projectileActiveOrNot);
+                projectile.ViewProjectile(projectileActive, goriyaAlive);
                 EnemyHitbox.UnregisterHitbox();
             }
         }

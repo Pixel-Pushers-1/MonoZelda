@@ -8,7 +8,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Rupee : IItem
 {
-    private Collidable rupeeCollidable;
+    private ItemCollidable rupeeCollidable;
     private bool itemPickedUp;
     private GraphicsDevice graphicsDevice;
     public bool ItemPickedUp
@@ -30,7 +30,7 @@ public class Rupee : IItem
 
     public void itemSpawn(SpriteDict rupeeDict, Point spawnPosition, CollisionController collisionController)
     {
-        rupeeCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice, CollidableType.Item);
+        rupeeCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice, ItemList.Rupee);
         collisionController.AddCollidable(rupeeCollidable);
         rupeeCollidable.setSpriteDict(rupeeDict);
         rupeeDict.Position = spawnPosition;

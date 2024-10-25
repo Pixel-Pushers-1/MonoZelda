@@ -7,7 +7,7 @@ using MonoZelda.Controllers;
 namespace MonoZelda.Items.ItemClasses;
 public class Bomb : IItem
 {
-    private Collidable bombCollidable;
+    private ItemCollidable bombCollidable;
     private bool itemPickedUp;
     private GraphicsDevice graphicsDevice;  
 
@@ -30,7 +30,7 @@ public class Bomb : IItem
 
     public void itemSpawn(SpriteDict bombDict, Point spawnPosition, CollisionController collisionController)
     {
-        bombCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice, CollidableType.Item);
+        bombCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice, ItemList.Bomb);
         collisionController.AddCollidable(bombCollidable);
         bombCollidable.setSpriteDict(bombDict);
         bombDict.Position = spawnPosition;

@@ -8,7 +8,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Fairy : IItem
 {
-    private Collidable fairyCollidable;
+    private ItemCollidable fairyCollidable;
     private bool itemPickedUp;
     private GraphicsDevice graphicsDevice;
 
@@ -31,7 +31,7 @@ public class Fairy : IItem
 
     public void itemSpawn(SpriteDict fairyDict, Point spawnPosition, CollisionController collisionController)
     {
-        fairyCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice, CollidableType.Item);
+        fairyCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice, ItemList.Fairy);
         collisionController.AddCollidable(fairyCollidable);
         fairyCollidable.setSpriteDict(fairyDict);
         fairyDict.Position = spawnPosition;

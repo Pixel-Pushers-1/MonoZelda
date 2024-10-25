@@ -9,7 +9,7 @@ namespace MonoZelda.Controllers;
 public class CollisionController : IController
 {
 
-    private List<Collidable> _gameObjects;
+    private List<ICollidable> _gameObjects;
     private CommandManager _commandManager;
 
     private Dictionary<(CollidableType, CollidableType), CommandType>_collisionCommandDictionary;
@@ -23,13 +23,17 @@ public class CollisionController : IController
             {(CollidableType.Player, CollidableType.Item), CommandType.PlayerItemCollisionCommand},
             {(CollidableType.Player, CollidableType.Enemy), CommandType.PlayerEnemyCollisionCommand},
             {(CollidableType.Player, CollidableType.EnemyProjectile), CommandType.PlayerEnemyProjectileCollisionCommand},
-            {(CollidableType.Player, CollidableType.Static), CommandType.PlayerStaticCollisionCommand},
+            {(CollidableType.Player, CollidableType.StaticRoom), CommandType.PlayerStaticCollisionCommand},
+            {(CollidableType.Player, CollidableType.StaticBoundary), CommandType.PlayerStaticCollisionCommand},
             {(CollidableType.Player, CollidableType.Trigger), CommandType.PlayerTriggerCollisionCommand},
-            {(CollidableType.Enemy, CollidableType.Projectile), CommandType.EnemyProjectileCollisionCommand},
-            {(CollidableType.Enemy, CollidableType.Static), CommandType.EnemyStaticCollisionCommand},
+            {(CollidableType.Enemy, CollidableType.PlayerProjectile), CommandType.EnemyPlayerProjectileCollisionCommand},
+            {(CollidableType.Enemy, CollidableType.StaticRoom), CommandType.EnemyStaticRoomCollisionCommand},
+            {(CollidableType.Enemy, CollidableType.StaticBoundary), CommandType.EnemyStaticBoundaryCollisionCommand},
+            {(CollidableType.PlayerProjectile, CollidableType.StaticRoom), CommandType.PlayerProjectileStaticRoomCollisionCommand},
+            {(CollidableType.PlayerProjectile, CollidableType.StaticBoundary), CommandType.PlayerProjectileStaticBoundaryCollisionCommand},
         };
 
-        _gameObjects = new List<Collidable>();
+        _gameObjects = new List<ICollidable>();
     }
 
     public void Update(GameTime gameTime)
@@ -39,8 +43,8 @@ public class CollisionController : IController
             for (int j = i + 1; j < _gameObjects.Count; j++)
             {
                 // Debug Statement
-                Collidable collidableA = _gameObjects[i];
-                Collidable collidableB = _gameObjects[j];
+                ICollidable collidableA = _gameObjects[i];
+                ICollidable collidableB = _gameObjects[j];
 
                 // Check for a collision between objA and objB
                 if (IsColliding(collidableA, collidableB))
@@ -55,30 +59,30 @@ public class CollisionController : IController
         }
     }
 
-    public void AddCollidable(Collidable collidable)
+    public void AddCollidable(ICollidable collidable)
     {
         _gameObjects.Add(collidable);
     }
 
-    public void RemoveCollidable(Collidable collidable)
+    public void RemoveCollidable(ICollidable collidable)
     {
         _gameObjects.Remove(collidable);
     }
 
     public void Reset()
     {
-        _gameObjects = new List<Collidable>();
+        _gameObjects = new List<ICollidable>();
     }
 
     // Check if two objects are colliding (AABB collision detection)
-    private bool IsColliding(Collidable collidableA, Collidable collidableB)
+    private bool IsColliding(ICollidable collidableA, ICollidable collidableB)
     {
         // Implement collision check logic (From Collision detection and bounding boxes)
         return collidableA.Intersects(collidableB);
     }
 
     // Handle what happens when two objects collide
-    private void HandleCollision(Collidable collidableA, Collidable collidableB, params object[] metadata)
+    private void HandleCollision(ICollidable collidableA, ICollidable collidableB, params object[] metadata)
     {
         if (_collisionCommandDictionary.ContainsKey((collidableA.type, collidableB.type)))
         {
@@ -90,7 +94,7 @@ public class CollisionController : IController
         }
     }
 
-    private object[] GetMetadata(Collidable collidableA, Collidable collidableB)
+    private object[] GetMetadata(ICollidable collidableA, ICollidable collidableB)
     {
         //convention: collidableA, collidableB, CollisionController, direction, intersection area
         var metadata = new object[5];

@@ -1,19 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
+using MonoZelda.Enemies;
 using MonoZelda.Link;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MonoZelda.Commands.CollisionCommands;
 
-public class PlayerStaticCollisionCommand : ICommand
+public class EnemyStaticBoundaryCollisionCommand : ICommand
 {
     private MonoZeldaGame game;
 
-    public PlayerStaticCollisionCommand()
+    public EnemyStaticBoundaryCollisionCommand()
     {
         //empty
     }
@@ -25,23 +22,23 @@ public class PlayerStaticCollisionCommand : ICommand
         Direction collisionDirection = (Direction)metadata[3];
         Rectangle intersection = (Rectangle)metadata[4];
 
-        PlayerCollidable playerCollidable;
+        EnemyCollidable enemyCollidable;
 
-        if (collidableA.type == CollidableType.Player)
+        if (collidableA.type == CollidableType.Enemy)
         {
-            playerCollidable = (PlayerCollidable)collidableA;
+            enemyCollidable = (EnemyCollidable)collidableA;
         }
         else
         {
-            playerCollidable = (PlayerCollidable)collidableB;
+            enemyCollidable = (EnemyCollidable)collidableB;
         }
 
-        PlayerCollisionManager playerCollision = playerCollidable.PlayerCollision;
-        playerCollision.HandleStaticCollision(collisionDirection, intersection);
+        EnemyCollisionManager enemyCollisionManager = enemyCollidable.EnemyCollision;
+        enemyCollisionManager.HandleStaticCollision(collisionDirection, intersection);
     }
 
     public void UnExecute()
     {
-        //empty
+        // empty
     }
 }

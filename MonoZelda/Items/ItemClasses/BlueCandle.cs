@@ -8,7 +8,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class BlueCandle : IItem
 {
-    private Collidable bluecandleCollidable;
+    private ItemCollidable bluecandleCollidable;
     private bool itemPickedUp;
     private GraphicsDevice graphicsDevice;
 
@@ -31,7 +31,7 @@ public class BlueCandle : IItem
 
     public void itemSpawn(SpriteDict bluecandleDict, Point spawnPosition, CollisionController collisionController)
     {
-        bluecandleCollidable = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 28, 60), graphicsDevice, CollidableType.Item);
+        bluecandleCollidable = new ItemCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 28, 60), graphicsDevice, ItemList.BlueCandle);
         collisionController.AddCollidable(bluecandleCollidable);
         bluecandleCollidable.setSpriteDict(bluecandleDict);
         bluecandleDict.Position = spawnPosition;

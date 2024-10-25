@@ -145,12 +145,20 @@ public class HTTPRoomParser : IDungeonRoomLoader
                             room.AddEnemySpawn(enemySpawn);
                         }
                         break;
-                    case "collision":
+                    case "roomCollision":
                         // Load collision
                         if (Enum.TryParse(enumValue, out CollisionTileRect collisionRect))
                         {
                             var rect = GetCollisionRectangle(collisionRect, position, DungeonConstants.TileWidth, DungeonConstants.TileHeight);
-                            room.AddStaticCollider(rect);
+                            room.AddStaticRoomCollider(rect);
+                        }
+                        break;
+                    case "boundaryCollision":
+                        // Load boundary collision
+                        if (Enum.TryParse(enumValue, out CollisionTileRect boundaryRect))
+                        {
+                            var rect = GetCollisionRectangle(boundaryRect, position, DungeonConstants.TileWidth, DungeonConstants.TileHeight);
+                            room.AddStaticBoundaryCollider(rect);
                         }
                         break;
                     case "trigger":
