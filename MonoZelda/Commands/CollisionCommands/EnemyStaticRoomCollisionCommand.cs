@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Link;
 using MonoZelda.Enemies;
-using System.Collections.Generic;
 
 namespace MonoZelda.Commands.CollisionCommands;
 

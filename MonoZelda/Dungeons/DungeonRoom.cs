@@ -50,9 +50,9 @@ namespace MonoZelda.Dungeons
             enemySpawns.Add(enemySpawn);
         }
 
-        public void AddStaticRoomCollider(Rectangle collider)
+        public void AddStaticRoomCollider(Rectangle roomCollider)
         {
-            roomColliders.Add(collider);
+            roomColliders.Add(roomCollider);
         }
 
         public void AddStaticBoundaryCollider(Rectangle boundaryCollider)

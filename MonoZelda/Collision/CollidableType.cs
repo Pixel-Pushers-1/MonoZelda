@@ -9,8 +9,5 @@ public enum CollidableType
     EnemyProjectile,
     StaticRoom,
     StaticBoundary,
-    Projectile,
-    Static,
-    Boundary,
     Trigger,
 }
