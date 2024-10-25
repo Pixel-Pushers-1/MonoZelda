@@ -4,17 +4,17 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MonoZelda.Commands.GameCommands;
 
-public class PlayerSetProjectileCommand : ICommand
+public class PlayerEquipProjectileCommand : ICommand
 {
     private Player player;
     private ProjectileManager projectileManager;
 
-    public PlayerSetProjectileCommand()
+    public PlayerEquipProjectileCommand()
     {
         //empty
     }
 
-    public PlayerSetProjectileCommand(ProjectileManager projectileManager, Player player)
+    public PlayerEquipProjectileCommand(ProjectileManager projectileManager, Player player)
     {
         this.player = player;
         this.projectileManager = projectileManager;
