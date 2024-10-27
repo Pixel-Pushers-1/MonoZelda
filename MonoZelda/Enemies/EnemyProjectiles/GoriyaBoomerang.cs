@@ -31,7 +31,7 @@ namespace MonoZelda.Enemies.GoriyaFolder
         public void ViewProjectile(bool view, bool goriyaAlive)
         {
             BoomerangSpriteDict.Enabled = view;
-            if(goriyaAlive == false)
+            if(!goriyaAlive)
             {
                 collisionController.RemoveCollidable(ProjectileHitbox);
                 ProjectileHitbox.UnregisterHitbox();
@@ -42,6 +42,11 @@ namespace MonoZelda.Enemies.GoriyaFolder
         {
             Pos = newPos;
             speed = Math.Abs(speed);
+        }
+
+        public void ProjectileCollide()
+        {
+            speed *= -1;
         }
 
         public void Update(GameTime gameTime, CardinalEnemyStateMachine.Direction attackDirection, Point enemyPos)

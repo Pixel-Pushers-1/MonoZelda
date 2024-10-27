@@ -79,7 +79,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             {
                 pixelsMoved++;
             }
-            Pos = stateMachine.Update(Pos,gameTime);
+            Pos = stateMachine.Update(this,Pos,gameTime);
             damageDelay -= dt;
         }
 
@@ -96,7 +96,6 @@ namespace MonoZelda.Enemies.EnemyClasses
                 damageDelay = 0.5;
                 if (health == 0)
                 {
-                    Alive = false;
                     stateMachine.Die();
                     EnemyHitbox.UnregisterHitbox();
                     collisionController.RemoveCollidable(EnemyHitbox);

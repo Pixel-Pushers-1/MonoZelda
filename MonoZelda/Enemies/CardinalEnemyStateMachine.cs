@@ -51,7 +51,7 @@ namespace MonoZelda.Enemies
             enemySpriteDict.SetSprite("death");
         }
 
-        public Point Update(Point position, GameTime gameTime)
+        public Point Update(IEnemy enemy, Point position, GameTime gameTime)
         {
             dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             Vector2 enemyPosition = position.ToVector2();
@@ -60,6 +60,7 @@ namespace MonoZelda.Enemies
                 animationTimer = animationTimer + dt;
                 if (animationTimer >= 1)
                 {
+                    enemy.ChangeDirection();
                     spawning = false;
                 }
             }
@@ -69,6 +70,7 @@ namespace MonoZelda.Enemies
                 if (animationTimer >= 0.5)
                 {
                     enemySpriteDict.Enabled = false;
+                    enemy.Alive = false;
                 }
             }
             else

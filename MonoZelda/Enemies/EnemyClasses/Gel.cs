@@ -106,7 +106,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 spawnTimer++;
                 gelSpriteDict.Position = Pos;
             }
-            Pos = stateMachine.Update(Pos, gameTime);
+            Pos = stateMachine.Update(this, Pos, gameTime);
         }
 
         public void TakeDamage(Boolean stun)

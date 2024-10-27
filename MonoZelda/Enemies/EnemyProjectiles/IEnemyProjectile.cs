@@ -11,5 +11,7 @@ public interface IEnemyProjectile
     public void ViewProjectile(bool view, bool enemyAlive);
     public void Follow(Point newPos);
 
+    public void ProjectileCollide();
+
     public void Update(GameTime gameTime, CardinalEnemyStateMachine.Direction attackDirection, Point enemyPos);
 }

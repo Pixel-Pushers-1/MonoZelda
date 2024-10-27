@@ -167,6 +167,11 @@ public class DungeonScene : IScene
 
         foreach(KeyValuePair<IEnemy, EnemyCollisionManager> entry in enemyDictionary)
         {
+            if (!entry.Key.Alive) // remove dead enemies from lists (hopefully this is useful for re-entering rooms)
+            {
+                enemies.Remove(entry.Key);
+                enemyDictionary.Remove(entry.Key);
+            }
             entry.Key.Update(gameTime);
             entry.Value.Update(entry.Key.Width, entry.Key.Height);
         }

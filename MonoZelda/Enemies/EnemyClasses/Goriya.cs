@@ -7,6 +7,7 @@ using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Enemies.GoriyaFolder;
+using MonoZelda.Items.ItemClasses;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies.EnemyClasses
@@ -20,36 +21,35 @@ namespace MonoZelda.Enemies.EnemyClasses
         public bool Alive { get; set; }
         private CardinalEnemyStateMachine stateMachine;
         private readonly Random rnd = new();
-        private SpriteDict goriyaSpriteDict;
-        private CardinalEnemyStateMachine.Direction direction;
+        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.None;
+        private CardinalEnemyStateMachine.Direction projDirection;
         private readonly GraphicsDevice graphicsDevice;
         private IEnemyProjectile projectile;
         private EnemyProjectileCollisionManager projectileCollision;
+        private CollisionController collisionController;
         private int pixelsMoved;
         private int tilesMoved;
         private int tileSize = 64;
+        private int health = 3;
+        private double dt;
         private bool projectileActive;
-        private bool goriyaAlive;
-        private int animatedDeath;
 
         public Goriya(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
-            Width = 64;
-            Height = 64;
+            Width = 48;
+            Height = 48;
+            Alive = true;
             projectileActive = true;
-            goriyaAlive = true;
-            animatedDeath = 0;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager)
         {
-            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 60, 60), graphicsDevice, EnemyList.Goriya);
+            this.collisionController = collisionController;
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 48, 48), graphicsDevice, EnemyList.Goriya);
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
-            enemyDict.SetSprite("cloud");
-            goriyaSpriteDict = enemyDict;
             Pos = spawnPosition;
             pixelsMoved = 0;
             tilesMoved = 0;
@@ -64,19 +64,19 @@ namespace MonoZelda.Enemies.EnemyClasses
             {
                 case 1:
                     direction = CardinalEnemyStateMachine.Direction.Left;
-                    goriyaSpriteDict.SetSprite("goriya_red_left");
+                    stateMachine.SetSprite("goriya_red_left");
                     break;
                 case 2:
                     direction = CardinalEnemyStateMachine.Direction.Right;
-                    goriyaSpriteDict.SetSprite("goriya_red_right");
+                    stateMachine.SetSprite("goriya_red_right");
                     break;
                 case 3:
                     direction = CardinalEnemyStateMachine.Direction.Up;
-                    goriyaSpriteDict.SetSprite("goriya_red_up");
+                    stateMachine.SetSprite("goriya_red_up");
                     break;
                 case 4:
                     direction = CardinalEnemyStateMachine.Direction.Down;
-                    goriyaSpriteDict.SetSprite("goriya_red_down");
+                    stateMachine.SetSprite("goriya_red_down");
                     break;
             }
             stateMachine.ChangeDirection(direction);
@@ -84,12 +84,12 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Attack(GameTime gameTime)
         {
-            projectile.ViewProjectile(projectileActive, goriyaAlive);
-            projectile.Update(gameTime, direction, Pos);
-            pixelsMoved += 4;
-            if (pixelsMoved >= tileSize*6)
+            projectile.ViewProjectile(projectileActive, Alive);
+            projectile.Update(gameTime, projDirection, Pos);
+            if (Math.Abs(projectile.Pos.X - Pos.X) < 3 && Math.Abs(projectile.Pos.Y - Pos.Y) < 3)
             {
-                projectile.ViewProjectile(false, goriyaAlive);
+                projectile.ViewProjectile(false, Alive);
+                projDirection = CardinalEnemyStateMachine.Direction.None;
                 pixelsMoved = 0;
                 tilesMoved = 0;
             }
@@ -97,51 +97,46 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Update(GameTime gameTime)
         {
-            if(goriyaAlive == false)
+            dt = gameTime.ElapsedGameTime.TotalSeconds;
+            if (pixelsMoved > tileSize*3)
             {
-                if(animatedDeath < 12)
-                {
-                    goriyaSpriteDict.SetSprite("death");
-                    animatedDeath++;
-                }
-                else
-                {
-                    TakeDamage(true);
-                }
+                projDirection = direction;
+                Attack(gameTime);
             }
-            else if (tilesMoved < 3)
+            else if (pixelsMoved >= 0)
             {
-                if (pixelsMoved >= tileSize)
+                if (pixelsMoved > 0 && pixelsMoved % tileSize == 0)
                 {
-                    pixelsMoved = 0;
-                    tilesMoved++;
                     ChangeDirection();
                 }
-
-                pixelsMoved++;
                 projectile.Follow(Pos);
-                Pos = stateMachine.Update(Pos, gameTime);
-                goriyaSpriteDict.Position = Pos;
+                
+                Pos = stateMachine.Update(this, Pos, gameTime);
             }
             else
             {
                 Attack(gameTime);
             }
             projectileCollision.Update();
-
+            pixelsMoved++;
         }
         public void TakeDamage(Boolean stun)
         {
-            if (goriyaAlive == true && animatedDeath < 12)
+            if (stun)
             {
-                goriyaAlive = false;
-                projectileActive = false;
+                stateMachine.ChangeDirection(CardinalEnemyStateMachine.Direction.None);
+                pixelsMoved = -128;
             }
-            else if(animatedDeath == 12)
+            else
             {
-                goriyaSpriteDict.Enabled = false;
-                projectile.ViewProjectile(projectileActive, goriyaAlive);
-                EnemyHitbox.UnregisterHitbox();
+                health--;
+                if (health == 0)
+                {
+                    projectileActive = false;
+                    stateMachine.Die();
+                    EnemyHitbox.UnregisterHitbox();
+                    collisionController.RemoveCollidable(EnemyHitbox);
+                }
             }
         }
     }

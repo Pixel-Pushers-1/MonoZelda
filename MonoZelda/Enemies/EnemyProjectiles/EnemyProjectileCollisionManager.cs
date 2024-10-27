@@ -39,6 +39,11 @@ namespace MonoZelda.Enemies.EnemyProjectiles
             projectileHitbox.setCollisionManager(this);
         }
 
+        public void HandleCollision()
+        {
+            projectile.ProjectileCollide();
+        }
+
         public void Update()
         {
             UpdateBoundingBox();

@@ -97,7 +97,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Update(GameTime gameTime)
         {
-            Pos = stateMachine.Update(Pos, gameTime);
+            Pos = stateMachine.Update(this, Pos, gameTime);
             aquamentusSpriteDict.Position = Pos;
             pixelsMoved++;
             if (Pos.X > spawnPoint.X || Pos.X < spawnPoint.X - tileSize*5)

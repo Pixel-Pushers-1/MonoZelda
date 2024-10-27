@@ -64,6 +64,11 @@ namespace MonoZelda.Enemies.EnemyProjectiles
             Pos = pos;
         }
 
+        public void ProjectileCollide()
+        {
+            throw new NotImplementedException();
+        }
+
         public void Update(GameTime gameTime, CardinalEnemyStateMachine.Direction attackDirection, Point enemyPos)
         {
             Point pos = Pos;

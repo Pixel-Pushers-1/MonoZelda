@@ -80,7 +80,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 pixelsMoved++;
                 ropeSpriteDict.Position = Pos;
             }
-            Pos = stateMachine.Update(Pos, gameTime);
+            Pos = stateMachine.Update(this, Pos, gameTime);
         }
 
         public void TakeDamage(Boolean stun)

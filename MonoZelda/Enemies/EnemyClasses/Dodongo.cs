@@ -83,7 +83,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             else
             {
                 pixelsMoved++;
-                Pos = stateMachine.Update(Pos, gameTime);
+                Pos = stateMachine.Update(this, Pos, gameTime);
                 dodongoSpriteDict.Position = Pos;
             }
         }
