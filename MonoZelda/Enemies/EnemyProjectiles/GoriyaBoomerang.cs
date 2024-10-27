@@ -13,10 +13,11 @@ namespace MonoZelda.Enemies.GoriyaFolder
     {
         public Point Pos { get; set; }
         public SpriteDict BoomerangSpriteDict { get; private set; }
-        private int speed = 4;
-        private int pixelsMoved;
-        private CollisionController collisionController;
         public EnemyProjectileCollidable ProjectileHitbox { get; set; }
+        private float velocity = 360;
+        private float attackTimer;
+        private float dt;
+        private CollisionController collisionController;
 
         public GoriyaBoomerang(Point pos, ContentManager contentManager, GraphicsDevice graphicsDevice, CollisionController collisionController)
         {
@@ -41,41 +42,39 @@ namespace MonoZelda.Enemies.GoriyaFolder
         public void Follow(Point newPos)
         {
             Pos = newPos;
-            speed = Math.Abs(speed);
+            velocity = Math.Abs(velocity);
+            attackTimer = 0;
         }
 
         public void ProjectileCollide()
         {
-            speed *= -1;
+            velocity *= -1;
         }
 
         public void Update(GameTime gameTime, CardinalEnemyStateMachine.Direction attackDirection, Point enemyPos)
         {
-            var pos = new Point();
-            pos = Pos;
-            if ((Math.Abs(enemyPos.X - pos.X) <= 192 && Math.Abs(enemyPos.Y - pos.Y) <= 192 )|| speed < 0)
+            dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            attackTimer += dt;
+            var pos = new Vector2();
+            pos = Pos.ToVector2();
+            if (attackTimer < 1 || velocity < 0)
             {
-                switch (attackDirection)
+                Vector2 movement = attackDirection switch
                 {
-                    case CardinalEnemyStateMachine.Direction.Left:
-                        pos.X -= speed;
-                        break;
-                    case CardinalEnemyStateMachine.Direction.Right:
-                        pos.X += speed;
-                        break;
-                    case CardinalEnemyStateMachine.Direction.Up:
-                        pos.Y -= speed;
-                        break;
-                    case CardinalEnemyStateMachine.Direction.Down:
-                        pos.Y += speed;
-                        break;
-                }
+                    CardinalEnemyStateMachine.Direction.Up => new Vector2(0, -1),
+                    CardinalEnemyStateMachine.Direction.Down => new Vector2(0, 1),
+                    CardinalEnemyStateMachine.Direction.Left => new Vector2(-1, 0),
+                    CardinalEnemyStateMachine.Direction.Right => new Vector2(1, 0),
+                    _ => Vector2.Zero
+                };
+                pos += (velocity * movement) * dt;
             }
             else
             {
-                speed *= -1;
+                velocity *= -1;
+                attackTimer = 0;
             }
-            Pos = pos;
+            Pos = pos.ToPoint();
             BoomerangSpriteDict.Position = Pos;
         }
     }

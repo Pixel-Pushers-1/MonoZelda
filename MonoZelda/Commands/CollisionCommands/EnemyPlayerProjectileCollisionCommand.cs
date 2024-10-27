@@ -2,6 +2,7 @@
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Enemies;
+using MonoZelda.Link;
 using MonoZelda.Link.Projectiles;
 
 namespace MonoZelda.Commands.CollisionCommands;
@@ -19,6 +20,7 @@ public class EnemyPlayerProjectileCollisionCommand : ICommand
         ICollidable collidableA = (ICollidable)metadata[0];
         ICollidable collidableB = (ICollidable)metadata[1];
         CollisionController collisionController = (CollisionController)metadata[2];
+        Direction collisionDirection = (Direction)metadata[3];
 
         PlayerProjectileCollidable projectileCollidable;
         EnemyCollidable enemyCollidable;
@@ -47,7 +49,7 @@ public class EnemyPlayerProjectileCollisionCommand : ICommand
         }
         collisionController.RemoveCollidable(projectileCollidable);
         IEnemy enemy = enemyCollidable.getEnemy();
-        enemy.TakeDamage(stun);
+        enemy.TakeDamage(stun, collisionDirection);
     }
 
     public void UnExecute()

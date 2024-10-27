@@ -5,33 +5,33 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Link;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Stalfos : IEnemy
     {
-        private CardinalEnemyStateMachine stateMachine;
         public Point Pos { get; set; }
-        private readonly Random rnd = new();
-        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.None;
-        private GraphicsDevice graphicsDevice;
-        private CollisionController collisionController;
-        private int pixelsMoved;
         public EnemyCollidable EnemyHitbox { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public Boolean Alive { get; set; }
+        private CardinalEnemyStateMachine stateMachine;
+        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.None;
+        private readonly GraphicsDevice graphicsDevice;
+        private CollisionController collisionController;
+        private int pixelsMoved;
         private int health = 2;
-        private int tileSize = 64;
-        private double damageDelay;
-        private double dt;
+        private readonly int tileSize = 64;
+        private readonly Random rnd = new();
 
         public Stalfos(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
             Width = 48;
             Height = 48;
+            Alive = true;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager)
@@ -69,7 +69,6 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Update(GameTime gameTime)
         {
-            dt = gameTime.ElapsedGameTime.TotalSeconds;
             if (pixelsMoved >= tileSize)
             {
                 pixelsMoved = 0;
@@ -80,10 +79,9 @@ namespace MonoZelda.Enemies.EnemyClasses
                 pixelsMoved++;
             }
             Pos = stateMachine.Update(this,Pos,gameTime);
-            damageDelay -= dt;
         }
 
-        public void TakeDamage(Boolean stun)
+        public void TakeDamage(Boolean stun, Direction collisionDirection)
         {
             if (stun)
             {
@@ -92,9 +90,12 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
             else
             {
-                health--;
-                damageDelay = 0.5;
-                if (health == 0)
+                //health--;
+                if (health > 0)
+                {
+                    stateMachine.Knockback(true, collisionDirection);
+                }
+                else
                 {
                     stateMachine.Die();
                     EnemyHitbox.UnregisterHitbox();

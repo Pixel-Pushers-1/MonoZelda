@@ -8,6 +8,7 @@ using MonoZelda.Controllers;
 using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Enemies.GoriyaFolder;
 using MonoZelda.Items.ItemClasses;
+using MonoZelda.Link;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies.EnemyClasses
@@ -28,10 +29,8 @@ namespace MonoZelda.Enemies.EnemyClasses
         private EnemyProjectileCollisionManager projectileCollision;
         private CollisionController collisionController;
         private int pixelsMoved;
-        private int tilesMoved;
         private int tileSize = 64;
         private int health = 3;
-        private double dt;
         private bool projectileActive;
 
         public Goriya(GraphicsDevice graphicsDevice)
@@ -52,7 +51,6 @@ namespace MonoZelda.Enemies.EnemyClasses
             enemyDict.Position = spawnPosition;
             Pos = spawnPosition;
             pixelsMoved = 0;
-            tilesMoved = 0;
             stateMachine = new CardinalEnemyStateMachine(enemyDict);
             projectile = new GoriyaBoomerang(spawnPosition, contentManager, graphicsDevice, collisionController);
             projectileCollision = new EnemyProjectileCollisionManager(projectile, collisionController);
@@ -91,16 +89,16 @@ namespace MonoZelda.Enemies.EnemyClasses
                 projectile.ViewProjectile(false, Alive);
                 projDirection = CardinalEnemyStateMachine.Direction.None;
                 pixelsMoved = 0;
-                tilesMoved = 0;
+                ChangeDirection();
             }
         }
 
         public void Update(GameTime gameTime)
         {
-            dt = gameTime.ElapsedGameTime.TotalSeconds;
-            if (pixelsMoved > tileSize*3)
+            if (pixelsMoved > tileSize*3 - 1)
             {
                 projDirection = direction;
+                stateMachine.ChangeDirection(CardinalEnemyStateMachine.Direction.None);
                 Attack(gameTime);
             }
             else if (pixelsMoved >= 0)
@@ -110,17 +108,16 @@ namespace MonoZelda.Enemies.EnemyClasses
                     ChangeDirection();
                 }
                 projectile.Follow(Pos);
-                
-                Pos = stateMachine.Update(this, Pos, gameTime);
             }
             else
             {
                 Attack(gameTime);
             }
+            Pos = stateMachine.Update(this, Pos, gameTime);
             projectileCollision.Update();
             pixelsMoved++;
         }
-        public void TakeDamage(Boolean stun)
+        public void TakeDamage(Boolean stun, Direction collisionDirection)
         {
             if (stun)
             {
@@ -134,6 +131,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 {
                     projectileActive = false;
                     stateMachine.Die();
+                    projectile.ViewProjectile(projectileActive, false);
                     EnemyHitbox.UnregisterHitbox();
                     collisionController.RemoveCollidable(EnemyHitbox);
                 }

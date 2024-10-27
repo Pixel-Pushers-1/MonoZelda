@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Link;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies
@@ -25,7 +26,7 @@ namespace MonoZelda.Enemies
 
         public void Update(GameTime gameTime);
 
-        public void TakeDamage(Boolean stun);
+        public void TakeDamage(Boolean stun, Direction collisionDirection);
         
     }
 }

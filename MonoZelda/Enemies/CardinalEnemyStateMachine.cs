@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Sprites;
+using MonoZelda.Link;
 
 namespace MonoZelda.Enemies
 {
@@ -10,11 +11,15 @@ namespace MonoZelda.Enemies
         private Direction direction = Direction.None;
         private bool spawning;
         public bool Dead { get; set; }
+        private bool knockback = false;
 
         //not states
-        private float velocity = 60;
+        private const float KNOCKBACK_FORCE = 1000f;
+        private float velocity = 60f;
         private float dt;
         private double animationTimer;
+        private float knockbackTimer;
+        private Vector2 knockbackDirection;
         private SpriteDict enemySpriteDict;
         private string currentSprite;
         private Vector2 movement;
@@ -39,9 +44,25 @@ namespace MonoZelda.Enemies
             currentSprite = newSprite;
         }
 
-        public void ChangeSpeed(int newSpeed)
+        public void ChangeSpeed(float newSpeed)
         {
             velocity = newSpeed;
+        }
+
+        public void Knockback(bool takesKnockback, Link.Direction collisionDirection)
+        {
+            if (takesKnockback)
+            {
+                knockback = true;
+                knockbackDirection = collisionDirection switch
+                {
+                    Link.Direction.Up => new Vector2(0, 1),
+                    Link.Direction.Down => new Vector2(0, -1),
+                    Link.Direction.Left => new Vector2(1, 0),
+                    Link.Direction.Right => new Vector2(-1, 0),
+                    _ => Vector2.Zero
+                };
+            }
         }
 
         public void Die()
@@ -55,9 +76,21 @@ namespace MonoZelda.Enemies
         {
             dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             Vector2 enemyPosition = position.ToVector2();
-            if (spawning)
+            if (knockback)
             {
-                animationTimer = animationTimer + dt;
+                knockbackTimer += dt;
+                if (knockbackTimer >= 0.05)
+                {
+                    velocity = 60;
+                    knockback = false;
+                    knockbackTimer = 0;
+                }
+                enemyPosition += (KNOCKBACK_FORCE * knockbackDirection) * dt;
+                enemySpriteDict.SetSprite("gel_turquoise");
+            }
+            else if (spawning)
+            {
+                animationTimer += dt;
                 if (animationTimer >= 1)
                 {
                     enemy.ChangeDirection();
@@ -66,7 +99,7 @@ namespace MonoZelda.Enemies
             }
             else if (Dead)
             {
-                animationTimer = animationTimer + dt;
+                animationTimer += dt;
                 if (animationTimer >= 0.5)
                 {
                     enemySpriteDict.Enabled = false;

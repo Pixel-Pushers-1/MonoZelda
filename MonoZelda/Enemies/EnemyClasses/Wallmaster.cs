@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using Microsoft.Xna.Framework.Graphics;
+using MonoZelda.Link;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
@@ -81,7 +82,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Pos = stateMachine.Update(this, Pos, gameTime);
         }
 
-        public void TakeDamage(Boolean stun)
+        public void TakeDamage(Boolean stun, Direction collisionDirection)
         {
             wallmasterSpriteDict.Enabled = false;
             EnemyHitbox.UnregisterHitbox();

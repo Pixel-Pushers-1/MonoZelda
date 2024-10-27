@@ -5,6 +5,7 @@ using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
 using System;
+using MonoZelda.Link;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
@@ -84,7 +85,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
         }
 
-        public void TakeDamage(Boolean stun)
+        public void TakeDamage(Boolean stun, Direction collisionDirection)
         {
             trapSpriteDict.Enabled = false;
             EnemyHitbox.UnregisterHitbox();

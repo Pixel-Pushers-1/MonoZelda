@@ -7,6 +7,7 @@ using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Enemies.EnemyProjectiles;
 using Microsoft.Xna.Framework.Graphics;
+using MonoZelda.Link;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
@@ -136,7 +137,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
         }
 
-        public void TakeDamage(Boolean stun)
+        public void TakeDamage(Boolean stun, Direction collisionDirection)
         {
             // not implemented
         }

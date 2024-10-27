@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Link;
 using MonoZelda.Sprites;
 using Point = Microsoft.Xna.Framework.Point;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -109,7 +110,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Pos = stateMachine.Update(this, Pos, gameTime);
         }
 
-        public void TakeDamage(Boolean stun)
+        public void TakeDamage(Boolean stun, Direction collisionDirection)
         {
             gelSpriteDict.Enabled = false;
             EnemyHitbox.UnregisterHitbox();
