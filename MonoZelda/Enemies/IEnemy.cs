@@ -17,13 +17,15 @@ namespace MonoZelda.Enemies
 
         public int Height { get; set; }
 
+        public Boolean Alive { get; set; }
+
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager);
 
         public void ChangeDirection();
 
         public void Update(GameTime gameTime);
 
-        public void KillEnemy();
+        public void TakeDamage(Boolean stun);
         
     }
 }

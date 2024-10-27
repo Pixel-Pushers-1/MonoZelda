@@ -17,6 +17,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         public EnemyCollidable EnemyHitbox { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        public bool Alive { get; set; }
         private CardinalEnemyStateMachine stateMachine;
         private readonly Random rnd = new();
         private SpriteDict goriyaSpriteDict;
@@ -52,7 +53,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Pos = spawnPosition;
             pixelsMoved = 0;
             tilesMoved = 0;
-            stateMachine = new CardinalEnemyStateMachine();
+            stateMachine = new CardinalEnemyStateMachine(enemyDict);
             projectile = new GoriyaBoomerang(spawnPosition, contentManager, graphicsDevice, collisionController);
             projectileCollision = new EnemyProjectileCollisionManager(projectile, collisionController);
         }
@@ -105,7 +106,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 }
                 else
                 {
-                    KillEnemy();
+                    TakeDamage(true);
                 }
             }
             else if (tilesMoved < 3)
@@ -119,7 +120,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
                 pixelsMoved++;
                 projectile.Follow(Pos);
-                Pos = stateMachine.Update(Pos);
+                Pos = stateMachine.Update(Pos, gameTime);
                 goriyaSpriteDict.Position = Pos;
             }
             else
@@ -129,7 +130,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             projectileCollision.Update();
 
         }
-        public void KillEnemy()
+        public void TakeDamage(Boolean stun)
         {
             if (goriyaAlive == true && animatedDeath < 12)
             {

@@ -22,6 +22,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         private EnemyCollidable verticalHitbox;
         public int Width { get; set; }
         public int Height { get; set; }
+        public bool Alive { get; set; }
 
         private int tileSize = 64;
 
@@ -73,7 +74,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             trapSpriteDict.SetSprite("bladetrap");
             Pos = spawnPosition;
             pixelsMoved = 0;
-            stateMachine = new CardinalEnemyStateMachine();
+            stateMachine = new CardinalEnemyStateMachine(enemyDict);
         }
         public void ChangeDirection()
         {
@@ -83,7 +84,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
         }
 
-        public void KillEnemy()
+        public void TakeDamage(Boolean stun)
         {
             trapSpriteDict.Enabled = false;
             EnemyHitbox.UnregisterHitbox();

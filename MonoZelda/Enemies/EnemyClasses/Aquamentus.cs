@@ -16,6 +16,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         public EnemyCollidable EnemyHitbox { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        public bool Alive { get; set; }
         private CardinalEnemyStateMachine stateMachine;
         private readonly Random rnd = new();
         private SpriteDict aquamentusSpriteDict;
@@ -57,7 +58,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             aquamentusSpriteDict = enemyDict;
             Pos = spawnPosition;
             pixelsMoved = 0;
-            stateMachine = new CardinalEnemyStateMachine();
+            stateMachine = new CardinalEnemyStateMachine(enemyDict);
             stateMachine.ChangeDirection(CardinalEnemyStateMachine.Direction.Left);
             fireballs.Add(new AquamentusFireball(spawnPosition, contentManager, graphicsDevice, collisionController, midAngle + 45));
             fireballs.Add(new AquamentusFireball(spawnPosition, contentManager, graphicsDevice, collisionController, midAngle));
@@ -96,7 +97,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Update(GameTime gameTime)
         {
-            Pos = stateMachine.Update(Pos);
+            Pos = stateMachine.Update(Pos, gameTime);
             aquamentusSpriteDict.Position = Pos;
             pixelsMoved++;
             if (Pos.X > spawnPoint.X || Pos.X < spawnPoint.X - tileSize*5)
@@ -135,7 +136,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
         }
 
-        public void KillEnemy()
+        public void TakeDamage(Boolean stun)
         {
             // not implemented
         }

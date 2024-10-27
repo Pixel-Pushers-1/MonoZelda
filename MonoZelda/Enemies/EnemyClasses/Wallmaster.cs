@@ -20,6 +20,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         public EnemyCollidable EnemyHitbox { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        public bool Alive { get; set; }
 
         private int tileSize = 64;
 
@@ -41,7 +42,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             wallmasterSpriteDict.SetSprite("cloud");
             Pos = spawnPosition;
             pixelsMoved = 0;
-            stateMachine = new CardinalEnemyStateMachine();
+            stateMachine = new CardinalEnemyStateMachine(enemyDict);
         }
         public void ChangeDirection()
         {
@@ -77,10 +78,10 @@ namespace MonoZelda.Enemies.EnemyClasses
                 pixelsMoved++;
                 wallmasterSpriteDict.Position = Pos;
             }
-            Pos = stateMachine.Update(Pos);
+            Pos = stateMachine.Update(Pos, gameTime);
         }
 
-        public void KillEnemy()
+        public void TakeDamage(Boolean stun)
         {
             wallmasterSpriteDict.Enabled = false;
             EnemyHitbox.UnregisterHitbox();

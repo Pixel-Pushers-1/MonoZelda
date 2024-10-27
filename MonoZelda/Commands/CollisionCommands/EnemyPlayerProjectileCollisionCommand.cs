@@ -1,6 +1,8 @@
-﻿using MonoZelda.Collision;
+﻿using System;
+using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Enemies;
+using MonoZelda.Link.Projectiles;
 
 namespace MonoZelda.Commands.CollisionCommands;
 
@@ -20,6 +22,7 @@ public class EnemyPlayerProjectileCollisionCommand : ICommand
 
         PlayerProjectileCollidable projectileCollidable;
         EnemyCollidable enemyCollidable;
+        Boolean stun = false;
 
         if (collidableA.type == CollidableType.PlayerProjectile)
         {
@@ -36,9 +39,15 @@ public class EnemyPlayerProjectileCollisionCommand : ICommand
         {
             projectileCollidable.ProjectileManager.destroyProjectile();
         }
+
+        if (projectileCollidable.projectileType == ProjectileType.Boomerang ||
+            projectileCollidable.projectileType == ProjectileType.BoomerangBlue)
+        {
+            stun = true;
+        }
+        collisionController.RemoveCollidable(projectileCollidable);
         IEnemy enemy = enemyCollidable.getEnemy();
-        enemy.KillEnemy();
-        collisionController.RemoveCollidable(enemyCollidable);
+        enemy.TakeDamage(stun);
     }
 
     public void UnExecute()

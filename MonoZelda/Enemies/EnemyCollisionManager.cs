@@ -72,6 +72,7 @@ namespace MonoZelda.Enemies
                     currentPos.Y += intersection.Height;
                     break;
             }
+            enemy.ChangeDirection();
             enemy.Pos = currentPos;
         }
     }

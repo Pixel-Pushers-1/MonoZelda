@@ -16,6 +16,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         public EnemyCollidable EnemyHitbox { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        public bool Alive { get; set; }
 
         private int spawnTimer;
 
@@ -56,7 +57,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
         }
 
-        public void KillEnemy()
+        public void TakeDamage(Boolean stun)
         {
             // oldman is immortal
         }

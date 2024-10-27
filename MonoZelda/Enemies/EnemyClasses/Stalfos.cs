@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,38 +14,37 @@ namespace MonoZelda.Enemies.EnemyClasses
         private CardinalEnemyStateMachine stateMachine;
         public Point Pos { get; set; }
         private readonly Random rnd = new();
-        private SpriteDict stalfosSpriteDict;
         private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.None;
         private GraphicsDevice graphicsDevice;
+        private CollisionController collisionController;
         private int pixelsMoved;
         public EnemyCollidable EnemyHitbox { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-
+        public Boolean Alive { get; set; }
+        private int health = 2;
         private int tileSize = 64;
-        private bool stalfosAlive;
-        private int animatedDeath;
+        private double damageDelay;
+        private double dt;
 
         public Stalfos(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
-            Width = 64;
-            Height = 64;
-            stalfosAlive = true;
-            animatedDeath = 0;
+            Width = 48;
+            Height = 48;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager)
         {
-            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 60, 60), graphicsDevice, EnemyList.Stalfos);
+            this.collisionController = collisionController;
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 48, 48), graphicsDevice, EnemyList.Stalfos);
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
-            enemyDict.SetSprite("cloud");
-            stalfosSpriteDict = enemyDict;
             Pos = spawnPosition;
             pixelsMoved = 0;
-            stateMachine = new CardinalEnemyStateMachine();
+            stateMachine = new CardinalEnemyStateMachine(enemyDict);
+            stateMachine.SetSprite("stalfos");
         }
 
         public void ChangeDirection()
@@ -64,25 +64,13 @@ namespace MonoZelda.Enemies.EnemyClasses
                     direction = CardinalEnemyStateMachine.Direction.Down;
                     break;
             }
-            stalfosSpriteDict.SetSprite("stalfos");
             stateMachine.ChangeDirection(direction);
         }
 
         public void Update(GameTime gameTime)
         {
-            if (stalfosAlive == false)
-            {
-                if (animatedDeath < 12)
-                {
-                    stalfosSpriteDict.SetSprite("death");
-                    animatedDeath++;
-                }
-                else
-                {
-                    KillEnemy();
-                }
-            }
-            else if (pixelsMoved >= tileSize)
+            dt = gameTime.ElapsedGameTime.TotalSeconds;
+            if (pixelsMoved >= tileSize)
             {
                 pixelsMoved = 0;
                 ChangeDirection();
@@ -90,21 +78,29 @@ namespace MonoZelda.Enemies.EnemyClasses
             else
             {
                 pixelsMoved++;
-                stalfosSpriteDict.Position = Pos;
             }
-            Pos = stateMachine.Update(Pos);
+            Pos = stateMachine.Update(Pos,gameTime);
+            damageDelay -= dt;
         }
 
-        public void KillEnemy()
+        public void TakeDamage(Boolean stun)
         {
-            if (stalfosAlive == true && animatedDeath < 12)
+            if (stun)
             {
-                stalfosAlive = false;
+                stateMachine.ChangeDirection(CardinalEnemyStateMachine.Direction.None);
+                pixelsMoved = -128;
             }
-            else if (animatedDeath == 12)
+            else
             {
-                stalfosSpriteDict.Enabled = false;
-                EnemyHitbox.UnregisterHitbox();
+                health--;
+                damageDelay = 0.5;
+                if (health == 0)
+                {
+                    Alive = false;
+                    stateMachine.Die();
+                    EnemyHitbox.UnregisterHitbox();
+                    collisionController.RemoveCollidable(EnemyHitbox);
+                }
             }
         }
     }

@@ -15,6 +15,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         public EnemyCollidable EnemyHitbox { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        public bool Alive { get; set; }
         private readonly Random rnd = new();
         private SpriteDict zolSpriteDict;
         private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.None;
@@ -43,7 +44,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Pos = spawnPosition;
             pixelsMoved = 0;
             readyToJump = false;
-            stateMachine = new CardinalEnemyStateMachine();
+            stateMachine = new CardinalEnemyStateMachine(enemyDict);
         }
         public void ChangeDirection()
         {
@@ -88,12 +89,12 @@ namespace MonoZelda.Enemies.EnemyClasses
             else
             {
                 pixelsMoved++;
-                Pos = stateMachine.Update(Pos);
+                Pos = stateMachine.Update(Pos, gameTime);
                 zolSpriteDict.Position = Pos;
             }
         }
 
-        public void KillEnemy()
+        public void TakeDamage(Boolean stun)
         {
             zolSpriteDict.Enabled = false;
             EnemyHitbox.UnregisterHitbox();

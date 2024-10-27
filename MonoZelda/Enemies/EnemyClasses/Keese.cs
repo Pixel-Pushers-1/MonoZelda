@@ -16,6 +16,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         public EnemyCollidable EnemyHitbox { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        public bool Alive { get; set; }
         private SpriteDict keeseSpriteDict;
         private DiagonalEnemyStateMachine.VertDirection vertDirection = DiagonalEnemyStateMachine.VertDirection.None;
         private DiagonalEnemyStateMachine.HorDirection horDirection = DiagonalEnemyStateMachine.HorDirection.None;
@@ -102,7 +103,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Pos = stateMachine.Update(Pos);
         }
 
-        public void KillEnemy()
+        public void TakeDamage(Boolean stun)
         {
             keeseSpriteDict.Enabled = false;
             EnemyHitbox.UnregisterHitbox();
