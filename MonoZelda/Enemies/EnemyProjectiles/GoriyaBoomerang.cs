@@ -51,7 +51,7 @@ namespace MonoZelda.Enemies.GoriyaFolder
             velocity *= -1;
         }
 
-        public void Update(GameTime gameTime, CardinalEnemyStateMachine.Direction attackDirection, Point enemyPos)
+        public void Update(GameTime gameTime, EnemyStateMachine.Direction attackDirection, Point enemyPos)
         {
             dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             attackTimer += dt;
@@ -61,10 +61,10 @@ namespace MonoZelda.Enemies.GoriyaFolder
             {
                 Vector2 movement = attackDirection switch
                 {
-                    CardinalEnemyStateMachine.Direction.Up => new Vector2(0, -1),
-                    CardinalEnemyStateMachine.Direction.Down => new Vector2(0, 1),
-                    CardinalEnemyStateMachine.Direction.Left => new Vector2(-1, 0),
-                    CardinalEnemyStateMachine.Direction.Right => new Vector2(1, 0),
+                    EnemyStateMachine.Direction.Up => new Vector2(0, -1),
+                    EnemyStateMachine.Direction.Down => new Vector2(0, 1),
+                    EnemyStateMachine.Direction.Left => new Vector2(-1, 0),
+                    EnemyStateMachine.Direction.Right => new Vector2(1, 0),
                     _ => Vector2.Zero
                 };
                 pos += (velocity * movement) * dt;

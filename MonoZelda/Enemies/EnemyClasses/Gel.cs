@@ -13,19 +13,20 @@ namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Gel : IEnemy
     {
-        private CardinalEnemyStateMachine stateMachine;
+        private EnemyStateMachine stateMachine;
         public Point Pos { get; set; }
         public EnemyCollidable EnemyHitbox { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public bool Alive { get; set; }
         private readonly Random rnd = new();
-        private SpriteDict gelSpriteDict;
-        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.None;
+        private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
         private readonly GraphicsDevice graphicsDevice;
+        private CollisionController collisionController;
 
         private int tileSize = 64;
-        private int spawnTimer;
+        private double spawnTimer;
+        private double dt;
         private int pixelsMoved;
         private int jumpCount = 3;
         private bool readyToJump;
@@ -33,65 +34,64 @@ namespace MonoZelda.Enemies.EnemyClasses
         public Gel(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
-            Width = 64;
-            Height = 64;
+            Width = 32;
+            Height = 32;
+            Alive = true;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
             ContentManager contentManager)
         {
+            this.collisionController = collisionController;
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Gel);
             collisionController.AddCollidable(EnemyHitbox);
-            gelSpriteDict = enemyDict;
-            EnemyHitbox.setSpriteDict(gelSpriteDict);
-            gelSpriteDict.Position = spawnPosition;
-            gelSpriteDict.SetSprite("cloud");
+            EnemyHitbox.setSpriteDict(enemyDict);
+            enemyDict.Position = spawnPosition;
             Pos = spawnPosition;
             pixelsMoved = 0;
             spawnTimer = 0;
             readyToJump = false;
-            stateMachine = new CardinalEnemyStateMachine(enemyDict);
+            stateMachine = new EnemyStateMachine(enemyDict);
+            stateMachine.SetSprite("gel_turquoise");
         }
 
         public void ChangeDirection()
         {
+            switch (rnd.Next(1, 5))
+            {
+                case 1:
+                    direction = EnemyStateMachine.Direction.Left;
+                    break;
+                case 2:
+                    direction = EnemyStateMachine.Direction.Right;
+                    break;
+                case 3:
+                    direction = EnemyStateMachine.Direction.Up;
+                    break;
+                case 4:
+                    direction = EnemyStateMachine.Direction.Down;
+                    break;
+            }
             stateMachine.ChangeDirection(direction);
-            gelSpriteDict.SetSprite("gel_turquoise");
         }
 
 
         public void Update(GameTime gameTime)
         {
-            if (spawnTimer > 63 && spawnTimer < 65)
+            dt = gameTime.ElapsedGameTime.TotalSeconds;
+            if (spawnTimer > 1 && spawnTimer < 1.05)
             {
                 readyToJump = true;
-                Width = 32;
-                Height = 32;
             }
             if (readyToJump)
             {
-                spawnTimer = 65;
-                switch (rnd.Next(1, 5))
-                {
-                    case 1:
-                        direction = CardinalEnemyStateMachine.Direction.Left;
-                        break;
-                    case 2:
-                        direction = CardinalEnemyStateMachine.Direction.Right;
-                        break;
-                    case 3:
-                        direction = CardinalEnemyStateMachine.Direction.Up;
-                        break;
-                    case 4:
-                        direction = CardinalEnemyStateMachine.Direction.Down;
-                        break;
-                }
+                spawnTimer = 1.05;
                 ChangeDirection();
                 readyToJump = false;
             }
             else if (pixelsMoved >= tileSize * jumpCount)
             {
-                direction = CardinalEnemyStateMachine.Direction.None;
+                direction = EnemyStateMachine.Direction.None;
                 ChangeDirection();
                 pixelsMoved++;
                 if (pixelsMoved >= tileSize * jumpCount + 30)
@@ -104,16 +104,16 @@ namespace MonoZelda.Enemies.EnemyClasses
             else
             {
                 pixelsMoved++;
-                spawnTimer++;
-                gelSpriteDict.Position = Pos;
+                spawnTimer = spawnTimer + dt;
             }
             Pos = stateMachine.Update(this, Pos, gameTime);
         }
 
         public void TakeDamage(Boolean stun, Direction collisionDirection)
         {
-            gelSpriteDict.Enabled = false;
+            stateMachine.Die();
             EnemyHitbox.UnregisterHitbox();
+            collisionController.RemoveCollidable(EnemyHitbox);
         }
     }
 }

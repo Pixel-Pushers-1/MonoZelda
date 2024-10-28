@@ -13,5 +13,5 @@ public interface IEnemyProjectile
 
     public void ProjectileCollide();
 
-    public void Update(GameTime gameTime, CardinalEnemyStateMachine.Direction attackDirection, Point enemyPos);
+    public void Update(GameTime gameTime, EnemyStateMachine.Direction attackDirection, Point enemyPos);
 }

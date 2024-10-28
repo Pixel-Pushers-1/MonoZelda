@@ -11,11 +11,11 @@ namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Trap : IEnemy
     {
-        private CardinalEnemyStateMachine stateMachine;
+        private EnemyStateMachine stateMachine;
         public Point Pos { get; set; }
         private readonly Random rnd = new();
         private SpriteDict trapSpriteDict;
-        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.None;
+        private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
         private GraphicsDevice graphicsDevice;
         private int pixelsMoved;
         public EnemyCollidable EnemyHitbox { get; set; }
@@ -75,7 +75,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             trapSpriteDict.SetSprite("bladetrap");
             Pos = spawnPosition;
             pixelsMoved = 0;
-            stateMachine = new CardinalEnemyStateMachine(enemyDict);
+            stateMachine = new EnemyStateMachine(enemyDict);
         }
         public void ChangeDirection()
         {

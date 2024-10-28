@@ -11,17 +11,18 @@ namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Zol : IEnemy
     {
-        private CardinalEnemyStateMachine stateMachine;
+        private EnemyStateMachine stateMachine;
         public Point Pos { get; set; }
         public EnemyCollidable EnemyHitbox { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public bool Alive { get; set; }
         private readonly Random rnd = new();
-        private SpriteDict zolSpriteDict;
-        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.None;
+        private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
         private readonly GraphicsDevice graphicsDevice;
+        private CollisionController collisionController;
 
+        private int health = 2;
         private int tileSize = 64;
         private int pixelsMoved;
         private bool readyToJump;
@@ -29,28 +30,43 @@ namespace MonoZelda.Enemies.EnemyClasses
         public Zol(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
-            Width = 64;
-            Height = 64;
+            Width = 48;
+            Height = 48;
+            Alive = true;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
             ContentManager contentManager)
         {
+            this.collisionController = collisionController;
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Zol);
             collisionController.AddCollidable(EnemyHitbox);
-            zolSpriteDict = enemyDict;
-            EnemyHitbox.setSpriteDict(zolSpriteDict);
-            zolSpriteDict.Position = spawnPosition;
-            zolSpriteDict.SetSprite("cloud");
+            EnemyHitbox.setSpriteDict(enemyDict);
+            enemyDict.Position = spawnPosition;
             Pos = spawnPosition;
             pixelsMoved = 0;
             readyToJump = false;
-            stateMachine = new CardinalEnemyStateMachine(enemyDict);
+            stateMachine = new EnemyStateMachine(enemyDict);
+            stateMachine.SetSprite("zol_brown");
         }
         public void ChangeDirection()
         {
+            switch (rnd.Next(1, 5))
+            {
+                case 1:
+                    direction = EnemyStateMachine.Direction.Left;
+                    break;
+                case 2:
+                    direction = EnemyStateMachine.Direction.Right;
+                    break;
+                case 3:
+                    direction = EnemyStateMachine.Direction.Up;
+                    break;
+                case 4:
+                    direction = EnemyStateMachine.Direction.Down;
+                    break;
+            }
             stateMachine.ChangeDirection(direction);
-            zolSpriteDict.SetSprite("zol_brown");
         }
 
 
@@ -58,27 +74,12 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
             if (readyToJump)
             {
-                switch (rnd.Next(1, 5))
-                {
-                    case 1:
-                        direction = CardinalEnemyStateMachine.Direction.Left;
-                        break;
-                    case 2:
-                        direction = CardinalEnemyStateMachine.Direction.Right;
-                        break;
-                    case 3:
-                        direction = CardinalEnemyStateMachine.Direction.Up;
-                        break;
-                    case 4:
-                        direction = CardinalEnemyStateMachine.Direction.Down;
-                        break;
-                }
                 readyToJump = false;
                 ChangeDirection();
             }
             else if (pixelsMoved >= tileSize)
             {
-                direction = CardinalEnemyStateMachine.Direction.None;
+                direction = EnemyStateMachine.Direction.None;
                 ChangeDirection();
                 pixelsMoved++;
                 if (pixelsMoved >= tileSize + 30)
@@ -91,14 +92,30 @@ namespace MonoZelda.Enemies.EnemyClasses
             {
                 pixelsMoved++;
                 Pos = stateMachine.Update(this, Pos, gameTime);
-                zolSpriteDict.Position = Pos;
             }
         }
 
         public void TakeDamage(Boolean stun, Direction collisionDirection)
         {
-            zolSpriteDict.Enabled = false;
-            EnemyHitbox.UnregisterHitbox();
+            if (stun)
+            {
+                stateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
+                pixelsMoved = -128;
+            }
+            else
+            {
+                health--;
+                if (health > 0)
+                {
+                    stateMachine.Knockback(true, collisionDirection);
+                }
+                else
+                {
+                    stateMachine.Die();
+                    EnemyHitbox.UnregisterHitbox();
+                    collisionController.RemoveCollidable(EnemyHitbox);
+                }
+            }
         }
     }
 }

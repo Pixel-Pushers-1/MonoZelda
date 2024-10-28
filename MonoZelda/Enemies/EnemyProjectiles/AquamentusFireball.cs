@@ -66,10 +66,12 @@ namespace MonoZelda.Enemies.EnemyProjectiles
 
         public void ProjectileCollide()
         {
-            throw new NotImplementedException();
+            FireballSpriteDict.Enabled = false;
+            collisionController.RemoveCollidable(ProjectileHitbox);
+            ProjectileHitbox.UnregisterHitbox();
         }
 
-        public void Update(GameTime gameTime, CardinalEnemyStateMachine.Direction attackDirection, Point enemyPos)
+        public void Update(GameTime gameTime, EnemyStateMachine.Direction attackDirection, Point enemyPos)
         {
             Point pos = Pos;
             pos.X -= speed;

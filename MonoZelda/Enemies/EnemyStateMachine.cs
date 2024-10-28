@@ -4,18 +4,18 @@ using MonoZelda.Link;
 
 namespace MonoZelda.Enemies
 {
-    public class CardinalEnemyStateMachine
+    public class EnemyStateMachine
     {
         //states
-        public enum Direction { Left, Right, Up, Down, None }
+        public enum Direction { Left, Right, Up, Down, UpLeft, UpRight, DownLeft, DownRight, None }
         private Direction direction = Direction.None;
-        private bool spawning;
+        public bool Spawning {get; set; }
         public bool Dead { get; set; }
-        private bool knockback = false;
+        private bool knockback;
 
         //not states
         private const float KNOCKBACK_FORCE = 1000f;
-        private float velocity = 60f;
+        private float velocity = 120;
         private float dt;
         private double animationTimer;
         private float knockbackTimer;
@@ -25,10 +25,10 @@ namespace MonoZelda.Enemies
         private Vector2 movement;
         public Point currentPosition { get; private set; }
 
-        public CardinalEnemyStateMachine(SpriteDict spriteDict)
+        public EnemyStateMachine(SpriteDict spriteDict)
         {
             enemySpriteDict = spriteDict;
-            spawning = true;
+            Spawning = true;
             Dead = false;
             animationTimer = 0;
             enemySpriteDict.SetSprite("cloud");
@@ -81,20 +81,20 @@ namespace MonoZelda.Enemies
                 knockbackTimer += dt;
                 if (knockbackTimer >= 0.05)
                 {
-                    velocity = 60;
+                    velocity = 120;
                     knockback = false;
                     knockbackTimer = 0;
                 }
                 enemyPosition += (KNOCKBACK_FORCE * knockbackDirection) * dt;
                 enemySpriteDict.SetSprite("gel_turquoise");
             }
-            else if (spawning)
+            else if (Spawning)
             {
                 animationTimer += dt;
                 if (animationTimer >= 1)
                 {
                     enemy.ChangeDirection();
-                    spawning = false;
+                    Spawning = false;
                 }
             }
             else if (Dead)
@@ -114,6 +114,10 @@ namespace MonoZelda.Enemies
                     Direction.Down => new Vector2(0, 1),
                     Direction.Left => new Vector2(-1, 0),
                     Direction.Right => new Vector2(1, 0),
+                    Direction.UpLeft => new Vector2(-1, -1),
+                    Direction.UpRight => new Vector2(1, -1),
+                    Direction.DownLeft => new Vector2(-1, 1),
+                    Direction.DownRight => new Vector2(1, 1),
                     _ => Vector2.Zero
                 };
                 enemyPosition += (velocity * movement)*dt;

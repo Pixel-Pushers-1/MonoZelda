@@ -17,8 +17,8 @@ namespace MonoZelda.Enemies.EnemyClasses
         public int Width { get; set; }
         public int Height { get; set; }
         public Boolean Alive { get; set; }
-        private CardinalEnemyStateMachine stateMachine;
-        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.None;
+        private EnemyStateMachine stateMachine;
+        private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
         private readonly GraphicsDevice graphicsDevice;
         private CollisionController collisionController;
         private int pixelsMoved;
@@ -37,13 +37,13 @@ namespace MonoZelda.Enemies.EnemyClasses
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager)
         {
             this.collisionController = collisionController;
-            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 48, 48), graphicsDevice, EnemyList.Stalfos);
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Stalfos);
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
             Pos = spawnPosition;
             pixelsMoved = 0;
-            stateMachine = new CardinalEnemyStateMachine(enemyDict);
+            stateMachine = new EnemyStateMachine(enemyDict);
             stateMachine.SetSprite("stalfos");
         }
 
@@ -52,16 +52,16 @@ namespace MonoZelda.Enemies.EnemyClasses
             switch (rnd.Next(1, 5))
             {
                 case 1:
-                    direction = CardinalEnemyStateMachine.Direction.Left;
+                    direction = EnemyStateMachine.Direction.Left;
                     break;
                 case 2:
-                    direction = CardinalEnemyStateMachine.Direction.Right;
+                    direction = EnemyStateMachine.Direction.Right;
                     break;
                 case 3:
-                    direction = CardinalEnemyStateMachine.Direction.Up;
+                    direction = EnemyStateMachine.Direction.Up;
                     break;
                 case 4:
-                    direction = CardinalEnemyStateMachine.Direction.Down;
+                    direction = EnemyStateMachine.Direction.Down;
                     break;
             }
             stateMachine.ChangeDirection(direction);
@@ -85,12 +85,12 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
             if (stun)
             {
-                stateMachine.ChangeDirection(CardinalEnemyStateMachine.Direction.None);
+                stateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
                 pixelsMoved = -128;
             }
             else
             {
-                //health--;
+                health--;
                 if (health > 0)
                 {
                     stateMachine.Knockback(true, collisionDirection);

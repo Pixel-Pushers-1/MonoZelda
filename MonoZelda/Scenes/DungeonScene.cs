@@ -14,6 +14,7 @@ using MonoZelda.Enemies;
 using System.Collections.Generic;
 using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Commands.CollisionCommands;
+using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Trigger;
 
 namespace MonoZelda.Scenes;
@@ -173,7 +174,14 @@ public class DungeonScene : IScene
                 enemyDictionary.Remove(entry.Key);
             }
             entry.Key.Update(gameTime);
-            entry.Value.Update(entry.Key.Width, entry.Key.Height);
+            if (entry.Key.GetType() == typeof(Aquamentus))
+            {
+                entry.Value.Update(entry.Key.Width, entry.Key.Height, new Point(entry.Key.Pos.X - 16, entry.Key.Pos.Y - 16));
+            }
+            else
+            {
+                entry.Value.Update(entry.Key.Width, entry.Key.Height, entry.Key.Pos);
+            }
         }
 
         playerCollision.Update();

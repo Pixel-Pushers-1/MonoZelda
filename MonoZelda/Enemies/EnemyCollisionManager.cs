@@ -9,6 +9,7 @@ namespace MonoZelda.Enemies
     {
         private int width;
         private int height;
+        private Point pos;
         private EnemyCollidable enemyHitbox;
         private CollisionController collisionController;
 
@@ -21,10 +22,10 @@ namespace MonoZelda.Enemies
             this.width = width;
             this.height = height;
 
-            Point enemyPosition = enemy.Pos;
+            pos = enemy.Pos;
             Rectangle bounds = new Rectangle(
-                (int)enemyPosition.X - width / 2,
-                (int)enemyPosition.Y - height / 2,
+                pos.X - width / 2,
+                pos.X - height / 2,
                 width,
                 height
             );
@@ -34,19 +35,19 @@ namespace MonoZelda.Enemies
             enemyHitbox.setCollisionManager(this);
         }
 
-        public void Update(int width, int height)
+        public void Update(int width, int height, Point pos)
         {
             this.width = width;
             this.height = height;
+            this.pos = pos;
             UpdateBoundingBox();
         }
 
         public void UpdateBoundingBox()
         {
-            Point enemyPosition = enemy.Pos;
             Rectangle newBounds = new Rectangle(
-                (int)enemyPosition.X - width / 2,
-                (int)enemyPosition.Y - height / 2,
+                pos.X - width / 2,
+                pos.Y - height / 2,
                 width,
                 height
             );
@@ -56,24 +57,24 @@ namespace MonoZelda.Enemies
 
         public void HandleStaticCollision(Direction collisionDirection, Rectangle intersection)
         {
-            Point currentPos = enemy.Pos;
+            pos = enemy.Pos;
             switch (collisionDirection)
             {
                 case Direction.Left:
-                    currentPos.X -= intersection.Width;
+                    pos.X -= intersection.Width;
                     break;
                 case Direction.Right:
-                    currentPos.X += intersection.Width;
+                    pos.X += intersection.Width;
                     break;
                 case Direction.Up:
-                    currentPos.Y -= intersection.Height;
+                    pos.Y -= intersection.Height;
                     break;
                 case Direction.Down:
-                    currentPos.Y += intersection.Height;
+                    pos.Y += intersection.Height;
                     break;
             }
             enemy.ChangeDirection();
-            enemy.Pos = currentPos;
+            enemy.Pos = pos;
         }
     }
 }
