@@ -4,7 +4,9 @@ using Microsoft.Xna.Framework.Input;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace MonoZelda.Link.Projectiles;
 
@@ -85,6 +87,9 @@ public class ProjectileManager
     public void fireEquippedProjectile(Player player)
     {
         itemFired = projectile.GetProjectileObject(equippedProjectile, player);
+        if (itemFired is WoodenSword) {
+            return;
+        }
         setupProjectile(equippedProjectile);
     }
 
