@@ -1,6 +1,7 @@
 ﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
+using System.Diagnostics;
 using System.Collections.Generic;
 
 namespace MonoZelda.Link;
@@ -18,7 +19,7 @@ public class Player
     private SpriteDict playerSpriteDict;
     private Vector2 playerPosition;
     private float playerSpeed = 4.0f;
-    private int frameTimer;
+    private double timer;
 
     private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
     {
@@ -36,11 +37,6 @@ public class Player
     public Direction PlayerDirection
     {
         get { return playerDirection; }
-    }
-    public int FrameTimer
-    {
-        get { return frameTimer; }
-        set { frameTimer = value; }
     }
     public Vector2 GetPlayerPosition()
     {
@@ -61,9 +57,8 @@ public class Player
 
     public void Move(PlayerMoveCommand moveCommand)
     {
-        if (frameTimer > 0)
-        {
-            frameTimer--;
+        if (timer > 0) {
+            timer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
             return;
         }
 
@@ -93,7 +88,7 @@ public class Player
         
     public void StandStill(PlayerStandingCommand standCommand)
     {
-        if (frameTimer == 0)
+        if (timer <= 0)
         {
             // Get direction string from the dictionary
             if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
@@ -102,54 +97,53 @@ public class Player
                 playerSpriteDict.SetSprite(spriteName);
             }
         }
-        else
-        {
-            frameTimer--;
+        else {
+            timer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         }
         playerSpriteDict.Position = playerPosition.ToPoint();
     }
 
     public void Attack()
     {
-        if (frameTimer == 0)
+        if (timer <= 0)
         {
-            frameTimer = 20;
-
             // Get direction string from the dictionary
             if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
             {
                 string spriteName = $"woodensword_{directionString}";
-                playerSpriteDict.SetSprite(spriteName);
+                timer = playerSpriteDict.SetSpriteOneshot(spriteName);
             }
+        }
+        else {
+            timer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         }
     }
 
     public void UseItem()
     {
-        if (frameTimer == 0)
+        if(timer <= 0)
         {
-            frameTimer = 20;
-
             // Get direction string from the dictionary
             if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
             {
                 string spriteName = $"useitem_{directionString}";
-                playerSpriteDict.SetSprite(spriteName);
+                timer = playerSpriteDict.SetSpriteOneshot(spriteName);
             }
         } 
+        else {
+            timer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+        }
     }
 
     public void TakeDamage()
     {
-        if (frameTimer == 0)
+        if (timer <= 0)
         {
-            frameTimer = 10;
-
             // Get direction string from the dictionary
             if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
             {
                 string spriteName = $"hurt_{directionString}";
-                playerSpriteDict.SetSprite(spriteName);
+                timer = playerSpriteDict.SetSpriteOneshot(spriteName);
             }
         }
     }

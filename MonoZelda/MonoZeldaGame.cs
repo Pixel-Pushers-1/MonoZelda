@@ -19,6 +19,8 @@ public enum GameState
 
 public class MonoZeldaGame : Game
 {
+    public static GameTime GameTime { get; private set; }
+
     private GraphicsDeviceManager graphicsDeviceManager;
     private SpriteBatch spriteBatch;
     private KeyboardController keyboardController;
@@ -71,6 +73,7 @@ public class MonoZeldaGame : Game
 
     protected override void Update(GameTime gameTime)
     {
+        GameTime = gameTime;
         keyboardController.Update(gameTime);
         mouseController.Update(gameTime);
         scene.Update(gameTime);
