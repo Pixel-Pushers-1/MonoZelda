@@ -40,7 +40,7 @@ public class PlayerEnemyProjectileCollisionCommand : ICommand
         PlayerCollisionManager playerCollision = playerCollidable.PlayerCollision;
 
         playerCollision.HandleEnemyProjectileCollision(collisionDirection);
-        //enemyProjectileCollision.DestroyProjectile();
+        enemyProjectileCollision.HandleCollision();
     }
     public void UnExecute()
     {

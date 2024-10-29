@@ -64,7 +64,14 @@ namespace MonoZelda.Enemies.EnemyProjectiles
             Pos = pos;
         }
 
-        public void Update(GameTime gameTime, CardinalEnemyStateMachine.Direction attackDirection, Point enemyPos)
+        public void ProjectileCollide()
+        {
+            FireballSpriteDict.Enabled = false;
+            collisionController.RemoveCollidable(ProjectileHitbox);
+            ProjectileHitbox.UnregisterHitbox();
+        }
+
+        public void Update(GameTime gameTime, EnemyStateMachine.Direction attackDirection, Point enemyPos)
         {
             Point pos = Pos;
             pos.X -= speed;
