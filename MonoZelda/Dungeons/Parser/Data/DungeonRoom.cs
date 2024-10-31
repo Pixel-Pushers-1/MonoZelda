@@ -8,7 +8,8 @@ namespace MonoZelda.Dungeons
     internal class DungeonRoom : IDungeonRoom
     {
         private List<IDoor> doors;
-        private List<Rectangle> colliders;
+        private List<Rectangle> roomColliders;
+        private List<Rectangle> boundaryColliders;        
         private List<ItemSpawn> itemSpawns;
         private List<EnemySpawn> enemySpawns;
         private List<TriggerSpawn> triggers;
@@ -23,6 +24,8 @@ namespace MonoZelda.Dungeons
 
             doors = new List<IDoor>();
             colliders = new List<Rectangle>();
+            roomColliders = new List<Rectangle>();
+            boundaryColliders = new List<Rectangle>();
             itemSpawns = new List<ItemSpawn>();
             enemySpawns = new List<EnemySpawn>();
             triggers = new List<TriggerSpawn>();
@@ -53,14 +56,24 @@ namespace MonoZelda.Dungeons
             enemySpawns.Add(enemySpawn);
         }
 
-        public void AddStaticCollider(Rectangle collider)
+        public void AddStaticRoomCollider(Rectangle roomCollider)
         {
-            colliders.Add(collider);
+            roomColliders.Add(roomCollider);
         }
 
-        public List<Rectangle> GetStaticColliders()
+        public void AddStaticBoundaryCollider(Rectangle boundaryCollider)
         {
-            return colliders;
+            boundaryColliders.Add(boundaryCollider);
+        }
+
+        public List<Rectangle> GetStaticRoomColliders()
+        {
+            return roomColliders;
+        }
+
+        public List<Rectangle> GetStaticBoundaryColliders()
+        {
+            return boundaryColliders;
         }
 
         public List<EnemySpawn> GetEnemySpawns()

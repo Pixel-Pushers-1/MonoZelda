@@ -4,65 +4,67 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Link;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Rope : IEnemy
     {
-        private CardinalEnemyStateMachine stateMachine;
         public Point Pos { get; set; }
-        private readonly Random rnd = new();
-        private SpriteDict ropeSpriteDict;
-        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.None;
-        private GraphicsDevice graphicsDevice;
-        private int pixelsMoved;
-        public Collidable EnemyHitbox { get; set; }
+        public EnemyCollidable EnemyHitbox { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        public bool Alive { get; set; }
+        private readonly Random rnd = new();
+        private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
+        private GraphicsDevice graphicsDevice;
+        private EnemyStateMachine stateMachine;
+        private CollisionController collisionController;
 
+        private int pixelsMoved;
+        private int health = 3;
         private int tileSize = 64;
 
         public Rope(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
-            Width = 64;
-            Height = 64;
+            Width = 48;
+            Height = 48;
+            Alive = true;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
             ContentManager contentManager)
         {
-            EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, CollidableType.Enemy);
+            this.collisionController = collisionController;
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Rope);
             collisionController.AddCollidable(EnemyHitbox);
-            ropeSpriteDict = enemyDict;
-            EnemyHitbox.setSpriteDict(ropeSpriteDict);
-            ropeSpriteDict.Position = spawnPosition;
-            ropeSpriteDict.SetSprite("cloud");
+            EnemyHitbox.setSpriteDict(enemyDict);
+            enemyDict.Position = spawnPosition;
             Pos = spawnPosition;
             pixelsMoved = 0;
-            stateMachine = new CardinalEnemyStateMachine();
-            EnemyHitbox.setEnemy(this);
+            stateMachine = new EnemyStateMachine(enemyDict);
         }
 
         public void ChangeDirection()
         {
-            ropeSpriteDict.SetSprite("rope_left");
+            stateMachine.SetSprite("rope_left");
             switch (rnd.Next(1, 5))
             {
                 case 1:
-                    direction = CardinalEnemyStateMachine.Direction.Left;
-                    ropeSpriteDict.SetSprite("rope_left");
+                    direction = EnemyStateMachine.Direction.Left;
+                    stateMachine.SetSprite("rope_left");
                     break;
                 case 2:
-                    direction = CardinalEnemyStateMachine.Direction.Right;
-                    ropeSpriteDict.SetSprite("rope_right");
+                    direction = EnemyStateMachine.Direction.Right;
+                    stateMachine.SetSprite("rope_right");
                     break;
                 case 3:
-                    direction = CardinalEnemyStateMachine.Direction.Up;
+                    direction = EnemyStateMachine.Direction.Up;
                     break;
                 case 4:
-                    direction = CardinalEnemyStateMachine.Direction.Down;
+                    direction = EnemyStateMachine.Direction.Down;
                     break;
             }
             stateMachine.ChangeDirection(direction);
@@ -78,15 +80,31 @@ namespace MonoZelda.Enemies.EnemyClasses
             else
             {
                 pixelsMoved++;
-                ropeSpriteDict.Position = Pos;
             }
-            Pos = stateMachine.Update(Pos);
+            Pos = stateMachine.Update(this, Pos, gameTime);
         }
 
-        public void KillEnemy()
+        public void TakeDamage(Boolean stun, Direction collisionDirection)
         {
-            ropeSpriteDict.Enabled = false;
-            EnemyHitbox.UnregisterHitbox();
+            if (stun)
+            {
+                stateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
+                pixelsMoved = -128;
+            }
+            else
+            {
+                health--;
+                if (health > 0)
+                {
+                    stateMachine.Knockback(true, collisionDirection);
+                }
+                else
+                {
+                    stateMachine.Die();
+                    EnemyHitbox.UnregisterHitbox();
+                    collisionController.RemoveCollidable(EnemyHitbox);
+                }
+            }
         }
     }
 }

@@ -5,17 +5,17 @@ using MonoZelda.Controllers;
 
 namespace MonoZelda.Link;
 
-public class PlayerCollision
+public class PlayerCollisionManager
 {
     private readonly int width;
     private readonly int height;
     private Player player;
-    private Collidable playerHitbox;
+    private PlayerCollidable playerHitbox;
     private CollisionController collisionController;
     private const float KNOCKBACK_FORCE = 30f;
     private Vector2 knockbackVelocity;
 
-    public PlayerCollision(Player player, Collidable playerHitbox, CollisionController collisionController)
+    public PlayerCollisionManager(Player player, PlayerCollidable playerHitbox, CollisionController collisionController)
     {
         this.player = player;
         this.playerHitbox = playerHitbox;
@@ -33,6 +33,7 @@ public class PlayerCollision
         this.collisionController = collisionController;
 
         playerHitbox.Bounds = bounds;
+        playerHitbox.setCollisionManager(this);
     }
 
     public void Update()
@@ -53,9 +54,16 @@ public class PlayerCollision
         playerHitbox.Bounds = newBounds;            
     }
 
+    public void HandleEnemyProjectileCollision(Direction collisionDirection)
+    {
+        if((int)player.PlayerDirection + (int)collisionDirection == 0)
+        {
+            player.TakeDamage();
+        }
+    }
+
     public void HandleStaticCollision(Direction collisionDirection, Rectangle intersection)
     {
-
         Vector2 currentPos = player.GetPlayerPosition();
 
         switch (collisionDirection)
@@ -73,9 +81,9 @@ public class PlayerCollision
                 currentPos.Y += intersection.Height;
                 break;
         }
-
         player.SetPosition(currentPos);
     }
+
     public void HandleEnemyCollision(Direction collisionDirection)
     {
         Vector2 currentPos = player.GetPlayerPosition();
@@ -87,10 +95,9 @@ public class PlayerCollision
 
     private void ApplyKnockback()
     {
-            Vector2 currentPos = player.GetPlayerPosition();
-            Vector2 newPosition = currentPos + knockbackVelocity;
-            player.SetPosition(newPosition);
-        
+        Vector2 currentPos = player.GetPlayerPosition();
+        Vector2 newPosition = currentPos + knockbackVelocity;
+        player.SetPosition(newPosition);
     }
 
     private Vector2 GetKnockbackDirection(Direction collisionDirection)

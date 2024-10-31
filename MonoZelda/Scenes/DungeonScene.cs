@@ -14,6 +14,7 @@ using MonoZelda.Enemies;
 using System.Collections.Generic;
 using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Commands.CollisionCommands;
+using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Trigger;
 
 namespace MonoZelda.Scenes;
@@ -24,15 +25,15 @@ public class DungeonScene : IScene
     private CommandManager commandManager;
     private Player player;
     private ProjectileManager projectileManager;
-    private PlayerCollision playerCollision;
+    private PlayerCollisionManager playerCollision;
     private CollisionController collisionController;
     private List<ITrigger> triggers;
     private ItemFactory itemFactory;
     private EnemyFactory enemyFactory;
     private List<IEnemy> enemies = new();
-    private Dictionary<IEnemy, EnemyCollision> enemyDictionary = new();
-    private List<EnemyCollision> enemyCollisions = new();
-    private List<EnemyProjectileCollision> enemyProjectileCollisions = new();
+    private Dictionary<IEnemy, EnemyCollisionManager> enemyDictionary = new();
+    private List<EnemyCollisionManager> enemyCollisions = new();
+    private List<EnemyProjectileCollisionManager> enemyProjectileCollisions = new();
     private IDungeonRoom room;
     private string roomName;
 
@@ -51,35 +52,29 @@ public class DungeonScene : IScene
         // Need to wait for LoadContent because MonoZeldaGame is going to clear everything before calling this.
         LoadRoom(contentManager);
 
-        //create player and player collision
+        //create player and player collision manager
         player = new Player();
-        Collidable playerHitbox = new Collidable(new Rectangle(100, 100, 50, 50), graphicsDevice, CollidableType.Player);
+        PlayerCollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50), graphicsDevice);
         collisionController.AddCollidable(playerHitbox);
-        playerCollision = new PlayerCollision(player, playerHitbox, collisionController);
+        playerCollision = new PlayerCollisionManager(player, playerHitbox, collisionController);
 
         // create projectile object and spriteDict
         var projectileDict = new SpriteDict(contentManager.Load<Texture2D>("Sprites/player"), SpriteCSVData.Projectiles, 0, new Point(0, 0));
-        projectileDict.Enabled = false;
-        var projectiles = new Projectile(projectileDict, player);
-        projectileManager = new ProjectileManager(collisionController, graphicsDevice);
+        projectileManager = new ProjectileManager(collisionController, graphicsDevice, projectileDict);
 
         // replace required commands
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(player));
-        commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(projectiles, projectileManager, player));
-        commandManager.ReplaceCommand(CommandType.PlayerFireSwordBeam, new PlayerFireSwordBeam(projectiles, projectileManager, player));
+        commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(projectileManager, player));
+        commandManager.ReplaceCommand(CommandType.PlayerEquipProjectileCommand, new PlayerEquipProjectileCommand(projectileManager, player));   
+        commandManager.ReplaceCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand(projectileManager, player));
+        commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, player));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(player));
-        commandManager.ReplaceCommand(CommandType.PlayerUseItemCommand, new PlayerUseItemCommand(projectiles, projectileManager, player));
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(player));
-        commandManager.ReplaceCommand(CommandType.PlayerStaticCollisionCommand, new PlayerStaticCollisionCommand(playerCollision));
-        commandManager.ReplaceCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand(playerCollision));
-        commandManager.ReplaceCommand(CommandType.PlayerEnemyProjectileCollisionCommand, new PlayerEnemyProjectileCollisionCommand(player));
 
         // create spritedict to pass into player controller
         var playerSpriteDict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Player), SpriteCSVData.Player, 1, new Point(100, 100));
         player.SetPlayerSpriteDict(playerSpriteDict);
     }
-
-
 
     private void LoadRoom(ContentManager contentManager)
     {
@@ -118,16 +113,22 @@ public class DungeonScene : IScene
         }
         foreach (var enemy in enemies)
         {
-            enemyDictionary.Add(enemy, new EnemyCollision(enemy, collisionController, enemy.Width, enemy.Height));
+            enemyDictionary.Add(enemy, new EnemyCollisionManager(enemy, collisionController, enemy.Width, enemy.Height));
         }
     }
 
     private void CreateStaticColliders()
     {
-        var colliderRects = room.GetStaticColliders();
-        foreach (var rect in colliderRects)
+        var roomColliderRects = room.GetStaticRoomColliders();
+        foreach (var rect in roomColliderRects)
         {
-            var collidable = new Collidable(rect, graphicsDevice, CollidableType.Static);
+            var collidable = new StaticRoomCollidable(rect, graphicsDevice);
+            collisionController.AddCollidable(collidable);
+        }
+        var boundaryColliderRects = room.GetStaticBoundaryColliders();
+        foreach (var rect in boundaryColliderRects)
+        {
+            var collidable = new StaticBoundaryCollidable(rect, graphicsDevice);
             collisionController.AddCollidable(collidable);
         }
     }
@@ -165,10 +166,22 @@ public class DungeonScene : IScene
             projectileManager.executeProjectile();
         }
 
-        foreach(KeyValuePair<IEnemy, EnemyCollision> entry in enemyDictionary)
+        foreach(KeyValuePair<IEnemy, EnemyCollisionManager> entry in enemyDictionary)
         {
+            if (!entry.Key.Alive) // remove dead enemies from lists (hopefully this is useful for re-entering rooms)
+            {
+                enemies.Remove(entry.Key);
+                enemyDictionary.Remove(entry.Key);
+            }
             entry.Key.Update(gameTime);
-            entry.Value.Update(entry.Key.Width, entry.Key.Height);
+            if (entry.Key.GetType() == typeof(Aquamentus))
+            {
+                entry.Value.Update(entry.Key.Width, entry.Key.Height, new Point(entry.Key.Pos.X - 16, entry.Key.Pos.Y - 16));
+            }
+            else
+            {
+                entry.Value.Update(entry.Key.Width, entry.Key.Height, entry.Key.Pos);
+            }
         }
 
         playerCollision.Update();

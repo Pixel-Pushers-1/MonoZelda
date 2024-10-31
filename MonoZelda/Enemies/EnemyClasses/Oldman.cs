@@ -5,6 +5,7 @@ using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
 using System;
+using MonoZelda.Link;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
@@ -13,9 +14,10 @@ namespace MonoZelda.Enemies.EnemyClasses
         public Point Pos { get; set; }
         private SpriteDict oldmanSpriteDict;
         private GraphicsDevice graphicsDevice;
-        public Collidable EnemyHitbox { get; set; }
+        public EnemyCollidable EnemyHitbox { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        public bool Alive { get; set; }
 
         private int spawnTimer;
 
@@ -24,13 +26,14 @@ namespace MonoZelda.Enemies.EnemyClasses
             this.graphicsDevice = graphicsDevice;
             Width = 64;
             Height = 64;
+            Alive = true;
 
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
             ContentManager contentManager)
         {
-            EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 60, 60), graphicsDevice, CollidableType.Enemy);
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Oldman);
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
@@ -56,7 +59,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
         }
 
-        public void KillEnemy()
+        public void TakeDamage(Boolean stun, Direction collisionDirection)
         {
             // oldman is immortal
         }

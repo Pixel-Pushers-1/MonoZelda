@@ -10,7 +10,5 @@ public interface IProjectile
 
 	bool hasFinished();
 
-	bool reachedDistance();
-
 	Rectangle getCollisionRectangle();
 }

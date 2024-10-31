@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Link;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies
@@ -11,11 +12,13 @@ namespace MonoZelda.Enemies
     {
         public Point Pos { get; set; }
 
-        public Collidable EnemyHitbox { get; set; }
+        public EnemyCollidable EnemyHitbox { get; set; }
 
         public int Width { get; set; }
 
         public int Height { get; set; }
+
+        public Boolean Alive { get; set; }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager);
 
@@ -23,7 +26,7 @@ namespace MonoZelda.Enemies
 
         public void Update(GameTime gameTime);
 
-        public void KillEnemy();
+        public void TakeDamage(Boolean stun, Direction collisionDirection);
         
     }
 }

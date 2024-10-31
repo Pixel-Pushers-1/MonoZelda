@@ -8,7 +8,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Compass : IItem
 {
-    private Collidable compassCollidable;
+    private ItemCollidable compassCollidable;
     private bool itemPickedUp;
     private GraphicsDevice graphicsDevice;
 
@@ -31,7 +31,7 @@ public class Compass : IItem
 
     public void itemSpawn(SpriteDict compassDict, Point spawnPosition, CollisionController collisionController)
     {
-        compassCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 60, 60), graphicsDevice, CollidableType.Item);
+        compassCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 60, 60), graphicsDevice, ItemList.Compass);
         collisionController.AddCollidable(compassCollidable);
         compassCollidable.setSpriteDict(compassDict);
         compassDict.Position = spawnPosition;

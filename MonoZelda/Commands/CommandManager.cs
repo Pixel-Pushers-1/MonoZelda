@@ -9,10 +9,11 @@ public enum CommandType
     // Commands for entire project
     ExitCommand,
     PlayerAttackCommand,
-    PlayerFireSwordBeam,
     PlayerMoveCommand,
     PlayerTakeDamageCommand,
-    PlayerUseItemCommand,
+    PlayerEquipProjectileCommand,
+    PlayerFireProjectileCommand,
+    PlayerFireSwordBeamCommand,
     ResetCommand,
     PlayerStandingCommand,
     StartGameCommand,
@@ -22,8 +23,12 @@ public enum CommandType
     PlayerEnemyProjectileCollisionCommand,
     PlayerStaticCollisionCommand,
     PlayerTriggerCollisionCommand,
-    EnemyProjectileCollisionCommand,
-    EnemyStaticCollisionCommand,
+    EnemyPlayerProjectileCollisionCommand,
+    EnemyStaticRoomCollisionCommand,
+    EnemyStaticBoundaryCollisionCommand,
+    EnemyProjectileStaticBoundaryCollisionCommand,
+    PlayerProjectileStaticRoomCollisionCommand,
+    PlayerProjectileStaticBoundaryCollisionCommand,
     ToggleGizmosCommand,
     None
 }
@@ -36,9 +41,10 @@ public class CommandManager
         commandMap = new Dictionary<CommandType, ICommand>();
         AddCommand(CommandType.ExitCommand, new ExitCommand());
         AddCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand());
-        AddCommand(CommandType.PlayerFireSwordBeam, new PlayerFireSwordBeam());
+        AddCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand());
         AddCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());
-        AddCommand(CommandType.PlayerUseItemCommand, new PlayerUseItemCommand());
+        AddCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand());
+        AddCommand(CommandType.PlayerEquipProjectileCommand, new PlayerEquipProjectileCommand());
         AddCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
         AddCommand(CommandType.ResetCommand, new ResetCommand());
         AddCommand(CommandType.StartGameCommand, new StartGameCommand());
@@ -48,10 +54,14 @@ public class CommandManager
         AddCommand(CommandType.PlayerEnemyProjectileCollisionCommand, new PlayerEnemyProjectileCollisionCommand());
         AddCommand(CommandType.PlayerStaticCollisionCommand, new PlayerStaticCollisionCommand());
         AddCommand(CommandType.PlayerTriggerCollisionCommand, new PlayerTriggerCollisionCommand());
-        AddCommand(CommandType.EnemyProjectileCollisionCommand, new EnemyProjectileCollisionCommand());
-        AddCommand(CommandType.EnemyStaticCollisionCommand, new EnemyStaticCollisionCommand());
+        AddCommand(CommandType.EnemyPlayerProjectileCollisionCommand, new EnemyPlayerProjectileCollisionCommand());
+        AddCommand(CommandType.EnemyStaticRoomCollisionCommand, new EnemyStaticRoomCollisionCommand());
+        AddCommand(CommandType.EnemyStaticBoundaryCollisionCommand, new EnemyStaticBoundaryCollisionCommand());
+        AddCommand(CommandType.EnemyProjectileStaticBoundaryCollisionCommand,
+            new EnemyProjectileStaticBoundaryCollisionCommand());
+        AddCommand(CommandType.PlayerProjectileStaticRoomCollisionCommand, new PlayerProjectileStaticRoomCollisionCommand());
+        AddCommand(CommandType.PlayerProjectileStaticBoundaryCollisionCommand, new PlayerProjectileStaticBoundaryCollisionCommand());
         AddCommand(CommandType.ToggleGizmosCommand, new ToggleGizmosCommand());
-
     }
 
     public void Execute(CommandType commandType, params object[] metadata)

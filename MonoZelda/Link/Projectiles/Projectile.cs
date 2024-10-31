@@ -1,23 +1,33 @@
 ﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace MonoZelda.Link.Projectiles;
 
 public class Projectile
 {
-
-    private ProjectileType currentProjectile;
     private SpriteDict projectileDict;
-    private Player player;
     protected Vector2 projectilePosition;
+    protected Vector2 playerPosition;
     protected Direction playerDirection;
 
-    public Projectile(SpriteDict projectileDict,Player player)
+    private static readonly Dictionary<ProjectileType, Func<SpriteDict, Vector2, Direction, Player, IProjectile>> projectileConstructors = new()
+    {
+       { ProjectileType.Arrow, (dict, pos, dir, player) => new Arrow(dict, pos, dir) },
+       { ProjectileType.ArrowBlue, (dict, pos, dir, player) => new ArrowBlue(dict, pos, dir) },
+       { ProjectileType.Bomb, (dict, pos, dir, player) => new Bomb(dict, pos, dir) },
+       { ProjectileType.Boomerang, (dict, pos, dir, player) => new Boomerang(dict, pos, dir, player) },
+       { ProjectileType.BoomerangBlue, (dict, pos, dir, player) => new BoomerangBlue(dict, pos, dir, player) },
+       { ProjectileType.CandleBlue, (dict,pos,dir,player) => new CandleBlue(dict, pos, dir) },
+       { ProjectileType.WoodenSword, (dict,pos,dir,player) => new WoodenSword(dict, pos, dir) },
+       { ProjectileType.WoodenSwordBeam, (dict,pos,dir,player) => new WoodenSwordBeam(dict, pos, dir) }
+    };
+    public Projectile(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection)
     {
         this.projectileDict = projectileDict;
-        this.player = player;
-        projectilePosition = new Vector2();
+        this.playerPosition = playerPosition;
+        this.playerDirection = playerDirection; 
     }
 
     protected void SetProjectileSprite(string projectileName)
@@ -25,14 +35,8 @@ public class Projectile
         projectileDict.SetSprite(projectileName);
     }
 
-    protected double CalculateDistance(Vector2 initialPosition)
-    {
-        return Math.Sqrt(Math.Pow(projectilePosition.X - initialPosition.X, 2) + Math.Pow(projectilePosition.Y - initialPosition.Y, 2));
-    }
-
     protected Vector2 SetInitialPosition(Vector2 Dimension)
     {
-        playerDirection = player.PlayerDirection;
         Vector2 positionInitializer = new Vector2();
         switch (playerDirection)
         {
@@ -49,20 +53,22 @@ public class Projectile
                 positionInitializer.X = ((Dimension.X / 2) * 4) + 32;
                 break;
         }
-        projectilePosition = player.GetPlayerPosition() + positionInitializer;
+        projectilePosition = playerPosition + positionInitializer;
         return projectilePosition;
     }
 
-    public IProjectile GetProjectileObject(ProjectileType currentProjectile)
+    public IProjectile GetProjectileObject(ProjectileType currentProjectile, Player player)
     {
-        var projectileType = Type.GetType($"MonoZelda.Link.Projectiles.{currentProjectile}");
-        IProjectile launchProjectile = (IProjectile)Activator.CreateInstance(projectileType, projectileDict, player);
+        playerPosition = player.GetPlayerPosition();
+        playerDirection = player.PlayerDirection;
 
-        return launchProjectile;
-    }
+        // Check if the projectile type exists in the dictionary
+        if (projectileConstructors.TryGetValue(currentProjectile, out var constructor))
+        {
+            // Use the constructor to create the projectile
+            return constructor(projectileDict, playerPosition, playerDirection, player);
+        }
 
-    public void EnableDict()
-    {
-        projectileDict.Enabled = true;
+        throw new ArgumentException($"Unknown projectile type: {currentProjectile}");
     }
 }

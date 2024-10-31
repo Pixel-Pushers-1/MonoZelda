@@ -1,23 +1,24 @@
 ﻿using MonoZelda.Collision;
 using MonoZelda.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
 namespace MonoZelda.Enemies.EnemyProjectiles
 {
-    public class EnemyProjectileCollision
+    public class EnemyProjectileCollisionManager
     {
         private readonly int width;
         private readonly int height;
         private IEnemyProjectile projectile;
-        private Collidable projectileHitbox;
+        private EnemyProjectileCollidable projectileHitbox;
         private CollisionController collisionController;
 
-        public EnemyProjectileCollision(IEnemyProjectile projectile, CollisionController collisionController)
+        public IEnemyProjectile Projectile
+        {
+            get { return projectile; }
+            set { projectile = value; }
+        }
+
+        public EnemyProjectileCollisionManager(IEnemyProjectile projectile, CollisionController collisionController)
         {
             this.projectile = projectile;
             projectileHitbox = projectile.ProjectileHitbox;
@@ -35,6 +36,12 @@ namespace MonoZelda.Enemies.EnemyProjectiles
             this.collisionController = collisionController;
 
             projectileHitbox.Bounds = bounds;
+            projectileHitbox.setCollisionManager(this);
+        }
+
+        public void HandleCollision()
+        {
+            projectile.ProjectileCollide();
         }
 
         public void Update()
