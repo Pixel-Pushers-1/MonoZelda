@@ -1,15 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoZelda.Dungeons.Parser.Data;
+using MonoZelda.Link;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace MonoZelda.Dungeons.Parser
 {
     internal class DoorCellParser : ICellParser
     {
+        private DoorDirection direction { get; }
+        public DoorCellParser(DoorDirection direction)
+        {
+            this.direction = direction;
+        }
+
         public void Parse(string cell, Point position, DungeonRoom room)
         {
             // Matching Door(sprite_name, destination)

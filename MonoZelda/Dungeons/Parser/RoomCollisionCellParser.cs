@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace MonoZelda.Dungeons.Parser
 {
-    internal class CollisionCellParser : ICellParser
+    internal class RoomCollisionCellParser : ICellParser
     {
         public void Parse(string cell, Point position, DungeonRoom room)
         {
             if (Enum.TryParse(cell, out CollisionTileRect collisionRect))
             {
                 var rect = GetCollisionRectangle(collisionRect, position, DungeonConstants.TileWidth, DungeonConstants.TileHeight);
-                room.AddStaticBoundaryCollider(rect);
+                room.AddStaticRoomCollider(rect);
             }
         }
 
-        private static Rectangle GetCollisionRectangle(CollisionTileRect collisionRect, Point position, int tileWidth, int tileHeight)
+        internal static Rectangle GetCollisionRectangle(CollisionTileRect collisionRect, Point position, int tileWidth, int tileHeight)
         {
             return collisionRect switch
             {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Dungeons.Loader;
+using MonoZelda.Dungeons.Parser.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,8 @@ namespace MonoZelda.Dungeons.Parser
 
             _cellParsers.Add("item", new ItemCellParser());
             _cellParsers.Add("enemy", new EnemyCellParser());
-            _cellParsers.Add("collision", new CollisionCellParser());
+            _cellParsers.Add("roomCollision", new RoomCollisionCellParser());
+            _cellParsers.Add("boundaryCollision", new BoundaryCollisionCellParser());
             _cellParsers.Add("trigger", new TriggerCellParser());
         }
 
@@ -65,10 +67,11 @@ namespace MonoZelda.Dungeons.Parser
         private static void LoadDoors(RoomFile file, DungeonRoom room)
         {
             var doorTokens = new List<string> { file.NorthDoor, file.EastDoor, file.SouthDoor, file.WestDoor };
-            var doorCellParser = new DoorCellParser();
+            var doorDirections = new List<DoorDirection> { DoorDirection.North, DoorDirection.East, DoorDirection.South, DoorDirection.West };
 
             for (int i = 0; i < doorTokens.Count; i++)
             {
+                var doorCellParser = new DoorCellParser(doorDirections[i]);
                 var doorPosition = DungeonConstants.DoorPositions[i];
                 doorCellParser.Parse(doorTokens[i], doorPosition, room);
             }
