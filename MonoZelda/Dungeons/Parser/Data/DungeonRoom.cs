@@ -23,7 +23,6 @@ namespace MonoZelda.Dungeons
             RoomSprite = roomSprite;
 
             doors = new List<IDoor>();
-            colliders = new List<Rectangle>();
             roomColliders = new List<Rectangle>();
             boundaryColliders = new List<Rectangle>();
             itemSpawns = new List<ItemSpawn>();

@@ -15,7 +15,7 @@ namespace MonoZelda.Dungeons.Parser
             if (Enum.TryParse(cell, out CollisionTileRect collisionRect))
             {
                 var rect = GetCollisionRectangle(collisionRect, position, DungeonConstants.TileWidth, DungeonConstants.TileHeight);
-                room.AddStaticCollider(rect);
+                room.AddStaticBoundaryCollider(rect);
             }
         }
 
