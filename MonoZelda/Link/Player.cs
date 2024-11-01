@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System;
+using System.Reflection.Metadata;
 
 namespace MonoZelda.Link;
 
@@ -20,6 +22,7 @@ public class Player
     private Vector2 playerPosition;
     private float playerSpeed = 4.0f;
     private double timer;
+    private PlayerStateMachine playerStateMachine;
 
     private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
     {
@@ -32,6 +35,7 @@ public class Player
     public Player()
     {
         playerPosition = new Vector2(500, 500);
+        playerStateMachine = new PlayerStateMachine(this);
     }
 
     public Direction PlayerDirection
@@ -103,6 +107,23 @@ public class Player
         playerSpriteDict.Position = playerPosition.ToPoint();
     }
 
+    public void PlayerDeath()
+    {
+        Debug.WriteLine("death");
+        if (timer <= 0)
+        {
+            string spriteName = "hurt_down";
+            playerSpriteDict.SetSprite(spriteName);
+            timer = playerSpriteDict.SetSpriteOneshot(spriteName);
+
+        }
+        else
+        {
+            timer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+
+        }
+    }
+
     public void Attack()
     {
         if (timer <= 0)
@@ -137,6 +158,8 @@ public class Player
 
     public void TakeDamage()
     {
+        playerStateMachine.SetHealth(playerStateMachine.GetHealth() - 1);
+
         if (timer <= 0)
         {
             // Get direction string from the dictionary
@@ -146,5 +169,10 @@ public class Player
                 timer = playerSpriteDict.SetSpriteOneshot(spriteName);
             }
         }
+    }
+    public PlayerStateMachine PlayerStateMachine
+    {
+        get => playerStateMachine;
+        set => playerStateMachine = value;
     }
 }
