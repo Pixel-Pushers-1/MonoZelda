@@ -22,7 +22,7 @@ public class PlayerSpriteManager
     private Vector2 playerPosition;
     private float playerSpeed = 4.0f;
     private double timer;
-    private PlayerState playerStateMachine;
+    private PlayerStateMachine playerStateMachine;
 
     private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
     {
@@ -35,7 +35,7 @@ public class PlayerSpriteManager
     public PlayerSpriteManager()
     {
         playerPosition = new Vector2(500, 500);
-        playerStateMachine = new PlayerState(this);
+        playerStateMachine = new PlayerStateMachine(this);
     }
 
     public Direction PlayerDirection
@@ -114,12 +114,10 @@ public class PlayerSpriteManager
             string spriteName = "hurt_down";
             playerSpriteDict.SetSprite(spriteName);
             timer = playerSpriteDict.SetSpriteOneshot(spriteName);
-
         }
         else
         {
             timer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
-
         }
     }
 
@@ -169,7 +167,7 @@ public class PlayerSpriteManager
             }
         }
     }
-    public PlayerState PlayerStateMachine
+    public PlayerStateMachine PlayerStateMachine
     {
         get => playerStateMachine;
         set => playerStateMachine = value;

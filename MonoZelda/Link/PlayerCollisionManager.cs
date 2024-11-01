@@ -26,6 +26,7 @@ public class PlayerCollisionManager
         this.width = 64;
         this.height = 64;
 
+       
         Vector2 playerPosition = player.GetPlayerPosition();
         Rectangle bounds = new Rectangle(
             (int)playerPosition.X - width / 2,
@@ -33,6 +34,7 @@ public class PlayerCollisionManager
             width,
             height
         );
+
         playerHitbox.Bounds = bounds;
         playerHitbox.setCollisionManager(this);
     }
@@ -62,6 +64,7 @@ public class PlayerCollisionManager
             width,
             height
         );
+
         playerHitbox.Bounds = newBounds;
     }
 
@@ -100,17 +103,14 @@ public class PlayerCollisionManager
 
     public void HandleEnemyCollision(Direction collisionDirection)
     {
-        if (invulnerabilityTimer > 0)
-            return;
-
         if (knockbackTimer <= 0)
         {
             Vector2 knockbackDirection = GetKnockbackDirection(collisionDirection);
             knockbackVelocity = knockbackDirection * KNOCKBACK_FORCE;
             knockbackTimer = KNOCKBACK_TIME;
+            invulnerabilityTimer = INVULNERABILITY_TIME;
             ApplyKnockback();
             player.TakeDamage();
-            invulnerabilityTimer = INVULNERABILITY_TIME;
         }
     }
 
