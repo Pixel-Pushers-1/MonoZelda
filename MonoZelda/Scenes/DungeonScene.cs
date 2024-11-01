@@ -16,6 +16,7 @@ using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Trigger;
+using Microsoft.Xna.Framework.Audio;
 
 namespace MonoZelda.Scenes;
 
@@ -36,7 +37,7 @@ public class DungeonScene : IScene
     private List<EnemyProjectileCollisionManager> enemyProjectileCollisions = new();
     private IDungeonRoom room;
     private string roomName;
-
+    private SoundEffect soundEffect;
 
     public DungeonScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room) 
     {
@@ -47,10 +48,18 @@ public class DungeonScene : IScene
         triggers = new List<ITrigger>();
     }
 
+    public void StopSound()
+    {
+        soundEffect.Dispose();
+    }
+
     public void LoadContent(ContentManager contentManager)
     {
         // Need to wait for LoadContent because MonoZeldaGame is going to clear everything before calling this.
         LoadRoom(contentManager);
+
+        // Load dungeon sound
+        soundEffect = contentManager.Load<SoundEffect>("Sound/LOZ_Dungeon_Theme");
 
         //create player and player collision manager
         player = new Player();
@@ -183,6 +192,8 @@ public class DungeonScene : IScene
                 entry.Value.Update(entry.Key.Width, entry.Key.Height, entry.Key.Pos);
             }
         }
+
+        soundEffect.Play();
 
         playerCollision.Update();
     }

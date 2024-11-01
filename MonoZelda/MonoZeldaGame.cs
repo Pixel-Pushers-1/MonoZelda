@@ -5,6 +5,7 @@ using MonoZelda.Sprites;
 using MonoZelda.Commands;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Scenes;
+using Microsoft.Xna.Framework.Audio;
 
 namespace MonoZelda;
 
@@ -28,7 +29,6 @@ public class MonoZeldaGame : Game
     private CollisionController collisionController;
     private CommandManager commandManager;
     private IDungeonRoomLoader dungeonManager;
-
     private IScene scene;
 
     public MonoZeldaGame()
@@ -116,6 +116,7 @@ public class MonoZeldaGame : Game
         if (scene is MainMenu)
         {
             // TODO: Passing MonoZeldaGame smells. It's used by some things to LoadContent, SpriteDict multiple AddSprite()
+            scene.StopSound();
             LoadDungeon("Room0");
         }
     }
