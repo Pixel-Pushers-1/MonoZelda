@@ -1,10 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MonoZelda.Dungeons.Parser
 {
@@ -19,7 +15,7 @@ namespace MonoZelda.Dungeons.Parser
             }
         }
 
-        internal static Rectangle GetCollisionRectangle(CollisionTileRect collisionRect, Point position, int tileWidth, int tileHeight)
+        private Rectangle GetCollisionRectangle(CollisionTileRect collisionRect, Point position, int tileWidth, int tileHeight)
         {
             return collisionRect switch
             {

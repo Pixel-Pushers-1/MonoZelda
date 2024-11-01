@@ -5,9 +5,6 @@ using MonoZelda.Sprites;
 using MonoZelda.Commands;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Scenes;
-using MonoZelda.Dungeons.Loader;
-using MonoZelda.Dungeons;
-using MonoZelda.Dungeons.Parser;
 
 namespace MonoZelda;
 
@@ -119,7 +116,7 @@ public class MonoZeldaGame : Game
         if (scene is MainMenu)
         {
             // TODO: Passing MonoZeldaGame smells. It's used by some things to LoadContent, SpriteDict multiple AddSprite()
-            LoadDungeon("Room5");
+            LoadDungeon("Room0");
         }
     }
 
