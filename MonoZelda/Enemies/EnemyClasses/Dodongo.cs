@@ -6,6 +6,7 @@ using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Link;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {

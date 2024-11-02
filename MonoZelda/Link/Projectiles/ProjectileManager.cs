@@ -4,9 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace MonoZelda.Link.Projectiles;
 
@@ -18,7 +16,7 @@ public class ProjectileManager
     private PlayerProjectileCollidable projectileCollidable;
     private CollisionController collisionController;
     private GraphicsDevice graphicsDevice;
-    private Projectile projectile;
+    private ProjectileFactory projectileFactory;
     private SpriteDict projectileDict;
 
     private Dictionary<Keys, ProjectileType> keyProjectileMap = new Dictionary<Keys, ProjectileType>
@@ -50,7 +48,7 @@ public class ProjectileManager
         this.collisionController = collisionController;
         this.graphicsDevice = graphicsDevice;
         this.projectileDict = projectileDict;
-        projectile = new Projectile(projectileDict, new Vector2(),Direction.Down);
+        projectileFactory = new ProjectileFactory(projectileDict, new Vector2(),Direction.Down);
     }
 
     private void setupProjectile(ProjectileType equippedProjectile)
@@ -74,26 +72,26 @@ public class ProjectileManager
 
     public void useSword(Player player)
     {
-        itemFired = projectile.GetProjectileObject(ProjectileType.WoodenSword, player);
+        itemFired = projectileFactory.GetProjectileObject(ProjectileType.WoodenSword, player);
         setupProjectile(ProjectileType.WoodenSword);
     }
 
     public void useSwordBeam(Player player)
     {
-        itemFired = projectile.GetProjectileObject(ProjectileType.WoodenSwordBeam, player);
+        itemFired = projectileFactory.GetProjectileObject(ProjectileType.WoodenSwordBeam, player);
         setupProjectile(ProjectileType.WoodenSwordBeam);
     }
 
     public void fireEquippedProjectile(Player player)
     {
-        itemFired = projectile.GetProjectileObject(equippedProjectile, player);
+        itemFired = projectileFactory.GetProjectileObject(equippedProjectile, player);
         if (itemFired is WoodenSword) {
             return;
         }
         setupProjectile(equippedProjectile);
     }
 
-    public void executeProjectile()
+    public void updatedProjectileState()
     {
         if (itemFired != null && !itemFired.hasFinished())
         {

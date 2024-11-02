@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MonoZelda.Sound;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Scenes;
@@ -18,14 +19,10 @@ public class MainMenu : IScene
         _graphicsDevice = graphicsDevice;
     }
 
-    public void StopSound()
-    {
-        soundEffect.Dispose();
-    }
 
     public void Update(GameTime gameTime)
     {
-        soundEffect.Play();
+        // To-do: animate waterfall
     }
 
     public void LoadContent(ContentManager contentManager)
@@ -33,6 +30,6 @@ public class MainMenu : IScene
         var dict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Title), SpriteCSVData.Title, 0, new Point(0,0));
         dict.SetSprite(nameof(MenuSprite.title));
 
-        soundEffect = contentManager.Load<SoundEffect>("Sound/LOZ_Intro");
+        SoundManager.PlaySound("LOZ_Intro", true);
     }
 }

@@ -1,10 +1,9 @@
 ﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
-using System;
 
 namespace MonoZelda.Link.Projectiles;
 
-public class Arrow : Projectile, IProjectile
+public class Arrow : ProjectileFactory, IProjectile
 {
     private bool Finished;
     private const float PROJECTILE_SPEED = 6f;

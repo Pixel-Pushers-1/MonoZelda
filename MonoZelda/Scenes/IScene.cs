@@ -5,7 +5,6 @@ namespace MonoZelda.Scenes;
 
 public interface IScene
 {
-    void StopSound();
     void Update(GameTime gameTime);
     void LoadContent(ContentManager contentManager);
 }

@@ -4,6 +4,7 @@ using MonoZelda.Controllers;
 using MonoZelda.Enemies;
 using MonoZelda.Link;
 using MonoZelda.Link.Projectiles;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Commands.CollisionCommands;
 

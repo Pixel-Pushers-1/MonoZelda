@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Link;
 
