@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace MonoZelda.Trigger
 {
-    internal class PushBlockTrigger : TriggerCollidable, ITrigger
+    internal class PushBlockTrigger : TriggerCollidable
     {
         private static readonly int PUSH_DELAY = 30;
         private int pushCounter = 0;
@@ -20,8 +20,6 @@ namespace MonoZelda.Trigger
         private readonly ICollidable staticCollider;
         private Direction pushDirection;
         private SpriteDict blockDict;
-
-        public List<ITrigger> TriggerActions { get; set; }
 
         // Overriding Bounds to enforce this trigger collider follows the static collider we create
         public new Rectangle Bounds
@@ -34,7 +32,6 @@ namespace MonoZelda.Trigger
             : base(new Rectangle(position, new Point(64, 64)), graphicsDevice)
         {
             collisionManager = colliderManager;
-            TriggerActions = new List<ITrigger>();
 
             var rect = new Rectangle(position, new Point(64, 64));
 
@@ -50,6 +47,8 @@ namespace MonoZelda.Trigger
             setSpriteDict(blockDict);
 
             destination = staticCollider.Bounds.Location;
+
+            OnTrigger += PushTrigger;
         }
 
         // Need to make Intersect use our static collider Bounds proxy.
@@ -79,7 +78,7 @@ namespace MonoZelda.Trigger
             pushCounter = Math.Max(0, pushCounter - 1);
         }
 
-        public void Trigger(Direction direction)
+        public void PushTrigger(Direction direction)
         {
             if(pushCounter > PUSH_DELAY)
             {
@@ -89,12 +88,7 @@ namespace MonoZelda.Trigger
                 // We don't want trigger this again
                 UnregisterHitbox();
                 collisionManager.RemoveCollidable(this);
-
-                // Trigger the next action
-                foreach (ITrigger action in TriggerActions)
-                {
-                    action.Trigger(direction);
-                }
+                OnTrigger -= PushTrigger; // Allways clean up your events
             }
 
             // +2 to overcome the -1 on update

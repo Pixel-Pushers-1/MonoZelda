@@ -79,5 +79,6 @@ room_40,768,864,192,112,1,top left
 room_41,960,864,192,112,1,top left
 room_42,0,1008,192,112,1,top left
 room_43,192,1008,192,112,1,top left
+room_black,960,1008,192,112,1,top left
 room_item,416,1008,256,160,1,top left
 room_passage,672,1008,256,160,1,top left

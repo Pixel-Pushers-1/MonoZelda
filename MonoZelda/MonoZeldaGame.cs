@@ -28,9 +28,7 @@ public class MonoZeldaGame : Game
     private SpriteBatch spriteBatch;
     private KeyboardController keyboardController;
     private MouseController mouseController;
-    private CollisionController collisionController;
     private CommandManager commandManager;
-    private IDungeonRoomLoader dungeonManager;
 
     private IScene scene;
 
@@ -51,7 +49,6 @@ public class MonoZeldaGame : Game
         // create controller objects
         keyboardController = new KeyboardController(commandManager);
         mouseController = new MouseController(commandManager);
-        collisionController = new CollisionController(commandManager);
     }
 
     protected override void Initialize()
@@ -61,15 +58,17 @@ public class MonoZeldaGame : Game
         graphicsDeviceManager.PreferredBackBufferHeight = 896;
         graphicsDeviceManager.ApplyChanges();
 
-        dungeonManager = new DungeonManager();
-
         base.Initialize();
     }
+
+    SpriteFont testFont;
 
     protected override void LoadContent()
     {
         spriteBatch = new SpriteBatch(GraphicsDevice);
-        
+
+        testFont = Content.Load<SpriteFont>("Fonts/Basic");
+
         // Start menu goes first
         StartMenu();
     }
@@ -80,19 +79,19 @@ public class MonoZeldaGame : Game
         keyboardController.Update(gameTime);
         mouseController.Update(gameTime);
         scene.Update(gameTime);
-        collisionController.Update(gameTime);
 
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
+        GraphicsDevice.Clear(Color.Black);
 
         spriteBatch.Begin();
 
         // SpriteDrawer draws all drawables
         SpriteDrawer.Draw(spriteBatch, gameTime);
+        scene.Draw(spriteBatch);
 
         spriteBatch.End();
 
@@ -103,36 +102,31 @@ public class MonoZeldaGame : Game
     {
         // Clean state to start a new scene
         SpriteDrawer.Reset();
-        collisionController.Clear();
         this.scene = scene;
         scene.LoadContent(Content);
     }
 
     public void StartMenu()
     {
-        LoadScene(new MainMenu(GraphicsDevice));
+        LoadScene(new MainMenuScene(GraphicsDevice));
     }
 
     public void StartDungeon()
     {
         // Preventing the StartCommand from activating when it shouldn't. -js
-        if (scene is MainMenu)
+        if (scene is MainMenuScene)
         {
-            // TODO: Passing MonoZeldaGame smells. It's used by some things to LoadContent, SpriteDict multiple AddSprite()
             LoadDungeon("Room5");
         }
     }
 
     public void LoadDungeon(string roomName)
     {
-        var room = dungeonManager.LoadRoom(roomName);
-        commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this, room));
-
-        LoadScene(new DungeonScene(GraphicsDevice, commandManager, collisionController, room));
+        LoadScene(new DungeonScene(roomName, GraphicsDevice, commandManager));
     }
 
-    public CollisionController GetCollisionController() 
+    public void ResetGame()
     {
-        return collisionController;
+        LoadScene(new MainMenuScene(GraphicsDevice));
     }
 }

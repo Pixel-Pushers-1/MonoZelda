@@ -18,6 +18,7 @@ public enum CommandType
     PlayerStandingCommand,
     StartGameCommand,
     LoadRoomCommand,
+    RoomTransitionCommand,
     PlayerItemCollisionCommand,
     PlayerEnemyCollisionCommand,
     PlayerEnemyProjectileCollisionCommand,
@@ -49,6 +50,7 @@ public class CommandManager
         AddCommand(CommandType.ResetCommand, new ResetCommand());
         AddCommand(CommandType.StartGameCommand, new StartGameCommand());
         AddCommand(CommandType.LoadRoomCommand, new LoadRoomCommand());
+        AddCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand());
         AddCommand(CommandType.PlayerItemCollisionCommand, new PlayerItemCollisionCommand());
         AddCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand());
         AddCommand(CommandType.PlayerEnemyProjectileCollisionCommand, new PlayerEnemyProjectileCollisionCommand());
@@ -80,6 +82,16 @@ public class CommandManager
         {
             return false;
         }
+    }
+
+    public ICommand GetCommand(CommandType commandType)
+    {
+        if(!commandMap.ContainsKey(commandType))
+        {
+            return default;
+        }
+
+        return commandMap[commandType];
     }
 
     private bool AddCommand(CommandType commandName, ICommand command)

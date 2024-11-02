@@ -7,7 +7,7 @@ namespace MonoZelda.Dungeons
 {
     internal class DungeonRoom : IDungeonRoom
     {
-        private List<IDoor> doors;
+        private List<DoorSpawn> doors;
         private List<Rectangle> roomColliders;
         private List<Rectangle> boundaryColliders;        
         private List<ItemSpawn> itemSpawns;
@@ -16,13 +16,14 @@ namespace MonoZelda.Dungeons
 
         public string RoomName { get; private set; }
         public Dungeon1Sprite RoomSprite { get; private set; }
+        public Point SpawnPoint { get; set; }
 
         public DungeonRoom(string name, Dungeon1Sprite roomSprite)
         {
             RoomName = name;
             RoomSprite = roomSprite;
 
-            doors = new List<IDoor>();
+            doors = new List<DoorSpawn>();
             roomColliders = new List<Rectangle>();
             boundaryColliders = new List<Rectangle>();
             itemSpawns = new List<ItemSpawn>();
@@ -30,12 +31,12 @@ namespace MonoZelda.Dungeons
             triggers = new List<TriggerSpawn>();
         }
 
-        public List<IDoor> GetDoors()
+        public List<DoorSpawn> GetDoors()
         {
             return doors;
         }
 
-        public void AddDoor(IDoor door)
+        public void AddDoor(DoorSpawn door)
         {
             doors.Add(door);
         }
