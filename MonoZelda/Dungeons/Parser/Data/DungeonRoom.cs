@@ -17,12 +17,12 @@ namespace MonoZelda.Dungeons
         public string RoomName { get; private set; }
         public Dungeon1Sprite RoomSprite { get; private set; }
 
-        public DungeonRoom(string name, Dungeon1Sprite roomSprite, List<IDoor> doors)
+        public DungeonRoom(string name, Dungeon1Sprite roomSprite)
         {
-            this.doors = doors;
             RoomName = name;
             RoomSprite = roomSprite;
 
+            doors = new List<IDoor>();
             roomColliders = new List<Rectangle>();
             boundaryColliders = new List<Rectangle>();
             itemSpawns = new List<ItemSpawn>();
@@ -33,6 +33,11 @@ namespace MonoZelda.Dungeons
         public List<IDoor> GetDoors()
         {
             return doors;
+        }
+
+        public void AddDoor(IDoor door)
+        {
+            doors.Add(door);
         }
 
         public void AddTrigger(TriggerSpawn trigger)

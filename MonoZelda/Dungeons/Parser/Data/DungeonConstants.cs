@@ -5,7 +5,7 @@ namespace MonoZelda.Dungeons;
 
 public static class DungeonConstants
 {
-    public static readonly string Dungeon1 = "https://docs.google.com/spreadsheets/d/1LJPdekWHcv_nLglTE_mb_izUfJeQiEXoGHPhfGcHD-M/gviz/tq?tqx=out:csv&sheet=";
+    public static readonly string DungeonOneUri = "https://docs.google.com/spreadsheets/d/1LJPdekWHcv_nLglTE_mb_izUfJeQiEXoGHPhfGcHD-M/gviz/tq?tqx=out:csv&sheet=";
 
     public static readonly int TileWidth = 64;
     public static readonly int TileHeight = 64;
