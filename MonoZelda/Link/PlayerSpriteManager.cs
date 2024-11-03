@@ -22,7 +22,7 @@ public class PlayerSpriteManager
     private Vector2 playerPosition;
     private float playerSpeed = 4.0f;
     private double timer;
-    private PlayerStateMachine playerStateMachine;
+    private PlayerState playerStateMachine;
 
     private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
     {
@@ -35,7 +35,7 @@ public class PlayerSpriteManager
     public PlayerSpriteManager()
     {
         playerPosition = new Vector2(500, 500);
-        playerStateMachine = new PlayerStateMachine(this);
+        playerStateMachine = new PlayerState(this);
     }
 
     public Direction PlayerDirection
@@ -167,7 +167,7 @@ public class PlayerSpriteManager
             }
         }
     }
-    public PlayerStateMachine PlayerStateMachine
+    public PlayerState PlayerStateMachine
     {
         get => playerStateMachine;
         set => playerStateMachine = value;
