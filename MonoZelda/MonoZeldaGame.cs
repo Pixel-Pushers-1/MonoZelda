@@ -27,7 +27,7 @@ public class MonoZeldaGame : Game
     private MouseController mouseController;
     private CollisionController collisionController;
     private CommandManager commandManager;
-    private IDungeonRoomLoader dungeonLoader;
+    private IDungeonRoomLoader dungeonManager;
 
     private IScene scene;
 
@@ -58,7 +58,7 @@ public class MonoZeldaGame : Game
         graphicsDeviceManager.PreferredBackBufferHeight = 896;
         graphicsDeviceManager.ApplyChanges();
 
-        dungeonLoader = new HTTPRoomParser(Content,GraphicsDevice);
+        dungeonManager = new DungeonManager();
 
         base.Initialize();
     }
@@ -116,13 +116,13 @@ public class MonoZeldaGame : Game
         if (scene is MainMenu)
         {
             // TODO: Passing MonoZeldaGame smells. It's used by some things to LoadContent, SpriteDict multiple AddSprite()
-            LoadDungeon("Room5");
+            LoadDungeon("Room0");
         }
     }
 
     public void LoadDungeon(string roomName)
     {
-        var room = dungeonLoader.LoadRoom(roomName);
+        var room = dungeonManager.LoadRoom(roomName);
         commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this, room));
 
         LoadScene(new DungeonScene(GraphicsDevice, commandManager, collisionController, room));
