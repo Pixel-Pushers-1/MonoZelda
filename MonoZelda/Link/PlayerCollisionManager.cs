@@ -13,8 +13,8 @@ public class PlayerCollisionManager
     private PlayerCollidable playerHitbox;
     private const float KNOCKBACK_FORCE = 8f;
     private Vector2 knockbackVelocity;
-    private int invulnerabilityFrames = 0; 
-    private int knockbackFramesRemaining = 0; 
+    private int knockbackFramesRemaining = 0;
+    private int invulnerabilityFramesRemaining = 0;
 
     public PlayerCollisionManager(PlayerSpriteManager player, PlayerCollidable playerHitbox, CollisionController collisionController)
     {
@@ -23,7 +23,6 @@ public class PlayerCollisionManager
         this.width = 64;
         this.height = 64;
 
-       
         Vector2 playerPosition = player.GetPlayerPosition();
         Rectangle bounds = new Rectangle(
             (int)playerPosition.X - width / 2,
@@ -31,7 +30,6 @@ public class PlayerCollisionManager
             width,
             height
         );
-
         playerHitbox.Bounds = bounds;
         playerHitbox.setCollisionManager(this);
     }
@@ -39,19 +37,16 @@ public class PlayerCollisionManager
     public void Update()
     {
         UpdateBoundingBox();
-        if (invulnerabilityFrames > 0)
-        {
-            invulnerabilityFrames--; 
-        }
+
         if (knockbackFramesRemaining > 0)
         {
             ApplyKnockback();
-            knockbackFramesRemaining--; 
+            knockbackFramesRemaining--;
         }
 
-        if (knockbackFramesRemaining <= 0)
+        if (invulnerabilityFramesRemaining > 0)
         {
-            EndEnemyCollision(); 
+            invulnerabilityFramesRemaining--;
         }
     }
 
@@ -64,26 +59,23 @@ public class PlayerCollisionManager
             width,
             height
         );
-
         playerHitbox.Bounds = newBounds;
     }
 
     public void HandleEnemyProjectileCollision(Direction collisionDirection)
     {
-        if (invulnerabilityFrames <= 0) 
+        if (invulnerabilityFramesRemaining > 0) return;
+
+        if ((int)player.PlayerDirection + (int)collisionDirection == 0)
         {
-            if ((int)player.PlayerDirection + (int)collisionDirection == 0)
-            {
-                player.TakeDamage();
-                invulnerabilityFrames = 1000;
-            }
+            player.TakeDamage();
+            invulnerabilityFramesRemaining = 60;
         }
     }
 
     public void HandleStaticCollision(Direction collisionDirection, Rectangle intersection)
     {
         Vector2 currentPos = player.GetPlayerPosition();
-
         switch (collisionDirection)
         {
             case Direction.Left:
@@ -104,21 +96,18 @@ public class PlayerCollisionManager
 
     public void HandleEnemyCollision(Direction collisionDirection)
     {
-        if (knockbackFramesRemaining == 0) 
+        if (invulnerabilityFramesRemaining > 0) return;
+
+        if (knockbackFramesRemaining == 0)
         {
             Vector2 currentPos = player.GetPlayerPosition();
             Vector2 knockbackDirection = GetKnockbackDirection(collisionDirection);
             knockbackVelocity = knockbackDirection * KNOCKBACK_FORCE;
             knockbackFramesRemaining = 12;
-            invulnerabilityFrames = 100000;
             ApplyKnockback();
             player.TakeDamage();
+            invulnerabilityFramesRemaining = 60;
         }
-    }
-
-    public void EndEnemyCollision()
-    {
-        knockbackFramesRemaining = 0; 
     }
 
     private void ApplyKnockback()
