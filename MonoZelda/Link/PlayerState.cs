@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MonoZelda.Link
 {
-    public class PlayerStateMachine
+    public class PlayerState
     {
         private int health;
         private int rupees;
@@ -15,8 +15,8 @@ namespace MonoZelda.Link
         private int keys;
         private bool isDead;
         private bool isKnockedBack;
-        private Player player;
-        public PlayerStateMachine(Player player)
+        private PlayerSpriteManager player;
+        public PlayerState(PlayerSpriteManager player)
         {
             health = 1;
             rupees = 0;

@@ -23,7 +23,7 @@ public class DungeonScene : IScene
 {
     private GraphicsDevice graphicsDevice;
     private CommandManager commandManager;
-    private Player player;
+    private PlayerSpriteManager player;
     private ProjectileManager projectileManager;
     private PlayerCollisionManager playerCollision;
     private CollisionController collisionController;
@@ -53,7 +53,7 @@ public class DungeonScene : IScene
         LoadRoom(contentManager);
 
         //create player and player collision manager
-        player = new Player();
+        player = new PlayerSpriteManager();
         PlayerCollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50), graphicsDevice);
         collisionController.AddCollidable(playerHitbox);
         playerCollision = new PlayerCollisionManager(player, playerHitbox, collisionController);

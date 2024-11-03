@@ -9,14 +9,14 @@ public class PlayerCollisionManager
 {
     private readonly int width;
     private readonly int height;
-    private Player player;
+    private PlayerSpriteManager player;
     private PlayerCollidable playerHitbox;
     private const float KNOCKBACK_FORCE = 8f;
     private Vector2 knockbackVelocity;
     private int invulnerabilityFrames = 0; 
     private int knockbackFramesRemaining = 0; 
 
-    public PlayerCollisionManager(Player player, PlayerCollidable playerHitbox, CollisionController collisionController)
+    public PlayerCollisionManager(PlayerSpriteManager player, PlayerCollidable playerHitbox, CollisionController collisionController)
     {
         this.player = player;
         this.playerHitbox = playerHitbox;

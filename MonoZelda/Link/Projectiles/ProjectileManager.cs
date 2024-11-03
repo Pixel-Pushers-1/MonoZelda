@@ -4,9 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace MonoZelda.Link.Projectiles;
 
@@ -72,24 +70,21 @@ public class ProjectileManager
         itemFired.FinishProjectile();
     }
 
-    public void useSword(Player player)
+    public void useSword(PlayerSpriteManager player)
     {
         itemFired = projectile.GetProjectileObject(ProjectileType.WoodenSword, player);
         setupProjectile(ProjectileType.WoodenSword);
     }
 
-    public void useSwordBeam(Player player)
+    public void useSwordBeam(PlayerSpriteManager player)
     {
         itemFired = projectile.GetProjectileObject(ProjectileType.WoodenSwordBeam, player);
         setupProjectile(ProjectileType.WoodenSwordBeam);
     }
 
-    public void fireEquippedProjectile(Player player)
+    public void fireEquippedProjectile(PlayerSpriteManager player)
     {
         itemFired = projectile.GetProjectileObject(equippedProjectile, player);
-        if (itemFired is WoodenSword) {
-            return;
-        }
         setupProjectile(equippedProjectile);
     }
 

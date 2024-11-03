@@ -13,10 +13,10 @@ public class BoomerangBlue : Projectile, IProjectile
     private Vector2 initialPosition;
     private Vector2 Dimension = new Vector2(8, 8);
     private SpriteDict projectileDict;
-    private Player player;
+    private PlayerSpriteManager player;
     private TrackReturn tracker;
 
-    public BoomerangBlue(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection, Player player)
+    public BoomerangBlue(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection, PlayerSpriteManager player)
     : base(projectileDict, playerPosition, playerDirection)
     {
         this.projectileDict = projectileDict;

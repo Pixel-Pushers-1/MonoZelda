@@ -15,14 +15,14 @@ public enum Direction {
     Right = -10,
 }
 
-public class Player
+public class PlayerSpriteManager
 {
     private Direction playerDirection;
     private SpriteDict playerSpriteDict;
     private Vector2 playerPosition;
     private float playerSpeed = 4.0f;
     private double timer;
-    private PlayerStateMachine playerStateMachine;
+    private PlayerState playerStateMachine;
 
     private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
     {
@@ -32,10 +32,10 @@ public class Player
        { Direction.Right, "right" }
     };
 
-    public Player()
+    public PlayerSpriteManager()
     {
         playerPosition = new Vector2(500, 500);
-        playerStateMachine = new PlayerStateMachine(this);
+        playerStateMachine = new PlayerState(this);
     }
 
     public Direction PlayerDirection
@@ -170,7 +170,7 @@ public class Player
             }
         }
     }
-    public PlayerStateMachine PlayerStateMachine
+    public PlayerState PlayerStateMachine
     {
         get => playerStateMachine;
         set => playerStateMachine = value;
