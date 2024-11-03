@@ -57,9 +57,13 @@ public class PlayerCollisionManager
 
     public void HandleEnemyProjectileCollision(Direction collisionDirection)
     {
-        if((int)player.PlayerDirection + (int)collisionDirection == 0)
+        if ((int)player.PlayerDirection + (int)collisionDirection == 0)
         {
             player.TakeDamage();
+        }
+        else
+        {
+            SoundManager.PlaySound("LOZ_Shield", false);
         }
     }
 
@@ -87,6 +91,7 @@ public class PlayerCollisionManager
 
     public void HandleEnemyCollision(Direction collisionDirection)
     {
+        SoundManager.PlaySound("LOZ_Link_Hurt",false);
         Vector2 currentPos = player.GetPlayerPosition();
         Vector2 knockbackDirection = GetKnockbackDirection(collisionDirection);
         knockbackVelocity = knockbackDirection * KNOCKBACK_FORCE;

@@ -97,9 +97,14 @@ namespace MonoZelda.Enemies.EnemyClasses
                 health--;
                 if (health == 0)
                 {
+                    SoundManager.PlaySound("LOZ_Enemy_Hit", false);
                     stateMachine.Die();
                     EnemyHitbox.UnregisterHitbox();
                     collisionController.RemoveCollidable(EnemyHitbox);
+                }
+                else
+                {
+                    SoundManager.PlaySound("LOZ_Enemy_Die", false);
                 }
             }
         }

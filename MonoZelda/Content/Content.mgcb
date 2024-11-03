@@ -26,6 +26,12 @@
 /processorParam:Quality=Best
 /build:Sound/LOZ_Arrow_Boomerang.wav
 
+#begin Sound/LOZ_Better_Theme.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/LOZ_Better_Theme.wav
+
 #begin Sound/LOZ_Bomb_Blow.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
