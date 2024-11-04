@@ -23,6 +23,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
         private readonly GraphicsDevice graphicsDevice;
         private CollisionController collisionController;
+        private EnemyCollisionManager enemyCollision;
 
         private int tileSize = 64;
         private double spawnTimer;
@@ -48,6 +49,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
             Pos = spawnPosition;
+            enemyCollision = new EnemyCollisionManager(this, collisionController, Width, Height);
             pixelsMoved = 0;
             spawnTimer = 0;
             readyToJump = false;
@@ -107,6 +109,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 spawnTimer = spawnTimer + dt;
             }
             Pos = stateMachine.Update(this, Pos, gameTime);
+            enemyCollision.Update(Width,Height,Pos);
         }
 
         public void TakeDamage(Boolean stun, Direction collisionDirection)

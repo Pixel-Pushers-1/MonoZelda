@@ -11,71 +11,39 @@ namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Trap : IEnemy
     {
-        private EnemyStateMachine stateMachine;
         public Point Pos { get; set; }
-        private readonly Random rnd = new();
-        private SpriteDict trapSpriteDict;
-        private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
-        private GraphicsDevice graphicsDevice;
-        private int pixelsMoved;
-        public EnemyCollidable EnemyHitbox { get; set; }
-        private EnemyCollidable horizontalHitbox;
-        private EnemyCollidable verticalHitbox;
         public int Width { get; set; }
         public int Height { get; set; }
         public bool Alive { get; set; }
+        public EnemyCollidable EnemyHitbox { get; set; }
+        private readonly Random rnd = new();
+        private EnemyStateMachine stateMachine;
+        private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
+        private GraphicsDevice graphicsDevice;
+        private CollisionController collisionController;
+        private EnemyCollisionManager enemyCollision;
 
         private int tileSize = 64;
 
         public Trap(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
-            Width = 64;
-            Height = 64;
+            Width = 48;
+            Height = 48;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
             ContentManager contentManager)
         {
-            trapSpriteDict = enemyDict;
-            trapSpriteDict.Position = spawnPosition;
+            this.collisionController = collisionController;
+            enemyDict.Position = spawnPosition;
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Trap);
             collisionController.AddCollidable(EnemyHitbox);
-            verticalHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Trap);
-            horizontalHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Trap);
-            if (spawnPosition.X < 400)
-            {
-                if (spawnPosition.Y > 400)
-                {
-                    horizontalHitbox.Bounds = new Rectangle(tileSize*2, tileSize*11, Width * 12, Height);
-                    verticalHitbox.Bounds = new Rectangle(tileSize*2, tileSize * 5, Width, Height * 7);
-                }
-                else
-                {
-                    horizontalHitbox.Bounds = new Rectangle(tileSize * 2, tileSize * 5, Width * 12, Height);
-                    verticalHitbox.Bounds = new Rectangle(tileSize * 2, tileSize * 5, Width, Height * 7);
-                }
-            }
-            else
-            {
-                if (spawnPosition.Y > 400)
-                {
-                    horizontalHitbox.Bounds = new Rectangle(tileSize * 2, tileSize * 11, Width * 12, Height);
-                    verticalHitbox.Bounds = new Rectangle(tileSize * 13, tileSize * 5, Width, Height * 7);
-                }
-                else
-                {
-                    horizontalHitbox.Bounds = new Rectangle(tileSize * 2, tileSize * 5, Width * 12, Height);
-                    verticalHitbox.Bounds = new Rectangle(tileSize * 13, tileSize * 5, Width, Height * 7);
-                }
-            }
-            collisionController.AddCollidable(horizontalHitbox);
-            collisionController.AddCollidable(verticalHitbox);
-            EnemyHitbox.setSpriteDict(trapSpriteDict); 
-            trapSpriteDict.SetSprite("bladetrap");
+            EnemyHitbox.setSpriteDict(enemyDict); 
             Pos = spawnPosition;
-            pixelsMoved = 0;
+            enemyCollision = new EnemyCollisionManager(this, collisionController, Width, Height);
             stateMachine = new EnemyStateMachine(enemyDict);
+            stateMachine.SetSprite("bladetrap");
         }
         public void ChangeDirection()
         {
@@ -83,12 +51,12 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Update(GameTime gameTime)
         {
+            enemyCollision.Update(Width, Height, Pos);
         }
 
         public void TakeDamage(Boolean stun, Direction collisionDirection)
         {
-            trapSpriteDict.Enabled = false;
-            EnemyHitbox.UnregisterHitbox();
+            //cannot take damage
         }
     }
 }

@@ -24,6 +24,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.Left;
         private CollisionController collisionController;
         private ContentManager contentManager;
+        private EnemyCollisionManager enemyCollision;
 
         private List<IEnemyProjectile> fireballs = new();
         private Dictionary<IEnemyProjectile, EnemyProjectileCollisionManager> projectileDictionary = new();
@@ -61,6 +62,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
             Pos = spawnPosition;
+            enemyCollision = new EnemyCollisionManager(this, collisionController, Width, Height);
             pixelsMoved = 0;
             stateMachine = new EnemyStateMachine(enemyDict);
             stateMachine.SetSprite("aquamentus_left");
@@ -155,6 +157,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             {
                 entry.Value.Update();
             }
+            enemyCollision.Update(Width, Height, new Point(Pos.X - 16, Pos.Y - 16));
         }
 
         public void TakeDamage(Boolean stun, Direction collisionDirection)

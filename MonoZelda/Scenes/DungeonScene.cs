@@ -12,6 +12,7 @@ using MonoZelda.Items;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Enemies;
 using System.Collections.Generic;
+using System.Linq;
 using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.Enemies.EnemyClasses;
@@ -111,10 +112,6 @@ public class DungeonScene : IScene
         {
             enemies.Add(enemyFactory.CreateEnemy(enemySpawn.EnemyType, new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32)));
         }
-        foreach (var enemy in enemies)
-        {
-            enemyDictionary.Add(enemy, new EnemyCollisionManager(enemy, collisionController, enemy.Width, enemy.Height));
-        }
     }
 
     private void CreateStaticColliders()
@@ -166,22 +163,13 @@ public class DungeonScene : IScene
             projectileManager.executeProjectile();
         }
 
-        foreach(KeyValuePair<IEnemy, EnemyCollisionManager> entry in enemyDictionary)
+        foreach(var enemy in enemies.ToList())
         {
-            if (!entry.Key.Alive) // remove dead enemies from lists (hopefully this is useful for re-entering rooms)
+            if (!enemy.Alive)
             {
-                enemies.Remove(entry.Key);
-                enemyDictionary.Remove(entry.Key);
+                enemies.Remove(enemy);
             }
-            entry.Key.Update(gameTime);
-            if (entry.Key.GetType() == typeof(Aquamentus))
-            {
-                entry.Value.Update(entry.Key.Width, entry.Key.Height, new Point(entry.Key.Pos.X - 16, entry.Key.Pos.Y - 16));
-            }
-            else
-            {
-                entry.Value.Update(entry.Key.Width, entry.Key.Height, entry.Key.Pos);
-            }
+            enemy.Update(gameTime);
         }
 
         playerCollision.Update();

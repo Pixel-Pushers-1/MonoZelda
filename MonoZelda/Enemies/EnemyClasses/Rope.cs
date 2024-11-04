@@ -21,6 +21,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         private GraphicsDevice graphicsDevice;
         private EnemyStateMachine stateMachine;
         private CollisionController collisionController;
+        private EnemyCollisionManager enemyCollision;
 
         private int pixelsMoved;
         private int health = 3;
@@ -43,6 +44,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
             Pos = spawnPosition;
+            enemyCollision = new EnemyCollisionManager(this, collisionController, Width, Height);
             pixelsMoved = 0;
             stateMachine = new EnemyStateMachine(enemyDict);
         }
@@ -82,6 +84,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 pixelsMoved++;
             }
             Pos = stateMachine.Update(this, Pos, gameTime);
+            enemyCollision.Update(Width, Height, Pos);
         }
 
         public void TakeDamage(Boolean stun, Direction collisionDirection)

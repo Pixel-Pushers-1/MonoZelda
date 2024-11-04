@@ -28,6 +28,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         private IEnemyProjectile projectile;
         private EnemyProjectileCollisionManager projectileCollision;
         private CollisionController collisionController;
+        private EnemyCollisionManager enemyCollision;
         private int pixelsMoved;
         private int tileSize = 64;
         private int health = 3;
@@ -50,6 +51,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
             Pos = spawnPosition;
+            enemyCollision = new EnemyCollisionManager(this, collisionController, Width, Height);
             pixelsMoved = 0;
             stateMachine = new EnemyStateMachine(enemyDict);
             projectile = new GoriyaBoomerang(spawnPosition, contentManager, graphicsDevice, collisionController);
@@ -116,6 +118,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Pos = stateMachine.Update(this, Pos, gameTime);
             projectileCollision.Update();
             pixelsMoved++;
+            enemyCollision.Update(Width,Height,Pos);
         }
         public void TakeDamage(Boolean stun, Direction collisionDirection)
         {

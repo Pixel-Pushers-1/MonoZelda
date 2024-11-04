@@ -21,6 +21,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
         private readonly GraphicsDevice graphicsDevice;
         private CollisionController collisionController;
+        private EnemyCollisionManager enemyCollision;
         private int pixelsMoved;
         private double speedUpTimer;
         private double dt;
@@ -42,8 +43,8 @@ namespace MonoZelda.Enemies.EnemyClasses
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
-            enemyDict.SetSprite("cloud");
             Pos = spawnPosition;
+            enemyCollision = new EnemyCollisionManager(this, collisionController, Width, Height);
             pixelsMoved = 0;
             speed = 0;
             speedUpTimer = 0;
@@ -102,6 +103,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 pixelsMoved++;
             }
             Pos = stateMachine.Update(this, Pos, gameTime);
+            enemyCollision.Update(Width, Height, Pos);
         }
 
         public void TakeDamage(Boolean stun, Direction collisionDirection)

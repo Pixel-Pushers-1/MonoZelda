@@ -116,7 +116,7 @@ public class MonoZeldaGame : Game
         if (scene is MainMenu)
         {
             // TODO: Passing MonoZeldaGame smells. It's used by some things to LoadContent, SpriteDict multiple AddSprite()
-            LoadDungeon("Room0");
+            LoadDungeon("RoomTest");
         }
     }
 

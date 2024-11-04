@@ -25,6 +25,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         private int health = 2;
         private readonly int tileSize = 64;
         private readonly Random rnd = new();
+        private EnemyCollisionManager enemyCollision;
 
         public Stalfos(GraphicsDevice graphicsDevice)
         {
@@ -42,6 +43,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
             Pos = spawnPosition;
+            enemyCollision = new EnemyCollisionManager(this, collisionController, Width, Height);
             pixelsMoved = 0;
             stateMachine = new EnemyStateMachine(enemyDict);
             stateMachine.SetSprite("stalfos");
@@ -79,6 +81,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 pixelsMoved++;
             }
             Pos = stateMachine.Update(this,Pos,gameTime);
+            enemyCollision.Update(Width, Height, Pos);
         }
 
         public void TakeDamage(Boolean stun, Direction collisionDirection)
