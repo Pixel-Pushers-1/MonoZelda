@@ -88,6 +88,7 @@ namespace MonoZelda.HUD
         }
         public void UpdateHeartDisplay()
         {
+            Debug.WriteLine("UPDATE");
             for (int i = hearts.Count - 1; i >= PlayerState.Health; i--)
             {
                 hearts[i].SetSprite("heart_empty");
@@ -96,7 +97,7 @@ namespace MonoZelda.HUD
         }
         public void UpdateSelectedWeapon()
         {
-            
+
             ProjectileType projectileType = projectileManager.EquippedProjectile;
             Debug.WriteLine(projectileType.ToString());
             string spriteName = projectileSpriteMap.TryGetValue(projectileType, out var name) ? name : "arrow";
