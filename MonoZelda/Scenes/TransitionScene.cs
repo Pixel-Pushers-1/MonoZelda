@@ -60,6 +60,21 @@ namespace MonoZelda.Scenes
             spritesToMove.Add(nextBorderSpriteDict);
             spritesToMove.Add(currentRoomSpriteDict);
             spritesToMove.Add(nextRoomSpriteDict);
+
+            // create Door spriteDicts
+            foreach(var currentDoorSpawn in currentRoom.GetDoors())
+            {
+                SpriteDict doorDict = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks, SpriteLayer.Transition, currentDoorSpawn.Position);
+                doorDict.SetSprite(currentDoorSpawn.Type.ToString());
+                spritesToMove.Add(doorDict);
+            }
+
+            foreach (var nextDoorSpawn in nextRoom.GetDoors())
+            {
+                SpriteDict doorDict = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks, SpriteLayer.Transition, nextDoorSpawn.Position + DungeonConstants.adjacentRoomSpawnPoints[TransitionDirection]);
+                doorDict.SetSprite(nextDoorSpawn.Type.ToString());
+                spritesToMove.Add(doorDict);
+            }
         }
 
         public override void Update(GameTime gameTime)
@@ -77,7 +92,6 @@ namespace MonoZelda.Scenes
             }
             else
             {
-                // TODO: If done, 
                 loadCommand.Execute(nextRoom.RoomName);
             }
         }
