@@ -50,11 +50,11 @@ public class DungeonScene : IScene
 
     public void LoadContent(ContentManager contentManager)
     {
+        player = new Player();
         // Need to wait for LoadContent because MonoZeldaGame is going to clear everything before calling this.
         LoadRoom(contentManager);
 
         //create player and player collision manager
-        player = new Player();
         PlayerCollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50), graphicsDevice);
         collisionController.AddCollidable(playerHitbox);
         playerCollision = new PlayerCollisionManager(player, playerHitbox, collisionController);
@@ -107,7 +107,7 @@ public class DungeonScene : IScene
 
     private void SpawnEnemies(ContentManager contentManager)
     {
-        enemyFactory = new EnemyFactory(collisionController, contentManager, graphicsDevice);
+        enemyFactory = new EnemyFactory(collisionController, contentManager, graphicsDevice, player);
         foreach(var enemySpawn in room.GetEnemySpawns())
         {
             enemies.Add(enemyFactory.CreateEnemy(enemySpawn.EnemyType, new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32)));

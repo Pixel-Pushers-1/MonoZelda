@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using MonoZelda.Items.ItemClasses;
+using MonoZelda.Link;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies
@@ -17,12 +18,14 @@ namespace MonoZelda.Enemies
         private CollisionController collisionController;
         private ContentManager contentManager;
         private GraphicsDevice graphicsDevice;
+        private Player player;
 
-        public EnemyFactory(CollisionController collisionController, ContentManager contentManager, GraphicsDevice graphicsDevice)
+        public EnemyFactory(CollisionController collisionController, ContentManager contentManager, GraphicsDevice graphicsDevice, Player player)
         {
             this.collisionController = collisionController;
             this.contentManager = contentManager;
             this.graphicsDevice = graphicsDevice;
+            this.player = player;
         }
 
         public IEnemy CreateEnemy(EnemyList enemyName, Point spawnPosition)
@@ -30,7 +33,7 @@ namespace MonoZelda.Enemies
             var enemyDict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Enemies), SpriteCSVData.Enemies, 0, new Point(0, 0));
             var enemyType = Type.GetType($"MonoZelda.Enemies.EnemyClasses.{enemyName}");
             IEnemy enemy = (IEnemy)Activator.CreateInstance(enemyType, graphicsDevice);
-            enemy.EnemySpawn(enemyDict, spawnPosition, collisionController, contentManager);
+            enemy.EnemySpawn(enemyDict, spawnPosition, collisionController, contentManager, player);
 
             return enemy;
         }

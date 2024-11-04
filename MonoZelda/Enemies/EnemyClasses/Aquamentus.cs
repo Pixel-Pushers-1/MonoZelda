@@ -52,7 +52,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            ContentManager contentManager)
+            ContentManager contentManager, Player player)
         {
             this.collisionController = collisionController;
             this.contentManager = contentManager;

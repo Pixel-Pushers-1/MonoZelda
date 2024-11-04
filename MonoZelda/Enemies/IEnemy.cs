@@ -20,7 +20,7 @@ namespace MonoZelda.Enemies
 
         public Boolean Alive { get; set; }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager);
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager, Player player);
 
         public void ChangeDirection();
 

@@ -22,6 +22,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         private EnemyStateMachine stateMachine;
         private CollisionController collisionController;
         private EnemyCollisionManager enemyCollision;
+        private Player player;
 
         private int pixelsMoved;
         private int health = 3;
@@ -36,7 +37,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            ContentManager contentManager)
+            ContentManager contentManager, Player player)
         {
             this.collisionController = collisionController;
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Rope);
@@ -44,6 +45,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
             Pos = spawnPosition;
+            this.player = player;
             enemyCollision = new EnemyCollisionManager(this, collisionController, Width, Height);
             pixelsMoved = 0;
             stateMachine = new EnemyStateMachine(enemyDict);
