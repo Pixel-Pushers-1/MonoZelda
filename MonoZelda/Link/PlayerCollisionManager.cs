@@ -22,6 +22,7 @@ public class PlayerCollisionManager
     public PlayerCollisionManager(PlayerSpriteManager player, PlayerCollidable playerHitbox, CollisionController collisionController)
     {
         this.player = player;
+        this.playerState = playerState;
         this.playerHitbox = playerHitbox;
         this.width = 64;
         this.height = 64;
