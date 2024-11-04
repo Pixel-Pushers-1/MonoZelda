@@ -47,7 +47,10 @@ namespace MonoZelda.Link
 
         public void TakeDamage()
         {
-            this.Health = this.Health - 1;
+            if (!IsDead)
+            {
+                this.Health = this.Health - 1;
+            }
             Debug.WriteLine($"Player Health: {this.Health}");
             HUDManager.UpdateHeartDisplay();  // Using null conditional operator
             playerSpriteManager.TakeDamage();
