@@ -5,6 +5,7 @@ using MonoZelda.Commands;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
+using MonoZelda.Link;
 using MonoZelda.Sprites;
 using System;
 
@@ -39,14 +40,14 @@ namespace MonoZelda.Scenes
             commandManager.ReplaceCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand(this));
         }
 
-        public void TransitionRoom(string roomName)
+        public void TransitionRoom(string roomName,Direction doorCollisionDirection)
         {
             resetScene();
 
             var nextRoom = roomManager.LoadRoom(roomName);
             var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
 
-            activeScene = new TransitionScene(currentRoom, nextRoom, command);
+            activeScene = new TransitionScene(currentRoom, nextRoom, command, doorCollisionDirection);
             activeScene.LoadContent(contentManager);
         }
 
@@ -54,7 +55,7 @@ namespace MonoZelda.Scenes
         {
             resetScene();
 
-            var room = roomManager.LoadRoom(roomName);
+            currentRoom = roomManager.LoadRoom(roomName);
 
             // TODO: Check for the mario level
             if (roomName == "mario")
@@ -64,7 +65,7 @@ namespace MonoZelda.Scenes
                 return;
             }
 
-            activeScene = new RoomScene(graphicsDevice, commandManager, collisionController, room);
+            activeScene = new RoomScene(graphicsDevice, commandManager, collisionController, currentRoom);
             activeScene.LoadContent(contentManager);
         }
 

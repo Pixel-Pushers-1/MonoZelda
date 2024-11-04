@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Dungeons.Parser.Data;
+using MonoZelda.Sprites;
 
 namespace MonoZelda.Dungeons
 {
@@ -8,6 +9,7 @@ namespace MonoZelda.Dungeons
         public string Destination { get; }
         public Rectangle Bounds { get; set; }
         public DoorDirection Direction { get; set; }
+        public SpriteDict DoorSpriteDict { get; set; }
 
         public DoorSpawn(string destination, DoorDirection direction, Point position, Dungeon1Sprite sprite) : base(position, sprite)
         {
