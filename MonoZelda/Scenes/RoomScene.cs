@@ -72,7 +72,7 @@ public class RoomScene : Scene
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(player));
 
         // create spritedict to pass into player controller
-        var playerSpriteDict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Player), SpriteCSVData.Player, 1, new Point(100, 100));
+        var playerSpriteDict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Player), SpriteCSVData.Player, 1, new Point(-100, -100));
         player.SetPlayerSpriteDict(playerSpriteDict);
     }
 
