@@ -88,7 +88,6 @@ namespace MonoZelda.HUD
         }
         public void UpdateHeartDisplay()
         {
-            Debug.WriteLine("UPDATE");
             for (int i = hearts.Count - 1; i >= PlayerState.Health; i--)
             {
                 hearts[i].SetSprite("heart_empty");
