@@ -13,7 +13,6 @@ using MonoZelda.Commands.GameCommands;
 using MonoZelda.Enemies;
 using System.Collections.Generic;
 using MonoZelda.Enemies.EnemyProjectiles;
-using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Trigger;
 using MonoZelda.HUD;
@@ -69,7 +68,7 @@ public class DungeonScene : IScene
 
         // Create itemFactory and HUDManager
         itemFactory = new ItemFactory(collisionController, contentManager, graphicsDevice);
-        hudManager = new HUDManager(contentManager);
+        hudManager = new HUDManager(contentManager, projectileManager);
 
         //
         playerState.HUDManager = hudManager;
@@ -78,7 +77,7 @@ public class DungeonScene : IScene
         // replace required commands
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(player));
         commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(projectileManager, player));
-        commandManager.ReplaceCommand(CommandType.PlayerEquipProjectileCommand, new PlayerEquipProjectileCommand(projectileManager, player));   
+        commandManager.ReplaceCommand(CommandType.PlayerEquipProjectileCommand, new PlayerEquipProjectileCommand(projectileManager, hudManager));   
         commandManager.ReplaceCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand(projectileManager, player));
         commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, player));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(player));
