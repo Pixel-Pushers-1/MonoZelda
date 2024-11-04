@@ -15,10 +15,11 @@ public class PlayerCollisionManager
     private Vector2 knockbackVelocity;
     private int knockbackFramesRemaining = 0;
     private int invulnerabilityFramesRemaining = 0;
-
-    public PlayerCollisionManager(PlayerSpriteManager player, PlayerCollidable playerHitbox, CollisionController collisionController)
+    private PlayerState playerState; 
+    public PlayerCollisionManager(PlayerSpriteManager player, PlayerCollidable playerHitbox, CollisionController collisionController, PlayerState playerState)
     {
         this.player = player;
+        this.playerState = playerState;
         this.playerHitbox = playerHitbox;
         this.width = 64;
         this.height = 64;
@@ -68,7 +69,7 @@ public class PlayerCollisionManager
 
         if ((int)player.PlayerDirection + (int)collisionDirection == 0)
         {
-            player.TakeDamage();
+            playerState.TakeDamage();
             invulnerabilityFramesRemaining = 60;
         }
     }
@@ -103,9 +104,11 @@ public class PlayerCollisionManager
             Vector2 currentPos = player.GetPlayerPosition();
             Vector2 knockbackDirection = GetKnockbackDirection(collisionDirection);
             knockbackVelocity = knockbackDirection * KNOCKBACK_FORCE;
+
+
             knockbackFramesRemaining = 12;
             ApplyKnockback();
-            player.TakeDamage();
+            playerState.TakeDamage();
             invulnerabilityFramesRemaining = 60;
         }
     }

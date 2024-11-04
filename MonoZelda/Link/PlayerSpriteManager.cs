@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System;
 using System.Reflection.Metadata;
+using System.Security.Cryptography.X509Certificates;
 
 namespace MonoZelda.Link;
 
@@ -22,7 +23,6 @@ public class PlayerSpriteManager
     private Vector2 playerPosition;
     private float playerSpeed = 4.0f;
     private double timer;
-    private PlayerState playerStateMachine;
 
     private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
     {
@@ -32,10 +32,9 @@ public class PlayerSpriteManager
        { Direction.Right, "right" }
     };
 
-    public PlayerSpriteManager()
+    public PlayerSpriteManager(PlayerState playerStateMachine)
     {
         playerPosition = new Vector2(500, 500);
-        playerStateMachine = new PlayerState(this);
     }
 
     public Direction PlayerDirection
@@ -158,8 +157,6 @@ public class PlayerSpriteManager
 
     public void TakeDamage()
     {
-        playerStateMachine.SetHealth(playerStateMachine.GetHealth() - 1);
-
         if (timer <= 0)
         {
             // Get direction string from the dictionary
@@ -169,10 +166,7 @@ public class PlayerSpriteManager
                 timer = playerSpriteDict.SetSpriteOneshot(spriteName);
             }
         }
+       
     }
-    public PlayerState PlayerStateMachine
-    {
-        get => playerStateMachine;
-        set => playerStateMachine = value;
-    }
+
 }

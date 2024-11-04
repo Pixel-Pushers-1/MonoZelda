@@ -16,6 +16,7 @@ using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Trigger;
+using MonoZelda.HUD;
 
 namespace MonoZelda.Scenes;
 
@@ -36,6 +37,8 @@ public class DungeonScene : IScene
     private List<EnemyProjectileCollisionManager> enemyProjectileCollisions = new();
     private IDungeonRoom room;
     private string roomName;
+    private HUDManager hudManager;
+    private PlayerState playerState;
 
 
     public DungeonScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room) 
@@ -52,15 +55,25 @@ public class DungeonScene : IScene
         // Need to wait for LoadContent because MonoZeldaGame is going to clear everything before calling this.
         LoadRoom(contentManager);
 
-        //create player and player collision manager
-        player = new PlayerSpriteManager();
+
+        //create playerState and player collisionManager and playerSpriteDrawer
+        player = new PlayerSpriteManager(playerState);
         PlayerCollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50), graphicsDevice);
         collisionController.AddCollidable(playerHitbox);
-        playerCollision = new PlayerCollisionManager(player, playerHitbox, collisionController);
+        playerState = new PlayerState(player);
+        playerCollision = new PlayerCollisionManager(player, playerHitbox, collisionController, playerState);
 
         // create projectile object and spriteDict
         var projectileDict = new SpriteDict(contentManager.Load<Texture2D>("Sprites/player"), SpriteCSVData.Projectiles, 0, new Point(0, 0));
         projectileManager = new ProjectileManager(collisionController, graphicsDevice, projectileDict);
+
+        // Create itemFactory and HUDManager
+        itemFactory = new ItemFactory(collisionController, contentManager, graphicsDevice);
+        hudManager = new HUDManager(contentManager);
+
+        //
+        playerState.HUDManager = hudManager;
+        hudManager.PlayerState = playerState;
 
         // replace required commands
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(player));
@@ -69,13 +82,13 @@ public class DungeonScene : IScene
         commandManager.ReplaceCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand(projectileManager, player));
         commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, player));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(player));
-        commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(player));
+        commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerState));
 
         // create spritedict to pass into player controller
         var playerSpriteDict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Player), SpriteCSVData.Player, 1, new Point(100, 100));
         player.SetPlayerSpriteDict(playerSpriteDict);
+       
     }
-
     private void LoadRoom(ContentManager contentManager)
     {
         LoadRoomTextures(contentManager);
