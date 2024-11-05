@@ -3,6 +3,7 @@ using MonoZelda.Collision;
 using MonoZelda.Enemies;
 using MonoZelda.Link;
 using System.Collections.Generic;
+using MonoZelda.Enemies.EnemyClasses;
 
 namespace MonoZelda.Commands.CollisionCommands;
 
@@ -34,7 +35,10 @@ public class EnemyStaticBoundaryCollisionCommand : ICommand
         }
 
         EnemyCollisionManager enemyCollisionManager = enemyCollidable.EnemyCollision;
-        enemyCollisionManager.HandleStaticCollision(collisionDirection, intersection);
+        if (enemyCollidable.enemyType != EnemyList.Wallmaster)
+        {
+            enemyCollisionManager.HandleStaticCollision(collisionDirection, intersection);
+        }
     }
 
     public void UnExecute()

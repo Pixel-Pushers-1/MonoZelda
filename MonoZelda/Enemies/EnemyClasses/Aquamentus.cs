@@ -168,7 +168,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 if (health == 0)
                 {
                     fireballs.ForEach(fireball => fireball.ProjectileCollide());
-                    stateMachine.Die();
+                    stateMachine.Die(false);
                     EnemyHitbox.UnregisterHitbox();
                     collisionController.RemoveCollidable(EnemyHitbox);
                 }

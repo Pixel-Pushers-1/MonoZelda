@@ -100,7 +100,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 }
                 else
                 {
-                    stateMachine.Die();
+                    stateMachine.Die(false);
                     EnemyHitbox.UnregisterHitbox();
                     collisionController.RemoveCollidable(EnemyHitbox);
                 }

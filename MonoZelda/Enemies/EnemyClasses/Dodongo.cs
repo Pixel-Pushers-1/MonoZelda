@@ -99,7 +99,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 health--;
                 if (health == 0)
                 {
-                    stateMachine.Die();
+                    stateMachine.Die(false);
                     EnemyHitbox.UnregisterHitbox();
                     collisionController.RemoveCollidable(EnemyHitbox);
                 }

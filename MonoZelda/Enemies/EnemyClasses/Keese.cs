@@ -108,7 +108,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void TakeDamage(Boolean stun, Direction collisionDirection)
         {
-            stateMachine.Die();
+            stateMachine.Die(false);
             EnemyHitbox.UnregisterHitbox();
             collisionController.RemoveCollidable(EnemyHitbox);
         }

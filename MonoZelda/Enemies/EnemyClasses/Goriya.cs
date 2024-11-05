@@ -137,7 +137,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 else
                 {
                     projectileActive = false;
-                    stateMachine.Die();
+                    stateMachine.Die(false);
                     projectile.ViewProjectile(projectileActive, false);
                     EnemyHitbox.UnregisterHitbox();
                     collisionController.RemoveCollidable(EnemyHitbox);
