@@ -96,7 +96,7 @@ namespace MonoZelda.HUD
         }
         public void UpdateSelectedWeapon()
         {
-
+            
             ProjectileType projectileType = projectileManager.EquippedProjectile;
             Debug.WriteLine(projectileType.ToString());
             string spriteName = projectileSpriteMap.TryGetValue(projectileType, out var name) ? name : "arrow";
