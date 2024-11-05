@@ -28,27 +28,29 @@ public class ProjectileManager
         {Keys.D5,ProjectileType.Bomb},
         {Keys.D6,ProjectileType.CandleBlue},
     };
-    
+
     public bool ProjectileFired
     {
-        get
-        {
-            return projectileFired;
-        }
-        set
-        {
-            projectileFired = value;
-        }
+        get => projectileFired;
+        set => projectileFired = value;
     }
 
-    public ProjectileManager(CollisionController collisionController, GraphicsDevice graphicsDevice, SpriteDict projectileDict) 
+    // Fixed property to properly get/set the equipped projectile
+    public ProjectileType EquippedProjectile
+    {
+        get => equippedProjectile;
+        private set => equippedProjectile = value;
+    }
+
+    public ProjectileManager(CollisionController collisionController, GraphicsDevice graphicsDevice, SpriteDict projectileDict)
     {
         projectileFired = false;
         projectileDict.Enabled = false;
         this.collisionController = collisionController;
         this.graphicsDevice = graphicsDevice;
         this.projectileDict = projectileDict;
-        projectile = new Projectile(projectileDict, new Vector2(),Direction.Down);
+        projectile = new Projectile(projectileDict, new Vector2(), Direction.Down);
+        EquippedProjectile = ProjectileType.Arrow;  // Use the property instead of field
     }
 
     private void setupProjectile(ProjectileType equippedProjectile)
@@ -62,9 +64,12 @@ public class ProjectileManager
 
     public void equipProjectile(Keys pressedKey)
     {
-        equippedProjectile = keyProjectileMap[pressedKey];
+        if (keyProjectileMap.TryGetValue(pressedKey, out ProjectileType newProjectile))
+        {
+            EquippedProjectile = newProjectile;  // Use the property instead of field
+        }
     }
-    
+
     public void destroyProjectile()
     {
         itemFired.FinishProjectile();
@@ -84,8 +89,8 @@ public class ProjectileManager
 
     public void fireEquippedProjectile(PlayerSpriteManager player)
     {
-        itemFired = projectile.GetProjectileObject(equippedProjectile, player);
-        setupProjectile(equippedProjectile);
+        itemFired = projectile.GetProjectileObject(EquippedProjectile, player);  // Use the property instead of field
+        setupProjectile(EquippedProjectile);  // Use the property instead of field
     }
 
     public void executeProjectile()
@@ -100,6 +105,6 @@ public class ProjectileManager
             collisionController.RemoveCollidable(projectileCollidable);
             projectileCollidable.UnregisterHitbox();
             projectileFired = false;
-        }        
+        }
     }
 }

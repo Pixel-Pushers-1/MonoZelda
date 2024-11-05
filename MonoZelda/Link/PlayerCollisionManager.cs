@@ -14,14 +14,15 @@ public class PlayerCollisionManager
     private readonly int width;
     private readonly int height;
     private PlayerSpriteManager player;
+    private PlayerState playerState;
     private PlayerCollidable playerHitbox;
     private Vector2 knockbackVelocity;
     private float knockbackTimer = 0;
     private float invulnerabilityTimer = 0;
 
-    public PlayerCollisionManager(PlayerSpriteManager player, PlayerCollidable playerHitbox, CollisionController collisionController)
-    {
+    public PlayerCollisionManager(PlayerSpriteManager player, PlayerCollidable playerHitbox, CollisionController collisionController, PlayerState playerState) {
         this.player = player;
+        this.playerState = playerState;
         this.playerHitbox = playerHitbox;
         this.width = 64;
         this.height = 64;
@@ -72,7 +73,7 @@ public class PlayerCollisionManager
 
         if ((int)player.PlayerDirection + (int)collisionDirection == 0)
         {
-            player.TakeDamage();
+            playerState.TakeDamage();
             invulnerabilityTimer = INVULNERABILITY_TIME;
         }
     }
@@ -100,17 +101,16 @@ public class PlayerCollisionManager
 
     public void HandleEnemyCollision(Direction collisionDirection)
     {
-        if (invulnerabilityTimer > 0)
+        if (invulnerabilityTimer > 0f)
             return;
-
         if (knockbackTimer <= 0)
         {
             Vector2 knockbackDirection = GetKnockbackDirection(collisionDirection);
             knockbackVelocity = knockbackDirection * KNOCKBACK_FORCE;
             knockbackTimer = KNOCKBACK_TIME;
-            ApplyKnockback();
-            player.TakeDamage();
             invulnerabilityTimer = INVULNERABILITY_TIME;
+            ApplyKnockback();
+            playerState.TakeDamage();
         }
     }
 
