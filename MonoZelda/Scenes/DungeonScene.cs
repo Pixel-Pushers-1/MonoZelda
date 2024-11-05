@@ -65,7 +65,7 @@ public class DungeonScene : IScene
         playerCollision = new PlayerCollisionManager(player, playerHitbox, collisionController, playerState);
 
         // create projectile object and spriteDict
-        var projectileDict = new SpriteDict(contentManager.Load<Texture2D>("Sprites/player"), SpriteCSVData.Projectiles, 0, new Point(0, 0));
+        var projectileDict = new SpriteDict(SpriteType.Projectiles, 0, new Point(0, 0));
         projectileManager = new ProjectileManager(collisionController, graphicsDevice, projectileDict);
 
         // Create itemFactory and HUDManager
@@ -86,7 +86,7 @@ public class DungeonScene : IScene
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerState));
 
         // create spritedict to pass into player controller
-        var playerSpriteDict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Player), SpriteCSVData.Player, 1, new Point(100, 100));
+        var playerSpriteDict = new SpriteDict(SpriteType.Player, 1, new Point(100, 100));
         player.SetPlayerSpriteDict(playerSpriteDict);
        
     }
@@ -149,21 +149,19 @@ public class DungeonScene : IScene
 
     private void LoadRoomTextures(ContentManager contentManager)
     {
-        var dungeonTexture = contentManager.Load<Texture2D>(TextureData.Blocks);
-
         // Room wall border
-        var r = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks, SpriteLayer.Background, DungeonConstants.DungeonPosition);
+        var r = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, DungeonConstants.DungeonPosition);
         r.SetSprite(nameof(Dungeon1Sprite.room_exterior));
 
         // Floor background
-        var f = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks, SpriteLayer.Background, DungeonConstants.BackgroundPosition);
+        var f = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, DungeonConstants.BackgroundPosition);
         f.SetSprite(room.RoomSprite.ToString());
 
         // Doors
         var doors = room.GetDoors();
         foreach (var door in doors)
         {
-            var doorDict = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks, SpriteLayer.Background, door.Position);
+            var doorDict = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, door.Position);
             doorDict.SetSprite(door.DoorSprite.ToString());
         }
     }

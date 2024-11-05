@@ -23,7 +23,7 @@ public class MainMenu : IScene
 
     public void LoadContent(ContentManager contentManager)
     {
-        var dict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Title), SpriteCSVData.Title, 0, new Point(0,0));
+        var dict = new SpriteDict(SpriteType.Title, 0, new Point(0,0));
         dict.SetSprite(nameof(MenuSprite.title));
     }
 }

@@ -44,7 +44,7 @@ namespace MonoZelda.Trigger
             // The trigger collider sits on top of the static collider
             colliderManager.AddCollidable(this);
 
-            blockDict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Blocks), SpriteCSVData.Blocks, 0, new Point(0, 0));
+            blockDict = new SpriteDict(SpriteType.Blocks, 0, new Point(0, 0));
             blockDict.SetSprite(BlockType.tile_block2.ToString());
             blockDict.Position = Bounds.Location;
             setSpriteDict(blockDict);

@@ -66,7 +66,9 @@ public class MonoZeldaGame : Game
     protected override void LoadContent()
     {
         spriteBatch = new SpriteBatch(GraphicsDevice);
-        
+
+        TextureData.LoadTextures(Content);
+
         // Start menu goes first
         StartMenu();
     }

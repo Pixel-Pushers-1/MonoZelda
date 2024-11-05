@@ -23,7 +23,7 @@ namespace MonoZelda.Enemies.EnemyProjectiles
         public AquamentusFireball(Point pos, ContentManager contentManager, GraphicsDevice graphicsDevice, CollisionController collisionController, int newAngle)
         {
             Pos = pos;
-            FireballSpriteDict = new(contentManager.Load<Texture2D>("Sprites/enemies"), SpriteCSVData.Enemies, 0, new Point(100, 100));
+            FireballSpriteDict = new(SpriteType.Enemies, 0, new Point(100, 100));
             FireballSpriteDict.SetSprite("fireball");
             ProjectileHitbox = new EnemyProjectileCollidable(new Rectangle(pos.X, pos.Y, 30, 30), graphicsDevice);
             collisionController.AddCollidable(ProjectileHitbox);

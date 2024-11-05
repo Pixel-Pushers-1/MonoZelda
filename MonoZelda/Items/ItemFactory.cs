@@ -23,7 +23,7 @@ public class ItemFactory
 
     public void CreateItem(ItemList itemName, Point spawnPosition)
     {
-        var itemDict = new SpriteDict(contentManager.Load<Texture2D>("Sprites/items"), SpriteCSVData.Items, 0, new Point(0, 0));
+        var itemDict = new SpriteDict(SpriteType.Items, 0, new Point(0, 0));
         var itemType = Type.GetType($"MonoZelda.Items.ItemClasses.{itemName}");
         IItem item = (IItem)Activator.CreateInstance(itemType,graphicsDevice);
         item.itemSpawn(itemDict, spawnPosition, collisionController);

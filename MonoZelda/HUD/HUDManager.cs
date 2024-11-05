@@ -58,31 +58,31 @@ namespace MonoZelda.HUD
             for (int i = 0; i < numberOfHearts; i++)
             {
                 Point heartPosition = new Point(700 + (i * 32),125);
-                SpriteDict heart = new SpriteDict(contentManager.Load<Texture2D>("Sprites/items"), SpriteCSVData.Items, 0, heartPosition);
+                SpriteDict heart = new SpriteDict(SpriteType.Items, 0, heartPosition);
                 heart.SetSprite("heart_full");
                 hearts.Add(heart);
             }
             //Set rupees
             int numberOfRupees = PlayerState.Rupees;
             Point rupeePosition = new Point(300, 10);
-            SpriteDict rupee = new SpriteDict(contentManager.Load<Texture2D>("Sprites/items"), SpriteCSVData.Items, 0, rupeePosition);
+            SpriteDict rupee = new SpriteDict(SpriteType.Items, 0, rupeePosition);
             rupee.SetSprite("rupee");
             //set key
             int numberOfKeys = PlayerState.Keys;
             Point keyPosition = new Point(300, 80);
-            SpriteDict key = new SpriteDict(contentManager.Load<Texture2D>("Sprites/items"), SpriteCSVData.Items, 0, keyPosition);
+            SpriteDict key = new SpriteDict(SpriteType.Items, 0, keyPosition);
             key.SetSprite("key_0");
             //set bomb
             int numberOfBombs = PlayerState.Bombs;
             Point bombPosition = new Point(300, 150);
-            SpriteDict bomb = new SpriteDict(contentManager.Load<Texture2D>("Sprites/items"), SpriteCSVData.Items, 0, bombPosition);
+            SpriteDict bomb = new SpriteDict(SpriteType.Items, 0, bombPosition);
             bomb.SetSprite("bomb");
 
 
             //show equipped projecetilie
             ProjectileType projectileType = projectileManager.EquippedProjectile;
             Point projPosition = new Point(450, 75);
-            this.proj = new SpriteDict(contentManager.Load<Texture2D>("Sprites/items"), SpriteCSVData.Items, 0, projPosition);
+            this.proj = new SpriteDict(SpriteType.Items, 0, projPosition);
             string spriteName = projectileSpriteMap.TryGetValue(projectileType, out var name) ? name : "arrow";
             proj.SetSprite(spriteName);
         }
