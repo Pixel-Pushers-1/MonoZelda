@@ -5,14 +5,14 @@ namespace MonoZelda.Commands.GameCommands;
 
 public class PlayerMoveCommand : ICommand
 {
-    private Player player;
+    private PlayerSpriteManager player;
 
     public PlayerMoveCommand()
     {
         //empty
     }
 
-    public PlayerMoveCommand(Player player)
+    public PlayerMoveCommand(PlayerSpriteManager player)
     {
         this.player = player;
         PlayerDirection = Direction.Down;
