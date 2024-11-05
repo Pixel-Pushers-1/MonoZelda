@@ -30,15 +30,15 @@ namespace MonoZelda.Trigger
             set { staticCollider.Bounds = value; }
         }
 
-        public PushBlockTrigger(ContentManager contentManager, CollisionController colliderManager, Point position, GraphicsDevice graphicsDevice)
-            : base(new Rectangle(position, new Point(64, 64)), graphicsDevice)
+        public PushBlockTrigger(CollisionController colliderManager, Point position)
+            : base(new Rectangle(position, new Point(64, 64)))
         {
             collisionManager = colliderManager;
             TriggerActions = new List<ITrigger>();
 
             var rect = new Rectangle(position, new Point(64, 64));
 
-            staticCollider = new StaticRoomCollidable(rect, graphicsDevice);
+            staticCollider = new StaticRoomCollidable(rect);
             colliderManager.AddCollidable(staticCollider);
 
             // The trigger collider sits on top of the static collider

@@ -19,14 +19,14 @@ namespace MonoZelda.Enemies.GoriyaFolder
         private float dt;
         private CollisionController collisionController;
 
-        public GoriyaBoomerang(Point pos, ContentManager contentManager, GraphicsDevice graphicsDevice, CollisionController collisionController)
+        public GoriyaBoomerang(Point pos, CollisionController collisionController)
         {
             this.Pos = pos;
             this.collisionController = collisionController;
             BoomerangSpriteDict = new(SpriteType.Enemies, 0, new Point(0, 0));
             BoomerangSpriteDict.SetSprite("boomerang");
             ViewProjectile(false, true);
-            ProjectileHitbox = new EnemyProjectileCollidable(new Rectangle(pos.X, pos.Y, 30, 30), graphicsDevice);
+            ProjectileHitbox = new EnemyProjectileCollidable(new Rectangle(pos.X, pos.Y, 30, 30));
             collisionController.AddCollidable(ProjectileHitbox);
         }
         public void ViewProjectile(bool view, bool goriyaAlive)
@@ -53,7 +53,7 @@ namespace MonoZelda.Enemies.GoriyaFolder
 
         public void Update(GameTime gameTime, EnemyStateMachine.Direction attackDirection, Point enemyPos)
         {
-            dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            dt = (float) MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
             attackTimer += dt;
             var pos = new Vector2();
             pos = Pos.ToVector2();

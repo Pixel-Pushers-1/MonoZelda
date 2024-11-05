@@ -20,12 +20,12 @@ namespace MonoZelda.Enemies.EnemyProjectiles
         private int speed = 4;
         private double angle;
 
-        public AquamentusFireball(Point pos, ContentManager contentManager, GraphicsDevice graphicsDevice, CollisionController collisionController, int newAngle)
+        public AquamentusFireball(Point pos, CollisionController collisionController, int newAngle)
         {
             Pos = pos;
             FireballSpriteDict = new(SpriteType.Enemies, 0, new Point(100, 100));
             FireballSpriteDict.SetSprite("fireball");
-            ProjectileHitbox = new EnemyProjectileCollidable(new Rectangle(pos.X, pos.Y, 30, 30), graphicsDevice);
+            ProjectileHitbox = new EnemyProjectileCollidable(new Rectangle(pos.X, pos.Y, 30, 30));
             collisionController.AddCollidable(ProjectileHitbox);
             angle = newAngle;
             if (angle <= 180)

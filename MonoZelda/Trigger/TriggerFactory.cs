@@ -8,12 +8,12 @@ namespace MonoZelda.Trigger
 {
     public static class TriggerFactory
     {
-        public static ITrigger CreateTrigger(TriggerType type, CollisionController colliderManager, ContentManager contentManager, Point position, GraphicsDevice graphicsDevice)
+        public static ITrigger CreateTrigger(TriggerType type, CollisionController colliderManager, Point position)
         {
             switch (type)
             {
                 case TriggerType.push_block:
-                    return new PushBlockTrigger(contentManager, colliderManager, position, graphicsDevice);
+                    return new PushBlockTrigger(colliderManager, position);
                 default:
                     throw new ArgumentException("Invalid trigger type");
             }

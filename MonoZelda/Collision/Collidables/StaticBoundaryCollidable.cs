@@ -13,10 +13,10 @@ public class StaticBoundaryCollidable : ICollidable
 
     private readonly CollisionHitboxDraw hitbox;
 
-    public StaticBoundaryCollidable(Rectangle bounds, GraphicsDevice graphicsDevice)
+    public StaticBoundaryCollidable(Rectangle bounds)
     {
         Bounds = bounds;
-        hitbox = new CollisionHitboxDraw(this, graphicsDevice);
+        hitbox = new CollisionHitboxDraw(this);
         type = CollidableType.StaticBoundary;
     }
 

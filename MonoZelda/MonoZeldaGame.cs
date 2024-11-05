@@ -67,7 +67,7 @@ public class MonoZeldaGame : Game
     {
         spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        TextureData.LoadTextures(Content);
+        TextureData.LoadTextures(Content, GraphicsDevice);
 
         // Start menu goes first
         StartMenu();
@@ -104,12 +104,12 @@ public class MonoZeldaGame : Game
         SpriteDrawer.Reset();
         collisionController.Clear();
         this.scene = scene;
-        scene.LoadContent(Content);
+        scene.LoadContent();
     }
 
     public void StartMenu()
     {
-        LoadScene(new MainMenu(GraphicsDevice));
+        LoadScene(new MainMenu());
     }
 
     public void StartDungeon()
@@ -127,7 +127,7 @@ public class MonoZeldaGame : Game
         var room = dungeonManager.LoadRoom(roomName);
         commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this, room));
 
-        LoadScene(new DungeonScene(GraphicsDevice, commandManager, collisionController, room));
+        LoadScene(new DungeonScene(commandManager, collisionController, room));
     }
 
     public CollisionController GetCollisionController() 

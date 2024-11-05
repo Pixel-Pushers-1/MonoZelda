@@ -17,10 +17,10 @@ public class EnemyCollidable : ICollidable
 
     private readonly CollisionHitboxDraw hitbox;
 
-    public EnemyCollidable(Rectangle bounds, GraphicsDevice graphicsDevice, EnemyList enemyType)
+    public EnemyCollidable(Rectangle bounds, EnemyList enemyType)
     {
         Bounds = bounds;
-        hitbox = new CollisionHitboxDraw(this, graphicsDevice);
+        hitbox = new CollisionHitboxDraw(this);
         type = CollidableType.Enemy;
         this.enemyType = enemyType;
     }

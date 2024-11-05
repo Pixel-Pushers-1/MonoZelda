@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+
 
 namespace MonoZelda.Sprites;
 
@@ -10,6 +12,7 @@ public enum SpriteType {
     Enemies,
     Title,
     Projectiles,
+    Blank,
 }
 
 internal static class TextureData
@@ -25,13 +28,16 @@ internal static class TextureData
     private static Texture2D ItemsTexture;
     private static Texture2D EnemiesTexture;
     private static Texture2D TitleTexture;
+    private static Texture2D BlankTexture;
 
-    public static void LoadTextures(ContentManager contentManager) {
+    public static void LoadTextures(ContentManager contentManager, GraphicsDevice graphicsDevice) {
         PlayerTexture = contentManager.Load<Texture2D>(PlayerFile);
         BlocksTexture = contentManager.Load<Texture2D>(BlocksFile);
         ItemsTexture = contentManager.Load<Texture2D>(ItemsFile);
         EnemiesTexture = contentManager.Load<Texture2D>(EnemiesFile);
         TitleTexture = contentManager.Load<Texture2D>(TitleFile);
+        BlankTexture = new Texture2D(graphicsDevice, 1, 1);
+        BlankTexture.SetData(new Color[] { Color.White });
     }
 
     public static Texture2D GetTexture(SpriteType type) {
@@ -42,7 +48,8 @@ internal static class TextureData
             SpriteType.Enemies => EnemiesTexture,
             SpriteType.Title => TitleTexture,
             SpriteType.Projectiles => PlayerTexture,
-            _ => PlayerTexture,
+            SpriteType.Blank => BlankTexture,
+            _ => BlankTexture,
         };
     }
 }
@@ -64,7 +71,7 @@ internal static class SpriteCSVData
             SpriteType.Enemies => EnemiesFile,
             SpriteType.Title => TitleFile,
             SpriteType.Projectiles => ProjectilesFile,
-            _ => PlayerFile,
+            _ => "",
         };
 
     }

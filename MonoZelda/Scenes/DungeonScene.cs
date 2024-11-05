@@ -21,7 +21,6 @@ namespace MonoZelda.Scenes;
 
 public class DungeonScene : IScene
 {
-    private GraphicsDevice graphicsDevice;
     private CommandManager commandManager;
     private PlayerSpriteManager player;
     private ProjectileManager projectileManager;
@@ -40,24 +39,23 @@ public class DungeonScene : IScene
     private PlayerState playerState;
 
 
-    public DungeonScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room) 
+    public DungeonScene(CommandManager commandManager, CollisionController collisionController, IDungeonRoom room) 
     {
-        this.graphicsDevice = graphicsDevice;
         this.commandManager = commandManager;
         this.collisionController = collisionController;
         this.room = room;
         triggers = new List<ITrigger>();
     }
 
-    public void LoadContent(ContentManager contentManager)
+    public void LoadContent()
     {
         // Need to wait for LoadContent because MonoZeldaGame is going to clear everything before calling this.
-        LoadRoom(contentManager);
+        LoadRoom();
 
 
         //create playerState and player collisionManager and playerSpriteDrawer
         player = new PlayerSpriteManager(playerState);
-        PlayerCollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50), graphicsDevice);
+        PlayerCollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50));
         collisionController.AddCollidable(playerHitbox);
         playerState = new PlayerState(player);
         playerCollision = new PlayerCollisionManager(player, playerHitbox, collisionController, playerState);
@@ -66,11 +64,11 @@ public class DungeonScene : IScene
 
         // create projectile object and spriteDict
         var projectileDict = new SpriteDict(SpriteType.Projectiles, 0, new Point(0, 0));
-        projectileManager = new ProjectileManager(collisionController, graphicsDevice, projectileDict);
+        projectileManager = new ProjectileManager(collisionController, projectileDict);
 
         // Create itemFactory and HUDManager
-        itemFactory = new ItemFactory(collisionController, contentManager, graphicsDevice);
-        hudManager = new HUDManager(contentManager, projectileManager);
+        itemFactory = new ItemFactory(collisionController);
+        hudManager = new HUDManager(projectileManager);
 
         //
         playerState.HUDManager = hudManager;
@@ -90,37 +88,38 @@ public class DungeonScene : IScene
         player.SetPlayerSpriteDict(playerSpriteDict);
        
     }
-    private void LoadRoom(ContentManager contentManager)
+
+    private void LoadRoom()
     {
-        LoadRoomTextures(contentManager);
+        LoadRoomTextures();
         CreateStaticColliders();
-        CreateTriggers(contentManager);
-        SpawnItems(contentManager);
-        SpawnEnemies(contentManager);
+        CreateTriggers();
+        SpawnItems();
+        SpawnEnemies();
     }
 
-    private void CreateTriggers(ContentManager contentManager)
+    private void CreateTriggers()
     {
         foreach(var trigger in room.GetTriggers())
         {
-            var t = TriggerFactory.CreateTrigger(trigger.Type, collisionController, contentManager, trigger.Position, graphicsDevice);
+            var t = TriggerFactory.CreateTrigger(trigger.Type, collisionController, trigger.Position);
             triggers.Add(t);
         }
     }
 
-    private void SpawnItems(ContentManager contentManager)
+    private void SpawnItems()
     {
         // Create itemFactory object
-        itemFactory = new ItemFactory(collisionController, contentManager, graphicsDevice);
+        itemFactory = new ItemFactory(collisionController);
         foreach (var itemSpawn in room.GetItemSpawns())
         {
             itemFactory.CreateItem(itemSpawn.ItemType, itemSpawn.Position);
         }
     }
 
-    private void SpawnEnemies(ContentManager contentManager)
+    private void SpawnEnemies()
     {
-        enemyFactory = new EnemyFactory(collisionController, contentManager, graphicsDevice);
+        enemyFactory = new EnemyFactory(collisionController);
         foreach(var enemySpawn in room.GetEnemySpawns())
         {
             enemies.Add(enemyFactory.CreateEnemy(enemySpawn.EnemyType, new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32)));
@@ -136,18 +135,18 @@ public class DungeonScene : IScene
         var roomColliderRects = room.GetStaticRoomColliders();
         foreach (var rect in roomColliderRects)
         {
-            var collidable = new StaticRoomCollidable(rect, graphicsDevice);
+            var collidable = new StaticRoomCollidable(rect);
             collisionController.AddCollidable(collidable);
         }
         var boundaryColliderRects = room.GetStaticBoundaryColliders();
         foreach (var rect in boundaryColliderRects)
         {
-            var collidable = new StaticBoundaryCollidable(rect, graphicsDevice);
+            var collidable = new StaticBoundaryCollidable(rect);
             collisionController.AddCollidable(collidable);
         }
     }
 
-    private void LoadRoomTextures(ContentManager contentManager)
+    private void LoadRoomTextures()
     {
         // Room wall border
         var r = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, DungeonConstants.DungeonPosition);

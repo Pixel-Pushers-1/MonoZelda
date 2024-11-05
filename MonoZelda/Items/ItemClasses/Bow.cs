@@ -9,7 +9,6 @@ public class Bow : IItem
 {
     private ItemCollidable bowCollidable;
     private bool itemPickedUp;
-    private GraphicsDevice graphicsDevice;
 
     public bool ItemPickedUp
     {
@@ -23,14 +22,9 @@ public class Bow : IItem
         }
     }
 
-    public Bow(GraphicsDevice graphicsDevice)
-    {
-        this.graphicsDevice = graphicsDevice;
-    }
-
     public void itemSpawn(SpriteDict bowDict, Point spawnPosition, CollisionController collisionController)
     {
-        bowCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice, ItemList.Bow);
+        bowCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), ItemList.Bow);
         collisionController.AddCollidable(bowCollidable);
         bowCollidable.setSpriteDict(bowDict);
         bowDict.Position = spawnPosition;

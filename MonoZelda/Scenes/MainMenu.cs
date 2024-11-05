@@ -7,21 +7,14 @@ namespace MonoZelda.Scenes;
 
 public class MainMenu : IScene
 {
-    GraphicsDevice _graphicsDevice;
-
     enum MenuSprite { title }
-
-    public MainMenu(GraphicsDevice graphicsDevice)
-    {
-        _graphicsDevice = graphicsDevice;
-    }
 
     public void Update(GameTime gameTime)
     {
         // TODO: Animate the waterfall
     }
 
-    public void LoadContent(ContentManager contentManager)
+    public void LoadContent()
     {
         var dict = new SpriteDict(SpriteType.Title, 0, new Point(0,0));
         dict.SetSprite(nameof(MenuSprite.title));

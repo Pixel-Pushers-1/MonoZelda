@@ -15,7 +15,6 @@ public class ProjectileManager
     private ProjectileType equippedProjectile;
     private PlayerProjectileCollidable projectileCollidable;
     private CollisionController collisionController;
-    private GraphicsDevice graphicsDevice;
     private Projectile projectile;
     private SpriteDict projectileDict;
 
@@ -42,12 +41,11 @@ public class ProjectileManager
         private set => equippedProjectile = value;
     }
 
-    public ProjectileManager(CollisionController collisionController, GraphicsDevice graphicsDevice, SpriteDict projectileDict)
+    public ProjectileManager(CollisionController collisionController, SpriteDict projectileDict)
     {
         projectileFired = false;
         projectileDict.Enabled = false;
         this.collisionController = collisionController;
-        this.graphicsDevice = graphicsDevice;
         this.projectileDict = projectileDict;
         projectile = new Projectile(projectileDict, new Vector2(), Direction.Down);
         EquippedProjectile = ProjectileType.Arrow;  // Use the property instead of field
@@ -57,7 +55,7 @@ public class ProjectileManager
     {
         projectileFired = true;
         projectileDict.Enabled = true;
-        projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), graphicsDevice, equippedProjectile);
+        projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), equippedProjectile);
         projectileCollidable.setProjectileManager(this);
         collisionController.AddCollidable(projectileCollidable);
     }

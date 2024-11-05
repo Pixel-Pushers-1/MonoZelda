@@ -1,18 +1,8 @@
-﻿using MonoZelda.Items.ItemClasses;
-using MonoZelda.Items;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework.Graphics;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoZelda.Link;
 using System.Diagnostics;
-using MonoZelda.Collision;
 using MonoZelda.Sprites;
-using System.Reflection;
-using Microsoft.Xna.Framework.Content;
 using MonoZelda.Link.Projectiles;
 
 
@@ -22,7 +12,6 @@ namespace MonoZelda.HUD
     {
         private PlayerState _playerState;
         private List<SpriteDict> hearts;
-        private ContentManager contentManager;
         private ProjectileManager projectileManager;
         private SpriteDict proj;
 
@@ -36,12 +25,13 @@ namespace MonoZelda.HUD
             { ProjectileType.Bomb, "bomb" },
             { ProjectileType.CandleBlue, "fire" }
         };
-        public HUDManager(ContentManager contentManager, ProjectileManager projectileManager)
+
+        public HUDManager(ProjectileManager projectileManager)
         {
-            this.contentManager = contentManager;
             this.hearts = new List<SpriteDict>();
             this.projectileManager = projectileManager;
         }
+
         public PlayerState PlayerState
         {
             get => _playerState;
@@ -51,6 +41,7 @@ namespace MonoZelda.HUD
                 Initialize();
             }
         }
+
         private void Initialize()
         {
             //sets hearts
@@ -86,6 +77,7 @@ namespace MonoZelda.HUD
             string spriteName = projectileSpriteMap.TryGetValue(projectileType, out var name) ? name : "arrow";
             proj.SetSprite(spriteName);
         }
+
         public void UpdateHeartDisplay()
         {
             for (int i = hearts.Count - 1; i >= PlayerState.Health; i--)
@@ -94,6 +86,7 @@ namespace MonoZelda.HUD
             }
 
         }
+
         public void UpdateSelectedWeapon()
         {
             
