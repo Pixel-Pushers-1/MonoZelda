@@ -7,14 +7,17 @@ namespace MonoZelda.Link;
 
 public class PlayerCollisionManager
 {
+    private const float KNOCKBACK_FORCE = 8f;
+    private const float KNOCKBACK_TIME = 0.2f;
+    private const float INVULNERABILITY_TIME = 1f;
+
     private readonly int width;
     private readonly int height;
     private PlayerSpriteManager player;
     private PlayerCollidable playerHitbox;
-    private const float KNOCKBACK_FORCE = 8f;
     private Vector2 knockbackVelocity;
-    private int knockbackFramesRemaining = 0;
-    private int invulnerabilityFramesRemaining = 0;
+    private float knockbackTimer = 0;
+    private float invulnerabilityTimer = 0;
 
     public PlayerCollisionManager(PlayerSpriteManager player, PlayerCollidable playerHitbox, CollisionController collisionController)
     {
@@ -38,15 +41,15 @@ public class PlayerCollisionManager
     {
         UpdateBoundingBox();
 
-        if (knockbackFramesRemaining > 0)
+        if (knockbackTimer > 0)
         {
             ApplyKnockback();
-            knockbackFramesRemaining--;
+            knockbackTimer -= (float) MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         }
 
-        if (invulnerabilityFramesRemaining > 0)
+        if (invulnerabilityTimer > 0)
         {
-            invulnerabilityFramesRemaining--;
+            invulnerabilityTimer -= (float) MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         }
     }
 
@@ -64,12 +67,13 @@ public class PlayerCollisionManager
 
     public void HandleEnemyProjectileCollision(Direction collisionDirection)
     {
-        if (invulnerabilityFramesRemaining > 0) return;
+        if (invulnerabilityTimer > 0)
+            return;
 
         if ((int)player.PlayerDirection + (int)collisionDirection == 0)
         {
             player.TakeDamage();
-            invulnerabilityFramesRemaining = 60;
+            invulnerabilityTimer = INVULNERABILITY_TIME;
         }
     }
 
@@ -96,17 +100,17 @@ public class PlayerCollisionManager
 
     public void HandleEnemyCollision(Direction collisionDirection)
     {
-        if (invulnerabilityFramesRemaining > 0) return;
+        if (invulnerabilityTimer > 0)
+            return;
 
-        if (knockbackFramesRemaining == 0)
+        if (knockbackTimer <= 0)
         {
-            Vector2 currentPos = player.GetPlayerPosition();
             Vector2 knockbackDirection = GetKnockbackDirection(collisionDirection);
             knockbackVelocity = knockbackDirection * KNOCKBACK_FORCE;
-            knockbackFramesRemaining = 12;
+            knockbackTimer = KNOCKBACK_TIME;
             ApplyKnockback();
             player.TakeDamage();
-            invulnerabilityFramesRemaining = 60;
+            invulnerabilityTimer = INVULNERABILITY_TIME;
         }
     }
 

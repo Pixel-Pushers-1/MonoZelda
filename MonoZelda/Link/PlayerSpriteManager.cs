@@ -109,7 +109,6 @@ public class PlayerSpriteManager
 
     public void PlayerDeath()
     {
-        Debug.WriteLine("death");
         if (timer <= 0)
         {
             string spriteName = "hurt_down";
