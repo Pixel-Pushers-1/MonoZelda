@@ -14,12 +14,13 @@ public class PlayerCollisionManager
     private readonly int width;
     private readonly int height;
     private PlayerSpriteManager player;
+    private PlayerState playerState;
     private PlayerCollidable playerHitbox;
     private Vector2 knockbackVelocity;
     private float knockbackTimer = 0;
     private float invulnerabilityTimer = 0;
 
-    public PlayerCollisionManager(PlayerSpriteManager player, PlayerCollidable playerHitbox, CollisionController collisionController, PlayerState playerState) { }
+    public PlayerCollisionManager(PlayerSpriteManager player, PlayerCollidable playerHitbox, CollisionController collisionController, PlayerState playerState) {
         this.player = player;
         this.playerState = playerState;
         this.playerHitbox = playerHitbox;
