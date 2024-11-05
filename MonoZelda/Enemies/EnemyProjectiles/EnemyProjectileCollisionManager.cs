@@ -1,6 +1,7 @@
 ﻿using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using Microsoft.Xna.Framework;
+using MonoZelda.Link;
 
 namespace MonoZelda.Enemies.EnemyProjectiles
 {

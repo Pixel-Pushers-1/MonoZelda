@@ -14,14 +14,17 @@ namespace MonoZelda.Enemies.GoriyaFolder
         public Point Pos { get; set; }
         public SpriteDict BoomerangSpriteDict { get; private set; }
         public EnemyProjectileCollidable ProjectileHitbox { get; set; }
+        private EnemyStateMachine.Direction attackDirection;
         private float velocity = 360;
         private float attackTimer;
         private float dt;
+        private Boolean returning;
         private CollisionController collisionController;
 
         public GoriyaBoomerang(Point pos, ContentManager contentManager, GraphicsDevice graphicsDevice, CollisionController collisionController)
         {
             this.Pos = pos;
+            returning = false;
             this.collisionController = collisionController;
             BoomerangSpriteDict = new(contentManager.Load<Texture2D>(TextureData.Enemies), SpriteCSVData.Enemies, 0, new Point(0, 0));
             BoomerangSpriteDict.SetSprite("boomerang");
@@ -41,6 +44,7 @@ namespace MonoZelda.Enemies.GoriyaFolder
 
         public void Follow(Point newPos)
         {
+            returning = false;
             Pos = newPos;
             velocity = Math.Abs(velocity);
             attackTimer = 0;
@@ -48,11 +52,16 @@ namespace MonoZelda.Enemies.GoriyaFolder
 
         public void ProjectileCollide()
         {
-            velocity *= -1;
+            if (!returning)
+            {
+                velocity *= -1;
+                returning = true;
+            }
         }
 
-        public void Update(GameTime gameTime, EnemyStateMachine.Direction attackDirection, Point enemyPos)
+        public void Update(GameTime gameTime, EnemyStateMachine.Direction direction, Point enemyPos)
         {
+            attackDirection = direction;
             dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             attackTimer += dt;
             var pos = new Vector2();
@@ -71,6 +80,7 @@ namespace MonoZelda.Enemies.GoriyaFolder
             }
             else
             {
+                returning = true;
                 velocity *= -1;
                 attackTimer = 0;
             }
