@@ -8,23 +8,20 @@ namespace MonoZelda.Commands.GameCommands;
 public class PlayerEquipProjectileCommand : ICommand
 {
     private ProjectileManager projectileManager;
-    private HUDManager hudManager;
     public PlayerEquipProjectileCommand()
     {
         //empty
     }
 
-    public PlayerEquipProjectileCommand(ProjectileManager projectileManager, HUDManager hudManager)
+    public PlayerEquipProjectileCommand(ProjectileManager projectileManager)
     {
         this.projectileManager = projectileManager;
-        this.hudManager = hudManager;
     }
 
     public void Execute(params object[] metadata)
     {
         Keys pressedKey = (Keys)metadata[0];
         projectileManager.equipProjectile(pressedKey);
-        hudManager.UpdateSelectedWeapon();
     }
 
     public void UnExecute()

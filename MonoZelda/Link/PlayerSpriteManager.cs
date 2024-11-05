@@ -23,6 +23,7 @@ public class PlayerSpriteManager
     private Vector2 playerPosition;
     private float playerSpeed = 4.0f;
     private double timer;
+    private PlayerState playerState;
 
     private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
     {
@@ -34,7 +35,8 @@ public class PlayerSpriteManager
 
     public PlayerSpriteManager(PlayerState playerStateMachine)
     {
-        playerPosition = new Vector2(500, 500);
+        playerPosition = playerStateMachine.Position.ToVector2();
+        playerState = playerStateMachine;
     }
 
     public Direction PlayerDirection
@@ -50,6 +52,7 @@ public class PlayerSpriteManager
     {
         playerPosition = position;
         playerSpriteDict.Position = position.ToPoint();
+        playerState.Position = position.ToPoint();
     }
 
     public void SetPlayerSpriteDict(SpriteDict spriteDict)

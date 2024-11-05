@@ -5,6 +5,7 @@ using MonoZelda.Commands;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
+using MonoZelda.Link;
 using MonoZelda.Sprites;
 using System;
 
@@ -17,7 +18,7 @@ namespace MonoZelda.Scenes
         private GraphicsDevice graphicsDevice;
         private CommandManager commandManager;
         private ContentManager contentManager;
-
+        private PlayerState playerState;
         private InventoryScene inventoryScene;
         private IDungeonRoom currentRoom;
 
@@ -33,7 +34,10 @@ namespace MonoZelda.Scenes
             StartRoom = startRoom;
             this.commandManager = commandManager;
 
-            inventoryScene = new InventoryScene(graphicsDevice, commandManager);
+            // Start the player near the entrance
+            playerState = new PlayerState() { Position = new Point(500, 700) };
+
+            inventoryScene = new InventoryScene(graphicsDevice, commandManager, playerState);
 
             commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this));
             commandManager.ReplaceCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand(this));
@@ -64,8 +68,11 @@ namespace MonoZelda.Scenes
                 return;
             }
 
-            activeScene = new RoomScene(graphicsDevice, commandManager, collisionController, room);
+            activeScene = new RoomScene(graphicsDevice, commandManager, collisionController, room, playerState);
             activeScene.LoadContent(contentManager);
+
+            // Complication due to SpriteDict getting clared, need to re-init the UI
+            inventoryScene.LoadContent(contentManager, room);
         }
 
         public override void Draw(SpriteBatch batch)
@@ -96,6 +103,7 @@ namespace MonoZelda.Scenes
         {
             collisionController.Clear();
             SpriteDrawer.Reset();
+
         }
     }
 }

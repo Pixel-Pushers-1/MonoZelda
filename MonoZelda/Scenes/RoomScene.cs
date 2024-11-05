@@ -16,6 +16,7 @@ using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Trigger;
+using MonoZelda.HUD;
 
 namespace MonoZelda.Scenes;
 
@@ -23,7 +24,7 @@ public class RoomScene : Scene
 {
     private GraphicsDevice graphicsDevice;
     private CommandManager commandManager;
-    private Player player;
+    private PlayerSpriteManager playerSprite;
     private ProjectileManager projectileManager;
     private PlayerCollisionManager playerCollision;
     private CollisionController collisionController;
@@ -36,14 +37,16 @@ public class RoomScene : Scene
     private List<EnemyProjectileCollisionManager> enemyProjectileCollisions = new();
     private IDungeonRoom room;
     private string roomName;
+    private PlayerState playerState;
 
 
-    public RoomScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room) 
+    public RoomScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room, PlayerState playerState) 
     {
         this.graphicsDevice = graphicsDevice;
         this.commandManager = commandManager;
         this.collisionController = collisionController;
         this.room = room;
+        this.playerState = playerState;
         triggers = new List<ITrigger>();
     }
 
@@ -52,28 +55,33 @@ public class RoomScene : Scene
         // Need to wait for LoadContent because MonoZeldaGame is going to clear everything before calling this.
         LoadRoom(contentManager);
 
+        playerSprite = new PlayerSpriteManager(playerState);
+        var takeDamageCommand = new PlayerTakeDamageCommand(playerState, playerSprite);
+
         //create player and player collision manager
-        player = new Player();
         PlayerCollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50), graphicsDevice);
         collisionController.AddCollidable(playerHitbox);
-        playerCollision = new PlayerCollisionManager(player, playerHitbox, collisionController);
+        playerCollision = new PlayerCollisionManager(playerSprite, playerHitbox, collisionController, takeDamageCommand);
 
         // create projectile object and spriteDict
         var projectileDict = new SpriteDict(contentManager.Load<Texture2D>("Sprites/player"), SpriteCSVData.Projectiles, 0, new Point(0, 0));
         projectileManager = new ProjectileManager(collisionController, graphicsDevice, projectileDict);
 
+        // Create itemFactory and HUDManager
+        itemFactory = new ItemFactory(collisionController, contentManager, graphicsDevice);
+
         // replace required commands
-        commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(player));
-        commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(projectileManager, player));
-        commandManager.ReplaceCommand(CommandType.PlayerEquipProjectileCommand, new PlayerEquipProjectileCommand(projectileManager, player));   
-        commandManager.ReplaceCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand(projectileManager, player));
-        commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, player));
-        commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(player));
-        commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(player));
+        commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
+        commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(projectileManager, playerSprite));
+        commandManager.ReplaceCommand(CommandType.PlayerEquipProjectileCommand, new PlayerEquipProjectileCommand(projectileManager));   
+        commandManager.ReplaceCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand(projectileManager, playerSprite));
+        commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, playerSprite));
+        commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(playerSprite));
+        commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerState, playerSprite));
 
         // create spritedict to pass into player controller
-        var playerSpriteDict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Player), SpriteCSVData.Player, 1, new Point(100, 100));
-        player.SetPlayerSpriteDict(playerSpriteDict);
+        var playerSpriteDict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Player), SpriteCSVData.Player, 1, playerState.Position);
+        playerSprite.SetPlayerSpriteDict(playerSpriteDict);
     }
 
     private void LoadRoom(ContentManager contentManager)
