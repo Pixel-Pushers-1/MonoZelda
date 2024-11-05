@@ -6,7 +6,7 @@ namespace MonoZelda.Commands.GameCommands;
 
 public class PlayerEquipProjectileCommand : ICommand
 {
-    private Player player;
+    private PlayerSpriteManager player;
     private ProjectileManager projectileManager;
 
     public PlayerEquipProjectileCommand()
@@ -14,7 +14,7 @@ public class PlayerEquipProjectileCommand : ICommand
         //empty
     }
 
-    public PlayerEquipProjectileCommand(ProjectileManager projectileManager, Player player)
+    public PlayerEquipProjectileCommand(ProjectileManager projectileManager, PlayerSpriteManager player)
     {
         this.player = player;
         this.projectileManager = projectileManager;

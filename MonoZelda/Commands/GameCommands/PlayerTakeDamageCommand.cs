@@ -4,14 +4,14 @@ namespace MonoZelda.Commands.GameCommands;
 
 public class PlayerTakeDamageCommand : ICommand
 {
-    private Player player;
+    private PlayerSpriteManager player;
 
     public PlayerTakeDamageCommand()
     {
         //empty
     }
 
-    public PlayerTakeDamageCommand(Player player)
+    public PlayerTakeDamageCommand(PlayerSpriteManager player)
     {
         this.player = player;
     }

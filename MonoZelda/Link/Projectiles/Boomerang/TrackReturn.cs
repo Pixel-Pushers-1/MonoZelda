@@ -5,12 +5,12 @@ namespace MonoZelda.Link.Projectiles;
 
 public class TrackReturn
 {
-    private Player player;
+    private PlayerSpriteManager player;
     private Vector2 returnPosition;
     private Vector2 Origin;
     private float boomerangSpeed;
     // Private constructor to prevent instantiation from outside
-    private TrackReturn(Player player, float boomerangSpeed)
+    private TrackReturn(PlayerSpriteManager player, float boomerangSpeed)
     {
         this.player = player;
         this.boomerangSpeed = boomerangSpeed;
@@ -18,7 +18,7 @@ public class TrackReturn
     }
 
     // Static method to allow only specific classes to instantiate TrackReturn
-    public static TrackReturn CreateInstance(object caller, Player player, float boomerangSpeed)
+    public static TrackReturn CreateInstance(object caller, PlayerSpriteManager player, float boomerangSpeed)
     {
         // Check if the caller is BoomerangBlue or BoomerangGreen
         if (caller is BoomerangBlue || caller is Boomerang)
