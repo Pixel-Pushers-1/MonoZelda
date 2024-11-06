@@ -18,7 +18,6 @@ namespace MonoZelda.Enemies.EnemyClasses
         public int Height { get; set; }
         public bool Alive { get; set; }
         private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
-        private GraphicsDevice graphicsDevice;
         private EnemyStateMachine stateMachine;
         private CollisionController collisionController;
         private int pixelsMoved;
@@ -26,19 +25,17 @@ namespace MonoZelda.Enemies.EnemyClasses
         private int health = 6;
         private int tileSize = 64;
 
-        public Dodongo(GraphicsDevice graphicsDevice)
+        public Dodongo()
         {
-            this.graphicsDevice = graphicsDevice;
             Width = 64;
             Height = 64;
             Alive = true;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            ContentManager contentManager)
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
             this.collisionController = collisionController;
-            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Dodongo);
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Dodongo);
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;

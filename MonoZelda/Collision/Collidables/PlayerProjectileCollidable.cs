@@ -15,10 +15,10 @@ public class PlayerProjectileCollidable : ICollidable
 
     private readonly CollisionHitboxDraw hitbox;
 
-    public PlayerProjectileCollidable(Rectangle bounds, GraphicsDevice graphicsDevice, ProjectileType projectileType)
+    public PlayerProjectileCollidable(Rectangle bounds, ProjectileType projectileType)
     {
         Bounds = bounds;
-        hitbox = new CollisionHitboxDraw(this, graphicsDevice);
+        hitbox = new CollisionHitboxDraw(this);
         type = CollidableType.PlayerProjectile;
         this.projectileType = projectileType;
     }

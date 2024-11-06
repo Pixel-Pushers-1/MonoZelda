@@ -6,5 +6,5 @@ namespace MonoZelda.Scenes;
 public interface IScene
 {
     void Update(GameTime gameTime);
-    void LoadContent(ContentManager contentManager);
+    void LoadContent();
 }

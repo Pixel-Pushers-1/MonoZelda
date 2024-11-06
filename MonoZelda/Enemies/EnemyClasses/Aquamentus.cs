@@ -20,10 +20,8 @@ namespace MonoZelda.Enemies.EnemyClasses
         public bool Alive { get; set; }
         private EnemyStateMachine stateMachine;
         private readonly Random rnd = new();
-        private readonly GraphicsDevice graphicsDevice;
         private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.Left;
         private CollisionController collisionController;
-        private ContentManager contentManager;
 
         private List<IEnemyProjectile> fireballs = new();
         private Dictionary<IEnemyProjectile, EnemyProjectileCollisionManager> projectileDictionary = new();
@@ -37,9 +35,8 @@ namespace MonoZelda.Enemies.EnemyClasses
         private double dt;
         private bool projectileActive;
 
-        public Aquamentus(GraphicsDevice graphicsDevice)
+        public Aquamentus()
         {
-            this.graphicsDevice = graphicsDevice;
             projectileActive = false;
             pixelsMoved = 0;
             moveDelay = rnd.Next(1, 4);
@@ -50,13 +47,11 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            ContentManager contentManager)
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
             this.collisionController = collisionController;
-            this.contentManager = contentManager;
             spawnPoint = spawnPosition;
-            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Aquamentus);
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Aquamentus);
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
@@ -105,9 +100,9 @@ namespace MonoZelda.Enemies.EnemyClasses
             if (!projectileActive)
             {
                 projectileActive = true;
-                fireballs.Add(new AquamentusFireball(Pos, contentManager, graphicsDevice, collisionController, midAngle + 45));
-                fireballs.Add(new AquamentusFireball(Pos, contentManager, graphicsDevice, collisionController, midAngle));
-                fireballs.Add(new AquamentusFireball(Pos, contentManager, graphicsDevice, collisionController, midAngle - 45));
+                fireballs.Add(new AquamentusFireball(Pos, collisionController, midAngle + 45));
+                fireballs.Add(new AquamentusFireball(Pos, collisionController, midAngle));
+                fireballs.Add(new AquamentusFireball(Pos, collisionController, midAngle - 45));
                 foreach (var projectile in fireballs)
                 {
                     projectileDictionary.Add(projectile, new EnemyProjectileCollisionManager(projectile, collisionController));

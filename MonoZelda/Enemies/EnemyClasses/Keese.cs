@@ -19,26 +19,23 @@ namespace MonoZelda.Enemies.EnemyClasses
         public int Height { get; set; }
         public bool Alive { get; set; }
         private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
-        private readonly GraphicsDevice graphicsDevice;
         private CollisionController collisionController;
         private int pixelsMoved;
         private double speedUpTimer;
         private double dt;
         private float speed;
 
-        public Keese(GraphicsDevice graphicsDevice)
+        public Keese()
         {
-            this.graphicsDevice = graphicsDevice;
             Width = 48;
             Height = 48;
             Alive = true;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            ContentManager contentManager)
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
             this.collisionController = collisionController;
-            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Keese);
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Keese);
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;

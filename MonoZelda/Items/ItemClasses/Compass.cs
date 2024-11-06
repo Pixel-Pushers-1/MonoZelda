@@ -10,7 +10,6 @@ public class Compass : IItem
 {
     private ItemCollidable compassCollidable;
     private bool itemPickedUp;
-    private GraphicsDevice graphicsDevice;
 
     public bool ItemPickedUp
     {
@@ -24,14 +23,9 @@ public class Compass : IItem
         }
     }
 
-    public Compass(GraphicsDevice graphicsDevice)
-    {
-        this.graphicsDevice = graphicsDevice;
-    }
-
     public void itemSpawn(SpriteDict compassDict, Point spawnPosition, CollisionController collisionController)
     {
-        compassCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 60, 60), graphicsDevice, ItemList.Compass);
+        compassCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 60, 60), ItemList.Compass);
         collisionController.AddCollidable(compassCollidable);
         compassCollidable.setSpriteDict(compassDict);
         compassDict.Position = spawnPosition;
