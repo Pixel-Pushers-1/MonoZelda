@@ -1,7 +1,7 @@
-Sprite,X,Y,W,H,Frames,Anchor
-title,1,11,256,224,1,top left
-spray1,846,11,32,16,1,top left
-spray2,879,11,32,16,1,top left
-foam1,776,28,32,16,1,top left
-foam2,809,28,32,16,1,top left
-foam3,842,28,32,16,1,top left
+Sprite,X,Y,W,H,Frames,Anchor,Fps
+title,1,11,256,224,1,top left,10
+spray1,846,11,32,16,1,top left,10
+spray2,879,11,32,16,1,top left,10
+foam1,776,28,32,16,1,top left,10
+foam2,809,28,32,16,1,top left,10
+foam3,842,28,32,16,1,top left,10
