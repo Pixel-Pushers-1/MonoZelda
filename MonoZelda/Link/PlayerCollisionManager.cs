@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
+using MonoZelda.Commands.GameCommands;
 using MonoZelda.Controllers;
 
 namespace MonoZelda.Link;
@@ -14,15 +15,15 @@ public class PlayerCollisionManager
     private readonly int width;
     private readonly int height;
     private PlayerSpriteManager player;
-    private PlayerState playerState;
+    private PlayerTakeDamageCommand damageCommand;
     private PlayerCollidable playerHitbox;
     private Vector2 knockbackVelocity;
     private float knockbackTimer = 0;
     private float invulnerabilityTimer = 0;
 
-    public PlayerCollisionManager(PlayerSpriteManager player, PlayerCollidable playerHitbox, CollisionController collisionController, PlayerState playerState) {
+    public PlayerCollisionManager(PlayerSpriteManager player, PlayerCollidable playerHitbox, CollisionController collisionController, PlayerTakeDamageCommand damageCommand) {
         this.player = player;
-        this.playerState = playerState;
+        this.damageCommand = damageCommand;
         this.playerHitbox = playerHitbox;
         this.width = 64;
         this.height = 64;
@@ -73,7 +74,7 @@ public class PlayerCollisionManager
 
         if ((int)player.PlayerDirection + (int)collisionDirection == 0)
         {
-            playerState.TakeDamage();
+            damageCommand.Execute();
             invulnerabilityTimer = INVULNERABILITY_TIME;
         }
     }
@@ -110,7 +111,7 @@ public class PlayerCollisionManager
             knockbackTimer = KNOCKBACK_TIME;
             invulnerabilityTimer = INVULNERABILITY_TIME;
             ApplyKnockback();
-            playerState.TakeDamage();
+            damageCommand.Execute();
         }
     }
 

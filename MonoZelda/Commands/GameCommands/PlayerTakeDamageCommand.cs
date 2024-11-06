@@ -5,15 +5,17 @@ namespace MonoZelda.Commands.GameCommands;
 public class PlayerTakeDamageCommand : ICommand
 {
     private PlayerState player;
+    private PlayerSpriteManager playerSprite;
 
     public PlayerTakeDamageCommand()
     {
         //empty
     }
 
-    public PlayerTakeDamageCommand(PlayerState player)
+    public PlayerTakeDamageCommand(PlayerState player, PlayerSpriteManager playerSprite)
     {
         this.player = player;
+        this.playerSprite = playerSprite;
     }
 
     public void Execute(params object[] metadata)
@@ -23,6 +25,7 @@ public class PlayerTakeDamageCommand : ICommand
 
         // Apply damage to player
         player.TakeDamage();
+        playerSprite.TakeDamage();
     }
 
     public void UnExecute()

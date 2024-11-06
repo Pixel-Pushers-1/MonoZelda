@@ -4,13 +4,13 @@ using MonoZelda.Scenes;
 
 namespace MonoZelda.Commands.GameCommands
 {
-    internal class LoadRoomCommand : ICommand
+    public class RoomTransitionCommand : ICommand
     {
         private DungeonScene dungeonScene;
 
-        public LoadRoomCommand() { }
+        public RoomTransitionCommand() { }
 
-        public LoadRoomCommand(DungeonScene dungeonScene)
+        public RoomTransitionCommand(DungeonScene dungeonScene)
         {
             this.dungeonScene = dungeonScene;
         }
@@ -25,7 +25,7 @@ namespace MonoZelda.Commands.GameCommands
             var destination = metadata[0];
             if (destination is string dest && !string.IsNullOrEmpty(dest))
             {
-                dungeonScene.LoadRoom(dest);
+                dungeonScene.TransitionRoom(dest);
             }
         }
 

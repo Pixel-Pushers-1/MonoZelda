@@ -5,16 +5,22 @@ using MonoZelda.Sprites;
 
 namespace MonoZelda.Scenes;
 
-public class MainMenu : IScene
+public class MainMenuScene : Scene
 {
     enum MenuSprite { title }
+    private GraphicsDevice _graphicsDevice;
 
-    public void Update(GameTime gameTime)
+    public MainMenuScene(GraphicsDevice graphicsDevice)
+    {
+        _graphicsDevice = graphicsDevice;
+    }
+
+    public override void Update(GameTime gameTime)
     {
         // TODO: Animate the waterfall
     }
 
-    public void LoadContent()
+    public override void LoadContent(ContentManager contentManager)
     {
         var dict = new SpriteDict(SpriteType.Title, 0, new Point(0,0));
         dict.SetSprite(nameof(MenuSprite.title));

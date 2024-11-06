@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MonoZelda.Dungeons.Parser.Data
+namespace MonoZelda.Tiles
 {
-    public enum DoorDirection
+    internal interface IDoor
     {
-        North,
-        East,
-        South,
-        West
+        void Open();
+        void Close();
+
     }
 }
