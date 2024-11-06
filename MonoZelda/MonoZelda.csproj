@@ -30,6 +30,9 @@
     <None Update="Content\Source Rect CSVs\Sprite Source Rects - Projectiles.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Source Rect CSVs\Sprite Source Rects - Tiles Dungeon1.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Source Rect CSVs\Sprite Source Rects - Title.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -37,9 +40,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Content\Source Rect CSVs\Sprite Source Rects - Player.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\Source Rect CSVs\Sprite Source Rects - Tiles Dungeon1.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Content\Sprites\tiles_dungeon1.png">
