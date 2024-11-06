@@ -29,15 +29,15 @@ namespace MonoZelda.UI
             this.playerState = playerState;
 
             int numberOfRupees = playerState.Rupees;
-            rupee = new SpriteDict(contentManager.Load<Texture2D>("Sprites/items"), SpriteCSVData.Items, 0, rupeePosition);
+            rupee = new SpriteDict(SpriteType.Items, 0, rupeePosition);
             rupee.SetSprite("rupee");
             //set key
             int numberOfKeys = playerState.Keys;
-            key = new SpriteDict(contentManager.Load<Texture2D>("Sprites/items"), SpriteCSVData.Items, 0, keyPosition);
+            key = new SpriteDict(SpriteType.Items, 0, keyPosition);
             key.SetSprite("key_0");
             //set bomb
             int numberOfBombs = playerState.Bombs;
-            bomb = new SpriteDict(contentManager.Load<Texture2D>("Sprites/items"), SpriteCSVData.Items, 0, bombPosition);
+            bomb = new SpriteDict(SpriteType.Items, 0, bombPosition);
             bomb.SetSprite("bomb");
 
             // TODO: Projectile manager needs to update PlayerState

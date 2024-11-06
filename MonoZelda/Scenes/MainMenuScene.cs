@@ -7,9 +7,8 @@ namespace MonoZelda.Scenes;
 
 public class MainMenuScene : Scene
 {
-    GraphicsDevice _graphicsDevice;
-
     enum MenuSprite { title }
+    private GraphicsDevice _graphicsDevice;
 
     public MainMenuScene(GraphicsDevice graphicsDevice)
     {
@@ -23,7 +22,7 @@ public class MainMenuScene : Scene
 
     public override void LoadContent(ContentManager contentManager)
     {
-        var dict = new SpriteDict(contentManager.Load<Texture2D>(TextureData.Title), SpriteCSVData.Title, 0, new Point(0,0));
+        var dict = new SpriteDict(SpriteType.Title, 0, new Point(0,0));
         dict.SetSprite(nameof(MenuSprite.title));
     }
 }

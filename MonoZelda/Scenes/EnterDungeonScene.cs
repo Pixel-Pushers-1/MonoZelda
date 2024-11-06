@@ -34,34 +34,32 @@ namespace MonoZelda.Scenes
             // center of the creen
             var center = new Point(gd.Viewport.Width / 2, DungeonConstants.RoomPosition.Y);
 
-            var dungeonTexture = contentManager.Load<Texture2D>(TextureData.Blocks);
-
             // Fake the dungeon entrance
             // Room wall border
-            var r = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks, SpriteLayer.Background, DungeonConstants.DungeonPosition);
+            var r = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, DungeonConstants.DungeonPosition);
             r.SetSprite(nameof(Dungeon1Sprite.room_exterior));
             r.Position = DungeonConstants.DungeonPosition;
 
             // Floor background
-            var f = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks, SpriteLayer.Background, DungeonConstants.BackgroundPosition);
+            var f = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, DungeonConstants.BackgroundPosition);
             f.SetSprite(room.RoomSprite.ToString());
 
             // the room texutres are 192 * 4 = 768 pixels wide
             var leftPosition = center - new Point(192 * 4, 0);
-            leftCurtain = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks, SpriteLayer.HUD, leftPosition);
+            leftCurtain = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD, leftPosition);
             leftCurtain.SetSprite(nameof(Dungeon1Sprite.room_41));
 
-            rightCurtain = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks, SpriteLayer.HUD, center);
+            rightCurtain = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD, center);
             rightCurtain.SetSprite(nameof(Dungeon1Sprite.room_41));
 
-            CreateFakeDoors(room, dungeonTexture);
+            CreateFakeDoors(room);
         }
 
-        private void CreateFakeDoors(IDungeonRoom room, Texture2D texture)
+        private void CreateFakeDoors(IDungeonRoom room)
         {
             foreach(var door in room.GetDoors())
             {
-                var doorSprite = new SpriteDict(texture, SpriteCSVData.Blocks, SpriteLayer.Background, door.Position);
+                var doorSprite = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, door.Position);
                 doorSprite.SetSprite(door.Type.ToString());
             }
         }

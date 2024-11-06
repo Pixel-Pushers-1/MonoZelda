@@ -1,131 +1,131 @@
-Sprite,X,Y,W,H,Frames,Anchor
-walk_down,0,16,16,16,2,center
-walk_right,32,16,16,16,2,center
-walk_up,64,16,16,16,2,center
-walk_left,96,16,16,16,2,center
-standing_down,0,16,16,16,1,center
-standing_right,32,16,16,16,1,center
-standing_up,64,16,16,16,1,center
-standing_left,96,16,16,16,1,center
-useitem_down,144,16,16,16,1,center
-useitem_right,160,16,16,16,1,center
-useitem_up,176,16,16,16,1,center
-useitem_left,192,16,16,16,1,center
-pickupitem_onehand,224,16,16,16,1,center
-pickupitem_twohands,240,16,16,16,1,center
-magicshield_down,288,16,16,16,2,center
-magicshield_right,320,16,16,16,2,center
-magicshield_up,64,16,16,16,2,center
-magicshield_left,352,16,16,16,2,center
-woodensword_down,0,48,16,32,4,top quarter
-woodensword_right,64,48,32,16,4,left quarter
-woodensword_up,192,48,16,32,4,bottom quarter
-woodensword_left,64,64,32,16,4,right quarter
-woodensword_magicshield_down,256,48,16,32,2,top quarter
-woodensword_magicshield_right,288,48,32,16,2,left quarter
-woodensword_magicshield_up,192,48,16,32,4,bottom quarter
-woodensword_magicshield_left,288,64,32,16,2,right quarter
-whitesword_down,0,96,16,32,4,top quarter
-whitesword_right,64,96,32,16,4,left quarter
-whitesword_up,192,96,16,32,4,bottom quarter
-whitesword_left,64,112,32,16,4,right quarter
-whitesword_magicshield_down,256,96,16,32,2,top quarter
-whitesword_magicshield_right,288,96,32,16,2,left quarter
-whitesword_magicshield_up,192,96,16,32,4,bottom quarter
-whitesword_magicshield_left,288,112,32,16,2,right quarter
-magicalsword_down,0,144,16,32,4,top quarter
-magicalsword_right,64,144,32,16,4,left quarter
-magicalsword_up,192,144,16,32,4,bottom quarter
-magicalsword_left,64,160,32,16,4,right quarter
-magicalsword_magicshield_down,256,144,16,32,2,top quarter
-magicalsword_magicshield_right,288,144,32,16,2,left quarter
-magicalsword_magicshield_up,192,144,16,32,4,bottom quarter
-magicalsword_magicshield_left,288,160,32,16,2,right quarter
-magicrod_down,0,192,16,32,4,top quarter
-magicrod_right,64,192,32,16,4,left quarter
-magicrod_up,192,192,16,32,4,bottom quarter
-magicrod_left,64,208,32,16,4,right quarter
-magicrod_magicshield_down,256,192,16,32,2,top quarter
-magicrod_magicshield_right,288,192,32,16,2,left quarter
-magicrod_magicshield_up,192,192,16,32,4,bottom quarter
-magicrod_magicshield_left,288,208,32,16,2,right quarter
-woodensword_item_up,0,224,8,16,1,center
-woodensword_item_down,8,224,8,16,1,center
-woodensword_item_right,16,224,16,8,1,center
-woodensword_item_left,16,232,16,8,1,center
-woodensword_effect_NW,32,224,8,10,1,center
-woodensword_effect_NE,40,224,8,10,1,center
-woodensword_effect_SW,32,234,8,10,1,center
-woodensword_effect_SE,40,234,8,10,1,center
-whitesword_item_up,48,224,8,16,1,center
-whitesword_item_down,56,224,8,16,1,center
-whitesword_item_right,64,224,16,8,1,center
-whitesword_item_left,64,232,16,8,1,center
-whitesword_effect_NW,80,224,8,10,1,center
-whitesword_effect_NE,88,224,8,10,1,center
-whitesword_effect_SW,80,234,8,10,1,center
-whitesword_effect_SE,88,234,8,10,1,center
-magicsword_up,96,224,8,16,1,center
-magicsword_down,104,224,8,16,1,center
-magicsword_right,112,224,16,8,1,center
-magicsword_left,112,232,16,8,1,center
-magicsword_effect_NW,128,224,8,10,1,center
-magicsword_effect_NE,136,224,8,10,1,center
-magicsword_effect_SW,128,234,8,10,1,center
-magicsword_effect_SE,136,234,8,10,1,center
-darksword_up,144,224,8,16,1,center
-darksword_down,152,224,8,16,1,center
-darksword_right,160,224,16,8,1,center
-darksword_left,160,232,16,8,1,center
-darksword_effect_NW,176,224,8,10,1,center
-darksword_effect_NE,184,224,8,10,1,center
-darksword_effect_SW,176,234,8,10,1,center
-darksword_effect_SE,184,234,8,10,1,center
-magicrod_item_up,192,224,8,16,1,center
-magicrod_item_down,200,224,8,16,1,center
-magicrod_item_right,208,224,16,8,1,center
-magicrod_item_left,208,232,16,8,1,center
-slash_green_up,224,224,16,16,1,center
-slash_green_down,224,240,16,16,1,center
-slash_black_up,240,224,16,16,1,center
-slash_black_down,240,240,16,16,1,center
-slash_red_up,256,224,16,16,1,center
-slash_red_down,256,240,16,16,1,center
-slash_blue_up,272,224,16,16,1,center
-slash_blue_down,272,240,16,16,1,center
-slash_green_right,288,224,16,16,1,center
-slash_green_left,288,240,16,16,1,center
-slash_black_right,304,224,16,16,1,center
-slash_black_left,304,240,16,16,1,center
-slash_red_right,320,224,16,16,1,center
-slash_red_left,320,240,16,16,1,center
-slash_blue_right,336,224,16,16,1,center
-slash_blue_left,336,240,16,16,1,center
-arrow_green_up,0,256,8,16,1,center
-arrow_green_down,8,256,8,16,1,center
-arrow_green_right,16,256,16,8,1,center
-arrow_green_left,16,264,16,8,1,center
-arrow_blue_up,32,256,8,16,1,center
-arrow_blue_down,40,256,8,16,1,center
-arrow_blue_right,48,256,16,8,1,center
-arrow_blue_left,48,264,16,8,1,center
-poof,64,256,8,8,1,center
-boomerang,80,256,8,8,8,center
-boomerang_blue,80,264,8,8,8,center
-bomb,144,256,16,16,1,center
-cloud,160,256,16,16,3,center
-fire,208,256,16,16,2,center
-smoke_orange,240,256,16,16,1,center
-smoke_red,256,256,16,16,1,center
-smoke_yellow,272,256,16,16,1,center
-smoke_blue,288,256,16,16,1,center
-ladder,304,256,16,16,1,center
-meat,320,256,16,16,1,center
-hurt_down,256,288,16,16,4,center
-hurt_right,256,304,16,16,4,center
-hurt_up,256,320,16,16,4,center
-hurt_left,256,336,16,16,4,center
-hurt_magicshield_down,320,288,16,16,4,center
-hurt_magicshield_right,320,304,16,16,4,center
-hurt_magicshield_up,320,320,16,16,4,center
-hurt_magicshield_left,320,336,16,16,4,center
+Sprite,X,Y,W,H,Frames,Anchor,Fps
+walk_down,0,16,16,16,2,center,10
+walk_right,32,16,16,16,2,center,10
+walk_up,64,16,16,16,2,center,10
+walk_left,96,16,16,16,2,center,10
+standing_down,0,16,16,16,1,center,10
+standing_right,32,16,16,16,1,center,10
+standing_up,64,16,16,16,1,center,10
+standing_left,96,16,16,16,1,center,10
+useitem_down,144,16,16,16,1,center,4
+useitem_right,160,16,16,16,1,center,4
+useitem_up,176,16,16,16,1,center,4
+useitem_left,192,16,16,16,1,center,4
+pickupitem_onehand,224,16,16,16,1,center,10
+pickupitem_twohands,240,16,16,16,1,center,10
+magicshield_down,288,16,16,16,2,center,10
+magicshield_right,320,16,16,16,2,center,10
+magicshield_up,64,16,16,16,2,center,10
+magicshield_left,352,16,16,16,2,center,10
+woodensword_down,0,48,16,32,4,top quarter,15
+woodensword_right,64,48,32,16,4,left quarter,15
+woodensword_up,192,48,16,32,4,bottom quarter,15
+woodensword_left,64,64,32,16,4,right quarter,15
+woodensword_magicshield_down,256,48,16,32,2,top quarter,10
+woodensword_magicshield_right,288,48,32,16,2,left quarter,10
+woodensword_magicshield_up,192,48,16,32,4,bottom quarter,10
+woodensword_magicshield_left,288,64,32,16,2,right quarter,10
+whitesword_down,0,96,16,32,4,top quarter,10
+whitesword_right,64,96,32,16,4,left quarter,10
+whitesword_up,192,96,16,32,4,bottom quarter,10
+whitesword_left,64,112,32,16,4,right quarter,10
+whitesword_magicshield_down,256,96,16,32,2,top quarter,10
+whitesword_magicshield_right,288,96,32,16,2,left quarter,10
+whitesword_magicshield_up,192,96,16,32,4,bottom quarter,10
+whitesword_magicshield_left,288,112,32,16,2,right quarter,10
+magicalsword_down,0,144,16,32,4,top quarter,10
+magicalsword_right,64,144,32,16,4,left quarter,10
+magicalsword_up,192,144,16,32,4,bottom quarter,10
+magicalsword_left,64,160,32,16,4,right quarter,10
+magicalsword_magicshield_down,256,144,16,32,2,top quarter,10
+magicalsword_magicshield_right,288,144,32,16,2,left quarter,10
+magicalsword_magicshield_up,192,144,16,32,4,bottom quarter,10
+magicalsword_magicshield_left,288,160,32,16,2,right quarter,10
+magicrod_down,0,192,16,32,4,top quarter,10
+magicrod_right,64,192,32,16,4,left quarter,10
+magicrod_up,192,192,16,32,4,bottom quarter,10
+magicrod_left,64,208,32,16,4,right quarter,10
+magicrod_magicshield_down,256,192,16,32,2,top quarter,10
+magicrod_magicshield_right,288,192,32,16,2,left quarter,10
+magicrod_magicshield_up,192,192,16,32,4,bottom quarter,10
+magicrod_magicshield_left,288,208,32,16,2,right quarter,10
+woodensword_item_up,0,224,8,16,1,center,10
+woodensword_item_down,8,224,8,16,1,center,10
+woodensword_item_right,16,224,16,8,1,center,10
+woodensword_item_left,16,232,16,8,1,center,10
+woodensword_effect_NW,32,224,8,10,1,center,10
+woodensword_effect_NE,40,224,8,10,1,center,10
+woodensword_effect_SW,32,234,8,10,1,center,10
+woodensword_effect_SE,40,234,8,10,1,center,10
+whitesword_item_up,48,224,8,16,1,center,10
+whitesword_item_down,56,224,8,16,1,center,10
+whitesword_item_right,64,224,16,8,1,center,10
+whitesword_item_left,64,232,16,8,1,center,10
+whitesword_effect_NW,80,224,8,10,1,center,10
+whitesword_effect_NE,88,224,8,10,1,center,10
+whitesword_effect_SW,80,234,8,10,1,center,10
+whitesword_effect_SE,88,234,8,10,1,center,10
+magicsword_up,96,224,8,16,1,center,10
+magicsword_down,104,224,8,16,1,center,10
+magicsword_right,112,224,16,8,1,center,10
+magicsword_left,112,232,16,8,1,center,10
+magicsword_effect_NW,128,224,8,10,1,center,10
+magicsword_effect_NE,136,224,8,10,1,center,10
+magicsword_effect_SW,128,234,8,10,1,center,10
+magicsword_effect_SE,136,234,8,10,1,center,10
+darksword_up,144,224,8,16,1,center,10
+darksword_down,152,224,8,16,1,center,10
+darksword_right,160,224,16,8,1,center,10
+darksword_left,160,232,16,8,1,center,10
+darksword_effect_NW,176,224,8,10,1,center,10
+darksword_effect_NE,184,224,8,10,1,center,10
+darksword_effect_SW,176,234,8,10,1,center,10
+darksword_effect_SE,184,234,8,10,1,center,10
+magicrod_item_up,192,224,8,16,1,center,10
+magicrod_item_down,200,224,8,16,1,center,10
+magicrod_item_right,208,224,16,8,1,center,10
+magicrod_item_left,208,232,16,8,1,center,10
+slash_green_up,224,224,16,16,1,center,10
+slash_green_down,224,240,16,16,1,center,10
+slash_black_up,240,224,16,16,1,center,10
+slash_black_down,240,240,16,16,1,center,10
+slash_red_up,256,224,16,16,1,center,10
+slash_red_down,256,240,16,16,1,center,10
+slash_blue_up,272,224,16,16,1,center,10
+slash_blue_down,272,240,16,16,1,center,10
+slash_green_right,288,224,16,16,1,center,10
+slash_green_left,288,240,16,16,1,center,10
+slash_black_right,304,224,16,16,1,center,10
+slash_black_left,304,240,16,16,1,center,10
+slash_red_right,320,224,16,16,1,center,10
+slash_red_left,320,240,16,16,1,center,10
+slash_blue_right,336,224,16,16,1,center,10
+slash_blue_left,336,240,16,16,1,center,10
+arrow_green_up,0,256,8,16,1,center,10
+arrow_green_down,8,256,8,16,1,center,10
+arrow_green_right,16,256,16,8,1,center,10
+arrow_green_left,16,264,16,8,1,center,10
+arrow_blue_up,32,256,8,16,1,center,10
+arrow_blue_down,40,256,8,16,1,center,10
+arrow_blue_right,48,256,16,8,1,center,10
+arrow_blue_left,48,264,16,8,1,center,10
+poof,64,256,8,8,1,center,10
+boomerang,80,256,8,8,8,center,10
+boomerang_blue,80,264,8,8,8,center,10
+bomb,144,256,16,16,1,center,10
+cloud,160,256,16,16,3,center,10
+fire,208,256,16,16,2,center,10
+smoke_orange,240,256,16,16,1,center,10
+smoke_red,256,256,16,16,1,center,10
+smoke_yellow,272,256,16,16,1,center,10
+smoke_blue,288,256,16,16,1,center,10
+ladder,304,256,16,16,1,center,10
+meat,320,256,16,16,1,center,10
+hurt_down,256,288,16,16,4,center,10
+hurt_right,256,304,16,16,4,center,10
+hurt_up,256,320,16,16,4,center,10
+hurt_left,256,336,16,16,4,center,10
+hurt_magicshield_down,320,288,16,16,4,center,10
+hurt_magicshield_right,320,304,16,16,4,center,10
+hurt_magicshield_up,320,320,16,16,4,center,10
+hurt_magicshield_left,320,336,16,16,4,center,10

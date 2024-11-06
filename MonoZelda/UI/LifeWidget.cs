@@ -24,7 +24,7 @@ namespace MonoZelda.UI
             for (int i = 0; i < numberOfHearts; i++)
             {
                 Point heartPosition = WidgetLocation + margin + new Point((i * 32), 32);
-                SpriteDict heart = new SpriteDict(cm.Load<Texture2D>("Sprites/items"), SpriteCSVData.Items, 0, heartPosition);
+                SpriteDict heart = new SpriteDict(SpriteType.Items, 0, heartPosition);
                 heart.SetSprite("heart_full");
 
                 _hearts.Add(heart);

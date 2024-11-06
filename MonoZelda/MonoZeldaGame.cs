@@ -67,7 +67,7 @@ public class MonoZeldaGame : Game
     {
         spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        testFont = Content.Load<SpriteFont>("Fonts/Basic");
+        TextureData.LoadTextures(Content, GraphicsDevice);
 
         // Start menu goes first
         StartMenu();

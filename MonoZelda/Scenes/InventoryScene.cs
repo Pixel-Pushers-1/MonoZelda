@@ -29,6 +29,10 @@ namespace MonoZelda.Scenes
             graphicsDevice = gd;
         }
 
+        public InventoryScene()
+        {
+        }
+
         public void LoadContent(ContentManager contentManager)
         {
             _spriteFont ??= contentManager.Load<SpriteFont>("Fonts/Basic");

@@ -14,12 +14,12 @@ public class SpriteDict : IDrawable
     private readonly Dictionary<string, Sprite> dict = new();
     private string currentSprite = "";
 
-    public SpriteDict(Texture2D texture, string csvName, int priority, Point position)
+    public SpriteDict(SpriteType spriteType, int priority, Point position)
     {
-        this.texture = texture;
+        this.texture = TextureData.GetTexture(spriteType);
         Position = position;
         this.Enabled = true;
-        SpriteSheetParser.Parse(this, csvName);
+        SpriteSheetParser.Parse(this, SpriteCSVData.GetFileName(spriteType));
         SpriteDrawer.RegisterDrawable(this, priority);
     }
 
