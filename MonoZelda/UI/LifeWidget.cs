@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Link;
 using MonoZelda.Sprites;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace MonoZelda.UI
 {
@@ -20,15 +21,15 @@ namespace MonoZelda.UI
             font = spriteFont;
             this.playerState = playerState;
 
-            var numberOfHearts = playerState.MaxHealth;
+            //create heart sprites
+            int numberOfHearts = (int) ((playerState.MaxHealth + 1) / 2f);
             for (int i = 0; i < numberOfHearts; i++)
             {
                 Point heartPosition = WidgetLocation + margin + new Point((i * 32), 32);
-                SpriteDict heart = new SpriteDict(SpriteType.Items, 0, heartPosition);
-                heart.SetSprite("heart_full");
-
+                SpriteDict heart = new SpriteDict(SpriteType.HUD, 0, heartPosition);
                 _hearts.Add(heart);
             }
+            SetHearts(playerState.Health);
         }
 
         public override void Draw(SpriteBatch sb)
@@ -43,8 +44,19 @@ namespace MonoZelda.UI
 
         public override void Update()
         {
-            for(int i =0 ; i < _hearts.Count; i++) {
-                _hearts[i].Enabled = i < playerState.Health;
+            SetHearts(playerState.Health);
+        }
+
+        private void SetHearts(int health)
+        {
+            for (int i = 0; i < _hearts.Count; i++) {
+                if (health >= 2)
+                    _hearts[i].SetSprite("heart_full");
+                else if (health == 1)
+                    _hearts[i].SetSprite("heart_half");
+                else
+                    _hearts[i].SetSprite("heart_empty");
+                health -= 2;
             }
         }
     }
