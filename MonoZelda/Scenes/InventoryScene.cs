@@ -7,16 +7,20 @@ using MonoZelda.Link;
 using MonoZelda.UI;
 using System;
 using System.Collections.Generic;
+using MonoZelda.Commands.GameCommands;
 
 namespace MonoZelda.Scenes
 {
     internal class InventoryScene : IScene
     {
+        private const int INVENTORY_OPEN_Y = 700;
+        private const int INVENTORY_OPEN_SPEED = 16;
         public Screen Screen { get; set; }
         public Dictionary<Type,IScreenWidget> Widgets { get; set; }
         private SpriteFont _spriteFont;
         private PlayerState _playerState;
         private GraphicsDevice graphicsDevice;
+        private bool isInventoryOpen = false;
 
         public InventoryScene(GraphicsDevice gd, CommandManager commands, PlayerState state)
         {
@@ -56,6 +60,15 @@ namespace MonoZelda.Scenes
             {
                 widget.Update();
             }
+
+            if (isInventoryOpen && Screen.Origin.Y <= INVENTORY_OPEN_Y)
+            {
+                Screen.Origin = new Point(0, Math.Min(Screen.Origin.Y + INVENTORY_OPEN_SPEED, INVENTORY_OPEN_Y));
+            }
+            else if (Screen.Origin.Y > 0)
+            {
+                Screen.Origin = new Point(0, Math.Max(Screen.Origin.Y - INVENTORY_OPEN_SPEED, 0));
+            }
         }
 
         public void Draw(SpriteBatch sb)
@@ -64,6 +77,12 @@ namespace MonoZelda.Scenes
             {
                 widget.Draw(sb);
             }
+        }
+
+        public bool ToggleInventory()
+        {
+            isInventoryOpen = !isInventoryOpen;
+            return isInventoryOpen;
         }
     }
 }
