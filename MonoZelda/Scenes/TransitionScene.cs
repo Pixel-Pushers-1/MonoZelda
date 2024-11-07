@@ -15,10 +15,6 @@ namespace MonoZelda.Scenes
         private IDungeonRoom currentRoom;
         private IDungeonRoom nextRoom;
         private Direction TransitionDirection;
-        private SpriteDict currentBorderSpriteDict;
-        private SpriteDict nextBorderSpriteDict;
-        private SpriteDict currentRoomSpriteDict;
-        private SpriteDict nextRoomSpriteDict;
         private List<SpriteDict> spritesToMove;
 
         private readonly Dictionary<Direction, Point> directionShiftMap = new()
