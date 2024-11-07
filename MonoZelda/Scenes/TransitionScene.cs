@@ -35,20 +35,14 @@ namespace MonoZelda.Scenes
             this.currentRoom = currentRoom;
             this.nextRoom = nextRoom;
             TransitionDirection = doorCollisionDirection;
+            spritesToMove = new List<SpriteDict>();
         }
 
-        private SpriteDict CreateRoomBorderSprite(Texture2D texture, Point position)
-        {
-            var spriteDict = new SpriteDict(texture, SpriteCSVData.Blocks, SpriteLayer.Transition, position);
-            spriteDict.SetSprite(nameof(Dungeon1Sprite.room_exterior));
-            return spriteDict;
-        }
-
-        private SpriteDict CreateRoomSprite(Texture2D texture, string spriteName, Point position)
+        private void CreateSpriteDict(Texture2D texture, string spriteName, Point position)
         {
             var spriteDict = new SpriteDict(texture, SpriteCSVData.Blocks, SpriteLayer.Transition, position);
             spriteDict.SetSprite(spriteName);
-            return spriteDict;
+            spritesToMove.Add(spriteDict);
         }
 
         public override void LoadContent(ContentManager contentManager)
@@ -57,33 +51,26 @@ namespace MonoZelda.Scenes
             var dungeonTexture = contentManager.Load<Texture2D>(TextureData.Blocks);
 
             // Set up room and border sprites
-            currentBorderSpriteDict = CreateRoomBorderSprite(dungeonTexture, DungeonConstants.DungeonPosition);
-            nextBorderSpriteDict = CreateRoomBorderSprite(dungeonTexture, DungeonConstants.DungeonPosition + DungeonConstants.adjacentRoomSpawnPoints[TransitionDirection]);
-            currentRoomSpriteDict = CreateRoomSprite(dungeonTexture, currentRoom.RoomSprite.ToString(), DungeonConstants.BackgroundPosition);
-            nextRoomSpriteDict = CreateRoomSprite(dungeonTexture, nextRoom.RoomSprite.ToString(), DungeonConstants.BackgroundPosition + DungeonConstants.adjacentRoomSpawnPoints[TransitionDirection]);
-
-            // create list of spriteDicts
-            spritesToMove = new List<SpriteDict> { currentBorderSpriteDict, nextBorderSpriteDict, currentRoomSpriteDict, nextRoomSpriteDict };
+            CreateSpriteDict(dungeonTexture, "room_exterior", DungeonConstants.DungeonPosition);
+            CreateSpriteDict(dungeonTexture, "room_exterior", DungeonConstants.DungeonPosition + DungeonConstants.adjacentTransitionRoomSpawnPoints[TransitionDirection]);
+            CreateSpriteDict(dungeonTexture, currentRoom.RoomSprite.ToString(), DungeonConstants.BackgroundPosition);
+            CreateSpriteDict(dungeonTexture, nextRoom.RoomSprite.ToString(), DungeonConstants.BackgroundPosition + DungeonConstants.adjacentTransitionRoomSpawnPoints[TransitionDirection]);
 
             // create Door spriteDicts
             foreach (var currentDoorSpawn in currentRoom.GetDoors())
             {
-                SpriteDict doorDict = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks, SpriteLayer.Transition, currentDoorSpawn.Position);
-                doorDict.SetSprite(currentDoorSpawn.Type.ToString());
-                spritesToMove.Add(doorDict);
+                CreateSpriteDict(dungeonTexture, currentDoorSpawn.Type.ToString(), currentDoorSpawn.Position);
             }
 
             foreach (var nextDoorSpawn in nextRoom.GetDoors())
             {
-                SpriteDict doorDict = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks, SpriteLayer.Transition, nextDoorSpawn.Position + DungeonConstants.adjacentRoomSpawnPoints[TransitionDirection]);
-                doorDict.SetSprite(nextDoorSpawn.Type.ToString());
-                spritesToMove.Add(doorDict);
+                CreateSpriteDict(dungeonTexture, nextDoorSpawn.Type.ToString(), nextDoorSpawn.Position + DungeonConstants.adjacentTransitionRoomSpawnPoints[TransitionDirection]);
             }
         }
 
         public override void Update(GameTime gameTime)
         {
-            Vector2 nextRoomPos = nextBorderSpriteDict.Position.ToVector2();
+            Vector2 nextRoomPos = spritesToMove[1].Position.ToVector2();
             Vector2 sceneRoomPos = DungeonConstants.DungeonPosition.ToVector2();
             float distance = Vector2.Distance(nextRoomPos, sceneRoomPos);
 

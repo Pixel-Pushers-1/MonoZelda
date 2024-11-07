@@ -25,7 +25,7 @@ public static class DungeonConstants
         DungeonPosition + new Point(0, 288)
     };
 
-    public static readonly Dictionary<Direction, Point> adjacentRoomSpawnPoints = new()
+    public static readonly Dictionary<Direction, Point> adjacentTransitionRoomSpawnPoints = new()
     {
         { Direction.Left, new Point(1024,0) },
         { Direction.Right, new Point(-1024,0) },
