@@ -19,6 +19,7 @@ public enum CommandType
     StartGameCommand,
     LoadRoomCommand,
     RoomTransitionCommand,
+    MuteCommand,
     PlayerItemCollisionCommand,
     PlayerEnemyCollisionCommand,
     PlayerEnemyProjectileCollisionCommand,
@@ -51,6 +52,7 @@ public class CommandManager
         AddCommand(CommandType.StartGameCommand, new StartGameCommand());
         AddCommand(CommandType.LoadRoomCommand, new LoadRoomCommand());
         AddCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand());
+        AddCommand(CommandType.MuteCommand, new MuteCommand());
         AddCommand(CommandType.PlayerItemCollisionCommand, new PlayerItemCollisionCommand());
         AddCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand());
         AddCommand(CommandType.PlayerEnemyProjectileCollisionCommand, new PlayerEnemyProjectileCollisionCommand());

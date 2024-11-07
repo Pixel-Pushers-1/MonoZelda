@@ -73,6 +73,10 @@ public static class SoundManager
 
     public static void ClearSoundDictionary()
     {
+        foreach (SoundEffectInstance soundEffect in soundEffects.Values)
+        {
+            soundEffect.Dispose();
+        }
         soundEffects.Clear();
     }
 }

@@ -17,6 +17,7 @@ using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Trigger;
 using MonoZelda.HUD;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Scenes;
 
@@ -54,6 +55,9 @@ public class RoomScene : Scene
     {
         // Need to wait for LoadContent because MonoZeldaGame is going to clear everything before calling this.
         LoadRoom(contentManager);
+
+        // Play dungeon theme
+        SoundManager.PlaySound("LOZ_Dungeon_Theme",true);
 
         playerSprite = new PlayerSpriteManager(playerState);
         var takeDamageCommand = new PlayerTakeDamageCommand(playerState, playerSprite);
@@ -171,7 +175,7 @@ public class RoomScene : Scene
     {
         if (projectileManager.ProjectileFired == true)
         {
-            projectileManager.executeProjectile();
+            projectileManager.updatedProjectileState();
         }
 
         foreach(KeyValuePair<IEnemy, EnemyCollisionManager> entry in enemyDictionary)

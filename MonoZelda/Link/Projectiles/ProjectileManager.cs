@@ -35,7 +35,6 @@ public class ProjectileManager
         set => projectileFired = value;
     }
 
-    // Fixed property to properly get/set the equipped projectile
     public ProjectileType EquippedProjectile
     {
         get => equippedProjectile;
@@ -87,7 +86,7 @@ public class ProjectileManager
 
     public void fireEquippedProjectile(PlayerSpriteManager player)
     {
-        itemFired = projectile.GetProjectileObject(EquippedProjectile, player);  // Use the property instead of field
+        itemFired = projectileFactory.GetProjectileObject(EquippedProjectile, player);  // Use the property instead of field
         setupProjectile(EquippedProjectile);  // Use the property instead of field
     }
 
