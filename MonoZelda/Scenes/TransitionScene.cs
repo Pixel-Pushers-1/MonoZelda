@@ -16,7 +16,7 @@ namespace MonoZelda.Scenes
         private IDungeonRoom nextRoom;
         private Direction TransitionDirection;
         private SpriteDict currentBorderSpriteDict;
-        private SpriteDict nextBorderSpriteDict;    
+        private SpriteDict nextBorderSpriteDict;
         private SpriteDict currentRoomSpriteDict;
         private SpriteDict nextRoomSpriteDict;
         private List<SpriteDict> spritesToMove;
@@ -35,34 +35,38 @@ namespace MonoZelda.Scenes
             this.currentRoom = currentRoom;
             this.nextRoom = nextRoom;
             TransitionDirection = doorCollisionDirection;
-            spritesToMove = new List<SpriteDict> ();
+        }
+
+        private SpriteDict CreateRoomBorderSprite(Texture2D texture, Point position)
+        {
+            var spriteDict = new SpriteDict(texture, SpriteCSVData.Blocks, SpriteLayer.Transition, position);
+            spriteDict.SetSprite(nameof(Dungeon1Sprite.room_exterior));
+            return spriteDict;
+        }
+
+        private SpriteDict CreateRoomSprite(Texture2D texture, string spriteName, Point position)
+        {
+            var spriteDict = new SpriteDict(texture, SpriteCSVData.Blocks, SpriteLayer.Transition, position);
+            spriteDict.SetSprite(spriteName);
+            return spriteDict;
         }
 
         public override void LoadContent(ContentManager contentManager)
         {
-            // load dungeon texture
+            // Load dungeon texture
             var dungeonTexture = contentManager.Load<Texture2D>(TextureData.Blocks);
 
-            // load border sprite
-            currentBorderSpriteDict = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks, SpriteLayer.Transition, DungeonConstants.DungeonPosition);
-            currentBorderSpriteDict.SetSprite(nameof(Dungeon1Sprite.room_exterior));
-            nextBorderSpriteDict = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks, SpriteLayer.Transition, DungeonConstants.DungeonPosition + DungeonConstants.adjacentRoomSpawnPoints[TransitionDirection]);
-            nextBorderSpriteDict.SetSprite(nameof(Dungeon1Sprite.room_exterior));
+            // Set up room and border sprites
+            currentBorderSpriteDict = CreateRoomBorderSprite(dungeonTexture, DungeonConstants.DungeonPosition);
+            nextBorderSpriteDict = CreateRoomBorderSprite(dungeonTexture, DungeonConstants.DungeonPosition + DungeonConstants.adjacentRoomSpawnPoints[TransitionDirection]);
+            currentRoomSpriteDict = CreateRoomSprite(dungeonTexture, currentRoom.RoomSprite.ToString(), DungeonConstants.BackgroundPosition);
+            nextRoomSpriteDict = CreateRoomSprite(dungeonTexture, nextRoom.RoomSprite.ToString(), DungeonConstants.BackgroundPosition + DungeonConstants.adjacentRoomSpawnPoints[TransitionDirection]);
 
-            // create and set spriteDicts for transition rooms
-            currentRoomSpriteDict = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks, SpriteLayer.Transition, DungeonConstants.BackgroundPosition);
-            currentRoomSpriteDict.SetSprite(currentRoom.RoomSprite.ToString());
-            nextRoomSpriteDict = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks,SpriteLayer.Transition, DungeonConstants.BackgroundPosition + DungeonConstants.adjacentRoomSpawnPoints[TransitionDirection]);
-            nextRoomSpriteDict.SetSprite(nextRoom.RoomSprite.ToString());
-
-            // add all spriteDicts to update list
-            spritesToMove.Add(currentBorderSpriteDict);
-            spritesToMove.Add(nextBorderSpriteDict);
-            spritesToMove.Add(currentRoomSpriteDict);
-            spritesToMove.Add(nextRoomSpriteDict);
+            // create list of spriteDicts
+            spritesToMove = new List<SpriteDict> { currentBorderSpriteDict, nextBorderSpriteDict, currentRoomSpriteDict, nextRoomSpriteDict };
 
             // create Door spriteDicts
-            foreach(var currentDoorSpawn in currentRoom.GetDoors())
+            foreach (var currentDoorSpawn in currentRoom.GetDoors())
             {
                 SpriteDict doorDict = new SpriteDict(dungeonTexture, SpriteCSVData.Blocks, SpriteLayer.Transition, currentDoorSpawn.Position);
                 doorDict.SetSprite(currentDoorSpawn.Type.ToString());
@@ -79,15 +83,16 @@ namespace MonoZelda.Scenes
 
         public override void Update(GameTime gameTime)
         {
-            // update spriteDict positions
             Vector2 nextRoomPos = nextBorderSpriteDict.Position.ToVector2();
             Vector2 sceneRoomPos = DungeonConstants.DungeonPosition.ToVector2();
-            if(Vector2.Distance(nextRoomPos,sceneRoomPos) > 0)
+            float distance = Vector2.Distance(nextRoomPos, sceneRoomPos);
+
+            if (distance > 0)
             {
-                System.Diagnostics.Debug.WriteLine(Vector2.Distance(nextRoomPos, sceneRoomPos));
-                foreach(var spriteDict in spritesToMove)
+                Point shift = directionShiftMap[TransitionDirection];
+                foreach (var spriteDict in spritesToMove)
                 {
-                    spriteDict.Position -= directionShiftMap[TransitionDirection];
+                    spriteDict.Position -= shift;
                 }
             }
             else
