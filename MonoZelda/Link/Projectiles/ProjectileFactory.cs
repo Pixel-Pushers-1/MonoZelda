@@ -13,7 +13,7 @@ public class ProjectileFactory
     protected Vector2 playerPosition;
     protected Direction playerDirection;
 
-    private static readonly Dictionary<ProjectileType, Func<SpriteDict, Vector2, Direction, Player, IProjectile>> projectileConstructors = new()
+    private static readonly Dictionary<ProjectileType, Func<SpriteDict, Vector2, Direction, PlayerSpriteManager, IProjectile>> projectileConstructors = new()
     {
        { ProjectileType.Arrow, (dict, pos, dir, player) => new Arrow(dict, pos, dir) },
        { ProjectileType.ArrowBlue, (dict, pos, dir, player) => new ArrowBlue(dict, pos, dir) },
@@ -71,12 +71,7 @@ public class ProjectileFactory
         return projectilePosition;
     }
 
-    private void PlayProjectileSound(ProjectileType currentProjectile)
-    {
-        
-    }
-
-    public IProjectile GetProjectileObject(ProjectileType currentProjectile, Player player)
+    public IProjectile GetProjectileObject(ProjectileType currentProjectile, PlayerSpriteManager player)
     {
         playSoundEffects[currentProjectile].Invoke();
         playerPosition = player.GetPlayerPosition();

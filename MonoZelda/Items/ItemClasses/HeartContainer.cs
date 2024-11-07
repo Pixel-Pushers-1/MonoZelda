@@ -10,7 +10,7 @@ public class HeartContainer : IItem
 {
     private ItemCollidable heartcontainerCollidable;
     private bool itemPickedUp;
-    private GraphicsDevice graphicsDevice;
+
     public bool ItemPickedUp
     {
         get
@@ -23,14 +23,9 @@ public class HeartContainer : IItem
         }
     }
 
-    public HeartContainer(GraphicsDevice graphicsDevice)
-    {
-        this.graphicsDevice = graphicsDevice;
-    }
-
     public void itemSpawn(SpriteDict heartcontainerDict, Point spawnPosition, CollisionController collisionController)
     {
-        heartcontainerCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 60, 60), graphicsDevice, ItemList.HeartContainer);
+        heartcontainerCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 60, 60), ItemList.HeartContainer);
         collisionController.AddCollidable(heartcontainerCollidable);
         heartcontainerCollidable.setSpriteDict(heartcontainerDict);
         heartcontainerDict.Position = spawnPosition;

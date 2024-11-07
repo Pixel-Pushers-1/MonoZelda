@@ -10,7 +10,6 @@ public class Arrow : IItem
 {
     private ItemCollidable arrowCollidable;
     private bool itemPickedUp;
-    private GraphicsDevice graphicsDevice;
 
     public bool ItemPickedUp
     {
@@ -24,14 +23,9 @@ public class Arrow : IItem
         }
     }
 
-    public Arrow(GraphicsDevice graphicsDevice)
-    {
-        this.graphicsDevice = graphicsDevice;
-    }
-
     public void itemSpawn(SpriteDict arrowDict, Point spawnPosition, CollisionController collisionController)
     {
-        arrowCollidable = new ItemCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 32, 64),graphicsDevice, ItemList.Arrow);
+        arrowCollidable = new ItemCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 32, 64), ItemList.Arrow);
         collisionController.AddCollidable(arrowCollidable);
         arrowCollidable.setSpriteDict(arrowDict);
         arrowDict.Position = spawnPosition;

@@ -4,14 +4,14 @@ namespace MonoZelda.Commands.GameCommands
 {
     public class PlayerStandingCommand : ICommand
     {
-        private Player player;
+        private PlayerSpriteManager player;
 
         public PlayerStandingCommand()
         {
             //empty
         }
 
-        public PlayerStandingCommand(Player player)
+        public PlayerStandingCommand(PlayerSpriteManager player)
         {
             this.player = player;
         }

@@ -8,7 +8,7 @@ namespace MonoZelda.Commands.CollisionCommands;
 public class PlayerEnemyProjectileCollisionCommand : ICommand
 {
     private MonoZeldaGame game;
-    private Player player;
+    private PlayerSpriteManager player;
 
     public PlayerEnemyProjectileCollisionCommand()
     {

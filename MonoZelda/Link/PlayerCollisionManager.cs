@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
+using MonoZelda.Commands.GameCommands;
 using MonoZelda.Controllers;
 using MonoZelda.Sound;
 
@@ -8,22 +9,26 @@ namespace MonoZelda.Link;
 
 public class PlayerCollisionManager
 {
+    private const float KNOCKBACK_FORCE = 8f;
+    private const float KNOCKBACK_TIME = 0.2f;
+    private const float INVULNERABILITY_TIME = 1f;
+
     private readonly int width;
     private readonly int height;
-    private Player player;
+    private PlayerSpriteManager player;
+    private PlayerTakeDamageCommand damageCommand;
     private PlayerCollidable playerHitbox;
-    private CollisionController collisionController;
-    private const float KNOCKBACK_FORCE = 30f;
     private Vector2 knockbackVelocity;
+    private float knockbackTimer = 0;
+    private float invulnerabilityTimer = 0;
 
-    public PlayerCollisionManager(Player player, PlayerCollidable playerHitbox, CollisionController collisionController)
-    {
+    public PlayerCollisionManager(PlayerSpriteManager player, PlayerCollidable playerHitbox, CollisionController collisionController, PlayerTakeDamageCommand damageCommand) {
         this.player = player;
+        this.damageCommand = damageCommand;
         this.playerHitbox = playerHitbox;
         this.width = 64;
         this.height = 64;
 
-        // Create initial hitbox for the player
         Vector2 playerPosition = player.GetPlayerPosition();
         Rectangle bounds = new Rectangle(
             (int)playerPosition.X - width / 2,
@@ -31,8 +36,6 @@ public class PlayerCollisionManager
             width,
             height
         );
-        this.collisionController = collisionController;
-
         playerHitbox.Bounds = bounds;
         playerHitbox.setCollisionManager(this);
     }
@@ -40,6 +43,17 @@ public class PlayerCollisionManager
     public void Update()
     {
         UpdateBoundingBox();
+
+        if (knockbackTimer > 0)
+        {
+            ApplyKnockback();
+            knockbackTimer -= (float) MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+        }
+
+        if (invulnerabilityTimer > 0)
+        {
+            invulnerabilityTimer -= (float) MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+        }
     }
 
     private void UpdateBoundingBox()
@@ -51,15 +65,18 @@ public class PlayerCollisionManager
             width,
             height
         );
-
-        playerHitbox.Bounds = newBounds;            
+        playerHitbox.Bounds = newBounds;
     }
 
     public void HandleEnemyProjectileCollision(Direction collisionDirection)
     {
+        if (invulnerabilityTimer > 0)
+            return;
+
         if ((int)player.PlayerDirection + (int)collisionDirection == 0)
         {
-            player.TakeDamage();
+            damageCommand.Execute();
+            invulnerabilityTimer = INVULNERABILITY_TIME;
         }
         else
         {
@@ -70,7 +87,6 @@ public class PlayerCollisionManager
     public void HandleStaticCollision(Direction collisionDirection, Rectangle intersection)
     {
         Vector2 currentPos = player.GetPlayerPosition();
-
         switch (collisionDirection)
         {
             case Direction.Left:
@@ -91,12 +107,17 @@ public class PlayerCollisionManager
 
     public void HandleEnemyCollision(Direction collisionDirection)
     {
-        SoundManager.PlaySound("LOZ_Link_Hurt",false);
-        Vector2 currentPos = player.GetPlayerPosition();
-        Vector2 knockbackDirection = GetKnockbackDirection(collisionDirection);
-        knockbackVelocity = knockbackDirection * KNOCKBACK_FORCE;
-        ApplyKnockback();
-        player.TakeDamage();
+        if (invulnerabilityTimer > 0f)
+            return;
+        if (knockbackTimer <= 0)
+        {
+            Vector2 knockbackDirection = GetKnockbackDirection(collisionDirection);
+            knockbackVelocity = knockbackDirection * KNOCKBACK_FORCE;
+            knockbackTimer = KNOCKBACK_TIME;
+            invulnerabilityTimer = INVULNERABILITY_TIME;
+            ApplyKnockback();
+            damageCommand.Execute();
+        }
     }
 
     private void ApplyKnockback()

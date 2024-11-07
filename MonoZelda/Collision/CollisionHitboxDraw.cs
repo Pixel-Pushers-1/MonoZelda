@@ -12,10 +12,10 @@ namespace MonoZelda.Collision
         private ICollidable collidable;
         private Texture2D texture;
 
-        public CollisionHitboxDraw(ICollidable collidable, GraphicsDevice graphicsDevice)
+        public CollisionHitboxDraw(ICollidable collidable)
         {
             this.collidable = collidable;
-            CreateTexture(graphicsDevice);
+            texture = TextureData.GetTexture(SpriteType.Blank);
             SpriteDrawer.RegisterDrawable(this, int.MaxValue, true);
         }
 
@@ -26,12 +26,6 @@ namespace MonoZelda.Collision
         public void Unregister()
         {
             SpriteDrawer.UnregisterDrawable(this);
-        }
-
-        private void CreateTexture(GraphicsDevice graphicsDevice)
-        {
-            texture = new Texture2D(graphicsDevice, 1, 1);
-            texture.SetData(new Color[] { Color.White });
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)

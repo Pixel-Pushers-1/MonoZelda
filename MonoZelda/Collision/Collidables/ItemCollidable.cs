@@ -23,10 +23,10 @@ public class ItemCollidable : ICollidable
        { ItemList.Rupee, () => SoundManager.PlaySound("LOZ_Get_Rupee",false) },
     };
 
-    public ItemCollidable(Rectangle bounds, GraphicsDevice graphicsDevice, ItemList itemType)
+    public ItemCollidable(Rectangle bounds, ItemList itemType)
     {
         Bounds = bounds;
-        hitbox = new CollisionHitboxDraw(this, graphicsDevice);
+        hitbox = new CollisionHitboxDraw(this);
         type = CollidableType.Item;
         this.itemType = itemType;
     }

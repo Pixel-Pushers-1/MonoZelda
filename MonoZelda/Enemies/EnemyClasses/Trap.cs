@@ -16,7 +16,6 @@ namespace MonoZelda.Enemies.EnemyClasses
         private readonly Random rnd = new();
         private SpriteDict trapSpriteDict;
         private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
-        private GraphicsDevice graphicsDevice;
         private int pixelsMoved;
         public EnemyCollidable EnemyHitbox { get; set; }
         private EnemyCollidable horizontalHitbox;
@@ -27,22 +26,20 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         private int tileSize = 64;
 
-        public Trap(GraphicsDevice graphicsDevice)
+        public Trap()
         {
-            this.graphicsDevice = graphicsDevice;
             Width = 64;
             Height = 64;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            ContentManager contentManager)
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
             trapSpriteDict = enemyDict;
             trapSpriteDict.Position = spawnPosition;
-            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Trap);
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Trap);
             collisionController.AddCollidable(EnemyHitbox);
-            verticalHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Trap);
-            horizontalHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Trap);
+            verticalHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Trap);
+            horizontalHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Trap);
             if (spawnPosition.X < 400)
             {
                 if (spawnPosition.Y > 400)

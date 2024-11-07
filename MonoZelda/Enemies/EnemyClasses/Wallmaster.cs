@@ -19,7 +19,6 @@ namespace MonoZelda.Enemies.EnemyClasses
         public bool Alive { get; set; }
         private readonly Random rnd = new();
         private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
-        private GraphicsDevice graphicsDevice;
         private EnemyStateMachine stateMachine;
         private CollisionController collisionController;
 
@@ -27,19 +26,17 @@ namespace MonoZelda.Enemies.EnemyClasses
         private int health = 3;
         private int tileSize = 64;
 
-        public Wallmaster(GraphicsDevice graphicsDevice)
+        public Wallmaster()
         {
-            this.graphicsDevice = graphicsDevice;
             Width = 48;
             Height = 48;
             Alive = true;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            ContentManager contentManager)
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
             this.collisionController = collisionController;
-            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Wallmaster);
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Wallmaster);
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;

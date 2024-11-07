@@ -12,11 +12,11 @@ public class Boomerang : ProjectileFactory, IProjectile
     private int tilesTraveled;
     private Vector2 initialPosition;
     private Vector2 Dimension = new Vector2(8, 8);
-    private Player player;
+    private PlayerSpriteManager player;
     private SpriteDict projectileDict;
     private TrackReturn tracker;
 
-    public Boomerang(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection, Player player)
+    public Boomerang(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection, PlayerSpriteManager player)
     : base(projectileDict, playerPosition, playerDirection)
     {
         this.projectileDict = projectileDict;

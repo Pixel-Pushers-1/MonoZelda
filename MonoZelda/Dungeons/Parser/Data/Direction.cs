@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MonoZelda.Dungeons.Parser.Data
 {
-    internal enum DoorDirection
+    public enum DoorDirection
     {
         North,
         East,

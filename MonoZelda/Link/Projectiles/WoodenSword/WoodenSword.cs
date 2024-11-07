@@ -12,7 +12,7 @@ public class WoodenSword : ProjectileFactory,IProjectile
     private Vector2 InitialPosition;
     private Vector2 Dimension = new Vector2(8, 16);
     private SpriteDict projectileDict;
-    private Player player;
+    private PlayerSpriteManager player;
 
     public WoodenSword(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection)
     : base(projectileDict, playerPosition, playerDirection)

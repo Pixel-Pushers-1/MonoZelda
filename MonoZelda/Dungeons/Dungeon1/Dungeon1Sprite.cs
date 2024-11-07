@@ -82,6 +82,7 @@ public enum Dungeon1Sprite
     room_41,
     room_42,
     room_43,
+    room_black,
     room_item,
     room_passage,
     unknown
