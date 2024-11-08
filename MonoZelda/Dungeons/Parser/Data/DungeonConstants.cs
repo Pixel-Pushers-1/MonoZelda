@@ -35,10 +35,10 @@ public static class DungeonConstants
 
     public static readonly Dictionary<Direction, Point> TransitionLinkSpawnPoints = new()
     {
-        { Direction.Left, new Point(-32,544) },
-        { Direction.Right, new Point(1056,544) },
-        { Direction.Up, new Point(512,160) },
-        { Direction.Down, new Point(512,928) },
+        { Direction.Left, new Point(96,544) },
+        { Direction.Right, new Point(928,544) },
+        { Direction.Up, new Point(512,288) },
+        { Direction.Down, new Point(512,800) },
     };
 
     public static readonly Dictionary<Direction, Vector2> DirectionVector = new()

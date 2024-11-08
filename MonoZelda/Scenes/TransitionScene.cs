@@ -11,12 +11,12 @@ namespace MonoZelda.Scenes;
 public class TransitionScene : Scene
 {
     private ICommand loadCommand;
-
     private IDungeonRoom currentRoom;
     private IDungeonRoom nextRoom;
     private Direction TransitionDirection;
     private List<SpriteDict> spritesToMove;
     private SpriteDict FakeLink;
+    private SpriteDict DoorLayer;
     private Vector2 FakeLinkPosition;
     private Vector2 InitialPosition;
     private Vector2 movement;
@@ -95,7 +95,7 @@ public class TransitionScene : Scene
         else
         {
             FakeLink.Enabled = true;
-            if (Vector2.Distance(InitialPosition, FakeLinkPosition) < 192)
+            if (Vector2.Distance(InitialPosition, FakeLinkPosition) < 64)
             {
                 FakeLinkPosition += FakeLinkSpeed * movement;
                 FakeLink.Position = FakeLinkPosition.ToPoint();
