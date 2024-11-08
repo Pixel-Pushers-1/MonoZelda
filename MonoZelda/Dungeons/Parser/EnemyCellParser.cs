@@ -1,10 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Enemies;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace MonoZelda.Dungeons.Parser
 {
@@ -12,11 +9,22 @@ namespace MonoZelda.Dungeons.Parser
     {
         public void Parse(string cell, Point position, DungeonRoom room)
         {
-            if (Enum.TryParse(cell, out EnemyList enemy))
+            if (string.IsNullOrEmpty(cell)) return;
+
+            var hasKey = false;
+            var enemyRegex = new Regex(@"Enemy\((\w+)(?:,\s*(true|false))?\)");
+            var match = enemyRegex.Match(cell);
+
+            if (match.Success)
             {
-                var enemySpawn = new EnemySpawn(position, enemy);
-                room.AddEnemySpawn(enemySpawn);
+                cell = match.Groups[1].Value;
+                hasKey = match.Groups[2].Success && bool.Parse(match.Groups[2].Value);
             }
+
+            if (!Enum.TryParse(cell, out EnemyList enemy)) return;
+
+            var enemySpawn = new EnemySpawn(position, enemy, hasKey);
+            room.AddEnemySpawn(enemySpawn);
         }
     }
 }

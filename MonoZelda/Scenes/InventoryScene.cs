@@ -7,20 +7,24 @@ using MonoZelda.Link;
 using MonoZelda.UI;
 using System;
 using System.Collections.Generic;
+using MonoZelda.Commands.GameCommands;
 
-namespace MonoZelda.Scenes;
-
-internal class InventoryScene : IScene
+namespace MonoZelda.Scenes
 {
-    private static readonly Point HUDBackgroundPosition = Point.Zero;
-    private static readonly Point LifePosition = new Point(720, 128);
-    private static readonly Point ItemCountPosition = new Point(416, 64);
+    internal class InventoryScene : IScene
+    {
+        private static readonly Point HUDBackgroundPosition = Point.Zero;
+        private static readonly Point LifePosition = new (720, 128);
+        private static readonly Point ItemCountPosition = new (416, 64);
+        private const int INVENTORY_OPEN_Y = 672;
+        private const int INVENTORY_OPEN_SPEED = 16;
 
-    public Screen Screen { get; set; }
-    public Dictionary<Type,IScreenWidget> Widgets { get; set; }
-    private SpriteFont _spriteFont;
-    private PlayerState _playerState;
-    private GraphicsDevice graphicsDevice;
+        public Screen Screen { get; set; }
+        public Dictionary<Type,IScreenWidget> Widgets { get; set; }
+        private SpriteFont _spriteFont;
+        private PlayerState _playerState;
+        private GraphicsDevice graphicsDevice;
+        private bool isInventoryOpen = false;
 
     public InventoryScene(GraphicsDevice gd, CommandManager commands, PlayerState state)
     {
@@ -53,19 +57,35 @@ internal class InventoryScene : IScene
         LoadContent(cm);
     }
 
-    public void Update(GameTime gameTime)
-    {
-        foreach(var widget in Widgets.Values)
+        public void Update(GameTime gameTime)
         {
-            widget.Update();
-        }
-    }
+            foreach(var widget in Widgets.Values)
+            {
+                widget.Update();
+            }
 
-    public void Draw(SpriteBatch sb)
-    {
-        foreach (var widget in Widgets.Values)
+            if (isInventoryOpen && Screen.Origin.Y <= INVENTORY_OPEN_Y)
+            {
+                Screen.Origin = new Point(0, Math.Min(Screen.Origin.Y + INVENTORY_OPEN_SPEED, INVENTORY_OPEN_Y));
+            }
+            else if (Screen.Origin.Y > 0)
+            {
+                Screen.Origin = new Point(0, Math.Max(Screen.Origin.Y - INVENTORY_OPEN_SPEED, 0));
+            }
+        }
+
+        public void Draw(SpriteBatch sb)
         {
-            widget.Draw(sb);
+            foreach (var widget in Widgets.Values)
+            {
+                widget.Draw(sb);
+            }
+        }
+
+        public bool ToggleInventory()
+        {
+            isInventoryOpen = !isInventoryOpen;
+            return isInventoryOpen;
         }
     }
 }

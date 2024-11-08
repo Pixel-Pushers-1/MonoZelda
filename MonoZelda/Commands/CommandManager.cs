@@ -31,6 +31,7 @@ public enum CommandType
     PlayerProjectileStaticRoomCollisionCommand,
     PlayerProjectileStaticBoundaryCollisionCommand,
     ToggleGizmosCommand,
+    ToggleInventoryCommand,
     None
 }
 
@@ -64,6 +65,7 @@ public class CommandManager
         AddCommand(CommandType.PlayerProjectileStaticRoomCollisionCommand, new PlayerProjectileStaticRoomCollisionCommand());
         AddCommand(CommandType.PlayerProjectileStaticBoundaryCollisionCommand, new PlayerProjectileStaticBoundaryCollisionCommand());
         AddCommand(CommandType.ToggleGizmosCommand, new ToggleGizmosCommand());
+        AddCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand());
     }
 
     public void Execute(CommandType commandType, params object[] metadata)

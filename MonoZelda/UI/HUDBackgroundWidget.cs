@@ -28,6 +28,7 @@ namespace MonoZelda.UI
 
         public override void Update()
         {
+            spriteDict.Position = WidgetLocation;
         }
     }
 }
