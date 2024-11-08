@@ -58,7 +58,7 @@ namespace MonoZelda.Scenes
         {
             resetScene();
 
-            var room = roomManager.LoadRoom(roomName);
+            currentRoom = roomManager.LoadRoom(roomName);
 
             // TODO: Check for the mario level
             if (roomName == "mario")
@@ -68,11 +68,11 @@ namespace MonoZelda.Scenes
                 return;
             }
 
-            activeScene = new RoomScene(graphicsDevice, commandManager, collisionController, room);
+            activeScene = new RoomScene(graphicsDevice, commandManager, collisionController, currentRoom);
             activeScene.LoadContent(contentManager);
 
             // Complication due to SpriteDict getting clared, need to re-init the UI
-            inventoryScene.LoadContent(contentManager, room);
+            inventoryScene.LoadContent(contentManager, currentRoom);
         }
 
         public override void Draw(SpriteBatch batch)
@@ -86,8 +86,8 @@ namespace MonoZelda.Scenes
             inventoryScene.LoadContent(contentManager);
 
             // We begin by revealing the the first room
-            var room = roomManager.LoadRoom(StartRoom);
-            activeScene = new EnterDungeonScene(this, room, graphicsDevice);
+            currentRoom = roomManager.LoadRoom(StartRoom);
+            activeScene = new EnterDungeonScene(this, currentRoom, graphicsDevice);
             activeScene.LoadContent(contentManager);
         }
 
