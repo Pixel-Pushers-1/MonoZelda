@@ -53,14 +53,14 @@ public class Sprite
         return FrameCount / Fps - buffer;
     }
 
-    public void Draw(SpriteBatch spriteBatch, GameTime gameTime, Texture2D texture, Point position)
+    public void Draw(SpriteBatch spriteBatch, Texture2D texture, Point position, Color color)
     {
         //calculate source rect based on gameTime to support animation
         double animationTime;
         if (oneshotPlaying) {
             //oneshot timer
             animationTime = oneshotTimer;
-            oneshotTimer += gameTime.ElapsedGameTime.TotalSeconds;
+            oneshotTimer += MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
             //end oneshot animation 
             if (oneshotTimer >= FrameCount / Fps) {
                 oneshotPlaying = false;
@@ -68,7 +68,7 @@ public class Sprite
         }
         else if (Animating) {
             //global timer
-            animationTime = gameTime.TotalGameTime.TotalSeconds;
+            animationTime = MonoZeldaGame.GameTime.TotalGameTime.TotalSeconds;
         }
         else {
             //not animating
@@ -83,7 +83,7 @@ public class Sprite
         Rectangle destinationRect = new(destRectPos, destRectSize.ToPoint());
 
         //draw the sprite
-        spriteBatch.Draw(texture, destinationRect, currentSource, Color.White);
+        spriteBatch.Draw(texture, destinationRect, currentSource, color);
     }
 
     private static Vector2 GetNormalizedAnchorOffset(AnchorType anchorType)
