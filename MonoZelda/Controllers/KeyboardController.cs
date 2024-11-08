@@ -41,6 +41,7 @@ public class KeyboardController : IController
             {new (Keys.Q, false), CommandType.ExitCommand},
             {new (Keys.R, false), CommandType.ResetCommand},
             {new (Keys.None, false), CommandType.PlayerStandingCommand},
+            {new (Keys.I, true), CommandType.ToggleInventoryCommand}
         };
     }
 
