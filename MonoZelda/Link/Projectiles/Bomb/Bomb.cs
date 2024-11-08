@@ -1,9 +1,10 @@
 ﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Link.Projectiles;
 
-public class Bomb : Projectile, IProjectile
+public class Bomb : ProjectileFactory, IProjectile
 {
     private bool Finished;
     private int timer;
@@ -50,6 +51,7 @@ public class Bomb : Projectile, IProjectile
     {
         if (timer >= EXPLODE_TIME && timer < 100)
         {
+            SoundManager.PlaySound("LOZ_Bomb_Blow", false);
             SetProjectileSprite("cloud");
             Exploded = true;
         }

@@ -1,10 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Sprites;
-using System;
 
 namespace MonoZelda.Link.Projectiles;
 
-public class WoodenSwordBeam : Projectile, IProjectile
+public class WoodenSwordBeam : ProjectileFactory, IProjectile
 {
     private bool Finished;
     private float PROJECTILE_SPEED = 8f;

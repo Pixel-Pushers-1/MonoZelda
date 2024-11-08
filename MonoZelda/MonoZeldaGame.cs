@@ -5,9 +5,7 @@ using MonoZelda.Sprites;
 using MonoZelda.Commands;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Scenes;
-using MonoZelda.Dungeons.Loader;
-using MonoZelda.Dungeons;
-using MonoZelda.Dungeons.Parser;
+using MonoZelda.Sound;
 
 namespace MonoZelda;
 
@@ -40,6 +38,9 @@ public class MonoZeldaGame : Game
 
         // create Command Manager
         commandManager = new CommandManager();
+
+        // initialize soundManager
+        SoundManager.Initialize(Content);
 
         // Commands that use MonoZeldaGame reference
         commandManager.ReplaceCommand(CommandType.ExitCommand, new ExitCommand(this));
@@ -116,7 +117,8 @@ public class MonoZeldaGame : Game
         // Preventing the StartCommand from activating when it shouldn't. -js
         if (scene is MainMenuScene)
         {
-            LoadDungeon("RoomTest");
+            SoundManager.StopSound("LOZ_Intro");
+            LoadDungeon("Room0");
         }
     }
 
@@ -127,6 +129,7 @@ public class MonoZeldaGame : Game
 
     public void ResetGame()
     {
+        SoundManager.ClearSoundDictionary();
         LoadScene(new MainMenuScene(GraphicsDevice));
     }
 }

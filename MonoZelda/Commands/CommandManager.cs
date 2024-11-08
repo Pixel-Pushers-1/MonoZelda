@@ -19,6 +19,7 @@ public enum CommandType
     StartGameCommand,
     LoadRoomCommand,
     RoomTransitionCommand,
+    MuteCommand,
     PlayerItemCollisionCommand,
     PlayerEnemyCollisionCommand,
     PlayerEnemyProjectileCollisionCommand,
@@ -52,6 +53,7 @@ public class CommandManager
         AddCommand(CommandType.StartGameCommand, new StartGameCommand());
         AddCommand(CommandType.LoadRoomCommand, new LoadRoomCommand());
         AddCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand());
+        AddCommand(CommandType.MuteCommand, new MuteCommand());
         AddCommand(CommandType.PlayerItemCollisionCommand, new PlayerItemCollisionCommand());
         AddCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand());
         AddCommand(CommandType.PlayerEnemyProjectileCollisionCommand, new PlayerEnemyProjectileCollisionCommand());
@@ -60,8 +62,7 @@ public class CommandManager
         AddCommand(CommandType.EnemyPlayerProjectileCollisionCommand, new EnemyPlayerProjectileCollisionCommand());
         AddCommand(CommandType.EnemyStaticRoomCollisionCommand, new EnemyStaticRoomCollisionCommand());
         AddCommand(CommandType.EnemyStaticBoundaryCollisionCommand, new EnemyStaticBoundaryCollisionCommand());
-        AddCommand(CommandType.EnemyProjectileStaticBoundaryCollisionCommand,
-            new EnemyProjectileStaticBoundaryCollisionCommand());
+        AddCommand(CommandType.EnemyProjectileStaticBoundaryCollisionCommand, new EnemyProjectileStaticBoundaryCollisionCommand());
         AddCommand(CommandType.PlayerProjectileStaticRoomCollisionCommand, new PlayerProjectileStaticRoomCollisionCommand());
         AddCommand(CommandType.PlayerProjectileStaticBoundaryCollisionCommand, new PlayerProjectileStaticBoundaryCollisionCommand());
         AddCommand(CommandType.ToggleGizmosCommand, new ToggleGizmosCommand());

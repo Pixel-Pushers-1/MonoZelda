@@ -16,7 +16,8 @@ public class ProjectileManager
     private ProjectileType equippedProjectile;
     private PlayerProjectileCollidable projectileCollidable;
     private CollisionController collisionController;
-    private Projectile projectile;
+    private GraphicsDevice graphicsDevice;
+    private ProjectileFactory projectileFactory;
     private SpriteDict projectileDict;
     private bool activateHitbox;
 
@@ -36,7 +37,6 @@ public class ProjectileManager
         set => projectileFired = value;
     }
 
-    // Fixed property to properly get/set the equipped projectile
     public ProjectileType EquippedProjectile
     {
         get => equippedProjectile;
@@ -50,8 +50,7 @@ public class ProjectileManager
         projectileDict.Enabled = false;
         this.collisionController = collisionController;
         this.projectileDict = projectileDict;
-        projectile = new Projectile(projectileDict, new Vector2(), Direction.Down);
-        EquippedProjectile = ProjectileType.Arrow;  // Use the property instead of field
+        projectileFactory = new ProjectileFactory(projectileDict, new Vector2(),Direction.Down);
     }
 
     private void setupProjectile(ProjectileType equippedProjectile)
@@ -78,23 +77,23 @@ public class ProjectileManager
 
     public void useSword(PlayerSpriteManager player)
     {
-        itemFired = projectile.GetProjectileObject(ProjectileType.WoodenSword, player);
+        itemFired = projectileFactory.GetProjectileObject(ProjectileType.WoodenSword, player);
         setupProjectile(ProjectileType.WoodenSword);
     }
 
     public void useSwordBeam(PlayerSpriteManager player)
     {
-        itemFired = projectile.GetProjectileObject(ProjectileType.WoodenSwordBeam, player);
+        itemFired = projectileFactory.GetProjectileObject(ProjectileType.WoodenSwordBeam, player);
         setupProjectile(ProjectileType.WoodenSwordBeam);
     }
 
     public void fireEquippedProjectile(PlayerSpriteManager player)
     {
-        itemFired = projectile.GetProjectileObject(EquippedProjectile, player);  // Use the property instead of field
+        itemFired = projectileFactory.GetProjectileObject(EquippedProjectile, player);  // Use the property instead of field
         setupProjectile(EquippedProjectile);  // Use the property instead of field
     }
 
-    public void executeProjectile()
+    public void UpdatedProjectileState()
     {
         if (itemFired != null && !itemFired.hasFinished())
         {
