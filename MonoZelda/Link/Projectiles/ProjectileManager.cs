@@ -93,7 +93,7 @@ public class ProjectileManager
         setupProjectile(EquippedProjectile);  // Use the property instead of field
     }
 
-    public void updatedProjectileState()
+    public void UpdatedProjectileState()
     {
         if (itemFired != null && !itemFired.hasFinished())
         {

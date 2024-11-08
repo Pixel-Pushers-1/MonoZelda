@@ -175,7 +175,7 @@ public class RoomScene : Scene
     {
         if (projectileManager.ProjectileFired == true)
         {
-            projectileManager.updatedProjectileState();
+            projectileManager.UpdatedProjectileState();
         }
 
         foreach(KeyValuePair<IEnemy, EnemyCollisionManager> entry in enemyDictionary)

@@ -53,21 +53,11 @@ public static class SoundManager
 
     public static void ChangeMuteState()
     {
-        if (Muted == false)
+        Muted = !Muted;
+        System.Diagnostics.Debug.WriteLine("Muted: " + Muted);
+        foreach (SoundEffectInstance soundEffect in soundEffects.Values)
         {
-            foreach (SoundEffectInstance soundEffect in soundEffects.Values)
-            {
-                soundEffect.Volume = 0;
-            }
-            Muted = true;
-        }
-        else
-        {
-            foreach (SoundEffectInstance soundEffect in soundEffects.Values)
-            {
-                soundEffect.Volume = 1;
-            }
-            Muted = false;
+            soundEffect.Volume = Muted ? 0 : 1;
         }
     }
 
