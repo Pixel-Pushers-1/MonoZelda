@@ -108,6 +108,7 @@ public class PlayerSpriteManager
             timer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         }
         playerSpriteDict.Position = playerPosition.ToPoint();
+        playerState.Position = playerPosition.ToPoint();
     }
 
     public void PlayerDeath()

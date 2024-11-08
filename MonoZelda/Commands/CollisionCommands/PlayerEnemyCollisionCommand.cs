@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Enemies;
+using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Link;
 using MonoZelda.Scenes;
 
@@ -46,7 +47,8 @@ public class PlayerEnemyCollisionCommand : ICommand
         playerCollision.HandleEnemyCollision(collisionDirection);
         if (enemyCollidable.enemyType == EnemyList.Wallmaster)
         {
-            commandManager.Execute(CommandType.RoomTransitionCommand, "Room1");
+            Wallmaster enemy = (Wallmaster)enemyCollidable.getEnemy();
+            enemy.grabPlayer(commandManager);
         }
     }
 

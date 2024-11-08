@@ -1,10 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Sprites;
 using System;
-using Microsoft.Xna.Framework.Content;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
-using Microsoft.Xna.Framework.Graphics;
+using MonoZelda.Commands;
 using MonoZelda.Link;
 
 namespace MonoZelda.Enemies.EnemyClasses
@@ -20,8 +19,10 @@ namespace MonoZelda.Enemies.EnemyClasses
         private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
         private EnemyStateMachine stateMachine;
         private CollisionController collisionController;
+        private CommandManager commandManager;
         private EnemyCollisionManager enemyCollision;
         private PlayerState player;
+        private Boolean grabbed;
 
         public enum PlayerAdjacentWall
         {
@@ -58,10 +59,18 @@ namespace MonoZelda.Enemies.EnemyClasses
             enemyCollision = new EnemyCollisionManager(this, collisionController, Width, Height);
             stateMachine = new EnemyStateMachine(enemyDict);
             stateMachine.Spawning = false;
+            grabbed = false;
             stateMachine.SetSprite("wallmaster");
         }
         public void ChangeDirection()
         {
+        }
+
+        public void grabPlayer(CommandManager commandManager)
+        {
+            this.commandManager = commandManager;
+            grabbed = true;
+            timer = 2.9f;
         }
 
         public void Spawn()
@@ -112,8 +121,11 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
             playerPos = player.Position;
             adjacentWall = PlayerAdjacentWall.None;
+            if (spawned)
+            {
+                timer += (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+            }
 
-            timer += (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
             if (timer >= -0.1 && timer <= -0.01)
             {
                 spawned = false;
@@ -197,10 +209,18 @@ namespace MonoZelda.Enemies.EnemyClasses
                     adjacentWall = PlayerAdjacentWall.None;
                     stateMachine.Die(true);
                     spawned = false;
+                    if (grabbed)
+                    {
+                        commandManager.Execute(CommandType.RoomTransitionCommand, "Room1");
+                    }
                 }
                 else if (timer >= 2.9)
                 {
                     stateMachine.ChangeDirection(returnDirection);
+                    if (grabbed)
+                    {
+                        player.Position = Pos;
+                    }
                 }
                 else if (spawned)
                 {
