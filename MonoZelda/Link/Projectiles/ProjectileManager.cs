@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
+using System;
 using System.Collections.Generic;
 
 namespace MonoZelda.Link.Projectiles;
@@ -17,6 +18,7 @@ public class ProjectileManager
     private CollisionController collisionController;
     private Projectile projectile;
     private SpriteDict projectileDict;
+    private bool activateHitbox;
 
     private Dictionary<Keys, ProjectileType> keyProjectileMap = new Dictionary<Keys, ProjectileType>
     {
@@ -44,6 +46,7 @@ public class ProjectileManager
     public ProjectileManager(CollisionController collisionController, SpriteDict projectileDict)
     {
         projectileFired = false;
+        activateHitbox = false;
         projectileDict.Enabled = false;
         this.collisionController = collisionController;
         this.projectileDict = projectileDict;
@@ -55,9 +58,9 @@ public class ProjectileManager
     {
         projectileFired = true;
         projectileDict.Enabled = true;
-        projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), equippedProjectile);
-        projectileCollidable.setProjectileManager(this);
-        collisionController.AddCollidable(projectileCollidable);
+        if (equippedProjectile != ProjectileType.Bomb) {
+            activateHitbox = true;
+        }
     }
 
     public void equipProjectile(Keys pressedKey)
@@ -95,14 +98,38 @@ public class ProjectileManager
     {
         if (itemFired != null && !itemFired.hasFinished())
         {
+            // Init projectile collidable
+            if (activateHitbox && projectileCollidable is null) {
+                projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), equippedProjectile);
+                projectileCollidable.setProjectileManager(this);
+                collisionController.AddCollidable(projectileCollidable);
+            } else if (activateHitbox && projectileCollidable is not null)
+            {
+                projectileCollidable.Bounds = itemFired.getCollisionRectangle();
+            }
+
+            // Update the projectile
             itemFired.UpdateProjectile();
-            projectileCollidable.Bounds = itemFired.getCollisionRectangle();
+
+            // Custom check for bombs (I know this isn't great practice)
+            if (itemFired is Bomb && projectileCollidable is null) {
+                Bomb itemFiredCls = itemFired as Bomb;
+                if (itemFiredCls.Exploded == true) {
+                    activateHitbox = true;
+                }
+            }
+            
         }
         else
         {
-            collisionController.RemoveCollidable(projectileCollidable);
-            projectileCollidable.UnregisterHitbox();
+            // Reset the projectile manager for the next projectile
+            if (projectileCollidable is not null) {
+                collisionController.RemoveCollidable(projectileCollidable);
+                projectileCollidable.UnregisterHitbox();
+                projectileCollidable = null;
+            }
             projectileFired = false;
+            activateHitbox = false;
         }
     }
 }
