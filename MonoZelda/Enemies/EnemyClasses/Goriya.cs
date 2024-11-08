@@ -24,7 +24,6 @@ namespace MonoZelda.Enemies.EnemyClasses
         private readonly Random rnd = new();
         private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
         private EnemyStateMachine.Direction projDirection;
-        private readonly GraphicsDevice graphicsDevice;
         private IEnemyProjectile projectile;
         private EnemyProjectileCollisionManager projectileCollision;
         private CollisionController collisionController;
@@ -34,19 +33,18 @@ namespace MonoZelda.Enemies.EnemyClasses
         private int health = 3;
         private bool projectileActive;
 
-        public Goriya(GraphicsDevice graphicsDevice)
+        public Goriya()
         {
-            this.graphicsDevice = graphicsDevice;
             Width = 48;
             Height = 48;
             Alive = true;
             projectileActive = true;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager, Player player)
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, PlayerState player)
         {
             this.collisionController = collisionController;
-            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Goriya);
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Goriya);
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
@@ -54,7 +52,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             enemyCollision = new EnemyCollisionManager(this, collisionController, Width, Height);
             pixelsMoved = 0;
             stateMachine = new EnemyStateMachine(enemyDict);
-            projectile = new GoriyaBoomerang(spawnPosition, contentManager, graphicsDevice, collisionController);
+            projectile = new GoriyaBoomerang(spawnPosition, collisionController);
             projectileCollision = new EnemyProjectileCollisionManager(projectile, collisionController);
         }
 
@@ -86,7 +84,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
             projectile.ViewProjectile(projectileActive, Alive);
             projectile.Update(gameTime, projDirection, Pos);
-            if (Math.Abs(projectile.Pos.X - Pos.X) < 3 && Math.Abs(projectile.Pos.Y - Pos.Y) < 3)
+            if (Math.Abs(projectile.Pos.X - Pos.X) < 4 && Math.Abs(projectile.Pos.Y - Pos.Y) < 4)
             {
                 projectile.ViewProjectile(false, Alive);
                 projDirection = EnemyStateMachine.Direction.None;

@@ -13,7 +13,6 @@ namespace MonoZelda.Enemies.EnemyClasses
     {
         public Point Pos { get; set; }
         private SpriteDict oldmanSpriteDict;
-        private GraphicsDevice graphicsDevice;
         public EnemyCollidable EnemyHitbox { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
@@ -21,19 +20,17 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         private int spawnTimer;
 
-        public Oldman(GraphicsDevice graphicsDevice)
+        public Oldman()
         {
-            this.graphicsDevice = graphicsDevice;
             Width = 64;
             Height = 64;
             Alive = true;
 
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            ContentManager contentManager, Player player)
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, PlayerState player)
         {
-            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Oldman);
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Oldman);
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;

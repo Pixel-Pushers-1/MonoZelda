@@ -19,7 +19,6 @@ namespace MonoZelda.Enemies.EnemyClasses
         public Boolean Alive { get; set; }
         private EnemyStateMachine stateMachine;
         private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
-        private readonly GraphicsDevice graphicsDevice;
         private CollisionController collisionController;
         private int pixelsMoved;
         private int health = 2;
@@ -27,18 +26,17 @@ namespace MonoZelda.Enemies.EnemyClasses
         private readonly Random rnd = new();
         private EnemyCollisionManager enemyCollision;
 
-        public Stalfos(GraphicsDevice graphicsDevice)
+        public Stalfos()
         {
-            this.graphicsDevice = graphicsDevice;
             Width = 48;
             Height = 48;
             Alive = true;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ContentManager contentManager, Player player)
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, PlayerState player)
         {
             this.collisionController = collisionController;
-            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Stalfos);
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Stalfos);
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;

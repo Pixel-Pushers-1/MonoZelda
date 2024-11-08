@@ -10,7 +10,6 @@ public class BluePotion : IItem
 {
     private ItemCollidable bluepotionCollidable;
     private bool itemPickedUp;
-    private GraphicsDevice graphicsDevice;
 
     public bool ItemPickedUp
     {
@@ -24,14 +23,9 @@ public class BluePotion : IItem
         }
     }
 
-    public BluePotion(GraphicsDevice graphicsDevice)
-    {
-        this.graphicsDevice = graphicsDevice;
-    }
-
     public void itemSpawn(SpriteDict bluepotionDict, Point spawnPosition, CollisionController collisionController)
     {
-        bluepotionCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice, ItemList.BluePotion);
+        bluepotionCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), ItemList.BluePotion);
         collisionController.AddCollidable(bluepotionCollidable);
         bluepotionCollidable.setSpriteDict(bluepotionDict);
         bluepotionDict.Position = spawnPosition;

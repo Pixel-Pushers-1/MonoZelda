@@ -3,6 +3,9 @@ using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System;
+using System.Reflection.Metadata;
+using System.Security.Cryptography.X509Certificates;
 
 namespace MonoZelda.Link;
 
@@ -13,13 +16,14 @@ public enum Direction {
     Right = -10,
 }
 
-public class Player
+public class PlayerSpriteManager
 {
     private Direction playerDirection;
     private SpriteDict playerSpriteDict;
     private Vector2 playerPosition;
     private float playerSpeed = 4.0f;
     private double timer;
+    private PlayerState playerState;
 
     private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
     {
@@ -29,9 +33,10 @@ public class Player
        { Direction.Right, "right" }
     };
 
-    public Player()
+    public PlayerSpriteManager(PlayerState playerStateMachine)
     {
-        playerPosition = new Vector2(500, 500);
+        playerPosition = playerStateMachine.Position.ToVector2();
+        playerState = playerStateMachine;
     }
 
     public Direction PlayerDirection
@@ -47,6 +52,7 @@ public class Player
     {
         playerPosition = position;
         playerSpriteDict.Position = position.ToPoint();
+        playerState.Position = position.ToPoint();
     }
 
     public void SetPlayerSpriteDict(SpriteDict spriteDict)
@@ -84,6 +90,7 @@ public class Player
         // Apply movement to player and sprite
         playerPosition += playerSpeed * movement;
         playerSpriteDict.Position = playerPosition.ToPoint();
+        playerState.Position = playerPosition.ToPoint();
     }
         
     public void StandStill(PlayerStandingCommand standCommand)
@@ -101,6 +108,20 @@ public class Player
             timer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         }
         playerSpriteDict.Position = playerPosition.ToPoint();
+    }
+
+    public void PlayerDeath()
+    {
+        if (timer <= 0)
+        {
+            string spriteName = "hurt_down";
+            playerSpriteDict.SetSprite(spriteName);
+            timer = playerSpriteDict.SetSpriteOneshot(spriteName);
+        }
+        else
+        {
+            timer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+        }
     }
 
     public void Attack()
@@ -146,5 +167,7 @@ public class Player
                 timer = playerSpriteDict.SetSpriteOneshot(spriteName);
             }
         }
+       
     }
+
 }

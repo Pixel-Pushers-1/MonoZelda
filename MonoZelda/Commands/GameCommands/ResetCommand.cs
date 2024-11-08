@@ -16,8 +16,7 @@ public class ResetCommand : ICommand
 
     public void Execute(params object[] metadata)
     {
-        game?.GetCollisionController().Reset();
-        game?.StartMenu();
+        game?.ResetGame();
     }
 
     public void UnExecute()

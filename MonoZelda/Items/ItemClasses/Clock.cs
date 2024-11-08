@@ -10,7 +10,6 @@ public class Clock : IItem
 {
     private ItemCollidable clockCollidable;
     private bool itemPickedUp;
-    private GraphicsDevice graphicsDevice;
 
     public bool ItemPickedUp
     {
@@ -24,14 +23,9 @@ public class Clock : IItem
         }
     }
 
-    public Clock(GraphicsDevice graphicsDevice)
-    {
-        this.graphicsDevice = graphicsDevice;   
-    }
-
     public void itemSpawn(SpriteDict clockDict, Point spawnPosition, CollisionController collisionController)
     {
-        clockCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 60, 60), graphicsDevice, ItemList.Clock);
+        clockCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 60, 60), ItemList.Clock);
         collisionController.AddCollidable(clockCollidable);
         clockCollidable.setSpriteDict(clockDict);
         clockDict.Position = spawnPosition;

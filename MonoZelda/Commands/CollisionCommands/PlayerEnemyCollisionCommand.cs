@@ -1,22 +1,24 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
+using MonoZelda.Enemies;
 using MonoZelda.Link;
+using MonoZelda.Scenes;
 
 namespace MonoZelda.Commands.CollisionCommands;
 
 public class PlayerEnemyCollisionCommand : ICommand
 {
     private MonoZeldaGame game;
-    private PlayerCollisionManager playerCollisionManager;
+    private CommandManager commandManager;
 
     public PlayerEnemyCollisionCommand()
     {
         //empty
     }
 
-    public PlayerEnemyCollisionCommand(PlayerCollisionManager playerCollisionManager)
+    public PlayerEnemyCollisionCommand(CommandManager commandManager)
     {
-        this.playerCollisionManager = playerCollisionManager;
+        this.commandManager = commandManager;
     }
 
     public void Execute(params object[] metadata)
@@ -27,18 +29,25 @@ public class PlayerEnemyCollisionCommand : ICommand
         Rectangle intersection = (Rectangle)metadata[4];
 
         PlayerCollidable playerCollidable;
+        EnemyCollidable enemyCollidable;
 
         if (collidableA.type == CollidableType.Player)
         {
             playerCollidable = (PlayerCollidable)collidableA;
+            enemyCollidable = (EnemyCollidable)collidableB;
         }
         else
         {
             playerCollidable = (PlayerCollidable)collidableB;
+            enemyCollidable = (EnemyCollidable)collidableA;
         }
 
         PlayerCollisionManager playerCollision = playerCollidable.PlayerCollision;
         playerCollision.HandleEnemyCollision(collisionDirection);
+        if (enemyCollidable.enemyType == EnemyList.Wallmaster)
+        {
+            commandManager.Execute(CommandType.RoomTransitionCommand, "Room1");
+        }
     }
 
     public void UnExecute()

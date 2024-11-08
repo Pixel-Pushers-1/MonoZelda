@@ -10,7 +10,6 @@ public class Fairy : IItem
 {
     private ItemCollidable fairyCollidable;
     private bool itemPickedUp;
-    private GraphicsDevice graphicsDevice;
 
     public bool ItemPickedUp
     {
@@ -24,14 +23,9 @@ public class Fairy : IItem
         }
     }
 
-    public Fairy(GraphicsDevice graphicsDevice)
-    {
-        this.graphicsDevice = graphicsDevice;
-    }
-
     public void itemSpawn(SpriteDict fairyDict, Point spawnPosition, CollisionController collisionController)
     {
-        fairyCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice, ItemList.Fairy);
+        fairyCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), ItemList.Fairy);
         collisionController.AddCollidable(fairyCollidable);
         fairyCollidable.setSpriteDict(fairyDict);
         fairyDict.Position = spawnPosition;

@@ -21,15 +21,15 @@ namespace MonoZelda.Enemies.GoriyaFolder
         private Boolean returning;
         private CollisionController collisionController;
 
-        public GoriyaBoomerang(Point pos, ContentManager contentManager, GraphicsDevice graphicsDevice, CollisionController collisionController)
+        public GoriyaBoomerang(Point pos, CollisionController collisionController)
         {
             this.Pos = pos;
             returning = false;
             this.collisionController = collisionController;
-            BoomerangSpriteDict = new(contentManager.Load<Texture2D>(TextureData.Enemies), SpriteCSVData.Enemies, 0, new Point(0, 0));
+            BoomerangSpriteDict = new(SpriteType.Enemies, 0, new Point(0, 0));
             BoomerangSpriteDict.SetSprite("boomerang");
             ViewProjectile(false, true);
-            ProjectileHitbox = new EnemyProjectileCollidable(new Rectangle(pos.X, pos.Y, 30, 30), graphicsDevice);
+            ProjectileHitbox = new EnemyProjectileCollidable(new Rectangle(pos.X, pos.Y, 30, 30));
             collisionController.AddCollidable(ProjectileHitbox);
         }
         public void ViewProjectile(bool view, bool goriyaAlive)

@@ -76,7 +76,7 @@ public class CollisionController : IController
     }
 
     // Check if two objects are colliding (AABB collision detection)
-    private bool IsColliding(ICollidable collidableA, ICollidable collidableB)
+    public bool IsColliding(ICollidable collidableA, ICollidable collidableB)
     {
         // Implement collision check logic (From Collision detection and bounding boxes)
         return collidableA.Intersects(collidableB);

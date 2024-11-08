@@ -18,11 +18,10 @@ namespace MonoZelda.Enemies.EnemyClasses
         public bool Alive { get; set; }
         private readonly Random rnd = new();
         private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
-        private GraphicsDevice graphicsDevice;
         private EnemyStateMachine stateMachine;
         private CollisionController collisionController;
         private EnemyCollisionManager enemyCollision;
-        private Player player;
+        private PlayerState player;
 
         public enum PlayerAdjacentWall
         {
@@ -38,22 +37,20 @@ namespace MonoZelda.Enemies.EnemyClasses
         private int health = 2;
         private int tileSize = 64;
 
-        public Wallmaster(GraphicsDevice graphicsDevice)
+        public Wallmaster()
         {
-            this.graphicsDevice = graphicsDevice;
             Width = 48;
             Height = 48;
             Alive = true;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            ContentManager contentManager, Player player)
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, PlayerState player)
         {
             spawned = true;
             timer = (float)(rnd.NextDouble()  - rnd.Next(0,2))*-1;
             this.player = player;
             this.collisionController = collisionController;
-            EnemyHitbox = new EnemyCollidable(new Rectangle(-100, -100, Width, Height), graphicsDevice, EnemyList.Wallmaster);
+            EnemyHitbox = new EnemyCollidable(new Rectangle(-100, -100, Width, Height), EnemyList.Wallmaster);
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = new Point(-100, -100);
@@ -113,7 +110,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Update(GameTime gameTime)
         {
-            playerPos = player.GetPlayerPosition().ToPoint();
+            playerPos = player.Position;
             adjacentWall = PlayerAdjacentWall.None;
 
             timer += (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
@@ -197,6 +194,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 if (timer >= 4.2)
                 {
                     stateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
+                    adjacentWall = PlayerAdjacentWall.None;
                     stateMachine.Die(true);
                     spawned = false;
                 }

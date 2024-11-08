@@ -23,26 +23,24 @@ namespace MonoZelda.Enemies.EnemyClasses
         private GraphicsDevice graphicsDevice;
         private CollisionController collisionController;
         private EnemyCollisionManager enemyCollision;
-        private Player player;
+        private PlayerState player;
         private Boolean attacking;
         private Boolean retreating;
 
         private int tileSize = 64;
 
-        public Trap(GraphicsDevice graphicsDevice)
+        public Trap()
         {
-            this.graphicsDevice = graphicsDevice;
             Width = 64;
             Height = 64;
             Alive = true;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            ContentManager contentManager, Player player)
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, PlayerState player)
         {
             this.collisionController = collisionController;
             enemyDict.Position = spawnPosition;
-            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Trap);
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Trap);
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict); 
             Pos = spawnPosition;
@@ -52,6 +50,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             enemyCollision = new EnemyCollisionManager(this, collisionController, Width, Height);
             stateMachine = new EnemyStateMachine(enemyDict);
             stateMachine.SetSprite("bladetrap");
+            stateMachine.Spawning = false;
         }
         public void ChangeDirection()
         {
@@ -111,7 +110,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Update(GameTime gameTime)
         {
-            var playerPos = player.GetPlayerPosition().ToPoint();
+            var playerPos = player.Position;
             if (Math.Abs(playerPos.Y - Pos.Y) < 60 && !attacking)
             {
                 if (playerPos.X - Pos.X > 0)
