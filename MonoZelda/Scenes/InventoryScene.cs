@@ -25,12 +25,11 @@ namespace MonoZelda.Scenes
         private GraphicsDevice graphicsDevice;
         private bool isInventoryOpen = false;
 
-    public InventoryScene(GraphicsDevice gd, CommandManager commands, PlayerState state)
+    public InventoryScene(GraphicsDevice gd, CommandManager commands)
     {
         // The Inventory starts mostly off screen
         Screen = new Screen() { Origin = new Point(0, 0) }; // Screen is helpfull for moving all the widgets at once
         Widgets = new Dictionary<Type, IScreenWidget>();
-        _playerState = state;
 
         // TODO: I'm sure there will be needs for widgets to register commands.
         graphicsDevice = gd;
@@ -45,8 +44,8 @@ namespace MonoZelda.Scenes
         _spriteFont ??= contentManager.Load<SpriteFont>("Fonts/Basic");
 
         Widgets.Add(typeof(HUDBackgroundWidget), new HUDBackgroundWidget(Screen, HUDBackgroundPosition, contentManager));
-        Widgets.Add(typeof(LifeWidget), new LifeWidget(Screen, LifePosition, contentManager, _playerState));
-        Widgets.Add(typeof(ItemCountWidget), new ItemCountWidget(_spriteFont, Screen, ItemCountPosition, contentManager, _playerState));
+        Widgets.Add(typeof(LifeWidget), new LifeWidget(Screen, LifePosition, contentManager));
+        Widgets.Add(typeof(ItemCountWidget), new ItemCountWidget(_spriteFont, Screen, ItemCountPosition, contentManager));
     }
 
     public void LoadContent(ContentManager cm, IDungeonRoom room)

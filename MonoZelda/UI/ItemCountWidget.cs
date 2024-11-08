@@ -17,7 +17,7 @@ namespace MonoZelda.UI
         private Point keyCountPosition = new Point(0, 86);
         private Point bombCountPosition = new Point(0, 118);
 
-        public ItemCountWidget(SpriteFont spriteFont, Screen screen, Point position, ContentManager contentManager, PlayerState playerState) : base(screen, position)
+        public ItemCountWidget(SpriteFont spriteFont, Screen screen, Point position, ContentManager contentManager) : base(screen, position)
         {
             font = spriteFont;
 
