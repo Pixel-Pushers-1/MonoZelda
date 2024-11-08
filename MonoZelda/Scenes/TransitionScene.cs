@@ -12,6 +12,7 @@ namespace MonoZelda.Scenes
     internal class TransitionScene : Scene
     {
         private ICommand loadCommand;
+
         private IDungeonRoom currentRoom;
         private IDungeonRoom nextRoom;
         private Direction TransitionDirection;
@@ -56,7 +57,7 @@ namespace MonoZelda.Scenes
             foreach (var currentDoorSpawn in currentRoom.GetDoors())
             {
                 CreateSpriteDict(dungeonTexture, currentDoorSpawn.Type.ToString(), currentDoorSpawn.Position);
-            }
+        }
 
             foreach (var nextDoorSpawn in nextRoom.GetDoors())
             {
@@ -80,8 +81,8 @@ namespace MonoZelda.Scenes
             }
             else
             {
-                loadCommand.Execute(nextRoom.RoomName);
-            }
+            loadCommand.Execute(nextRoom.RoomName);
         }
     }
+}
 }

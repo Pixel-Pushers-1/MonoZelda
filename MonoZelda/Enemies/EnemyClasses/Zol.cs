@@ -19,7 +19,6 @@ namespace MonoZelda.Enemies.EnemyClasses
         public bool Alive { get; set; }
         private readonly Random rnd = new();
         private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
-        private readonly GraphicsDevice graphicsDevice;
         private CollisionController collisionController;
 
         private int health = 2;
@@ -27,19 +26,17 @@ namespace MonoZelda.Enemies.EnemyClasses
         private int pixelsMoved;
         private bool readyToJump;
 
-        public Zol(GraphicsDevice graphicsDevice)
+        public Zol()
         {
-            this.graphicsDevice = graphicsDevice;
             Width = 48;
             Height = 48;
             Alive = true;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            ContentManager contentManager)
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
             this.collisionController = collisionController;
-            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, EnemyList.Zol);
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Zol);
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
@@ -49,6 +46,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             stateMachine = new EnemyStateMachine(enemyDict);
             stateMachine.SetSprite("zol_brown");
         }
+
         public void ChangeDirection()
         {
             switch (rnd.Next(1, 5))

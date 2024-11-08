@@ -21,18 +21,18 @@ namespace MonoZelda.Dungeons
         private DoorSpawn spawnPont;
 
         // So many arguments, but it's necessary for the door to be able to transition to the next room, open to suggetions -js
-        public DungeonDoor(Texture2D doorTexture, DoorSpawn spawnPoint, ICommand roomTransitionCommand, GraphicsDevice gd, CollisionController c)
+        public DungeonDoor(DoorSpawn spawnPoint, ICommand roomTransitionCommand, CollisionController c)
         {
             spawnPont = spawnPoint;
 
             transitionCommand = roomTransitionCommand;
 
-            spriteDict = new SpriteDict(doorTexture, SpriteCSVData.Blocks, SpriteLayer.Background, spawnPont.Position);
+            spriteDict = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, spawnPont.Position);
             spriteDict.SetSprite(spawnPont.Type.ToString());
             spawnPoint.DoorSpriteDict = spriteDict;
 
             // TODO: Setup trigger bounds loaction based on direction
-            trigger = new TriggerCollidable(spawnPont.Bounds, gd);
+            trigger = new TriggerCollidable(spawnPont.Bounds);
             trigger.OnTrigger += Transition;
             c.AddCollidable(trigger);
 
@@ -80,7 +80,7 @@ namespace MonoZelda.Dungeons
         private void Transition(Direction d)
         {
             trigger.OnTrigger -= Transition;
-            transitionCommand.Execute(spawnPont.Destination, d);
+            transitionCommand.Execute(spawnPont.Destination);
         }
     }
 }

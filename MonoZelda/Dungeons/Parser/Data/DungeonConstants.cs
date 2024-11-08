@@ -14,6 +14,7 @@ public static class DungeonConstants
     public static readonly Point Margin = new Point(64, 64);
     public static readonly Point DungeonPosition = new Point(0, 192);
     public static readonly Point BackgroundPosition = DungeonPosition + new Point(128, 128);
+    public static Point RoomPosition => DungeonPosition + Margin;
 
     public static Point RoomPosition => DungeonPosition + Margin;
 

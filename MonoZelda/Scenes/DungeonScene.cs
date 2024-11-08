@@ -18,7 +18,7 @@ namespace MonoZelda.Scenes
         private GraphicsDevice graphicsDevice;
         private CommandManager commandManager;
         private ContentManager contentManager;
-
+        private PlayerState playerState;
         private InventoryScene inventoryScene;
         private IDungeonRoom currentRoom;
 
@@ -34,20 +34,23 @@ namespace MonoZelda.Scenes
             StartRoom = startRoom;
             this.commandManager = commandManager;
 
-            inventoryScene = new InventoryScene(graphicsDevice, commandManager);
+            // Start the player near the entrance
+            playerState = new PlayerState() { Position = new Point(500, 700) };
+
+            inventoryScene = new InventoryScene(graphicsDevice, commandManager, playerState);
 
             commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this));
             commandManager.ReplaceCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand(this));
         }
 
-        public void TransitionRoom(string roomName,Direction doorCollisionDirection)
+        public void TransitionRoom(string roomName)
         {
             resetScene();
 
             var nextRoom = roomManager.LoadRoom(roomName);
             var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
 
-            activeScene = new TransitionScene(currentRoom, nextRoom, command, doorCollisionDirection);
+            activeScene = new TransitionScene(currentRoom, nextRoom, command);
             activeScene.LoadContent(contentManager);
         }
 
@@ -55,7 +58,7 @@ namespace MonoZelda.Scenes
         {
             resetScene();
 
-            currentRoom = roomManager.LoadRoom(roomName);
+            var room = roomManager.LoadRoom(roomName);
 
             // TODO: Check for the mario level
             if (roomName == "mario")
@@ -65,8 +68,11 @@ namespace MonoZelda.Scenes
                 return;
             }
 
-            activeScene = new RoomScene(graphicsDevice, commandManager, collisionController, currentRoom);
+            activeScene = new RoomScene(graphicsDevice, commandManager, collisionController, room, playerState);
             activeScene.LoadContent(contentManager);
+
+            // Complication due to SpriteDict getting clared, need to re-init the UI
+            inventoryScene.LoadContent(contentManager, room);
         }
 
         public override void Draw(SpriteBatch batch)
@@ -97,6 +103,7 @@ namespace MonoZelda.Scenes
         {
             collisionController.Clear();
             SpriteDrawer.Reset();
+
         }
     }
 }

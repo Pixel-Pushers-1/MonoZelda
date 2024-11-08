@@ -10,7 +10,6 @@ public class Map : IItem
 {
     private ItemCollidable mapCollidable;
     private bool itemPickedUp;
-    private GraphicsDevice graphicsDevice;
 
     public bool ItemPickedUp
     {
@@ -24,14 +23,9 @@ public class Map : IItem
         }
     }
 
-    public Map(GraphicsDevice graphicsDevice)
-    {
-        this.graphicsDevice = graphicsDevice;
-    }
-
     public void itemSpawn(SpriteDict mapDict, Point spawnPosition, CollisionController collisionController)
     {
-        mapCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice, ItemList.Map);
+        mapCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), ItemList.Map);
         collisionController.AddCollidable(mapCollidable);
         mapCollidable.setSpriteDict(mapDict);
         mapDict.Position = spawnPosition;

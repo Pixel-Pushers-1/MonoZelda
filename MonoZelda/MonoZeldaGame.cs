@@ -5,6 +5,9 @@ using MonoZelda.Sprites;
 using MonoZelda.Commands;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Scenes;
+using MonoZelda.Dungeons.Loader;
+using MonoZelda.Dungeons;
+using MonoZelda.Dungeons.Parser;
 
 namespace MonoZelda;
 
@@ -64,7 +67,7 @@ public class MonoZeldaGame : Game
     {
         spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        testFont = Content.Load<SpriteFont>("Fonts/Basic");
+        TextureData.LoadTextures(Content, GraphicsDevice);
 
         // Start menu goes first
         StartMenu();
@@ -113,7 +116,7 @@ public class MonoZeldaGame : Game
         // Preventing the StartCommand from activating when it shouldn't. -js
         if (scene is MainMenuScene)
         {
-            LoadDungeon("Room0");
+            LoadDungeon("Room5");
         }
     }
 

@@ -17,10 +17,10 @@ public class TriggerCollidable : ICollidable, ITrigger
 
     private readonly CollisionHitboxDraw hitbox;
 
-    public TriggerCollidable(Rectangle bounds, GraphicsDevice graphicsDevice)
+    public TriggerCollidable(Rectangle bounds)
     {
         Bounds = bounds;
-        hitbox = new CollisionHitboxDraw(this, graphicsDevice);
+        hitbox = new CollisionHitboxDraw(this);
         type = CollidableType.Trigger;
     }
 
