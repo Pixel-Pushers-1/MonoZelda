@@ -1,11 +1,10 @@
 ﻿using System;
 using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
-using System.Diagnostics.SymbolStore;
+using System.Numerics;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace MonoZelda.Enemies.EnemyProjectiles
 {
@@ -13,37 +12,28 @@ namespace MonoZelda.Enemies.EnemyProjectiles
     {
         public EnemyProjectileCollidable ProjectileHitbox { get; set; }
         public Point Pos { get; set; }
+        private Point originalPos;
 
         private CollisionController collisionController;
         public SpriteDict FireballSpriteDict { get; private set; }
 
         private int speed = 4;
         private double angle;
+        private Vector2 move;
 
-        public AquamentusFireball(Point pos, CollisionController collisionController, int newAngle)
+        public AquamentusFireball(Point pos, CollisionController collisionController, Point C)
         {
             Pos = pos;
+            originalPos = pos;
             FireballSpriteDict = new(SpriteType.Enemies, 0, new Point(100, 100));
             FireballSpriteDict.SetSprite("fireball");
             ProjectileHitbox = new EnemyProjectileCollidable(new Rectangle(pos.X, pos.Y, 30, 30));
             collisionController.AddCollidable(ProjectileHitbox);
-            angle = newAngle;
-            if (angle <= 180)
-            {
-                if (angle <= 90)
-                {
-                    angle = angle / 180 - 2;
-                }
-                else
-                {
-                    angle = angle / 180 - 1;
-                }
-            }
-            else
-            {
-                angle /= 180;
-            }
-            this.collisionController = collisionController; 
+            move = C.ToVector2();
+            this.collisionController = collisionController;
+
+            move = Vector2.Divide(move, (float)Math.Sqrt(move.X * move.X + move.Y * move.Y));
+            move *= 6;
         }
 
         public void ViewProjectile(bool view, bool aquamentusAlive)
@@ -73,19 +63,7 @@ namespace MonoZelda.Enemies.EnemyProjectiles
 
         public void Update(GameTime gameTime, EnemyStateMachine.Direction attackDirection, Point enemyPos)
         {
-            Point pos = Pos;
-            pos.X -= speed;
-            if (angle >= 1.5)
-            {
-                angle = Math.Ceiling(angle);
-            }
-            else
-            {
-                angle = Math.Floor(angle);
-            }
-
-            pos.Y -= (int)angle;
-            Pos = pos;
+            Pos = Pos + move.ToPoint();
             FireballSpriteDict.Position = Pos;
         }
     }

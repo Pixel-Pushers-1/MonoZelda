@@ -26,7 +26,6 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         private List<IEnemyProjectile> fireballs = new();
         private Dictionary<IEnemyProjectile, EnemyProjectileCollisionManager> projectileDictionary = new();
-        private int midAngle = 180;
         private int health = 6;
         private Point spawnPoint;
         private int pixelsMoved;
@@ -35,6 +34,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         private double attackDelay;
         private double dt;
         private bool projectileActive;
+        private PlayerState player;
 
         public Aquamentus()
         {
@@ -50,6 +50,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, PlayerState player)
         {
+            this.player = player;
             this.collisionController = collisionController;
             spawnPoint = spawnPosition;
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Aquamentus);
@@ -84,7 +85,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         public void Attack(GameTime gameTime)
         {
             fireballs.ForEach(fireball => fireball.Update(gameTime, EnemyStateMachine.Direction.Left, Pos));
-            if (attackDelay >= 6)
+            if (attackDelay >= 5.5)
             {
                 fireballs.RemoveRange(0,2);
                 foreach (var entry in projectileDictionary)
@@ -99,12 +100,13 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void CreateFireballs()
         {
+            var C = player.Position - Pos;
             if (!projectileActive)
             {
                 projectileActive = true;
-                fireballs.Add(new AquamentusFireball(Pos, collisionController, midAngle + 45));
-                fireballs.Add(new AquamentusFireball(Pos, collisionController, midAngle));
-                fireballs.Add(new AquamentusFireball(Pos, collisionController, midAngle - 45));
+                fireballs.Add(new AquamentusFireball(Pos, collisionController, new Point(C.X, C.Y - tileSize*3)));
+                fireballs.Add(new AquamentusFireball(Pos, collisionController, C));
+                fireballs.Add(new AquamentusFireball(Pos, collisionController, new Point(C.X, C.Y + tileSize*3)));
                 foreach (var projectile in fireballs)
                 {
                     projectileDictionary.Add(projectile, new EnemyProjectileCollisionManager(projectile, collisionController));
