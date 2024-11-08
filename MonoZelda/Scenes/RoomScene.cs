@@ -52,10 +52,13 @@ public class RoomScene : Scene
         // Need to wait for LoadContent because MonoZeldaGame is going to clear everything before calling this.
         LoadRoom(contentManager);
 
+        // create player sprite classes
         playerSprite = new PlayerSpriteManager();
-        var takeDamageCommand = new PlayerTakeDamageCommand(playerSprite);
+        var playerSpriteDict = new SpriteDict(SpriteType.Player, SpriteLayer.Player, PlayerState.Position);
+        playerSprite.SetPlayerSpriteDict(playerSpriteDict);
 
         //create player and player collision manager
+        var takeDamageCommand = new PlayerTakeDamageCommand(playerSprite);
         PlayerCollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50));
         collisionController.AddCollidable(playerHitbox);
         playerCollision = new PlayerCollisionManager(playerSprite, playerHitbox, collisionController, takeDamageCommand);
@@ -75,10 +78,6 @@ public class RoomScene : Scene
         commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerSprite));
-
-        // create spritedict to pass into player controller
-        var playerSpriteDict = new SpriteDict(SpriteType.Player, 1, PlayerState.Position);
-        playerSprite.SetPlayerSpriteDict(playerSpriteDict);
     }
 
     private void LoadRoom(ContentManager contentManager)
