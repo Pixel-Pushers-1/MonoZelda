@@ -17,6 +17,7 @@ using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Trigger;
 using MonoZelda.HUD;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Scenes;
 
@@ -167,7 +168,7 @@ public class RoomScene : Scene
     {
         if (projectileManager.ProjectileFired == true)
         {
-            projectileManager.executeProjectile();
+            projectileManager.UpdatedProjectileState();
         }
 
         foreach(KeyValuePair<IEnemy, EnemyCollisionManager> entry in enemyDictionary)

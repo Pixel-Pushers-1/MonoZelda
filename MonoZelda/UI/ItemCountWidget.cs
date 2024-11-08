@@ -13,42 +13,31 @@ namespace MonoZelda.UI
         private SpriteFont font;
         private Point margin = new Point(10, 10);
 
-        private SpriteDict rupee;
-        private SpriteDict key;
-        private SpriteDict bomb;
+        private Point rupeeCountPosition = new Point(0, 22);
+        private Point keyCountPosition = new Point(0, 86);
+        private Point bombCountPosition = new Point(0, 118);
 
-        private Point rupeePosition = new Point(0, 10);
-        private Point rupeeCountPosition = new Point(50, 20);
-        private Point keyPosition = new Point(0, 80);
-        private Point bombPosition = new Point(0, 150);
-
-        public ItemCountWidget(SpriteFont spriteFont, Screen screen, Point position, ContentManager contentManager) : base(screen, position)
+        public ItemCountWidget(SpriteFont spriteFont, Screen screen, Point position, ContentManager contentManager, PlayerState playerState) : base(screen, position)
         {
             font = spriteFont;
 
-            int numberOfRupees = PlayerState.Rupees;
-            rupee = new SpriteDict(SpriteType.Items, 0, rupeePosition);
-            rupee.SetSprite("rupee");
-            //set key
-            int numberOfKeys = PlayerState.Keys;
-            key = new SpriteDict(SpriteType.Items, 0, keyPosition);
-            key.SetSprite("key_0");
-            //set bomb
-            int numberOfBombs = PlayerState.Bombs;
-            bomb = new SpriteDict(SpriteType.Items, 0, bombPosition);
-            bomb.SetSprite("bomb");
+            // TODO: Projectile manager needs to update PlayerState
 
-            ProjectileType projectileType = PlayerState.EquippedProjectile;
-            Point projPosition = new Point(450, 75);
-            var proj = new SpriteDict(SpriteType.Items,SpriteLayer.Items,projPosition);
+            //show equipped projecetilie
+            //ProjectileType projectileType = playerState.EquippedProjectile;
+            //Point projPosition = new Point(450, 75);
+            //var proj = new SpriteDict(contentManager.Load<Texture2D>("Sprites/items"), SpriteCSVData.Items, 0, projPosition);
             //string spriteName = projectileSpriteMap.TryGetValue(projectileType, out var name) ? name : "arrow";
             //proj.SetSprite(spriteName);
         }
 
         public override void Draw(SpriteBatch sb)
         {
-            // Daw inventory counts in the correct location
-            sb.DrawString(font, "0", (WidgetLocation + rupeeCountPosition).ToVector2(), Color.White);
+            // Draw inventory counts in the correct location
+            sb.DrawString(font, "00", (WidgetLocation + rupeeCountPosition).ToVector2(), Color.White);
+            sb.DrawString(font, "00", (WidgetLocation + keyCountPosition).ToVector2(), Color.White);
+            sb.DrawString(font, "00", (WidgetLocation + bombCountPosition).ToVector2(), Color.White);
+
         }
 
         public override void Load(ContentManager content)
@@ -58,9 +47,7 @@ namespace MonoZelda.UI
 
         public override void Update()
         {
-            rupee.Position = WidgetLocation + rupeePosition;
-            key.Position = WidgetLocation + keyPosition;
-            bomb.Position = WidgetLocation + bombPosition;
+
         }
     }
 }

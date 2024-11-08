@@ -2,10 +2,11 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Link.Projectiles;
 
-public class Projectile
+public class ProjectileFactory
 {
     private SpriteDict projectileDict;
     protected Vector2 projectilePosition;
@@ -23,7 +24,20 @@ public class Projectile
        { ProjectileType.WoodenSword, (dict,pos,dir,player) => new WoodenSword(dict, pos, dir) },
        { ProjectileType.WoodenSwordBeam, (dict,pos,dir,player) => new WoodenSwordBeam(dict, pos, dir) }
     };
-    public Projectile(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection)
+
+    private static readonly Dictionary<ProjectileType, Action> playSoundEffects = new()
+    {
+       { ProjectileType.Arrow, () => SoundManager.PlaySound("LOZ_Arrow_Boomerang",false) },
+       { ProjectileType.ArrowBlue, () => SoundManager.PlaySound("LOZ_Arrow_Boomerang" ,false) },
+       { ProjectileType.Bomb, () => SoundManager.PlaySound("LOZ_Bomb_Drop",false) },
+       { ProjectileType.Boomerang, () => SoundManager.PlaySound("LOZ_Arrow_Boomerang",false) },
+       { ProjectileType.BoomerangBlue, () => SoundManager.PlaySound("LOZ_Arrow_Boomerang",false) },
+       { ProjectileType.CandleBlue, () => SoundManager.PlaySound("LOZ_Candle",false) },
+       { ProjectileType.WoodenSword, () => SoundManager.PlaySound("LOZ_Sword_Slash",false) },
+       { ProjectileType.WoodenSwordBeam, () => SoundManager.PlaySound("LOZ_Sword_Shoot",false) }
+    };
+
+    public ProjectileFactory(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection)
     {
         this.projectileDict = projectileDict;
         this.playerPosition = playerPosition;
@@ -59,6 +73,7 @@ public class Projectile
 
     public IProjectile GetProjectileObject(ProjectileType currentProjectile, PlayerSpriteManager player)
     {
+        playSoundEffects[currentProjectile].Invoke();
         playerPosition = player.GetPlayerPosition();
         playerDirection = player.PlayerDirection;
 

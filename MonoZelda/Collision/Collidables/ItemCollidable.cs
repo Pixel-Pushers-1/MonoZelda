@@ -2,6 +2,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using MonoZelda.Sprites;
 using MonoZelda.Items;
+using System.Collections.Generic;
+using System;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Collision;
 
@@ -14,12 +17,30 @@ public class ItemCollidable : ICollidable
 
     private readonly CollisionHitboxDraw hitbox;
 
+    private readonly Dictionary<ItemList, Action> itemSoundEffects = new()
+    {
+       { ItemList.Heart, () => SoundManager.PlaySound("LOZ_Get_Heart" ,false) },
+       { ItemList.Rupee, () => SoundManager.PlaySound("LOZ_Get_Rupee",false) },
+    };
+
     public ItemCollidable(Rectangle bounds, ItemList itemType)
     {
         Bounds = bounds;
         hitbox = new CollisionHitboxDraw(this);
         type = CollidableType.Item;
         this.itemType = itemType;
+    }
+
+    public void PlaySound()
+    {
+        if (itemSoundEffects.ContainsKey(itemType))
+        {
+            itemSoundEffects[itemType].Invoke();
+        }
+        else
+        {
+            SoundManager.PlaySound("LOZ_Get_Item", false);
+        }
     }
 
     public void UnregisterHitbox()

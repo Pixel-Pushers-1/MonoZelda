@@ -3,7 +3,7 @@ using MonoZelda.Sprites;
 
 namespace MonoZelda.Link.Projectiles;
 
-public class WoodenSword : Projectile,IProjectile
+public class WoodenSword : ProjectileFactory,IProjectile
 {
     private bool Finished;
     private int timer;

@@ -6,6 +6,7 @@ using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Link;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
@@ -91,10 +92,12 @@ namespace MonoZelda.Enemies.EnemyClasses
                 health--;
                 if (health > 0)
                 {
+                    SoundManager.PlaySound("LOZ_Enemy_Hit", false);
                     stateMachine.Knockback(true, collisionDirection);
                 }
                 else
                 {
+                    SoundManager.PlaySound("LOZ_Enemy_Die", false);
                     stateMachine.Die();
                     EnemyHitbox.UnregisterHitbox();
                     collisionController.RemoveCollidable(EnemyHitbox);

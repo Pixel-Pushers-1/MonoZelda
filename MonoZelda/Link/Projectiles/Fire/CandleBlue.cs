@@ -4,7 +4,7 @@ using System;
 
 namespace MonoZelda.Link.Projectiles;
 
-public class CandleBlue : Projectile, IProjectile
+public class CandleBlue : ProjectileFactory, IProjectile
 {
     private bool Finished;
     private const float PROJECTILE_SPEED = 4f;

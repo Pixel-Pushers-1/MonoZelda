@@ -84,9 +84,8 @@ namespace MonoZelda.Dungeons.Parser
             // The rest is the enum value
             var enumValue = cell[(cell.IndexOf('_') + 1)..];
 
-            if (!_cellParsers.ContainsKey(enumType)) return;
+            if (!_cellParsers.TryGetValue(enumType, out var cellParser)) return;
 
-            var cellParser = _cellParsers[enumType];
             cellParser.Parse(enumValue, position, room);
         }
 

@@ -4,7 +4,7 @@ using System;
 
 namespace MonoZelda.Link.Projectiles;
 
-public class Boomerang : Projectile, IProjectile
+public class Boomerang : ProjectileFactory, IProjectile
 {
     private bool Finished;
     private const float PROJECTILE_SPEED = 6f;

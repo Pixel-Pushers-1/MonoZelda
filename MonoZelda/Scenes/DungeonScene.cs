@@ -20,6 +20,7 @@ namespace MonoZelda.Scenes
         private ContentManager contentManager;
         private InventoryScene inventoryScene;
         private IDungeonRoom currentRoom;
+        private bool isPaused;
 
         public string StartRoom { get; private set; }
 
@@ -41,11 +42,12 @@ namespace MonoZelda.Scenes
 
             commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this));
             commandManager.ReplaceCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand(this));
+            commandManager.ReplaceCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand(this));
         }
 
         public void TransitionRoom(string roomName, Direction transitionDirection)
         {
-            resetScene();
+            ResetScene();
 
             var nextRoom = roomManager.LoadRoom(roomName);
             var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
@@ -56,7 +58,7 @@ namespace MonoZelda.Scenes
 
         public void LoadRoom(string roomName)
         {
-            resetScene();
+            ResetScene();
 
             currentRoom = roomManager.LoadRoom(roomName);
 
@@ -93,16 +95,32 @@ namespace MonoZelda.Scenes
 
         public override void Update(GameTime gameTime)
         {
-            collisionController.Update(gameTime);
-
-            activeScene.Update(gameTime);
             inventoryScene.Update(gameTime);
+            if (isPaused) return;
+
+            collisionController.Update(gameTime);
+            activeScene.Update(gameTime);
         }
 
-        private void resetScene()
+        private void ResetScene()
         {
             collisionController.Clear();
             SpriteDrawer.Reset();
+        }
+        
+        public void ToggleInventory()
+        {
+            isPaused = inventoryScene.ToggleInventory();
+        }
+
+        public void Pause()
+        {
+            isPaused = true;
+        }
+        
+        public void UnPause()
+        {
+            isPaused = false;
         }
     }
 }

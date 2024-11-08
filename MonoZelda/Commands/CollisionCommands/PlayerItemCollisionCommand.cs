@@ -25,20 +25,22 @@ public class PlayerItemCollisionCommand : ICommand
         CollisionController collisionController = (CollisionController) metadata[2];
 
         //it's possible that checking A and B is not necessary if CollisionController is forcing an order 
+        ItemCollidable itemCollidable;
+
         if (collidableA.type == CollidableType.Item)
         {
-            SpriteDict collidableDict = collidableA.CollidableDict;
-            collidableDict.Unregister();
-            collidableA.UnregisterHitbox();
-            collisionController.RemoveCollidable(collidableA);
+            itemCollidable = (ItemCollidable)collidableA;
         }
         else
         {
-            SpriteDict collidableDict = collidableB.CollidableDict;
-            collidableDict.Unregister();
-            collidableB.UnregisterHitbox();
-            collisionController.RemoveCollidable(collidableB);
+            itemCollidable = (ItemCollidable)collidableB;
         }
+
+        SpriteDict collidableDict = itemCollidable.CollidableDict;
+        collidableDict.Unregister();
+        itemCollidable.PlaySound();
+        itemCollidable.UnregisterHitbox();
+        collisionController.RemoveCollidable(itemCollidable);
     }
 
     public void UnExecute()

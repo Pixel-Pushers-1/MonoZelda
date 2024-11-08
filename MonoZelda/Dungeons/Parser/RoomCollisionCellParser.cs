@@ -19,7 +19,7 @@ namespace MonoZelda.Dungeons.Parser
             }
         }
 
-        internal static Rectangle GetCollisionRectangle(CollisionTileRect collisionRect, Point position, int tileWidth, int tileHeight)
+        private Rectangle GetCollisionRectangle(CollisionTileRect collisionRect, Point position, int tileWidth, int tileHeight)
         {
             return collisionRect switch
             {
