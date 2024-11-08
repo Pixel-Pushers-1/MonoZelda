@@ -58,6 +58,9 @@ public class RoomScene : Scene
         var playerSpriteDict = new SpriteDict(SpriteType.Player, SpriteLayer.Player, PlayerState.Position);
         playerSprite.SetPlayerSpriteDict(playerSpriteDict);
 
+        // Play Dungeon Theme
+        SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
+
         //create player and player collision manager
         var takeDamageCommand = new PlayerTakeDamageCommand(playerSprite);
         PlayerCollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50));
