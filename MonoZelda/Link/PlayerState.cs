@@ -11,7 +11,8 @@ public static class PlayerState
 
     public static void Initialize()
     {
-        // Empty
+        Direction = Direction.Down;
+        Position = new Point(500, 700);
     }
 
     public static int Health
@@ -41,6 +42,7 @@ public static class PlayerState
     public static bool IsKnockedBack { get; set; }
     public static int MaxHealth { get; set; } = INITIAL_HP;
     public static Point Position { get; set; }
+    public static Direction Direction { get; set; }
     public static ProjectileType EquippedProjectile { get; set; }
 
     public static void AddRupees(int amount) => Rupees += amount;

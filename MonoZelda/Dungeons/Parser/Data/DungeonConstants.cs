@@ -19,10 +19,10 @@ public static class DungeonConstants
 
     public static readonly Point[] DoorPositions = new Point[]
     {
-        DungeonPosition + new Point(448, 0),
-        DungeonPosition + new Point(896, 288),
-        DungeonPosition + new Point(448, 576),
-        DungeonPosition + new Point(0, 288)
+        DungeonPosition + new Point(448, 0), // North Door
+        DungeonPosition + new Point(896, 288), // East Door
+        DungeonPosition + new Point(448, 576), // South Door
+        DungeonPosition + new Point(0, 288) // West Door
     };
 
     public static readonly Dictionary<Direction, Point> adjacentTransitionRoomSpawnPoints = new()
@@ -33,4 +33,27 @@ public static class DungeonConstants
         { Direction.Down, new Point(0,-704) },
     };
 
+    public static readonly Dictionary<Direction, Point> TransitionLinkSpawnPoints = new()
+    {
+        { Direction.Left, new Point(-32,544) },
+        { Direction.Right, new Point(1056,544) },
+        { Direction.Up, new Point(512,160) },
+        { Direction.Down, new Point(512,928) },
+    };
+
+    public static readonly Dictionary<Direction, Vector2> DirectionVector = new()
+    {
+        { Direction.Left, new Vector2(-1,0) },
+        { Direction.Right, new Vector2(1,0) },
+        { Direction.Up, new Vector2(0,-1) },
+        { Direction.Down, new Vector2(0,1) },
+    };
+
+    public static readonly Dictionary<Direction, Vector2> TransitionDirectionVector = new()
+    {
+        { Direction.Left, new Vector2(1,0) },
+        { Direction.Right, new Vector2(-1,0) },
+        { Direction.Up, new Vector2(0,1) },
+        { Direction.Down, new Vector2(0,-1) },
+    };
 }

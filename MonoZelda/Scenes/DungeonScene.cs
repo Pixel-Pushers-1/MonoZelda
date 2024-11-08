@@ -34,7 +34,7 @@ namespace MonoZelda.Scenes
             this.commandManager = commandManager;
 
             // Start the player near the entrance
-            PlayerState.Position = new Point(500, 700);
+            PlayerState.Initialize();
 
             // create inventory scene
             inventoryScene = new InventoryScene(graphicsDevice, commandManager);

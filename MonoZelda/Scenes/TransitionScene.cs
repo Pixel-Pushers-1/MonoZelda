@@ -1,88 +1,111 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Commands;
 using MonoZelda.Dungeons;
 using MonoZelda.Link;
 using MonoZelda.Sprites;
 using System.Collections.Generic;
 
-namespace MonoZelda.Scenes
+namespace MonoZelda.Scenes;
+
+public class TransitionScene : Scene
 {
-    internal class TransitionScene : Scene
+    private ICommand loadCommand;
+
+    private IDungeonRoom currentRoom;
+    private IDungeonRoom nextRoom;
+    private Direction TransitionDirection;
+    private List<SpriteDict> spritesToMove;
+    private SpriteDict FakeLink;
+    private Vector2 FakeLinkPosition;
+    private Vector2 InitialPosition;
+    private Vector2 movement;
+    private float FakeLinkSpeed = 4f;
+
+    private readonly Dictionary<Direction, Point> directionShiftMap = new()
     {
-        private ICommand loadCommand;
+        { Direction.Left, new Point(8,0) },
+        { Direction.Right, new Point(-8,0) },
+        { Direction.Up, new Point(0,8) },
+        { Direction.Down, new Point(0,-8) },
+    };
 
-        private IDungeonRoom currentRoom;
-        private IDungeonRoom nextRoom;
-        private Direction TransitionDirection;
-        private List<SpriteDict> spritesToMove;
+    private readonly Dictionary<Direction, (string,Direction)> DirectionMap = new()
+    {
+       { Direction.Up, ("down",Direction.Down) },
+       { Direction.Down, ("up", Direction.Up) },
+       { Direction.Left, ("right", Direction.Right) },
+       { Direction.Right, ("left", Direction.Left) }
+    };
 
-        private readonly Dictionary<Direction, Point> directionShiftMap = new()
+    public TransitionScene(IDungeonRoom currentRoom, IDungeonRoom nextRoom, ICommand loadCommand, Direction transitionDirection)
+    {
+        this.loadCommand = loadCommand;
+        this.currentRoom = currentRoom;
+        this.nextRoom = nextRoom;
+        TransitionDirection = transitionDirection;
+        movement = DungeonConstants.TransitionDirectionVector[TransitionDirection];
+        InitialPosition = DungeonConstants.TransitionLinkSpawnPoints[transitionDirection].ToVector2();
+        spritesToMove = new List<SpriteDict>();
+    }
+
+    private void CreateSpriteDict(string spriteName, Point position)
+    {
+        var spriteDict = new SpriteDict(SpriteType.Blocks,SpriteLayer.Transition, position);
+        spriteDict.SetSprite(spriteName);
+        spritesToMove.Add(spriteDict);
+    }
+
+    public override void LoadContent(ContentManager contentManager)
+    {
+        // Set up room and border sprites
+        CreateSpriteDict("room_exterior", DungeonConstants.DungeonPosition);
+        CreateSpriteDict("room_exterior", DungeonConstants.DungeonPosition + DungeonConstants.adjacentTransitionRoomSpawnPoints[TransitionDirection]);
+        CreateSpriteDict(currentRoom.RoomSprite.ToString(), DungeonConstants.BackgroundPosition);
+        CreateSpriteDict(nextRoom.RoomSprite.ToString(), DungeonConstants.BackgroundPosition + DungeonConstants.adjacentTransitionRoomSpawnPoints[TransitionDirection]);
+
+        // create Door spriteDicts
+        foreach (var currentDoorSpawn in currentRoom.GetDoors())
         {
-            { Direction.Left, new Point(8,0) },
-            { Direction.Right, new Point(-8,0) },
-            { Direction.Up, new Point(0,8) },
-            { Direction.Down, new Point(0,-8) },
-        };
-
-        public TransitionScene(IDungeonRoom currentRoom, IDungeonRoom nextRoom, ICommand loadCommand, Direction transitionDirection)
-        {
-            this.loadCommand = loadCommand;
-            this.currentRoom = currentRoom;
-            this.nextRoom = nextRoom;
-            TransitionDirection = transitionDirection;
-            spritesToMove = new List<SpriteDict>();
+            CreateSpriteDict(currentDoorSpawn.Type.ToString(), currentDoorSpawn.Position);
         }
 
-        private void CreateSpriteDict(string spriteName, Point position)
+        foreach (var nextDoorSpawn in nextRoom.GetDoors())
         {
-            var spriteDict = new SpriteDict(SpriteType.Blocks,SpriteLayer.Transition, position);
-            spriteDict.SetSprite(spriteName);
-            spritesToMove.Add(spriteDict);
+            CreateSpriteDict(nextDoorSpawn.Type.ToString(), nextDoorSpawn.Position + DungeonConstants.adjacentTransitionRoomSpawnPoints[TransitionDirection]);
         }
 
-        public override void LoadContent(ContentManager contentManager)
-        {
-            // Set up room and border sprites
-            CreateSpriteDict("room_exterior", DungeonConstants.DungeonPosition);
-            CreateSpriteDict("room_exterior", DungeonConstants.DungeonPosition + DungeonConstants.adjacentTransitionRoomSpawnPoints[TransitionDirection]);
-            CreateSpriteDict(currentRoom.RoomSprite.ToString(), DungeonConstants.BackgroundPosition);
-            CreateSpriteDict(nextRoom.RoomSprite.ToString(), DungeonConstants.BackgroundPosition + DungeonConstants.adjacentTransitionRoomSpawnPoints[TransitionDirection]);
+        //Initialize Fake Link
+        FakeLink = new SpriteDict(SpriteType.Player, SpriteLayer.Transition, DungeonConstants.TransitionLinkSpawnPoints[TransitionDirection]);
+        FakeLink.SetSprite($"walk_{DirectionMap[TransitionDirection].Item1}");
+        FakeLinkPosition = DungeonConstants.TransitionLinkSpawnPoints[TransitionDirection].ToVector2();
+        FakeLink.Enabled = false;
+    }
 
-            // create Door spriteDicts
-            foreach (var currentDoorSpawn in currentRoom.GetDoors())
+    public override void Update(GameTime gameTime)
+    {
+        Point shift = directionShiftMap[TransitionDirection];
+        if (Vector2.Distance(spritesToMove[1].Position.ToVector2(), DungeonConstants.DungeonPosition.ToVector2()) > 0)
+        {
+            foreach (var spriteDict in spritesToMove)
             {
-                CreateSpriteDict(currentDoorSpawn.Type.ToString(), currentDoorSpawn.Position);
+                spriteDict.Position -= shift;
             }
-
-            foreach (var nextDoorSpawn in nextRoom.GetDoors())
-            {
-                CreateSpriteDict(nextDoorSpawn.Type.ToString(), nextDoorSpawn.Position + DungeonConstants.adjacentTransitionRoomSpawnPoints[TransitionDirection]);
-            }
-
-            // create Fake Link
-
         }
-
-        public override void Update(GameTime gameTime)
+        else
         {
-            Vector2 nextRoomPos = spritesToMove[1].Position.ToVector2();
-            Vector2 sceneRoomPos = DungeonConstants.DungeonPosition.ToVector2();
-            float distance = Vector2.Distance(nextRoomPos, sceneRoomPos);
-
-            if (distance > 0)
+            FakeLink.Enabled = true;
+            if (Vector2.Distance(InitialPosition, FakeLinkPosition) < 192)
             {
-                Point shift = directionShiftMap[TransitionDirection];
-                foreach (var spriteDict in spritesToMove)
-                {
-                    spriteDict.Position -= shift;
-                }
+                FakeLinkPosition += FakeLinkSpeed * movement;
+                FakeLink.Position = FakeLinkPosition.ToPoint();
             }
             else
             {
-            loadCommand.Execute(nextRoom.RoomName);
+                PlayerState.Position = FakeLinkPosition.ToPoint();
+                PlayerState.Direction = DirectionMap[TransitionDirection].Item2;
+                loadCommand.Execute(nextRoom.RoomName);
+            }
         }
     }
-}
 }

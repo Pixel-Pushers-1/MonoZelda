@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
 using System.Collections.Generic;
+using MonoZelda.Dungeons;
 
 namespace MonoZelda.Link;
 
@@ -52,7 +53,7 @@ public class PlayerSpriteManager
     public void SetPlayerSpriteDict(SpriteDict spriteDict)
     {
         playerSpriteDict = spriteDict;
-        playerDirection = Direction.Down;
+        playerDirection = PlayerState.Direction;
     }
 
     public void Move(PlayerMoveCommand moveCommand)
@@ -65,14 +66,7 @@ public class PlayerSpriteManager
         playerDirection = moveCommand.PlayerDirection;
 
         // Determine movement vector
-        Vector2 movement = playerDirection switch
-        {
-            Direction.Up => new Vector2(0, -1),
-            Direction.Down => new Vector2(0, 1),
-            Direction.Left => new Vector2(-1, 0),
-            Direction.Right => new Vector2(1, 0),
-            _ => Vector2.Zero
-        };
+        Vector2 movement = DungeonConstants.DirectionVector[playerDirection];
 
         // Get direction string from the dictionary
         if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
