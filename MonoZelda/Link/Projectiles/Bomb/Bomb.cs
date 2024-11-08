@@ -12,6 +12,12 @@ public class Bomb : ProjectileFactory, IProjectile
     private Vector2 InitialPosition;
     private Vector2 Dimension = new Vector2(8, 16);
     private SpriteDict projectileDict;
+    private bool exploded;
+    public bool Exploded
+    {
+        get => exploded;
+        set => exploded = value;
+    }
 
     public Bomb(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection)
     : base(projectileDict, playerPosition, playerDirection)
@@ -22,6 +28,7 @@ public class Bomb : ProjectileFactory, IProjectile
         InitialPosition = SetInitialPosition(Dimension);
         SetProjectileSprite("bomb");
         projectileDict.Position = InitialPosition.ToPoint();
+        Exploded = false;
     }
 
     public bool hasFinished()
@@ -37,7 +44,7 @@ public class Bomb : ProjectileFactory, IProjectile
     public Rectangle getCollisionRectangle()
     {
         Point spawnPosition = projectilePosition.ToPoint();
-        return new Rectangle(spawnPosition.X - 32 / 2, spawnPosition.Y - 64 / 2, 32, 64);
+        return new Rectangle(spawnPosition.X - 64 / 2, spawnPosition.Y - 64 / 2, 64, 64);
     }
 
     public void UpdateProjectile()
@@ -46,6 +53,7 @@ public class Bomb : ProjectileFactory, IProjectile
         {
             SoundManager.PlaySound("LOZ_Bomb_Blow", false);
             SetProjectileSprite("cloud");
+            Exploded = true;
         }
         else if(timer == 100)
         {

@@ -6,7 +6,7 @@ namespace MonoZelda.Link
 {
     public class PlayerState
     {
-        private static readonly int INITIAL_HP = 6;
+        private static readonly int INITIAL_HP = 12;
         private int _health = INITIAL_HP;
 
         public PlayerState()
