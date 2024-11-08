@@ -13,6 +13,7 @@ public enum SpriteType {
     Title,
     Projectiles,
     Blank,
+    HUD,
 }
 
 internal static class TextureData
@@ -22,6 +23,7 @@ internal static class TextureData
     private const string ItemsFile = "Sprites/items";
     private const string EnemiesFile = "Sprites/enemies";
     private const string TitleFile = "Sprites/title";
+    private const string HUDFile = "Sprites/hud";
 
     private static Texture2D PlayerTexture;
     private static Texture2D BlocksTexture;
@@ -29,6 +31,7 @@ internal static class TextureData
     private static Texture2D EnemiesTexture;
     private static Texture2D TitleTexture;
     private static Texture2D BlankTexture;
+    private static Texture2D HUDTexture;
 
     public static void LoadTextures(ContentManager contentManager, GraphicsDevice graphicsDevice) {
         PlayerTexture = contentManager.Load<Texture2D>(PlayerFile);
@@ -38,6 +41,7 @@ internal static class TextureData
         TitleTexture = contentManager.Load<Texture2D>(TitleFile);
         BlankTexture = new Texture2D(graphicsDevice, 1, 1);
         BlankTexture.SetData(new Color[] { Color.White });
+        HUDTexture = contentManager.Load<Texture2D>(HUDFile);
     }
 
     public static Texture2D GetTexture(SpriteType type) {
@@ -49,6 +53,7 @@ internal static class TextureData
             SpriteType.Title => TitleTexture,
             SpriteType.Projectiles => PlayerTexture,
             SpriteType.Blank => BlankTexture,
+            SpriteType.HUD => HUDTexture,
             _ => BlankTexture,
         };
     }
@@ -62,6 +67,7 @@ internal static class SpriteCSVData
     private const string EnemiesFile = "Content/Source Rect CSVs/Sprite Source Rects - Enemies.csv";
     private const string TitleFile = "Content/Source Rect CSVs/Sprite Source Rects - Title.csv";
     private const string ProjectilesFile = "Content/Source Rect CSVs/Sprite Source Rects - Projectiles.csv";
+    private const string HUDFile = "Content/Source Rect CSVs/Sprite Source Rects - HUD.csv";
 
     public static string GetFileName(SpriteType type) { 
         return type switch {
@@ -71,6 +77,7 @@ internal static class SpriteCSVData
             SpriteType.Enemies => EnemiesFile,
             SpriteType.Title => TitleFile,
             SpriteType.Projectiles => ProjectilesFile,
+            SpriteType.HUD => HUDFile,
             _ => "",
         };
 
