@@ -53,6 +53,7 @@ public class PlayerSpriteManager
     public void SetPlayerSpriteDict(SpriteDict spriteDict)
     {
         playerSpriteDict = spriteDict;
+        playerSpriteDict.SetSprite($"walk_{DirectionToStringMap[PlayerState.Direction]}");
         playerDirection = PlayerState.Direction;
     }
 
