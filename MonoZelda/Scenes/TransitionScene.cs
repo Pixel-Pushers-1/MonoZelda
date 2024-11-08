@@ -26,43 +26,43 @@ namespace MonoZelda.Scenes
             { Direction.Down, new Point(0,-8) },
         };
 
-        public TransitionScene(IDungeonRoom currentRoom, IDungeonRoom nextRoom, ICommand loadCommand, Direction doorCollisionDirection)
+        public TransitionScene(IDungeonRoom currentRoom, IDungeonRoom nextRoom, ICommand loadCommand, Direction transitionDirection)
         {
             this.loadCommand = loadCommand;
             this.currentRoom = currentRoom;
             this.nextRoom = nextRoom;
-            TransitionDirection = doorCollisionDirection;
+            TransitionDirection = transitionDirection;
             spritesToMove = new List<SpriteDict>();
         }
 
-        private void CreateSpriteDict(Texture2D texture, string spriteName, Point position)
+        private void CreateSpriteDict(string spriteName, Point position)
         {
-            var spriteDict = new SpriteDict(texture, SpriteCSVData.Blocks, SpriteLayer.Transition, position);
+            var spriteDict = new SpriteDict(SpriteType.Blocks,SpriteLayer.Transition, position);
             spriteDict.SetSprite(spriteName);
             spritesToMove.Add(spriteDict);
         }
 
         public override void LoadContent(ContentManager contentManager)
         {
-            // Load dungeon texture
-            var dungeonTexture = contentManager.Load<Texture2D>(TextureData.Blocks);
-
             // Set up room and border sprites
-            CreateSpriteDict(dungeonTexture, "room_exterior", DungeonConstants.DungeonPosition);
-            CreateSpriteDict(dungeonTexture, "room_exterior", DungeonConstants.DungeonPosition + DungeonConstants.adjacentTransitionRoomSpawnPoints[TransitionDirection]);
-            CreateSpriteDict(dungeonTexture, currentRoom.RoomSprite.ToString(), DungeonConstants.BackgroundPosition);
-            CreateSpriteDict(dungeonTexture, nextRoom.RoomSprite.ToString(), DungeonConstants.BackgroundPosition + DungeonConstants.adjacentTransitionRoomSpawnPoints[TransitionDirection]);
+            CreateSpriteDict("room_exterior", DungeonConstants.DungeonPosition);
+            CreateSpriteDict("room_exterior", DungeonConstants.DungeonPosition + DungeonConstants.adjacentTransitionRoomSpawnPoints[TransitionDirection]);
+            CreateSpriteDict(currentRoom.RoomSprite.ToString(), DungeonConstants.BackgroundPosition);
+            CreateSpriteDict(nextRoom.RoomSprite.ToString(), DungeonConstants.BackgroundPosition + DungeonConstants.adjacentTransitionRoomSpawnPoints[TransitionDirection]);
 
             // create Door spriteDicts
             foreach (var currentDoorSpawn in currentRoom.GetDoors())
             {
-                CreateSpriteDict(dungeonTexture, currentDoorSpawn.Type.ToString(), currentDoorSpawn.Position);
-        }
+                CreateSpriteDict(currentDoorSpawn.Type.ToString(), currentDoorSpawn.Position);
+            }
 
             foreach (var nextDoorSpawn in nextRoom.GetDoors())
             {
-                CreateSpriteDict(dungeonTexture, nextDoorSpawn.Type.ToString(), nextDoorSpawn.Position + DungeonConstants.adjacentTransitionRoomSpawnPoints[TransitionDirection]);
+                CreateSpriteDict(nextDoorSpawn.Type.ToString(), nextDoorSpawn.Position + DungeonConstants.adjacentTransitionRoomSpawnPoints[TransitionDirection]);
             }
+
+            // create Fake Link
+
         }
 
         public override void Update(GameTime gameTime)

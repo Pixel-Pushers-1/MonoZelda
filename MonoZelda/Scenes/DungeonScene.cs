@@ -18,7 +18,6 @@ namespace MonoZelda.Scenes
         private GraphicsDevice graphicsDevice;
         private CommandManager commandManager;
         private ContentManager contentManager;
-        private PlayerState playerState;
         private InventoryScene inventoryScene;
         private IDungeonRoom currentRoom;
 
@@ -35,22 +34,23 @@ namespace MonoZelda.Scenes
             this.commandManager = commandManager;
 
             // Start the player near the entrance
-            playerState = new PlayerState() { Position = new Point(500, 700) };
+            PlayerState.Position = new Point(500, 700);
 
-            inventoryScene = new InventoryScene(graphicsDevice, commandManager, playerState);
+            // create inventory scene
+            inventoryScene = new InventoryScene(graphicsDevice, commandManager);
 
             commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this));
             commandManager.ReplaceCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand(this));
         }
 
-        public void TransitionRoom(string roomName)
+        public void TransitionRoom(string roomName, Direction transitionDirection)
         {
             resetScene();
 
             var nextRoom = roomManager.LoadRoom(roomName);
             var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
 
-            activeScene = new TransitionScene(currentRoom, nextRoom, command);
+            activeScene = new TransitionScene(currentRoom, nextRoom, command, transitionDirection);
             activeScene.LoadContent(contentManager);
         }
 
@@ -68,7 +68,7 @@ namespace MonoZelda.Scenes
                 return;
             }
 
-            activeScene = new RoomScene(graphicsDevice, commandManager, collisionController, room, playerState);
+            activeScene = new RoomScene(graphicsDevice, commandManager, collisionController, room);
             activeScene.LoadContent(contentManager);
 
             // Complication due to SpriteDict getting clared, need to re-init the UI
@@ -103,7 +103,6 @@ namespace MonoZelda.Scenes
         {
             collisionController.Clear();
             SpriteDrawer.Reset();
-
         }
     }
 }

@@ -29,7 +29,6 @@ namespace MonoZelda.Dungeons
 
             spriteDict = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, spawnPont.Position);
             spriteDict.SetSprite(spawnPont.Type.ToString());
-            spawnPoint.DoorSpriteDict = spriteDict;
 
             // TODO: Setup trigger bounds loaction based on direction
             trigger = new TriggerCollidable(spawnPont.Bounds);
@@ -77,10 +76,10 @@ namespace MonoZelda.Dungeons
             }
         }
 
-        private void Transition(Direction d)
+        private void Transition(Direction transitionDirection)
         {
             trigger.OnTrigger -= Transition;
-            transitionCommand.Execute(spawnPont.Destination);
+            transitionCommand.Execute(spawnPont.Destination,transitionDirection);
         }
     }
 }

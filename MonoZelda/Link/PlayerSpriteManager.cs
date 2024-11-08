@@ -1,11 +1,7 @@
 ﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
-using System.Diagnostics;
 using System.Collections.Generic;
-using System;
-using System.Reflection.Metadata;
-using System.Security.Cryptography.X509Certificates;
 
 namespace MonoZelda.Link;
 
@@ -23,7 +19,6 @@ public class PlayerSpriteManager
     private Vector2 playerPosition;
     private float playerSpeed = 4.0f;
     private double timer;
-    private PlayerState playerState;
 
     private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
     {
@@ -33,10 +28,9 @@ public class PlayerSpriteManager
        { Direction.Right, "right" }
     };
 
-    public PlayerSpriteManager(PlayerState playerStateMachine)
+    public PlayerSpriteManager()
     {
-        playerPosition = playerStateMachine.Position.ToVector2();
-        playerState = playerStateMachine;
+        playerPosition = PlayerState.Position.ToVector2();
     }
 
     public Direction PlayerDirection
@@ -52,7 +46,7 @@ public class PlayerSpriteManager
     {
         playerPosition = position;
         playerSpriteDict.Position = position.ToPoint();
-        playerState.Position = position.ToPoint();
+        PlayerState.Position = position.ToPoint();
     }
 
     public void SetPlayerSpriteDict(SpriteDict spriteDict)

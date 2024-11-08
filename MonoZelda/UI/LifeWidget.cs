@@ -14,16 +14,14 @@ namespace MonoZelda.UI
     {
         private SpriteFont font;
         private Point margin = new Point(10, 10);
-        private PlayerState playerState;
 
         private List<SpriteDict> _hearts = new();
 
-        public LifeWidget(SpriteFont spriteFont, Screen screen, Point position, ContentManager cm, PlayerState playerState) : base(screen, position)
+        public LifeWidget(SpriteFont spriteFont, Screen screen, Point position, ContentManager cm) : base(screen, position)
         {
             font = spriteFont;
-            this.playerState = playerState;
 
-            var numberOfHearts = playerState.MaxHealth;
+            var numberOfHearts = PlayerState.MaxHealth;
             for (int i = 0; i < numberOfHearts; i++)
             {
                 Point heartPosition = WidgetLocation + margin + new Point((i * 32), 32);
@@ -49,7 +47,7 @@ namespace MonoZelda.UI
         public override void Update()
         {
             for(int i =0 ; i < _hearts.Count; i++) {
-                _hearts[i].Enabled = i < playerState.Health;
+                _hearts[i].Enabled = i < PlayerState.Health;
             }
         }
     }

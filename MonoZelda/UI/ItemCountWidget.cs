@@ -12,7 +12,6 @@ namespace MonoZelda.UI
     {
         private SpriteFont font;
         private Point margin = new Point(10, 10);
-        private PlayerState playerState;
 
         private SpriteDict rupee;
         private SpriteDict key;
@@ -23,29 +22,25 @@ namespace MonoZelda.UI
         private Point keyPosition = new Point(0, 80);
         private Point bombPosition = new Point(0, 150);
 
-        public ItemCountWidget(SpriteFont spriteFont, Screen screen, Point position, ContentManager contentManager, PlayerState playerState) : base(screen, position)
+        public ItemCountWidget(SpriteFont spriteFont, Screen screen, Point position, ContentManager contentManager) : base(screen, position)
         {
             font = spriteFont;
-            this.playerState = playerState;
 
-            int numberOfRupees = playerState.Rupees;
+            int numberOfRupees = PlayerState.Rupees;
             rupee = new SpriteDict(SpriteType.Items, 0, rupeePosition);
             rupee.SetSprite("rupee");
             //set key
-            int numberOfKeys = playerState.Keys;
+            int numberOfKeys = PlayerState.Keys;
             key = new SpriteDict(SpriteType.Items, 0, keyPosition);
             key.SetSprite("key_0");
             //set bomb
-            int numberOfBombs = playerState.Bombs;
+            int numberOfBombs = PlayerState.Bombs;
             bomb = new SpriteDict(SpriteType.Items, 0, bombPosition);
             bomb.SetSprite("bomb");
 
-            // TODO: Projectile manager needs to update PlayerState
-
-            //show equipped projecetilie
-            //ProjectileType projectileType = playerState.EquippedProjectile;
-            //Point projPosition = new Point(450, 75);
-            //var proj = new SpriteDict(contentManager.Load<Texture2D>("Sprites/items"), SpriteCSVData.Items, 0, projPosition);
+            ProjectileType projectileType = PlayerState.EquippedProjectile;
+            Point projPosition = new Point(450, 75);
+            var proj = new SpriteDict(SpriteType.Items,SpriteLayer.Items,projPosition);
             //string spriteName = projectileSpriteMap.TryGetValue(projectileType, out var name) ? name : "arrow";
             //proj.SetSprite(spriteName);
         }

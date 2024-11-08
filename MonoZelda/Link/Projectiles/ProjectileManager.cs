@@ -65,6 +65,7 @@ public class ProjectileManager
         if (keyProjectileMap.TryGetValue(pressedKey, out ProjectileType newProjectile))
         {
             EquippedProjectile = newProjectile;  // Use the property instead of field
+            PlayerState.EquippedProjectile = equippedProjectile;
         }
     }
 

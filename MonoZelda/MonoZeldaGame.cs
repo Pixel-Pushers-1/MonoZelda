@@ -116,7 +116,7 @@ public class MonoZeldaGame : Game
         // Preventing the StartCommand from activating when it shouldn't. -js
         if (scene is MainMenuScene)
         {
-            LoadDungeon("Room5");
+            LoadDungeon("Room0");
         }
     }
 

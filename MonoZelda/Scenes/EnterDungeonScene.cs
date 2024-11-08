@@ -3,11 +3,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Dungeons;
 using MonoZelda.Sprites;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MonoZelda.Scenes
 {
@@ -33,8 +28,6 @@ namespace MonoZelda.Scenes
         {
             // center of the creen
             var center = new Point(gd.Viewport.Width / 2, DungeonConstants.RoomPosition.Y);
-
-            var dungeonTexture = contentManager.Load<Texture2D>(TextureData.Blocks);
 
             // Fake the dungeon entrance
             // Room wall border
