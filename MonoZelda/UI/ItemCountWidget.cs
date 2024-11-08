@@ -14,31 +14,14 @@ namespace MonoZelda.UI
         private Point margin = new Point(10, 10);
         private PlayerState playerState;
 
-        private SpriteDict rupee;
-        private SpriteDict key;
-        private SpriteDict bomb;
-
-        private Point rupeePosition = new Point(0, 10);
-        private Point rupeeCountPosition = new Point(50, 20);
-        private Point keyPosition = new Point(0, 80);
-        private Point bombPosition = new Point(0, 150);
+        private Point rupeeCountPosition = new Point(0, 22);
+        private Point keyCountPosition = new Point(0, 86);
+        private Point bombCountPosition = new Point(0, 118);
 
         public ItemCountWidget(SpriteFont spriteFont, Screen screen, Point position, ContentManager contentManager, PlayerState playerState) : base(screen, position)
         {
             font = spriteFont;
             this.playerState = playerState;
-
-            int numberOfRupees = playerState.Rupees;
-            rupee = new SpriteDict(SpriteType.Items, 0, rupeePosition);
-            rupee.SetSprite("rupee");
-            //set key
-            int numberOfKeys = playerState.Keys;
-            key = new SpriteDict(SpriteType.Items, 0, keyPosition);
-            key.SetSprite("key_0");
-            //set bomb
-            int numberOfBombs = playerState.Bombs;
-            bomb = new SpriteDict(SpriteType.Items, 0, bombPosition);
-            bomb.SetSprite("bomb");
 
             // TODO: Projectile manager needs to update PlayerState
 
@@ -52,8 +35,11 @@ namespace MonoZelda.UI
 
         public override void Draw(SpriteBatch sb)
         {
-            // Daw inventory counts in the correct location
-            sb.DrawString(font, "0", (WidgetLocation + rupeeCountPosition).ToVector2(), Color.White);
+            // Draw inventory counts in the correct location
+            sb.DrawString(font, "00", (WidgetLocation + rupeeCountPosition).ToVector2(), Color.White);
+            sb.DrawString(font, "00", (WidgetLocation + keyCountPosition).ToVector2(), Color.White);
+            sb.DrawString(font, "00", (WidgetLocation + bombCountPosition).ToVector2(), Color.White);
+
         }
 
         public override void Load(ContentManager content)
@@ -63,9 +49,7 @@ namespace MonoZelda.UI
 
         public override void Update()
         {
-            rupee.Position = WidgetLocation + rupeePosition;
-            key.Position = WidgetLocation + keyPosition;
-            bomb.Position = WidgetLocation + bombPosition;
+
         }
     }
 }
