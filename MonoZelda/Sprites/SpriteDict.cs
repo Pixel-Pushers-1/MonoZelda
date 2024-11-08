@@ -7,12 +7,28 @@ namespace MonoZelda.Sprites;
 
 public class SpriteDict : IDrawable
 {
+    public enum FlashingType
+    {
+        OnOff,
+        Red,
+        Colorful,
+    }
+
+    private const float FLASHING_RATE = 20f;
+    private static Dictionary<FlashingType, List<Color>> flashingColors = new Dictionary<FlashingType, List<Color>> {
+        { FlashingType.OnOff, new List<Color> { ColorData.White, ColorData.Transparent } },
+        { FlashingType.Red, new List<Color> { ColorData.White, ColorData.Red } },
+        { FlashingType.Colorful, new List<Color> { ColorData.Blue, ColorData.Red, ColorData.Green, ColorData.White } },
+    };
+
     public Point Position { get; set; }
     public bool Enabled { get; set; }
 
     private readonly Texture2D texture;
     private readonly Dictionary<string, Sprite> dict = new();
     private string currentSprite = "";
+    private FlashingType flashingType;
+    private float flashingTimer;
 
     public SpriteDict(SpriteType spriteType, int priority, Point position)
     {
@@ -49,7 +65,13 @@ public class SpriteDict : IDrawable
         return dict[currentSprite].SetOneshot(true);
     }
 
-    public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+    public void SetFlashing(FlashingType type, float seconds)
+    {
+        flashingType = type;
+        flashingTimer = seconds;
+    }
+
+    public void Draw(SpriteBatch spriteBatch)
     {
         //do nothing if disabled
         if (!Enabled) {
@@ -57,6 +79,15 @@ public class SpriteDict : IDrawable
         }
 
         //draw current sprite
-        dict[currentSprite].Draw(spriteBatch, gameTime, texture, Position);
+        dict[currentSprite].Draw(spriteBatch, texture, Position, GetColor());
+
+        flashingTimer -= (float) MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+    }
+
+    private Color GetColor() {
+        if (flashingTimer <= 0f) {
+            return ColorData.White;
+        }
+        return flashingColors[flashingType][(int) (flashingTimer * FLASHING_RATE % flashingColors[flashingType].Count)];
     }
 }

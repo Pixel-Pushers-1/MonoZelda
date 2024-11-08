@@ -84,3 +84,12 @@ internal static class SpriteCSVData
     }
 }
 
+internal static class ColorData
+{
+    public static Color White { get; private set; } = new Color(1f, 1f, 1f, 1f);
+    public static Color Red { get; private set; } = new Color(1f, .5f, .5f, 1f);
+    public static Color Green { get; private set; } = new Color(.5f, 1f, .5f, 1f);
+    public static Color Blue { get; private set; } = new Color(.5f, .5f, 1f, 1f);
+    public static Color Transparent { get; private set; } = new Color(0f, 0f, 0f, 0f);
+}
+

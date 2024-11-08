@@ -28,7 +28,7 @@ namespace MonoZelda.Collision
             SpriteDrawer.UnregisterDrawable(this);
         }
 
-        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch)
         {
             Rectangle Bounds = collidable.Bounds;
             spriteBatch.Draw(texture, new Rectangle(Bounds.Left, Bounds.Top, Bounds.Width, Thickness), GizmoColor);
