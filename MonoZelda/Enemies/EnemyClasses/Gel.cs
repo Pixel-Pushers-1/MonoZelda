@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Link;
+using MonoZelda.Sound;
 using MonoZelda.Sprites;
 using Point = Microsoft.Xna.Framework.Point;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -111,6 +112,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void TakeDamage(Boolean stun, Direction collisionDirection)
         {
+            SoundManager.PlaySound("LOZ_Enemy_Die", false);
             stateMachine.Die(false);
             EnemyHitbox.UnregisterHitbox();
             collisionController.RemoveCollidable(EnemyHitbox);

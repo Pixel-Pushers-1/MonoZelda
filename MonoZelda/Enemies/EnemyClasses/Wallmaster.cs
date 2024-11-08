@@ -5,6 +5,7 @@ using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Commands;
 using MonoZelda.Link;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
@@ -238,6 +239,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             if (health <= 0 && !stun)
             {
                 stateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
+                SoundManager.PlaySound("LOZ_Enemy_Die", false);
                 stateMachine.Die(true);
                 spawned = false;
                 health = 2;

@@ -22,6 +22,7 @@ namespace MonoZelda.Scenes
         private PlayerState playerState;
         private InventoryScene inventoryScene;
         private IDungeonRoom currentRoom;
+        private bool isPaused;
 
         public string StartRoom { get; private set; }
 
@@ -42,13 +43,14 @@ namespace MonoZelda.Scenes
 
             commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this));
             commandManager.ReplaceCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand(this));
+            commandManager.ReplaceCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand(this));
             commandManager.ReplaceCommand(CommandType.PlayerEnemyCollisionCommand,
                 new PlayerEnemyCollisionCommand(commandManager));
         }
 
         public void TransitionRoom(string roomName)
         {
-            resetScene();
+            ResetScene();
 
             var nextRoom = roomManager.LoadRoom(roomName);
             var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
@@ -59,7 +61,7 @@ namespace MonoZelda.Scenes
 
         public void LoadRoom(string roomName)
         {
-            resetScene();
+            ResetScene();
 
             var room = roomManager.LoadRoom(roomName);
 
@@ -96,17 +98,33 @@ namespace MonoZelda.Scenes
 
         public override void Update(GameTime gameTime)
         {
-            collisionController.Update(gameTime);
-
-            activeScene.Update(gameTime);
             inventoryScene.Update(gameTime);
+            if (isPaused) return;
+
+            collisionController.Update(gameTime);
+            activeScene.Update(gameTime);
         }
 
-        private void resetScene()
+        private void ResetScene()
         {
             collisionController.Clear();
             SpriteDrawer.Reset();
 
+        }
+        
+        public void ToggleInventory()
+        {
+            isPaused = inventoryScene.ToggleInventory();
+        }
+
+        public void Pause()
+        {
+            isPaused = true;
+        }
+        
+        public void UnPause()
+        {
+            isPaused = false;
         }
     }
 }

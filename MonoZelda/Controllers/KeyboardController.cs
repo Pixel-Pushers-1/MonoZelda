@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Input;
 using MonoZelda.Commands;
 using System.Collections.Generic;
 using System.Linq;
-using System.Diagnostics;
 
 namespace MonoZelda.Controllers;
 
@@ -38,9 +37,11 @@ public class KeyboardController : IController
             {new (Keys.T, true), CommandType.PlayerFireSwordBeamCommand},
             {new (Keys.Z, true), CommandType.PlayerAttackCommand},
             {new (Keys.N, true), CommandType.PlayerAttackCommand},
+            {new (Keys.M, true), CommandType.MuteCommand},
             {new (Keys.Q, false), CommandType.ExitCommand},
             {new (Keys.R, false), CommandType.ResetCommand},
             {new (Keys.None, false), CommandType.PlayerStandingCommand},
+            {new (Keys.I, true), CommandType.ToggleInventoryCommand}
         };
     }
 

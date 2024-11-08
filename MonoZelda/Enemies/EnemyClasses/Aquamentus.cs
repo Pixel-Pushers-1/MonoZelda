@@ -8,6 +8,7 @@ using MonoZelda.Controllers;
 using MonoZelda.Enemies.EnemyProjectiles;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Link;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
@@ -139,6 +140,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             {
                 if (attackDelay <= 3.1)
                 {
+                    SoundManager.PlaySound("LOZ_Boss_Scream1", false);
                     CreateFireballs();
                     stateMachine.SetSprite("aquamentus_left_mouthopen");
                 }
@@ -164,10 +166,15 @@ namespace MonoZelda.Enemies.EnemyClasses
                 health--;
                 if (health == 0)
                 {
+                    SoundManager.PlaySound("LOZ_Enemy_Die", false);
                     fireballs.ForEach(fireball => fireball.ProjectileCollide());
                     stateMachine.Die(false);
                     EnemyHitbox.UnregisterHitbox();
                     collisionController.RemoveCollidable(EnemyHitbox);
+                }
+                else
+                {
+                    SoundManager.PlaySound("LOZ_Boss_Hit", false);
                 }
             }
         }

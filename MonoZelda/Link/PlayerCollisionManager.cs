@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Link;
 
@@ -76,6 +77,10 @@ public class PlayerCollisionManager
         {
             damageCommand.Execute();
             invulnerabilityTimer = INVULNERABILITY_TIME;
+        }
+        else
+        {
+            SoundManager.PlaySound("LOZ_Shield", false);
         }
     }
 
