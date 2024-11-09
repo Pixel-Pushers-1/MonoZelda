@@ -18,11 +18,11 @@ namespace MonoZelda.Enemies
             this.player = player;
         }
 
-        public IEnemy CreateEnemy(EnemyList enemyName, Point spawnPosition)
+        public Enemy CreateEnemy(EnemyList enemyName, Point spawnPosition)
         {
             var enemyDict = new SpriteDict(SpriteType.Enemies, 0, new Point(0, 0));
             var enemyType = Type.GetType($"MonoZelda.Enemies.EnemyClasses.{enemyName}");
-            IEnemy enemy = (IEnemy)Activator.CreateInstance(enemyType);
+            Enemy enemy = (Enemy)Activator.CreateInstance(enemyType);
             enemy.EnemySpawn(enemyDict, spawnPosition, collisionController, player);
 
             return enemy;

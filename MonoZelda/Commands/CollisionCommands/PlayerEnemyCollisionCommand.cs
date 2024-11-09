@@ -48,7 +48,7 @@ public class PlayerEnemyCollisionCommand : ICommand
         if (enemyCollidable.enemyType == EnemyList.Wallmaster)
         {
             Wallmaster enemy = (Wallmaster)enemyCollidable.getEnemy();
-            enemy.grabPlayer(commandManager);
+            enemy.GrabPlayer(commandManager);
         }
     }
 

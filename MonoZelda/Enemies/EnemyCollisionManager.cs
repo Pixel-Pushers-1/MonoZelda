@@ -13,9 +13,9 @@ namespace MonoZelda.Enemies
         private EnemyCollidable enemyHitbox;
         private CollisionController collisionController;
 
-        public IEnemy enemy { get; private set; }
+        public Enemy enemy { get; private set; }
 
-        public EnemyCollisionManager(IEnemy enemy, CollisionController collisionController, int width, int height)
+        public EnemyCollisionManager(Enemy enemy, CollisionController collisionController, int width, int height)
         {
             this.enemy = enemy;
             this.enemyHitbox = enemy.EnemyHitbox;

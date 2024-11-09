@@ -49,7 +49,7 @@ public class EnemyPlayerProjectileCollisionCommand : ICommand
             stun = true;
         }
         collisionController.RemoveCollidable(projectileCollidable);
-        IEnemy enemy = enemyCollidable.getEnemy();
+        Enemy enemy = enemyCollidable.getEnemy();
         enemy.TakeDamage(stun, collisionDirection);
     }
 

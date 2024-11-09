@@ -10,7 +10,7 @@ using MonoZelda.Sound;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
-    public class Dodongo : IEnemy
+    public class Dodongo : Enemy
     {
         public Point Pos { get; set; }
         private readonly Random rnd = new();

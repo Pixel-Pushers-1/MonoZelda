@@ -80,7 +80,7 @@ namespace MonoZelda.Enemies
             }
         }
 
-        public Point Update(IEnemy enemy, Point position, GameTime gameTime)
+        public Point Update(Enemy enemy, Point position, GameTime gameTime)
         {
             dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             Vector2 enemyPosition = position.ToVector2();

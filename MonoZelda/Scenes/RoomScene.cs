@@ -33,8 +33,8 @@ public class RoomScene : Scene
     private List<ITrigger> triggers;
     private ItemFactory itemFactory;
     private EnemyFactory enemyFactory;
-    private List<IEnemy> enemies = new();
-    private Dictionary<IEnemy, EnemyCollisionManager> enemyDictionary = new();
+    private List<Enemy> enemies = new();
+    private Dictionary<Enemy, EnemyCollisionManager> enemyDictionary = new();
     private List<EnemyCollisionManager> enemyCollisions = new();
     private List<EnemyProjectileCollisionManager> enemyProjectileCollisions = new();
     private IDungeonRoom room;

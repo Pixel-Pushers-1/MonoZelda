@@ -1,28 +1,15 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Link;
-using MonoZelda.Sound;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
-    public class Keese : IEnemy
+    public class Keese : Enemy
     {
-        private EnemyStateMachine stateMachine;
         private readonly Random rnd = new();
-        public Point Pos { get; set; }
-        public EnemyCollidable EnemyHitbox { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public bool Alive { get; set; }
-        private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
-        private CollisionController collisionController;
-        private EnemyCollisionManager enemyCollision;
-        private int pixelsMoved;
         private double speedUpTimer;
         private double dt;
         private float speed;
@@ -31,85 +18,65 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
             Width = 48;
             Height = 48;
+            Health = 1;
             Alive = true;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, PlayerState player)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, PlayerState player)
         {
-            this.collisionController = collisionController;
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Keese);
-            collisionController.AddCollidable(EnemyHitbox);
-            EnemyHitbox.setSpriteDict(enemyDict);
-            enemyDict.Position = spawnPosition;
-            Pos = spawnPosition;
-            enemyCollision = new EnemyCollisionManager(this, collisionController, Width, Height);
-            pixelsMoved = 0;
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, player);
             speed = 0;
             speedUpTimer = 0;
-            stateMachine = new EnemyStateMachine(enemyDict);
-            stateMachine.SetSprite("keese_blue");
+            StateMachine.SetSprite("keese_blue");
         }
 
-        public void ChangeDirection()
+        public override void ChangeDirection()
         {
             switch (rnd.Next(1, 9))
             {
                 case 1:
-                    direction = EnemyStateMachine.Direction.Left;
+                    Direction = EnemyStateMachine.Direction.Left;
                     break;
                 case 2:
-                    direction = EnemyStateMachine.Direction.Right;
+                    Direction = EnemyStateMachine.Direction.Right;
                     break;
                 case 3:
-                    direction = EnemyStateMachine.Direction.Up;
+                    Direction = EnemyStateMachine.Direction.Up;
                     break;
                 case 4:
-                    direction = EnemyStateMachine.Direction.Down;
+                    Direction = EnemyStateMachine.Direction.Down;
                     break;
                 case 5:
-                    direction = EnemyStateMachine.Direction.UpLeft;
+                    Direction = EnemyStateMachine.Direction.UpLeft;
                     break;
                 case 6:
-                    direction = EnemyStateMachine.Direction.UpRight;
+                    Direction = EnemyStateMachine.Direction.UpRight;
                     break;
                 case 7:
-                    direction = EnemyStateMachine.Direction.DownLeft;
+                    Direction = EnemyStateMachine.Direction.DownLeft;
                     break;
                 case 8:
-                    direction = EnemyStateMachine.Direction.DownRight;
+                    Direction = EnemyStateMachine.Direction.DownRight;
                     break;
             }
-            stateMachine.ChangeDirection(direction);
+            StateMachine.ChangeDirection(Direction);
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
-            dt = gameTime.ElapsedGameTime.TotalSeconds;
+            base.Update(gameTime);
             if (speedUpTimer < 2)
             {
-                speedUpTimer += dt;
+                speedUpTimer += MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
                 speed++;
-                stateMachine.ChangeSpeed(speed);
+                StateMachine.ChangeSpeed(speed);
             }
-            if (pixelsMoved >= 64)
-            {
-                pixelsMoved = 0;
-                ChangeDirection();
-            }
-            else
-            {
-                pixelsMoved++;
-            }
-            Pos = stateMachine.Update(this, Pos, gameTime);
-            enemyCollision.Update(Width, Height, Pos);
         }
 
-        public void TakeDamage(Boolean stun, Direction collisionDirection)
+        public override void TakeDamage(Boolean stun, Direction collisionDirection)
         {
-            SoundManager.PlaySound("LOZ_Enemy_Die", false);
-            stateMachine.Die(false);
-            EnemyHitbox.UnregisterHitbox();
-            collisionController.RemoveCollidable(EnemyHitbox);
+            base.TakeDamage(false, collisionDirection);
         }
     }
 }

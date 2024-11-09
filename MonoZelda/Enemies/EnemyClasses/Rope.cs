@@ -10,7 +10,7 @@ using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
-    public class Rope : IEnemy
+    public class Rope : Enemy
     {
         public Point Pos { get; set; }
         public EnemyCollidable EnemyHitbox { get; set; }

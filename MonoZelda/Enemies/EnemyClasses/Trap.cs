@@ -1,33 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
 using System;
-using System.Diagnostics;
 using MonoZelda.Link;
+using Direction = MonoZelda.Link.Direction;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
-    public class Trap : IEnemy
+    public class Trap : Enemy
     {
-        public Point Pos { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public bool Alive { get; set; }
-        public EnemyCollidable EnemyHitbox { get; set; }
         private readonly Random rnd = new();
-        private EnemyStateMachine stateMachine;
-        private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
-        private GraphicsDevice graphicsDevice;
-        private CollisionController collisionController;
-        private EnemyCollisionManager enemyCollision;
         private PlayerState player;
         private Boolean attacking;
         private Boolean retreating;
-
-        private int tileSize = 64;
 
         public Trap()
         {
@@ -36,33 +22,23 @@ namespace MonoZelda.Enemies.EnemyClasses
             Alive = true;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, PlayerState player)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, PlayerState player)
         {
-            this.collisionController = collisionController;
-            enemyDict.Position = spawnPosition;
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Trap);
-            collisionController.AddCollidable(EnemyHitbox);
-            EnemyHitbox.setSpriteDict(enemyDict); 
-            Pos = spawnPosition;
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, player);
             attacking = false;
             retreating = false;
             this.player = player;
-            enemyCollision = new EnemyCollisionManager(this, collisionController, Width, Height);
-            stateMachine = new EnemyStateMachine(enemyDict);
-            stateMachine.SetSprite("bladetrap");
-            stateMachine.Spawning = false;
+            StateMachine.SetSprite("bladetrap");
+            StateMachine.Spawning = false;
         }
-        public void ChangeDirection()
-        {
-        }
-
-        public void tempChangeDirection()
+        public override void ChangeDirection()
         {
             retreating = false;
             attacking = false;
-            direction = EnemyStateMachine.Direction.None;
-            stateMachine.ChangeDirection(direction);
-            stateMachine.ChangeSpeed(0);
+            Direction = EnemyStateMachine.Direction.None;
+            StateMachine.ChangeDirection(Direction);
+            StateMachine.ChangeSpeed(0);
         }
 
         public void Attack(EnemyStateMachine.Direction attackDirection)
@@ -71,8 +47,8 @@ namespace MonoZelda.Enemies.EnemyClasses
             {
                 attacking = true;
                 retreating = false;
-                stateMachine.ChangeDirection(attackDirection);
-                stateMachine.ChangeSpeed(240);
+                StateMachine.ChangeDirection(attackDirection);
+                StateMachine.ChangeSpeed(240);
             }
         }
 
@@ -81,7 +57,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             if (!retreating)
             {
                 retreating = true;
-                direction = direction switch
+                Direction = Direction switch
                 {
                     EnemyStateMachine.Direction.Up => EnemyStateMachine.Direction.Down,
                     EnemyStateMachine.Direction.Down => EnemyStateMachine.Direction.Up,
@@ -89,39 +65,39 @@ namespace MonoZelda.Enemies.EnemyClasses
                     EnemyStateMachine.Direction.Right => EnemyStateMachine.Direction.Left,
                     _ => EnemyStateMachine.Direction.None
                 };
-                stateMachine.ChangeDirection(direction);
-                stateMachine.ChangeSpeed(120);
+                StateMachine.ChangeDirection(Direction);
+                StateMachine.ChangeSpeed(120);
             }
         }
 
         public void CheckBounds()
         {
-            if (Pos.X <= tileSize* 2 + 31 || Pos.X >= tileSize * 14 - 31 || Pos.Y <= tileSize*5 + 31 || Pos.Y >= tileSize * 12 - 31)
+            if (Pos.X <= TileSize* 2 + 31 || Pos.X >= TileSize * 14 - 31 || Pos.Y <= TileSize*5 + 31 || Pos.Y >= TileSize * 12 - 31)
             {
-                if (Pos.Y <= tileSize * 5 + 31)
+                if (Pos.Y <= TileSize * 5 + 31)
                 {
                     var pos = Pos;
                     pos.Y++;
                     Pos = pos;
                 }
-                tempChangeDirection();
+                ChangeDirection();
             }
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             var playerPos = player.Position;
             if (Math.Abs(playerPos.Y - Pos.Y) < 60 && !attacking)
             {
                 if (playerPos.X - Pos.X > 0)
                 {
-                    direction = EnemyStateMachine.Direction.Right;
-                    Attack(direction);
+                    Direction = EnemyStateMachine.Direction.Right;
+                    Attack(Direction);
                 }
                 else
                 {
-                    direction = EnemyStateMachine.Direction.Left;
-                    Attack(direction);
+                    Direction = EnemyStateMachine.Direction.Left;
+                    Attack(Direction);
                 }
             }
             
@@ -129,32 +105,32 @@ namespace MonoZelda.Enemies.EnemyClasses
             {
                 if (playerPos.Y - Pos.Y > 0)
                 {
-                    direction = EnemyStateMachine.Direction.Down;
-                    Attack(direction);
+                    Direction = EnemyStateMachine.Direction.Down;
+                    Attack(Direction);
                 }
                 else
                 {
-                    direction = EnemyStateMachine.Direction.Up;
-                    Attack(direction);
+                    Direction = EnemyStateMachine.Direction.Up;
+                    Attack(Direction);
                 }
             }
             
-            if (Math.Abs(Pos.X - tileSize * 8) < 32)
+            if (Math.Abs(Pos.X - TileSize * 8) < 32)
             {
                 Retreat();
             }
             
-            if (Math.Abs(Pos.Y - (int)(tileSize * 8.5)) < 32)
+            if (Math.Abs(Pos.Y - (int)(TileSize * 8.5)) < 32)
             {
                 Retreat();
             }
 
-            Pos = stateMachine.Update(this, Pos, gameTime);
-            enemyCollision.Update(Width, Height, Pos);
+            Pos = StateMachine.Update(this, Pos, gameTime);
+            EnemyCollision.Update(Width, Height, Pos);
             CheckBounds();
         }
 
-        public void TakeDamage(Boolean stun, Direction collisionDirection)
+        public override void TakeDamage(Boolean stun, Direction collisionDirection)
         {
             //cannot take damage
         }
