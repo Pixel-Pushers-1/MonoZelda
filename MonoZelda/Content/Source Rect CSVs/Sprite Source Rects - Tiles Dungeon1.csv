@@ -8,6 +8,10 @@ door_open_north,848,16,32,32,1,top left,10
 door_open_west,848,48,32,32,1,top left,10
 door_open_east,848,80,32,32,1,top left,10
 door_open_south,848,112,32,32,1,top left,10
+diamond_door_north,848,16,32,32,1,top left,10
+diamond_door_west,848,48,32,32,1,top left,10
+diamond_door_east,848,80,32,32,1,top left,10
+diamond_door_south,848,112,32,32,1,top left,10
 door_locked_north,880,16,32,32,1,top left,10
 door_locked_west,880,48,32,32,1,top left,10
 door_locked_east,880,80,32,32,1,top left,10

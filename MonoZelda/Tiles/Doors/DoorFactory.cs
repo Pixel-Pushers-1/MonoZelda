@@ -3,12 +3,14 @@ using System.ComponentModel;
 using MonoZelda.Commands;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
+using MonoZelda.Enemies;
+using MonoZelda.Scenes;
 
 namespace MonoZelda.Tiles.Doors;
 
 internal static class DoorFactory
 {
-    public static IDoor CreateDoor(DoorSpawn door, ICommand roomTransitionCommand, CollisionController c)
+    public static IDoor CreateDoor(DoorSpawn door, ICommand roomTransitionCommand, CollisionController c, List<IEnemy> enemies)
     {
         var doorType = DoorTypeMap[door.Type];
         
@@ -17,7 +19,7 @@ internal static class DoorFactory
             DoorType.NormalDoor => new DungeonDoor(door, roomTransitionCommand, c),
             DoorType.LockedDoor => new KeyDoor(door, roomTransitionCommand, c),
             DoorType.BombableWall => new BombableWall(door, roomTransitionCommand, c),
-            DoorType.DiamondDoor => new DiamondDoor(door, roomTransitionCommand, c),
+            DoorType.DiamondDoor => new DiamondDoor(door, roomTransitionCommand, c, enemies),
             DoorType.Wall => new Wall(door, c),
             _ => throw new InvalidEnumArgumentException()
         };
@@ -41,10 +43,10 @@ internal static class DoorFactory
         { Dungeon1Sprite.bombable_wall_north, DoorType.BombableWall },
         { Dungeon1Sprite.bombable_wall_south, DoorType.BombableWall },
         { Dungeon1Sprite.bombable_wall_west, DoorType.BombableWall },
-        { Dungeon1Sprite.door_closed_east, DoorType.DiamondDoor },
-        { Dungeon1Sprite.door_closed_north, DoorType.DiamondDoor },
-        { Dungeon1Sprite.door_closed_south, DoorType.DiamondDoor },
-        { Dungeon1Sprite.door_closed_west, DoorType.DiamondDoor },
+        { Dungeon1Sprite.diamond_door_east, DoorType.DiamondDoor },
+        { Dungeon1Sprite.diamond_door_north, DoorType.DiamondDoor },
+        { Dungeon1Sprite.diamond_door_south, DoorType.DiamondDoor },
+        { Dungeon1Sprite.diamond_door_west, DoorType.DiamondDoor },
         { Dungeon1Sprite.door_open_east, DoorType.NormalDoor },
         { Dungeon1Sprite.door_open_north, DoorType.NormalDoor },
         { Dungeon1Sprite.door_open_south, DoorType.NormalDoor },

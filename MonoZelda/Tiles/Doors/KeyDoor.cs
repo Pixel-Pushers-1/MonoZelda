@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Commands;
@@ -28,7 +27,7 @@ namespace MonoZelda.Tiles
             
             var bounds = new Rectangle(spawnPoint.Position + offset, spawnPoint.Bounds.Size);
             
-            collider = new StaticRoomCollidable(bounds);
+            collider = new StaticBoundaryCollidable(bounds);
             c.AddCollidable(collider);
             
             // Move the underlying trigger to match

@@ -81,6 +81,11 @@ namespace MonoZelda.Dungeons
             return enemySpawns;
         }
 
+        public void Remove(EnemySpawn spawn)
+        {
+            enemySpawns.Remove(spawn);
+        }
+
         public List<ItemSpawn> GetItemSpawns()
         {
             return itemSpawns;

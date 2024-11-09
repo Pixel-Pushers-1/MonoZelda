@@ -101,5 +101,9 @@ public enum Dungeon1Sprite
     bombable_wall_east,
     bombable_wall_north,
     bombable_wall_south,
-    bombable_wall_west
+    bombable_wall_west,
+    diamond_door_east,
+    diamond_door_north,
+    diamond_door_south,
+    diamond_door_west,
 }

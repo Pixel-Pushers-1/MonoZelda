@@ -13,13 +13,10 @@ using MonoZelda.Commands.GameCommands;
 using MonoZelda.Enemies;
 using System.Collections.Generic;
 using MonoZelda.Enemies.EnemyProjectiles;
-using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Trigger;
-using MonoZelda.HUD;
 using MonoZelda.Sound;
 using MonoZelda.Tiles.Doors;
-using MonoZelda.UI;
 
 namespace MonoZelda.Scenes;
 
@@ -31,7 +28,7 @@ public class RoomScene : Scene
     private ProjectileManager projectileManager;
     private PlayerCollisionManager playerCollision;
     private CollisionController collisionController;
-    private List<ITrigger> triggers;
+    private List<IGameUpdate> updateables;
     private ItemFactory itemFactory;
     private EnemyFactory enemyFactory;
     private List<IEnemy> enemies = new();
@@ -47,7 +44,7 @@ public class RoomScene : Scene
         this.commandManager = commandManager;
         this.collisionController = collisionController;
         this.room = room;
-        triggers = new List<ITrigger>();
+        updateables = new List<IGameUpdate>();
     }
 
     public override void LoadContent(ContentManager contentManager)
@@ -93,6 +90,7 @@ public class RoomScene : Scene
         CreateTriggers(contentManager);
         SpawnItems(contentManager);
         SpawnEnemies(contentManager);
+        LoadDoors();
     }
 
     private void CreateTriggers(ContentManager contentManager)
@@ -100,7 +98,10 @@ public class RoomScene : Scene
         foreach(var trigger in room.GetTriggers())
         {
             var t = TriggerFactory.CreateTrigger(trigger.Type, collisionController, trigger.Position);
-            triggers.Add(t);
+            if(t is IGameUpdate updateable)
+            {
+                updateables.Add(updateable);
+            }
         }
     }
 
@@ -154,19 +155,21 @@ public class RoomScene : Scene
         var f = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, DungeonConstants.BackgroundPosition);
         f.SetSprite(room.RoomSprite.ToString());
 
-        // Doors
+        
+    }
+
+    private void LoadDoors()
+    {
         var doors = room.GetDoors();
         foreach (var door in doors)
         {
-            // TODO: Load kinds on concrete doors based on the door type
-            // TODO: This might be better as a factory method
-            // Speculating that the bombabale door will want to modify it's DoorSpawn to be bombed
-
             var transitionCommand = commandManager.GetCommand(CommandType.RoomTransitionCommand);
 
-            var dDoor = DoorFactory.CreateDoor(door, transitionCommand, collisionController);
-
-            //var dungeonDoor = new DungeonDoor(door, transitionCommand, collisionController);
+            var dDoor = DoorFactory.CreateDoor(door, transitionCommand, collisionController, enemies);
+            if (dDoor is IGameUpdate updateable)
+            {
+                updateables.Add(updateable);
+            }
         }
     }
 
@@ -193,6 +196,11 @@ public class RoomScene : Scene
             {
                 entry.Value.Update(entry.Key.Width, entry.Key.Height, entry.Key.Pos);
             }
+        }
+        
+        foreach (var updateable in updateables)
+        {
+            updateable.Update(gameTime);
         }
 
         playerCollision.Update();
