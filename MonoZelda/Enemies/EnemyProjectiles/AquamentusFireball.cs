@@ -17,23 +17,23 @@ namespace MonoZelda.Enemies.EnemyProjectiles
         private CollisionController collisionController;
         public SpriteDict FireballSpriteDict { get; private set; }
 
+        public bool Active { get; set; }
         private int speed = 4;
         private double angle;
         private Vector2 move;
 
-        public AquamentusFireball(Point pos, CollisionController collisionController, Point C)
+        public AquamentusFireball(Point pos, CollisionController collisionController, Vector2 C)
         {
             Pos = pos;
             originalPos = pos;
             FireballSpriteDict = new(SpriteType.Enemies, 0, new Point(100, 100));
             FireballSpriteDict.SetSprite("fireball");
-            ProjectileHitbox = new EnemyProjectileCollidable(new Rectangle(pos.X, pos.Y, 30, 30));
+            ProjectileHitbox = new EnemyProjectileCollidable(new Rectangle(pos.X, pos.Y, 30, 30), EnemyProjectileType.AquamentusFireball);
             collisionController.AddCollidable(ProjectileHitbox);
-            move = C.ToVector2();
+            move = C;
             this.collisionController = collisionController;
 
-            move = Vector2.Divide(move, (float)Math.Sqrt(move.X * move.X + move.Y * move.Y));
-            move *= 6;
+            Active = true;
         }
 
         public void ViewProjectile(bool view, bool aquamentusAlive)
@@ -57,6 +57,7 @@ namespace MonoZelda.Enemies.EnemyProjectiles
         public void ProjectileCollide()
         {
             FireballSpriteDict.Enabled = false;
+            Active = false;
             collisionController.RemoveCollidable(ProjectileHitbox);
             ProjectileHitbox.UnregisterHitbox();
         }

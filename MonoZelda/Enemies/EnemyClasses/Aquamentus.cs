@@ -86,14 +86,23 @@ namespace MonoZelda.Enemies.EnemyClasses
         public void Attack(GameTime gameTime)
         {
             fireballs.ForEach(fireball => fireball.Update(gameTime, EnemyStateMachine.Direction.Left, Pos));
-            if (attackDelay >= 5.5)
+            var tempActive = false;
+            foreach (var entry in projectileDictionary)
             {
-                fireballs.RemoveRange(0,2);
-                foreach (var entry in projectileDictionary)
+                if (entry.Key.Active)
                 {
-                    projectileDictionary.Remove(entry.Key);
+                    tempActive = true;
                 }
 
+                if (!entry.Key.Active)
+                {
+                    fireballs.Remove(entry.Key);
+                    projectileDictionary.Remove(entry.Key);
+                }
+            }
+
+            if (!tempActive)
+            {
                 projectileActive = false;
                 attackDelay = 0;
             }
@@ -101,13 +110,14 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void CreateFireballs()
         {
-            var C = player.Position - Pos;
+            var move = player.Position.ToVector2() - Pos.ToVector2();
+            move = Vector2.Divide(move, (float)Math.Sqrt(move.X * move.X + move.Y * move.Y)) * 6;
             if (!projectileActive)
             {
                 projectileActive = true;
-                fireballs.Add(new AquamentusFireball(Pos, collisionController, new Point(C.X, C.Y - tileSize*3)));
-                fireballs.Add(new AquamentusFireball(Pos, collisionController, C));
-                fireballs.Add(new AquamentusFireball(Pos, collisionController, new Point(C.X, C.Y + tileSize*3)));
+                fireballs.Add(new AquamentusFireball(Pos, collisionController, new Vector2(move.X,move.Y - 2)));
+                fireballs.Add(new AquamentusFireball(Pos, collisionController, move));
+                fireballs.Add(new AquamentusFireball(Pos, collisionController, new Vector2(move.X, move.Y + 2)));
                 foreach (var projectile in fireballs)
                 {
                     projectileDictionary.Add(projectile, new EnemyProjectileCollisionManager(projectile, collisionController));
@@ -118,7 +128,6 @@ namespace MonoZelda.Enemies.EnemyClasses
         public void Update(GameTime gameTime)
         {
             dt = gameTime.ElapsedGameTime.TotalSeconds;
-            attackDelay += dt;
             Pos = stateMachine.Update(this, Pos, gameTime);
             pixelsMoved++;
             if (Pos.X > spawnPoint.X + 10 || Pos.X < spawnPoint.X - tileSize*5 - 10)
@@ -136,22 +145,17 @@ namespace MonoZelda.Enemies.EnemyClasses
                 }
             }
 
-            if (attackDelay >= 3)
+            if (fireballs.Count == 0 && health > 0)
             {
-                if (attackDelay <= 3.1)
-                {
-                    SoundManager.PlaySound("LOZ_Boss_Scream1", false);
-                    CreateFireballs();
-                    stateMachine.SetSprite("aquamentus_left_mouthopen");
-                }
-                else
-                {
-                    stateMachine.SetSprite("aquamentus_left");
-                }
-
+                SoundManager.PlaySound("LOZ_Boss_Scream1", false);
+                CreateFireballs();
+                stateMachine.SetSprite("aquamentus_left_mouthopen");
+            }
+            else
+            {
+                stateMachine.SetSprite("aquamentus_left");
                 Attack(gameTime);
             }
-
             foreach (KeyValuePair<IEnemyProjectile, EnemyProjectileCollisionManager> entry in projectileDictionary)
             {
                 entry.Value.Update();
