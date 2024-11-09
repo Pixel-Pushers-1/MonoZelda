@@ -37,7 +37,7 @@ public static class PlayerState
 
     public static int Rupees { get; set; }
     public static int Bombs { get; set; }
-    public static int Keys { get; set; }
+    public static int Keys { get; set; } = 99;
     public static bool IsDead { get; private set; }
     public static bool IsKnockedBack { get; set; }
     public static int MaxHealth { get; set; } = INITIAL_HP;

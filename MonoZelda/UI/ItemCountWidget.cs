@@ -35,7 +35,7 @@ namespace MonoZelda.UI
         {
             // Draw inventory counts in the correct location
             sb.DrawString(font, "00", (WidgetLocation + rupeeCountPosition).ToVector2(), Color.White);
-            sb.DrawString(font, "00", (WidgetLocation + keyCountPosition).ToVector2(), Color.White);
+            sb.DrawString(font, PlayerState.Keys.ToString("00"), (WidgetLocation + keyCountPosition).ToVector2(), Color.White);
             sb.DrawString(font, "00", (WidgetLocation + bombCountPosition).ToVector2(), Color.White);
         }
 

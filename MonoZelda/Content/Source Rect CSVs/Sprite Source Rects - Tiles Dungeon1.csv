@@ -20,6 +20,10 @@ wall_bombed_north,944,16,32,32,1,top left,10
 wall_bombed_west,944,48,32,32,1,top left,10
 wall_bombed_east,944,80,32,32,1,top left,10
 wall_bombed_south,944,112,32,32,1,top left,10
+bombable_wall_north,944,16,32,32,1,top left,10
+bombable_wall_west,944,48,32,32,1,top left,10
+bombable_wall_east,944,80,32,32,1,top left,10
+bombable_wall_south,944,112,32,32,1,top left,10
 doorframe_wall_north,976,16,32,32,1,top left,10
 doorframe_wall_west,976,48,32,32,1,top left,10
 doorframe_wall_east,976,80,32,32,1,top left,10

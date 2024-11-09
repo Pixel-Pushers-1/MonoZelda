@@ -5,5 +5,6 @@ public enum DoorType
     BombableWall,
     DiamondDoor,
     LockedDoor,
-    NormalDoor
+    NormalDoor,
+    Wall
 }
