@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using MonoZelda.Commands;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
@@ -16,7 +17,7 @@ internal static class DoorFactory
             DoorType.NormalDoor => new DungeonDoor(door, roomTransitionCommand, c),
             DoorType.LockedDoor => new KeyDoor(door, roomTransitionCommand, c),
             DoorType.BombableWall => new BombableWall(door, roomTransitionCommand, c),
-            _ => throw new System.NotImplementedException(),
+            _ => throw new InvalidEnumArgumentException()
         };
     }
     
