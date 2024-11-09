@@ -1,12 +1,10 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Link;
 using MonoZelda.Sound;
 using MonoZelda.Sprites;
-using static MonoZelda.Enemies.EnemyStateMachine;
 using Direction = MonoZelda.Link.Direction;
 
 namespace MonoZelda.Enemies
@@ -40,7 +38,7 @@ namespace MonoZelda.Enemies
             enemyDict.Position = spawnPosition;
             Pos = spawnPosition;
             CollisionController = collisionController;
-            EnemyCollision = new EnemyCollisionManager(this, collisionController, Width, Height);
+            EnemyCollision = new EnemyCollisionManager(this, Width, Height);
             StateMachine = new EnemyStateMachine(enemyDict);
         }
 
@@ -64,7 +62,7 @@ namespace MonoZelda.Enemies
             StateMachine.ChangeDirection(Direction);
         }
 
-        public virtual void Update(GameTime gameTime)
+        public virtual void Update()
         {
             if (PixelsMoved >= TileSize)
             {
@@ -75,7 +73,7 @@ namespace MonoZelda.Enemies
             {
                 PixelsMoved++;
             }
-            Pos = StateMachine.Update(this, Pos, gameTime);
+            Pos = StateMachine.Update(this, Pos);
             EnemyCollision.Update(Width, Height, Pos);
         }
 

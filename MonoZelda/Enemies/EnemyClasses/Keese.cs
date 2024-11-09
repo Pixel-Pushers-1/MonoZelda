@@ -63,9 +63,9 @@ namespace MonoZelda.Enemies.EnemyClasses
             StateMachine.ChangeDirection(Direction);
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update()
         {
-            base.Update(gameTime);
+            base.Update();
             if (speedUpTimer < 2)
             {
                 speedUpTimer += MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;

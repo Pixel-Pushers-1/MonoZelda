@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using MonoZelda.Sprites;
-using MonoZelda.Link;
 
 namespace MonoZelda.Enemies
 {
@@ -80,9 +79,9 @@ namespace MonoZelda.Enemies
             }
         }
 
-        public Point Update(Enemy enemy, Point position, GameTime gameTime)
+        public Point Update(Enemy enemy, Point position)
         {
-            dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            dt = (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
             Vector2 enemyPosition = position.ToVector2();
             if (knockback)
             {

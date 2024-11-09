@@ -37,7 +37,7 @@ public class EnemyCollidable : ICollidable
 
     public Enemy getEnemy()
     {
-        return EnemyCollision.enemy;
+        return EnemyCollision.Enemy;
     }
 
     public void UnregisterHitbox()

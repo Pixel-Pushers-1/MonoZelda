@@ -1,9 +1,7 @@
-﻿using System;
-using MonoZelda.Sprites;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
-using System.Numerics;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace MonoZelda.Enemies.EnemyProjectiles
@@ -18,8 +16,6 @@ namespace MonoZelda.Enemies.EnemyProjectiles
         public SpriteDict FireballSpriteDict { get; private set; }
 
         public bool Active { get; set; }
-        private int speed = 4;
-        private double angle;
         private Vector2 move;
 
         public AquamentusFireball(Point pos, CollisionController collisionController, Vector2 C)
@@ -45,15 +41,6 @@ namespace MonoZelda.Enemies.EnemyProjectiles
                 ProjectileHitbox.UnregisterHitbox();
             }
         }
-
-        public void Follow(Point newPos)
-        {
-            Point pos = Pos;
-            pos.X = newPos.X;
-            pos.Y = newPos.Y - 48;
-            Pos = pos;
-        }
-
         public void ProjectileCollide()
         {
             FireballSpriteDict.Enabled = false;
@@ -62,7 +49,7 @@ namespace MonoZelda.Enemies.EnemyProjectiles
             ProjectileHitbox.UnregisterHitbox();
         }
 
-        public void Update(GameTime gameTime, EnemyStateMachine.Direction attackDirection, Point enemyPos)
+        public void Update(EnemyStateMachine.Direction attackDirection, Point enemyPos)
         {
             Pos = Pos + move.ToPoint();
             FireballSpriteDict.Position = Pos;

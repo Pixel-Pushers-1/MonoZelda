@@ -98,7 +98,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update()
         {
             playerPos = player.Position;
             adjacentWall = PlayerAdjacentWall.None;
@@ -209,7 +209,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 }
             }
             Spawn();
-            Pos = StateMachine.Update(this, Pos, gameTime);
+            Pos = StateMachine.Update(this, Pos);
             EnemyCollision.Update(Width, Height, Pos);
         }
 

@@ -44,7 +44,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             enemyDict.Position = spawnPosition;
             Pos = spawnPosition;
             this.player = player;
-            enemyCollision = new EnemyCollisionManager(this, collisionController, Width, Height);
+            enemyCollision = new EnemyCollisionManager(this, Width, Height);
             pixelsMoved = 0;
             stateMachine = new EnemyStateMachine(enemyDict);
         }
@@ -72,7 +72,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             stateMachine.ChangeDirection(direction);
         }
 
-        public void Update(GameTime gameTime)
+        public void Update()
         {
             if (pixelsMoved >= tileSize)
             {
@@ -83,7 +83,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             {
                 pixelsMoved++;
             }
-            Pos = stateMachine.Update(this, Pos, gameTime);
+            Pos = stateMachine.Update(this, Pos);
             enemyCollision.Update(Width, Height, Pos);
         }
 

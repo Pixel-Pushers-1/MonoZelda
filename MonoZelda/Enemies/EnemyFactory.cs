@@ -1,7 +1,6 @@
 ﻿using MonoZelda.Controllers;
 using System;
 using Microsoft.Xna.Framework;
-using MonoZelda.Items.ItemClasses;
 using MonoZelda.Link;
 using MonoZelda.Sprites;
 

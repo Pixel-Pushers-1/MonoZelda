@@ -28,7 +28,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             StateMachine.SetSprite("zol_brown");
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update()
         {
             if (readyToJump)
             {
@@ -49,7 +49,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             else
             {
                 PixelsMoved += 2;
-                Pos = StateMachine.Update(this, Pos, gameTime);
+                Pos = StateMachine.Update(this, Pos);
             }
             EnemyCollision.Update(Width, Height, Pos);
         }

@@ -32,7 +32,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             StateMachine.SetSprite("gel_turquoise");
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update()
         {
             if (spawnTimer > 1 && spawnTimer < 1.05)
             {
@@ -61,7 +61,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 PixelsMoved++;
                 spawnTimer += MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
             }
-            Pos = StateMachine.Update(this, Pos, gameTime);
+            Pos = StateMachine.Update(this, Pos);
             EnemyCollision.Update(Width,Height,Pos);
         }
 

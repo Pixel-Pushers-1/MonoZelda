@@ -182,7 +182,7 @@ public class RoomScene : Scene
             {
                 enemies.Remove(enemy);
             }
-            enemy.Update(gameTime);
+            enemy.Update();
         }
 
         playerCollision.Update();

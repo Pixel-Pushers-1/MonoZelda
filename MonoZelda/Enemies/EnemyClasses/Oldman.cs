@@ -24,9 +24,9 @@ namespace MonoZelda.Enemies.EnemyClasses
             PixelsMoved = 0;
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update()
         {
-            StateMachine.Update(this, Pos, gameTime);
+            StateMachine.Update(this, Pos);
         }
 
         public override void TakeDamage(Boolean stun, Direction collisionDirection)

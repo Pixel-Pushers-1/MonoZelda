@@ -44,36 +44,39 @@ namespace MonoZelda.Enemies.EnemyClasses
             StateMachine.SetSprite(newSprite);
         }
 
-        public void Attack(GameTime gameTime)
+        public void Attack()
         {
-            if (!projectileActive && Health > 0)
+            if (Health > 0)
             {
-                projectile = new GoriyaBoomerang(Pos, CollisionController, projDirection);
-                projectileCollision = new EnemyProjectileCollisionManager(projectile, CollisionController);
-                projectileActive = true;
-            }
-            projectile.ViewProjectile(projectileActive, true);
-            projectile.Update(gameTime, projDirection, Pos);
-            projectileCollision.Update();
-            if (Math.Abs(projectile.Pos.X - Pos.X) < 16 && Math.Abs(projectile.Pos.Y - Pos.Y) < 16)
-            {
-                projectileActive = false;
-                projectile.ViewProjectile(projectileActive, false);
-                projectile = null;
-                projectileCollision = null;
-                projDirection = EnemyStateMachine.Direction.None;
-                PixelsMoved = 0;
-                ChangeDirection();
+                if (!projectileActive)
+                {
+                    projectile = new GoriyaBoomerang(Pos, CollisionController, projDirection);
+                    projectileCollision = new EnemyProjectileCollisionManager(projectile);
+                    projectileActive = true;
+                }
+                projectile.ViewProjectile(projectileActive, true);
+                projectile.Update(projDirection, Pos);
+                projectileCollision.Update();
+                if (Math.Abs(projectile.Pos.X - Pos.X) < 16 && Math.Abs(projectile.Pos.Y - Pos.Y) < 16)
+                {
+                    projectileActive = false;
+                    projectile.ViewProjectile(projectileActive, false);
+                    projectile = null;
+                    projectileCollision = null;
+                    projDirection = EnemyStateMachine.Direction.None;
+                    PixelsMoved = 0;
+                    ChangeDirection();
+                }
             }
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update()
         {
             if (PixelsMoved > TileSize*3 - 1)
             {
                 projDirection = Direction;
                 StateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
-                Attack(gameTime);
+                Attack();
             }
             else if (PixelsMoved >= 0)
             {
@@ -84,10 +87,10 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
             else if (projectileActive)
             {
-                Attack(gameTime);
+                Attack();
             }
 
-            Pos = StateMachine.Update(this, Pos, gameTime);
+            Pos = StateMachine.Update(this, Pos);
             PixelsMoved++;
             EnemyCollision.Update(Width,Height,Pos);
         }

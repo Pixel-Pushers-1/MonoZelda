@@ -1,7 +1,5 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Enemies.EnemyProjectiles;
@@ -53,14 +51,6 @@ namespace MonoZelda.Enemies.GoriyaFolder
             }
         }
 
-        public void Follow(Point newPos)
-        {
-            returning = false;
-            Pos = newPos;
-            velocity = Math.Abs(velocity);
-            attackTimer = 0;
-        }
-
         public void ProjectileCollide()
         {
             if (!returning)
@@ -70,10 +60,10 @@ namespace MonoZelda.Enemies.GoriyaFolder
             }
         }
 
-        public void Update(GameTime gameTime, EnemyStateMachine.Direction direction, Point enemyPos)
+        public void Update (EnemyStateMachine.Direction direction, Point enemyPos)
         {
             attackDirection = direction;
-            dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            dt = (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
             attackTimer += dt;
             var pos = new Vector2();
             pos = Pos.ToVector2();

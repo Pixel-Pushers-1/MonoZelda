@@ -59,9 +59,9 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
         }
 
-        public void Attack(GameTime gameTime)
+        public void Attack()
         {
-            fireballs.ForEach(fireball => fireball.Update(gameTime, EnemyStateMachine.Direction.Left, Pos));
+            fireballs.ForEach(fireball => fireball.Update( EnemyStateMachine.Direction.Left, Pos));
             var tempActive = false;
             foreach (var entry in projectileDictionary)
             {
@@ -95,14 +95,14 @@ namespace MonoZelda.Enemies.EnemyClasses
                 fireballs.Add(new AquamentusFireball(Pos, CollisionController, new Vector2(move.X, move.Y + 2)));
                 foreach (var projectile in fireballs)
                 {
-                    projectileDictionary.Add(projectile, new EnemyProjectileCollisionManager(projectile, CollisionController));
+                    projectileDictionary.Add(projectile, new EnemyProjectileCollisionManager(projectile));
                 }
             }
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update()
         {
-            Pos = StateMachine.Update(this, Pos, gameTime);
+            Pos = StateMachine.Update(this, Pos);
             PixelsMoved++;
             if (Pos.X > spawnPoint.X + 10 || Pos.X < spawnPoint.X - TileSize*5 - 10)
             {
@@ -128,7 +128,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             else
             {
                 StateMachine.SetSprite("aquamentus_left");
-                Attack(gameTime);
+                Attack();
             }
             foreach (KeyValuePair<IEnemyProjectile, EnemyProjectileCollisionManager> entry in projectileDictionary)
             {

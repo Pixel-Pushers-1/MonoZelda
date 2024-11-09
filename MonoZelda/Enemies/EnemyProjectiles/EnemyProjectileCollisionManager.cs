@@ -1,7 +1,6 @@
 ﻿using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using Microsoft.Xna.Framework;
-using MonoZelda.Link;
 
 namespace MonoZelda.Enemies.EnemyProjectiles
 {
@@ -11,7 +10,6 @@ namespace MonoZelda.Enemies.EnemyProjectiles
         private readonly int height;
         private IEnemyProjectile projectile;
         private EnemyProjectileCollidable projectileHitbox;
-        private CollisionController collisionController;
 
         public IEnemyProjectile Projectile
         {
@@ -19,7 +17,7 @@ namespace MonoZelda.Enemies.EnemyProjectiles
             set { projectile = value; }
         }
 
-        public EnemyProjectileCollisionManager(IEnemyProjectile projectile, CollisionController collisionController)
+        public EnemyProjectileCollisionManager(IEnemyProjectile projectile)
         {
             this.projectile = projectile;
             projectileHitbox = projectile.ProjectileHitbox;
@@ -34,8 +32,6 @@ namespace MonoZelda.Enemies.EnemyProjectiles
                 width,
                 height
             );
-            this.collisionController = collisionController;
-
             projectileHitbox.Bounds = bounds;
             projectileHitbox.setCollisionManager(this);
         }

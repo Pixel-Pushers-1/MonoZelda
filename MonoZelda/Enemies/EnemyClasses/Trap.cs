@@ -84,7 +84,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update()
         {
             var playerPos = player.Position;
             if (Math.Abs(playerPos.Y - Pos.Y) < 60 && !attacking)
@@ -125,7 +125,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 Retreat();
             }
 
-            Pos = StateMachine.Update(this, Pos, gameTime);
+            Pos = StateMachine.Update(this, Pos);
             EnemyCollision.Update(Width, Height, Pos);
             CheckBounds();
         }
