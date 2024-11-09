@@ -13,6 +13,7 @@ namespace MonoZelda.Enemies.GoriyaFolder
     {
         public Point Pos { get; set; }
         public SpriteDict BoomerangSpriteDict { get; private set; }
+        public bool Active { get; set; }
         public EnemyProjectileCollidable ProjectileHitbox { get; set; }
         private EnemyStateMachine.Direction attackDirection;
         private float velocity = 360;
@@ -20,10 +21,20 @@ namespace MonoZelda.Enemies.GoriyaFolder
         private float dt;
         private Boolean returning;
         private CollisionController collisionController;
+        private Vector2 movement;
 
-        public GoriyaBoomerang(Point pos, CollisionController collisionController)
+        public GoriyaBoomerang(Point pos, CollisionController collisionController, EnemyStateMachine.Direction direction)
         {
-            this.Pos = pos;
+            
+            movement = direction switch
+            {
+                EnemyStateMachine.Direction.Up => new Vector2(0, -1),
+                EnemyStateMachine.Direction.Down => new Vector2(0, 1),
+                EnemyStateMachine.Direction.Left => new Vector2(-1, 0),
+                EnemyStateMachine.Direction.Right => new Vector2(1, 0),
+                _ => Vector2.Zero
+            };
+            this.Pos = (pos.ToVector2() + movement*30).ToPoint();
             returning = false;
             this.collisionController = collisionController;
             BoomerangSpriteDict = new(SpriteType.Enemies, 0, new Point(0, 0));
@@ -35,7 +46,7 @@ namespace MonoZelda.Enemies.GoriyaFolder
         public void ViewProjectile(bool view, bool goriyaAlive)
         {
             BoomerangSpriteDict.Enabled = view;
-            if(!goriyaAlive)
+            if (!goriyaAlive)
             {
                 collisionController.RemoveCollidable(ProjectileHitbox);
                 ProjectileHitbox.UnregisterHitbox();
@@ -68,14 +79,6 @@ namespace MonoZelda.Enemies.GoriyaFolder
             pos = Pos.ToVector2();
             if (attackTimer < 1 || velocity < 0)
             {
-                Vector2 movement = attackDirection switch
-                {
-                    EnemyStateMachine.Direction.Up => new Vector2(0, -1),
-                    EnemyStateMachine.Direction.Down => new Vector2(0, 1),
-                    EnemyStateMachine.Direction.Left => new Vector2(-1, 0),
-                    EnemyStateMachine.Direction.Right => new Vector2(1, 0),
-                    _ => Vector2.Zero
-                };
                 pos += (velocity * movement) * dt;
             }
             else

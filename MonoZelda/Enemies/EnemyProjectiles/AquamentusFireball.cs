@@ -28,7 +28,7 @@ namespace MonoZelda.Enemies.EnemyProjectiles
             originalPos = pos;
             FireballSpriteDict = new(SpriteType.Enemies, 0, new Point(100, 100));
             FireballSpriteDict.SetSprite("fireball");
-            ProjectileHitbox = new EnemyProjectileCollidable(new Rectangle(pos.X, pos.Y, 30, 30), EnemyProjectileType.AquamentusFireball);
+            ProjectileHitbox = new EnemyProjectileCollidable(new Rectangle(pos.X, pos.Y, 30, 30));
             collisionController.AddCollidable(ProjectileHitbox);
             move = C;
             this.collisionController = collisionController;

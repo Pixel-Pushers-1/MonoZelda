@@ -39,7 +39,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Width = 48;
             Height = 48;
             Alive = true;
-            projectileActive = true;
+            projectileActive = false;
         }
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, PlayerState player)
@@ -53,8 +53,6 @@ namespace MonoZelda.Enemies.EnemyClasses
             enemyCollision = new EnemyCollisionManager(this, collisionController, Width, Height);
             pixelsMoved = 0;
             stateMachine = new EnemyStateMachine(enemyDict);
-            projectile = new GoriyaBoomerang(spawnPosition, collisionController);
-            projectileCollision = new EnemyProjectileCollisionManager(projectile, collisionController);
         }
 
         public void ChangeDirection()
@@ -83,11 +81,21 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Attack(GameTime gameTime)
         {
-            projectile.ViewProjectile(projectileActive, Alive);
-            projectile.Update(gameTime, projDirection, Pos);
-            if (Math.Abs(projectile.Pos.X - Pos.X) < 4 && Math.Abs(projectile.Pos.Y - Pos.Y) < 4)
+            if (!projectileActive && health > 0)
             {
-                projectile.ViewProjectile(false, Alive);
+                projectile = new GoriyaBoomerang(Pos, collisionController, projDirection);
+                projectileCollision = new EnemyProjectileCollisionManager(projectile, collisionController);
+                projectileActive = true;
+            }
+            projectile.ViewProjectile(projectileActive, true);
+            projectile.Update(gameTime, projDirection, Pos);
+            projectileCollision.Update();
+            if (Math.Abs(projectile.Pos.X - Pos.X) < 16 && Math.Abs(projectile.Pos.Y - Pos.Y) < 16)
+            {
+                projectileActive = false;
+                projectile.ViewProjectile(projectileActive, false);
+                projectile = null;
+                projectileCollision = null;
                 projDirection = EnemyStateMachine.Direction.None;
                 pixelsMoved = 0;
                 ChangeDirection();
@@ -108,14 +116,13 @@ namespace MonoZelda.Enemies.EnemyClasses
                 {
                     ChangeDirection();
                 }
-                projectile.Follow(Pos);
             }
-            else
+            else if (projectileActive)
             {
                 Attack(gameTime);
             }
+
             Pos = stateMachine.Update(this, Pos, gameTime);
-            projectileCollision.Update();
             pixelsMoved++;
             enemyCollision.Update(Width,Height,Pos);
         }
@@ -136,10 +143,14 @@ namespace MonoZelda.Enemies.EnemyClasses
                 }
                 else
                 {
+                    if (projectile != null)
+                    {
+                        projectile.ViewProjectile(false, false);
+                    }
+
                     SoundManager.PlaySound("LOZ_Enemy_Die", false);
                     projectileActive = false;
                     stateMachine.Die(false);
-                    projectile.ViewProjectile(projectileActive, false);
                     EnemyHitbox.UnregisterHitbox();
                     collisionController.RemoveCollidable(EnemyHitbox);
                 }
