@@ -45,6 +45,7 @@ namespace MonoZelda.Scenes
         Widgets.Add(typeof(HUDBackgroundWidget), new HUDBackgroundWidget(Screen, HUDBackgroundPosition, contentManager));
         Widgets.Add(typeof(LifeWidget), new LifeWidget(Screen, LifePosition, contentManager));
         Widgets.Add(typeof(ItemCountWidget), new ItemCountWidget(_spriteFont, Screen, ItemCountPosition, contentManager));
+        Widgets.Add(typeof(LevelTextWidget), new LevelTextWidget(_spriteFont, Screen, new Point(10, 10)));
     }
 
     public void LoadContent(ContentManager cm, IDungeonRoom room)

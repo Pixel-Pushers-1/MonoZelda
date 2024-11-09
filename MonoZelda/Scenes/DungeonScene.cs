@@ -8,6 +8,7 @@ using MonoZelda.Dungeons;
 using MonoZelda.Link;
 using MonoZelda.Sprites;
 using System;
+using MonoZelda.UI;
 
 namespace MonoZelda.Scenes
 {
@@ -69,6 +70,9 @@ namespace MonoZelda.Scenes
                 activeScene.LoadContent(contentManager);
                 return;
             }
+            
+            // Debugging purposes
+            LevelTextWidget.LevelName = roomName;
 
             activeScene = new RoomScene(graphicsDevice, commandManager, collisionController, currentRoom);
             activeScene.LoadContent(contentManager);

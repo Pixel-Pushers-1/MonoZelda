@@ -18,6 +18,7 @@ using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Trigger;
 using MonoZelda.HUD;
 using MonoZelda.Sound;
+using MonoZelda.UI;
 
 namespace MonoZelda.Scenes;
 
@@ -162,7 +163,6 @@ public class RoomScene : Scene
 
             var transitionCommand = commandManager.GetCommand(CommandType.RoomTransitionCommand);
 
-            // this is a disgusting number of arguments
             var dungeonDoor = new DungeonDoor(door, transitionCommand, collisionController);
         }
     }
