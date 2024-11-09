@@ -49,9 +49,9 @@ public class TransitionScene : Scene
         spritesToMove = new List<SpriteDict>();
     }
 
-    private void CreateSpriteDict(string spriteName, Point position)
+    private void CreateSpriteDict(string spriteName, Point position, int priority = SpriteLayer.Background)
     {
-        var spriteDict = new SpriteDict(SpriteType.Blocks,SpriteLayer.Transition, position);
+        var spriteDict = new SpriteDict(SpriteType.Blocks, priority, position);
         spriteDict.SetSprite(spriteName);
         spritesToMove.Add(spriteDict);
     }
@@ -67,16 +67,16 @@ public class TransitionScene : Scene
         // create Door spriteDicts
         foreach (var currentDoorSpawn in currentRoom.GetDoors())
         {
-            CreateSpriteDict(currentDoorSpawn.Type.ToString(), currentDoorSpawn.Position);
+            CreateSpriteDict(currentDoorSpawn.Type.ToString(), currentDoorSpawn.Position, SpriteLayer.DoorLayer);
         }
 
         foreach (var nextDoorSpawn in nextRoom.GetDoors())
         {
-            CreateSpriteDict(nextDoorSpawn.Type.ToString(), nextDoorSpawn.Position + DungeonConstants.adjacentTransitionRoomSpawnPoints[TransitionDirection]);
+            CreateSpriteDict(nextDoorSpawn.Type.ToString(), nextDoorSpawn.Position + DungeonConstants.adjacentTransitionRoomSpawnPoints[TransitionDirection], SpriteLayer.DoorLayer);
         }
 
         //Initialize Fake Link
-        FakeLink = new SpriteDict(SpriteType.Player, SpriteLayer.Transition, DungeonConstants.TransitionLinkSpawnPoints[TransitionDirection]);
+        FakeLink = new SpriteDict(SpriteType.Player, SpriteLayer.HUD, DungeonConstants.TransitionLinkSpawnPoints[TransitionDirection]);
         FakeLink.SetSprite($"walk_{DirectionMap[TransitionDirection].Item1}");
         FakeLinkPosition = DungeonConstants.TransitionLinkSpawnPoints[TransitionDirection].ToVector2();
         FakeLink.Enabled = false;

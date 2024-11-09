@@ -72,9 +72,6 @@ namespace MonoZelda.Scenes
 
             activeScene = new RoomScene(graphicsDevice, commandManager, collisionController, currentRoom);
             activeScene.LoadContent(contentManager);
-
-            // Complication due to SpriteDict getting clared, need to re-init the UI
-            inventoryScene.LoadContent(contentManager, currentRoom);
         }
 
         public override void Draw(SpriteBatch batch)
@@ -106,6 +103,9 @@ namespace MonoZelda.Scenes
         {
             collisionController.Clear();
             SpriteDrawer.Reset();
+            
+            // Complication due to SpriteDict getting cleared, need to re-init the UI
+            inventoryScene.LoadContent(contentManager, currentRoom);
         }
         
         public void ToggleInventory()

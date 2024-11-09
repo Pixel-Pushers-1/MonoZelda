@@ -13,10 +13,10 @@ namespace MonoZelda.Scenes
 {
     internal class InventoryScene : IScene
     {
-        private static readonly Point HUDBackgroundPosition = Point.Zero;
+        private static readonly Point HUDBackgroundPosition = new (0, -32);
         private static readonly Point LifePosition = new (720, 128);
         private static readonly Point ItemCountPosition = new (416, 64);
-        private const int INVENTORY_OPEN_Y = 672;
+        private const int INVENTORY_OPEN_Y = 704;
         private const int INVENTORY_OPEN_SPEED = 16;
 
         public Screen Screen { get; set; }
@@ -27,11 +27,10 @@ namespace MonoZelda.Scenes
 
     public InventoryScene(GraphicsDevice gd, CommandManager commands)
     {
-        // The Inventory starts mostly off screen
+        // The Inventory starts mostly off-screen
         Screen = new Screen() { Origin = new Point(0, 0) }; // Screen is helpfull for moving all the widgets at once
         Widgets = new Dictionary<Type, IScreenWidget>();
 
-        // TODO: I'm sure there will be needs for widgets to register commands.
         graphicsDevice = gd;
     }
 
@@ -61,7 +60,7 @@ namespace MonoZelda.Scenes
             {
                 widget.Update();
             }
-
+            
             if (isInventoryOpen && Screen.Origin.Y <= INVENTORY_OPEN_Y)
             {
                 Screen.Origin = new Point(0, Math.Min(Screen.Origin.Y + INVENTORY_OPEN_SPEED, INVENTORY_OPEN_Y));
