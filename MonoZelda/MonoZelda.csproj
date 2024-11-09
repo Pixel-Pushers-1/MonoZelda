@@ -14,6 +14,7 @@
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
     <None Remove="Link\Projectiles\WoodenSword\WoodenSword.cs~RF169f651b.TMP" />
+    <None Remove="Scenes\TransitionScene.cs~RF12d33335.TMP" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />

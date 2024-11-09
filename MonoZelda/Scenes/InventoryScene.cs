@@ -13,27 +13,24 @@ namespace MonoZelda.Scenes
 {
     internal class InventoryScene : IScene
     {
-        private static readonly Point HUDBackgroundPosition = Point.Zero;
+        private static readonly Point HUDBackgroundPosition = new (0, -32);
         private static readonly Point LifePosition = new (720, 128);
         private static readonly Point ItemCountPosition = new (416, 64);
-        private const int INVENTORY_OPEN_Y = 672;
+        private const int INVENTORY_OPEN_Y = 704;
         private const int INVENTORY_OPEN_SPEED = 16;
 
         public Screen Screen { get; set; }
         public Dictionary<Type,IScreenWidget> Widgets { get; set; }
         private SpriteFont _spriteFont;
-        private PlayerState _playerState;
         private GraphicsDevice graphicsDevice;
         private bool isInventoryOpen = false;
 
-    public InventoryScene(GraphicsDevice gd, CommandManager commands, PlayerState state)
+    public InventoryScene(GraphicsDevice gd, CommandManager commands)
     {
-        // The Inventory starts mostly off screen
+        // The Inventory starts mostly off-screen
         Screen = new Screen() { Origin = new Point(0, 0) }; // Screen is helpfull for moving all the widgets at once
         Widgets = new Dictionary<Type, IScreenWidget>();
-        _playerState = state;
 
-        // TODO: I'm sure there will be needs for widgets to register commands.
         graphicsDevice = gd;
     }
 
@@ -46,8 +43,8 @@ namespace MonoZelda.Scenes
         _spriteFont ??= contentManager.Load<SpriteFont>("Fonts/Basic");
 
         Widgets.Add(typeof(HUDBackgroundWidget), new HUDBackgroundWidget(Screen, HUDBackgroundPosition, contentManager));
-        Widgets.Add(typeof(LifeWidget), new LifeWidget(Screen, LifePosition, contentManager, _playerState));
-        Widgets.Add(typeof(ItemCountWidget), new ItemCountWidget(_spriteFont, Screen, ItemCountPosition, contentManager, _playerState));
+        Widgets.Add(typeof(LifeWidget), new LifeWidget(Screen, LifePosition, contentManager));
+        Widgets.Add(typeof(ItemCountWidget), new ItemCountWidget(_spriteFont, Screen, ItemCountPosition, contentManager));
     }
 
     public void LoadContent(ContentManager cm, IDungeonRoom room)
@@ -63,7 +60,7 @@ namespace MonoZelda.Scenes
             {
                 widget.Update();
             }
-
+            
             if (isInventoryOpen && Screen.Origin.Y <= INVENTORY_OPEN_Y)
             {
                 Screen.Origin = new Point(0, Math.Min(Screen.Origin.Y + INVENTORY_OPEN_SPEED, INVENTORY_OPEN_Y));

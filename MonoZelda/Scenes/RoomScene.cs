@@ -38,16 +38,13 @@ public class RoomScene : Scene
     private List<EnemyProjectileCollisionManager> enemyProjectileCollisions = new();
     private IDungeonRoom room;
     private string roomName;
-    private PlayerState playerState;
 
-
-    public RoomScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room, PlayerState playerState) 
+    public RoomScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room) 
     {
         this.graphicsDevice = graphicsDevice;
         this.commandManager = commandManager;
         this.collisionController = collisionController;
         this.room = room;
-        this.playerState = playerState;
         triggers = new List<ITrigger>();
     }
 
@@ -56,13 +53,16 @@ public class RoomScene : Scene
         // Need to wait for LoadContent because MonoZeldaGame is going to clear everything before calling this.
         LoadRoom(contentManager);
 
-        // Play dungeon theme
-        SoundManager.PlaySound("LOZ_Dungeon_Theme",true);
+        // create player sprite classes
+        playerSprite = new PlayerSpriteManager();
+        var playerSpriteDict = new SpriteDict(SpriteType.Player, SpriteLayer.Player, PlayerState.Position);
+        playerSprite.SetPlayerSpriteDict(playerSpriteDict);
 
-        playerSprite = new PlayerSpriteManager(playerState);
-        var takeDamageCommand = new PlayerTakeDamageCommand(playerState, playerSprite);
+        // Play Dungeon Theme
+        SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
 
         //create player and player collision manager
+        var takeDamageCommand = new PlayerTakeDamageCommand(playerSprite);
         PlayerCollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50));
         collisionController.AddCollidable(playerHitbox);
         playerCollision = new PlayerCollisionManager(playerSprite, playerHitbox, collisionController, takeDamageCommand);
@@ -81,11 +81,7 @@ public class RoomScene : Scene
         commandManager.ReplaceCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand(projectileManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerState, playerSprite));
-
-        // create spritedict to pass into player controller
-        var playerSpriteDict = new SpriteDict(SpriteType.Player, 1, playerState.Position);
-        playerSprite.SetPlayerSpriteDict(playerSpriteDict);
+        commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerSprite));
     }
 
     private void LoadRoom(ContentManager contentManager)

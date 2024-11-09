@@ -10,7 +10,6 @@ namespace MonoZelda.HUD
 {
     public class HUDManager
     {
-        private PlayerState _playerState;
         private List<SpriteDict> hearts;
         private ProjectileManager projectileManager;
         private SpriteDict proj;
@@ -30,16 +29,6 @@ namespace MonoZelda.HUD
         {
             this.hearts = new List<SpriteDict>();
             this.projectileManager = projectileManager;
-        }
-
-        public PlayerState PlayerState
-        {
-            get => _playerState;
-            set
-            {
-                _playerState = value;
-                Initialize();
-            }
         }
 
         private void Initialize()

@@ -48,6 +48,7 @@ public class ProjectileManager
         projectileFired = false;
         activateHitbox = false;
         projectileDict.Enabled = false;
+        equippedProjectile = PlayerState.EquippedProjectile;
         this.collisionController = collisionController;
         this.projectileDict = projectileDict;
         projectileFactory = new ProjectileFactory(projectileDict, new Vector2(),Direction.Down);
@@ -67,6 +68,7 @@ public class ProjectileManager
         if (keyProjectileMap.TryGetValue(pressedKey, out ProjectileType newProjectile))
         {
             EquippedProjectile = newProjectile;  // Use the property instead of field
+            PlayerState.EquippedProjectile = equippedProjectile;
         }
     }
 

@@ -12,16 +12,14 @@ namespace MonoZelda.UI
     {
         private SpriteFont font;
         private Point margin = new Point(10, 10);
-        private PlayerState playerState;
 
-        private Point rupeeCountPosition = new Point(0, 22);
-        private Point keyCountPosition = new Point(0, 86);
-        private Point bombCountPosition = new Point(0, 118);
+        private Point rupeeCountPosition = new Point(0, -12);
+        private Point keyCountPosition = new Point(0, 54);
+        private Point bombCountPosition = new Point(0, 86);
 
-        public ItemCountWidget(SpriteFont spriteFont, Screen screen, Point position, ContentManager contentManager, PlayerState playerState) : base(screen, position)
+        public ItemCountWidget(SpriteFont spriteFont, Screen screen, Point position, ContentManager contentManager) : base(screen, position)
         {
             font = spriteFont;
-            this.playerState = playerState;
 
             // TODO: Projectile manager needs to update PlayerState
 
@@ -39,7 +37,6 @@ namespace MonoZelda.UI
             sb.DrawString(font, "00", (WidgetLocation + rupeeCountPosition).ToVector2(), Color.White);
             sb.DrawString(font, "00", (WidgetLocation + keyCountPosition).ToVector2(), Color.White);
             sb.DrawString(font, "00", (WidgetLocation + bombCountPosition).ToVector2(), Color.White);
-
         }
 
         public override void Load(ContentManager content)

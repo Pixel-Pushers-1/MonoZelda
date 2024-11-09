@@ -76,10 +76,10 @@ namespace MonoZelda.Dungeons
             }
         }
 
-        private void Transition(Direction d)
+        private void Transition(Direction transitionDirection)
         {
             trigger.OnTrigger -= Transition;
-            transitionCommand.Execute(spawnPont.Destination);
+            transitionCommand.Execute(spawnPont.Destination,transitionDirection);
         }
     }
 }
