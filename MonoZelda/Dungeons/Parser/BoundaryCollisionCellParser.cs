@@ -27,6 +27,10 @@ namespace MonoZelda.Dungeons.Parser
                 CollisionTileRect.bottom => new Rectangle(new Point(position.X, position.Y + tileHeight / 2), new Point(tileWidth, tileHeight / 2)),
                 CollisionTileRect.left => new Rectangle(position, new Point(tileWidth / 2, tileHeight)),
                 CollisionTileRect.right => new Rectangle(new Point(position.X + tileWidth / 2, position.Y), new Point(tileWidth / 2, tileHeight)),
+                CollisionTileRect.topleft => new Rectangle(position, new Point(tileWidth / 2, tileHeight / 2)),
+                CollisionTileRect.topright => new Rectangle(new Point(position.X + tileWidth / 2, position.Y), new Point(tileWidth / 2, tileHeight / 2)),
+                CollisionTileRect.bottomleft => new Rectangle(new Point(position.X, position.Y + tileHeight / 2), new Point(tileWidth / 2, tileHeight / 2)),
+                CollisionTileRect.bottomright => new Rectangle(new Point(position.X + tileWidth / 2, position.Y + tileHeight / 2), new Point(tileWidth / 2, tileHeight / 2)),
                 CollisionTileRect.full or _ => new Rectangle(position, new Point(tileWidth, tileHeight)),
             };
         }
