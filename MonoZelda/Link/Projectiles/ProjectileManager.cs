@@ -13,7 +13,6 @@ public class ProjectileManager
 {
     private bool projectileFired;
     private IProjectile itemFired;
-    private ProjectileType equippedProjectile;
     private PlayerProjectileCollidable projectileCollidable;
     private CollisionController collisionController;
     private GraphicsDevice graphicsDevice;
@@ -21,7 +20,7 @@ public class ProjectileManager
     private SpriteDict projectileDict;
     private bool activateHitbox;
 
-    private Dictionary<Keys, ProjectileType> keyProjectileMap = new Dictionary<Keys, ProjectileType>
+    private  readonly Dictionary<Keys, ProjectileType> keyProjectileMap = new Dictionary<Keys, ProjectileType>
     {
         {Keys.D1,ProjectileType.Arrow},
         {Keys.D2,ProjectileType.ArrowBlue},
@@ -39,8 +38,8 @@ public class ProjectileManager
 
     public ProjectileType EquippedProjectile
     {
-        get => equippedProjectile;
-        private set => equippedProjectile = value;
+        get => PlayerState.EquippedProjectile;
+        private set => PlayerState.EquippedProjectile = value;
     }
 
     public ProjectileManager(CollisionController collisionController, SpriteDict projectileDict)
@@ -48,7 +47,6 @@ public class ProjectileManager
         projectileFired = false;
         activateHitbox = false;
         projectileDict.Enabled = false;
-        equippedProjectile = PlayerState.EquippedProjectile;
         this.collisionController = collisionController;
         this.projectileDict = projectileDict;
         projectileFactory = new ProjectileFactory(projectileDict, new Vector2(),Direction.Down);
@@ -67,8 +65,7 @@ public class ProjectileManager
     {
         if (keyProjectileMap.TryGetValue(pressedKey, out ProjectileType newProjectile))
         {
-            EquippedProjectile = newProjectile;  // Use the property instead of field
-            PlayerState.EquippedProjectile = equippedProjectile;
+            EquippedProjectile = newProjectile;
         }
     }
 
@@ -101,7 +98,7 @@ public class ProjectileManager
         {
             // Init projectile collidable
             if (activateHitbox && projectileCollidable is null) {
-                projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), equippedProjectile);
+                projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), EquippedProjectile);
                 projectileCollidable.setProjectileManager(this);
                 collisionController.AddCollidable(projectileCollidable);
             } else if (activateHitbox && projectileCollidable is not null)
