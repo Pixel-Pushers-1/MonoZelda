@@ -1,7 +1,11 @@
 ﻿using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Items;
+using MonoZelda.Items.ItemClasses;
 using MonoZelda.Link;
 using MonoZelda.Sprites;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace MonoZelda.Commands.CollisionCommands;
 
@@ -41,7 +45,20 @@ public class PlayerItemCollisionCommand : ICommand
         itemCollidable.PlaySound();
         itemCollidable.UnregisterHitbox();
         collisionController.RemoveCollidable(itemCollidable);
-        
+        Debug.WriteLine(itemCollidable.itemType);
+        if (itemCollidable.itemType == ItemList.Rupee)
+        {
+            PlayerState.AddRupees(1);
+        }
+        else if (itemCollidable.itemType == ItemList.Bomb)
+        {
+            PlayerState.AddBombs(1);
+        }
+        else if (itemCollidable.itemType == ItemList.Key)
+        {
+            PlayerState.AddKeys(1);
+        }
+
     }
 
     public void UnExecute()
