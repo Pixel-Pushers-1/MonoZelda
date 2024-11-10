@@ -12,6 +12,7 @@
         Stalfos,
         Trap,
         Wallmaster,
-        Zol
+        Zol,
+        OldManText,
     }
 }
