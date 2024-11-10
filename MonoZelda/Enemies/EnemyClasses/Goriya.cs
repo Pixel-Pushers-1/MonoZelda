@@ -94,9 +94,9 @@ namespace MonoZelda.Enemies.EnemyClasses
             PixelsMoved++;
             EnemyCollision.Update(Width,Height,Pos);
         }
-        public override void TakeDamage(Boolean stun, Direction collisionDirection)
+        public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
         {
-            base.TakeDamage(stun, collisionDirection);
+            base.TakeDamage(stunTime, collisionDirection, damage);
             if (Health <= 0 && projectile != null)
             {
                 projectile.ViewProjectile(false, false);

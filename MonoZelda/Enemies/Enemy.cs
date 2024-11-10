@@ -76,16 +76,16 @@ namespace MonoZelda.Enemies
             EnemyCollision.Update(Width, Height, Pos);
         }
 
-        public virtual void TakeDamage(Boolean stun, Direction collisionDirection)
+        public virtual void TakeDamage(float stunTime, Direction collisionDirection, int damage)
         {
-            if (stun)
+            if (stunTime > 0)
             {
                 StateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
-                PixelsMoved = -128;
+                PixelsMoved = (int)(stunTime * TileSize) * - 1;
             }
             else
             {
-                Health--;
+                Health -= damage;
                 if (Health > 0)
                 {
                     SoundManager.PlaySound("LOZ_Enemy_Hit", false);

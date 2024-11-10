@@ -190,12 +190,14 @@ namespace MonoZelda.Enemies.EnemyClasses
                     spawned = false;
                     if (grabbed)
                     {
-                        commandManager.Execute(CommandType.RoomTransitionCommand, "Room1");
+                        //might need to use a different type of transition here, idk what it is in game
+                        commandManager.Execute(CommandType.RoomTransitionCommand, "Room1", Link.Direction.Down);
                     }
                 }
                 else if (timer >= 2.9)
                 {
                     StateMachine.ChangeDirection(returnDirection);
+                    // if link is grabbed animation should start here
                 }
                 else if (spawned)
                 {
@@ -207,10 +209,10 @@ namespace MonoZelda.Enemies.EnemyClasses
             EnemyCollision.Update(Width, Height, Pos);
         }
 
-        public override void TakeDamage(Boolean stun, Direction collisionDirection)
+        public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
         {
-            Health--;
-            if (Health <= 0 && !stun)
+            Health -= damage;
+            if (Health <= 0 && stunTime == 0)
             {
                 StateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
                 SoundManager.PlaySound("LOZ_Enemy_Die", false);

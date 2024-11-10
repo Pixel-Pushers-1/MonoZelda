@@ -135,11 +135,11 @@ namespace MonoZelda.Enemies.EnemyClasses
             EnemyCollision.Update(Width, Height, new Point(Pos.X - 16, Pos.Y - 16));
         }
 
-        public override void TakeDamage(Boolean stun, Direction collisionDirection)
+        public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
         {
-            if (!stun)
+            if (stunTime == 0)
             {
-                Health--;
+                Health -= damage;
                 if (Health == 0)
                 {
                     SoundManager.PlaySound("LOZ_Enemy_Die", false);

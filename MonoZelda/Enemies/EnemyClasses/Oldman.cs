@@ -29,7 +29,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             StateMachine.Update(this, Pos);
         }
 
-        public override void TakeDamage(Boolean stun, Direction collisionDirection)
+        public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
         {
             // oldman is immortal
         }

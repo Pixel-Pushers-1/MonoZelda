@@ -1,10 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Sprites;
 using System;
-using Microsoft.Xna.Framework.Content;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
-using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Link;
 using MonoZelda.Sound;
 

@@ -74,9 +74,9 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
         }
 
-        public override void TakeDamage(Boolean stun, Direction collisionDirection)
+        public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
         {
-            base.TakeDamage(false, collisionDirection);
+            base.TakeDamage(0, collisionDirection, damage);
         }
     }
 }

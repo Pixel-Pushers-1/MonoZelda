@@ -84,9 +84,9 @@ namespace MonoZelda.Enemies.EnemyClasses
             enemyCollision.Update(Width, Height, Pos);
         }
 
-        public override void TakeDamage(Boolean stun, Direction collisionDirection)
+        public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
         {
-            if (stun)
+            if (stunTime > 0)
             {
                 stateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
                 pixelsMoved = -128;

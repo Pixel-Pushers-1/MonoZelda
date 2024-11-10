@@ -128,7 +128,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             CheckBounds();
         }
 
-        public override void TakeDamage(Boolean stun, Direction collisionDirection)
+        public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
         {
             //cannot take damage
         }
