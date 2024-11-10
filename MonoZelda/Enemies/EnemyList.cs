@@ -18,6 +18,7 @@ namespace MonoZelda.Enemies
         Stalfos,
         Trap,
         Wallmaster,
-        Zol
+        Zol,
+        OldManText,
     }
 }

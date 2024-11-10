@@ -30,14 +30,19 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
-            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Oldman);
+            //adjusted position to spawn in middle of screen since we cant with current implementation
+            Point adjustedPosition = new Point(spawnPosition.X - 32, spawnPosition.Y + 64);
+
+            EnemyHitbox = new EnemyCollidable(new Rectangle(adjustedPosition.X, adjustedPosition.Y, Width, Height), EnemyList.Oldman);
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
-            enemyDict.Position = spawnPosition;
-            enemyDict.SetSprite("cloud");
+            enemyDict.Position = adjustedPosition;
+            EnemyHitbox.UnregisterHitbox();
+            collisionController.RemoveCollidable(EnemyHitbox);
+            // Immediately set to oldman sprite instead of cloud
+            enemyDict.SetSprite("oldman");
             oldmanSpriteDict = enemyDict;
-            Pos = spawnPosition;
-            spawnTimer = 0;
+            Pos = adjustedPosition;
         }
 
         public void ChangeDirection()
@@ -46,14 +51,6 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Update(GameTime gameTime)
         {
-            if (spawnTimer >= 64)
-            {
-                oldmanSpriteDict.SetSprite("oldman");
-            }
-            else
-            {
-                spawnTimer++;
-            }
         }
 
         public void TakeDamage(Boolean stun, Direction collisionDirection)
