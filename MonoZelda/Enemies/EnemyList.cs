@@ -19,6 +19,5 @@ namespace MonoZelda.Enemies
         Trap,
         Wallmaster,
         Zol,
-        OldManText,
     }
 }
