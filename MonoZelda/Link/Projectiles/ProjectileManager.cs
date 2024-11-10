@@ -20,7 +20,7 @@ public class ProjectileManager
     private SpriteDict projectileDict;
     private bool activateHitbox;
 
-    private  readonly Dictionary<Keys, ProjectileType> keyProjectileMap = new Dictionary<Keys, ProjectileType>
+    private readonly Dictionary<Keys, ProjectileType> keyProjectileMap = new Dictionary<Keys, ProjectileType>
     {
         {Keys.D1,ProjectileType.Arrow},
         {Keys.D2,ProjectileType.ArrowBlue},
@@ -49,14 +49,49 @@ public class ProjectileManager
         projectileDict.Enabled = false;
         this.collisionController = collisionController;
         this.projectileDict = projectileDict;
-        projectileFactory = new ProjectileFactory(projectileDict, new Vector2(),Direction.Down);
+        projectileFactory = new ProjectileFactory(projectileDict, new Vector2(), Direction.Down);
+    }
+
+    private bool hasRequiredResources(ProjectileType projectileType)
+    {
+        switch (projectileType)
+        {
+            case ProjectileType.Arrow:
+            case ProjectileType.ArrowBlue:
+                return PlayerState.Rupees > 0;
+            case ProjectileType.Bomb:
+                return PlayerState.Bombs > 0;
+            default:
+                return true;
+        }
+    }
+
+    private void deductResources(ProjectileType projectileType)
+    {
+        switch (projectileType)
+        {
+            case ProjectileType.Arrow:
+            case ProjectileType.ArrowBlue:
+                PlayerState.Rupees--;
+                break;
+            case ProjectileType.Bomb:
+                PlayerState.Bombs--;
+                break;
+        }
     }
 
     private void setupProjectile(ProjectileType equippedProjectile)
     {
+        if (!hasRequiredResources(equippedProjectile))
+        {
+            return;
+        }
+
+        deductResources(equippedProjectile);
         projectileFired = true;
         projectileDict.Enabled = true;
-        if (equippedProjectile != ProjectileType.Bomb) {
+        if (equippedProjectile != ProjectileType.Bomb)
+        {
             activateHitbox = true;
         }
     }
@@ -88,8 +123,13 @@ public class ProjectileManager
 
     public void fireEquippedProjectile(PlayerSpriteManager player)
     {
-        itemFired = projectileFactory.GetProjectileObject(EquippedProjectile, player);  // Use the property instead of field
-        setupProjectile(EquippedProjectile);  // Use the property instead of field
+        if (!hasRequiredResources(EquippedProjectile))
+        {
+            return;
+        }
+
+        itemFired = projectileFactory.GetProjectileObject(EquippedProjectile, player);
+        setupProjectile(EquippedProjectile);
     }
 
     public void UpdatedProjectileState()
@@ -97,11 +137,13 @@ public class ProjectileManager
         if (itemFired != null && !itemFired.hasFinished())
         {
             // Init projectile collidable
-            if (activateHitbox && projectileCollidable is null) {
+            if (activateHitbox && projectileCollidable is null)
+            {
                 projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), EquippedProjectile);
                 projectileCollidable.setProjectileManager(this);
                 collisionController.AddCollidable(projectileCollidable);
-            } else if (activateHitbox && projectileCollidable is not null)
+            }
+            else if (activateHitbox && projectileCollidable is not null)
             {
                 projectileCollidable.Bounds = itemFired.getCollisionRectangle();
             }
@@ -110,18 +152,20 @@ public class ProjectileManager
             itemFired.UpdateProjectile();
 
             // Custom check for bombs (I know this isn't great practice)
-            if (itemFired is Bomb && projectileCollidable is null) {
+            if (itemFired is Bomb && projectileCollidable is null)
+            {
                 Bomb itemFiredCls = itemFired as Bomb;
-                if (itemFiredCls.Exploded == true) {
+                if (itemFiredCls.Exploded == true)
+                {
                     activateHitbox = true;
                 }
             }
-            
         }
         else
         {
             // Reset the projectile manager for the next projectile
-            if (projectileCollidable is not null) {
+            if (projectileCollidable is not null)
+            {
                 collisionController.RemoveCollidable(projectileCollidable);
                 projectileCollidable.UnregisterHitbox();
                 projectileCollidable = null;
