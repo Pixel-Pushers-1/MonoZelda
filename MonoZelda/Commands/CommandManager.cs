@@ -33,7 +33,8 @@ public enum CommandType
     PlayerProjectileStaticBoundaryCollisionCommand,
     ToggleGizmosCommand,
     ToggleInventoryCommand,
-    None
+    None,
+    PlayerProjectileDoorCollisionCommand
 }
 
 public class CommandManager

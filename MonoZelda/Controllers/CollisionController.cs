@@ -32,6 +32,7 @@ public class CollisionController : IController
             {(CollidableType.EnemyProjectile, CollidableType.StaticBoundary), CommandType.EnemyProjectileStaticBoundaryCollisionCommand},
             {(CollidableType.PlayerProjectile, CollidableType.StaticRoom), CommandType.PlayerProjectileStaticRoomCollisionCommand},
             {(CollidableType.PlayerProjectile, CollidableType.StaticBoundary), CommandType.PlayerProjectileStaticBoundaryCollisionCommand},
+            {(CollidableType.PlayerProjectile, CollidableType.Door), CommandType.PlayerProjectileDoorCollisionCommand},
         };
 
         _gameObjects = new List<ICollidable>();

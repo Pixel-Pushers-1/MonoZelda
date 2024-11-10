@@ -10,4 +10,5 @@ public enum CollidableType
     StaticRoom,
     StaticBoundary,
     Trigger,
+    Door
 }

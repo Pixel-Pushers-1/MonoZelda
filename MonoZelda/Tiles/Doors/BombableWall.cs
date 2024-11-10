@@ -6,19 +6,23 @@ using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Dungeons.Parser.Data;
 using MonoZelda.Link.Projectiles;
+using MonoZelda.Sprites;
 
 namespace MonoZelda.Tiles
 {
-    internal class BombableWall : DungeonDoor, IDisposable
+    internal class BombableWall : DungeonDoor, ICollidable
     {
         private const int HALF_TILE = 16;
-        private ProjectileManager pm;
         private ICollidable collider;
+        private readonly CollisionHitboxDraw hitbox;
+        private bool isOpen;
 
-        public BombableWall(DoorSpawn spawnPoint, ICommand roomTransitionCommand, CollisionController c,
-            ProjectileManager pm)
+        public BombableWall(DoorSpawn spawnPoint, ICommand roomTransitionCommand, CollisionController c)
             : base(spawnPoint, roomTransitionCommand, c)
         {
+            hitbox = new CollisionHitboxDraw(this);
+            c.AddCollidable(this);
+            
             // Create collider to block entry, HALF_TILE makes the door flush with the wall
             var offset = spawnPoint.Direction == DoorDirection.North ? 
                 new Point(0, -spawnPoint.Bounds.Size.Y / 2 + HALF_TILE) : new Point(0, 0);
@@ -27,20 +31,30 @@ namespace MonoZelda.Tiles
             
             collider = new StaticBoundaryCollidable(bounds);
             c.AddCollidable(collider);
-            
-            this.pm = pm;
-            pm.OnProjectileColliderActive += OnProjectileColliderActive;
         }
 
-        private void OnProjectileColliderActive(PlayerProjectileCollidable collidable)
+        protected override Dungeon1Sprite GetMaskSprite()
         {
-            if (collidable.projectileType == ProjectileType.Bomb && Spawn.Bounds.Intersects(collidable.Bounds))
+            return Direction switch
             {
-                SpriteDict.SetSprite(GetBombedSprite().ToString());
-                CollisionController.RemoveCollidable(collider);
-                
-                pm.OnProjectileColliderActive -= OnProjectileColliderActive;
-            }
+                DoorDirection.North => Dungeon1Sprite.doorframe_wall_north,
+                DoorDirection.South => Dungeon1Sprite.doorframe_wall_south,
+                DoorDirection.West => Dungeon1Sprite.doorframe_wall_west,
+                DoorDirection.East => Dungeon1Sprite.doorframe_wall_east,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+
+        private Dungeon1Sprite GetBombedMaskSprite()
+        {
+            return Direction switch
+            {
+                DoorDirection.North => Dungeon1Sprite.doorframe_bombed_north,
+                DoorDirection.South => Dungeon1Sprite.doorframe_bombed_south,
+                DoorDirection.West => Dungeon1Sprite.doorframe_bombed_west,
+                DoorDirection.East => Dungeon1Sprite.doorframe_bombed_east,
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
         private Dungeon1Sprite GetBombedSprite()
@@ -55,9 +69,45 @@ namespace MonoZelda.Tiles
             };
         }
 
-        public void Dispose()
+        public CollidableType type
         {
-            pm.OnProjectileColliderActive -= OnProjectileColliderActive;
+            get => CollidableType.Door;
+            set => throw new InvalidOperationException();
+        }
+
+        public Rectangle Bounds
+        {
+            get => collider.Bounds;
+            set => collider.Bounds = value;
+        }
+        
+        public SpriteDict CollidableDict { get; set; }
+        public void UnregisterHitbox()
+        {
+            hitbox.Unregister();
+        }
+
+        public bool Intersects(ICollidable other)
+        {
+            if (other is PlayerProjectileCollidable collidable 
+                && collidable.projectileType == ProjectileType.Bomb 
+                && Spawn.Bounds.Intersects(collidable.Bounds))
+            {
+                var newSprite = GetBombedSprite();
+                SpriteDict.SetSprite(newSprite.ToString());
+                Spawn.Type = newSprite;
+                SetMaskSprite(GetBombedMaskSprite());
+                
+                CollisionController.RemoveCollidable(collider);
+                CollisionController.RemoveCollidable(this);
+            }
+
+            return false;
+        }
+
+        public Rectangle GetIntersectionArea(ICollidable other)
+        {
+            return Rectangle.Intersect(Bounds, other.Bounds);
         }
     }
 }

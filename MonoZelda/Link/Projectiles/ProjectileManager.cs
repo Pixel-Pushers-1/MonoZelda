@@ -21,8 +21,6 @@ public class ProjectileManager
     private SpriteDict projectileDict;
     private bool activateHitbox;
 
-    public event Action<PlayerProjectileCollidable> OnProjectileColliderActive;
-
     private Dictionary<Keys, ProjectileType> keyProjectileMap = new Dictionary<Keys, ProjectileType>
     {
         {Keys.D1,ProjectileType.Arrow},
@@ -106,7 +104,6 @@ public class ProjectileManager
                 projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), equippedProjectile);
                 projectileCollidable.setProjectileManager(this);
                 collisionController.AddCollidable(projectileCollidable);
-                OnProjectileColliderActive?.Invoke(projectileCollidable);
             } else if (activateHitbox && projectileCollidable is not null)
             {
                 projectileCollidable.Bounds = itemFired.getCollisionRectangle();

@@ -19,10 +19,13 @@ namespace MonoZelda.Dungeons
         internal DoorSpawn Spawn;
         internal CollisionController CollisionController;
         
+        
         public DoorDirection Direction => Spawn.Direction;
         public Point Position { get; set; }
+        
         private ICommand transitionCommand;
-
+        private SpriteDict doorMask;
+        
         // So many arguments, but it's necessary for the door to be able to transition to the next room, open to suggetions -js
         public DungeonDoor(DoorSpawn spawnPoint, ICommand roomTransitionCommand, CollisionController c)
         {
@@ -41,22 +44,26 @@ namespace MonoZelda.Dungeons
 
         private void AddDoorMask()
         {
-            var mask = new SpriteDict(SpriteType.Blocks, SpriteLayer.Player + 1, Spawn.Position);
-            switch (Direction)
+            doorMask = new SpriteDict(SpriteType.Blocks, SpriteLayer.Player + 1, Spawn.Position);
+            var sprite = GetMaskSprite();
+            doorMask.SetSprite(sprite.ToString());
+        }
+        
+        public void SetMaskSprite(Dungeon1Sprite sprite)
+        {
+            doorMask.SetSprite(sprite.ToString());
+        }
+        
+        protected virtual Dungeon1Sprite GetMaskSprite()
+        {
+            return Direction switch
             {
-                case DoorDirection.North:
-                    mask.SetSprite(nameof(Dungeon1Sprite.doorframe_door_north));
-                    break;
-                case DoorDirection.South:
-                    mask.SetSprite(nameof(Dungeon1Sprite.doorframe_door_south));
-                    break;
-                case DoorDirection.West:
-                    mask.SetSprite(nameof(Dungeon1Sprite.doorframe_door_west));
-                    break;
-                case DoorDirection.East:
-                    mask.SetSprite(nameof(Dungeon1Sprite.doorframe_door_east));
-                    break;
-            }
+                DoorDirection.North => Dungeon1Sprite.doorframe_door_north,
+                DoorDirection.South => Dungeon1Sprite.doorframe_door_south,
+                DoorDirection.West => Dungeon1Sprite.doorframe_door_west,
+                DoorDirection.East => Dungeon1Sprite.doorframe_door_east,
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
         private TriggerCollidable CreateActivateTrigger()
