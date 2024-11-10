@@ -4,6 +4,10 @@ wall_north,816,16,32,32,1,top left,10
 wall_west,816,48,32,32,1,top left,10
 wall_east,816,80,32,32,1,top left,10
 wall_south,816,112,32,32,1,top left,10
+bombable_wall_north,816,16,32,32,1,top left,10
+bombable_wall_west,816,48,32,32,1,top left,10
+bombable_wall_east,816,80,32,32,1,top left,10
+bombable_wall_south,816,112,32,32,1,top left,10
 door_open_north,848,16,32,32,1,top left,10
 door_open_west,848,48,32,32,1,top left,10
 door_open_east,848,80,32,32,1,top left,10
@@ -24,10 +28,6 @@ wall_bombed_north,944,16,32,32,1,top left,10
 wall_bombed_west,944,48,32,32,1,top left,10
 wall_bombed_east,944,80,32,32,1,top left,10
 wall_bombed_south,944,112,32,32,1,top left,10
-bombable_wall_north,944,16,32,32,1,top left,10
-bombable_wall_west,944,48,32,32,1,top left,10
-bombable_wall_east,944,80,32,32,1,top left,10
-bombable_wall_south,944,112,32,32,1,top left,10
 doorframe_wall_north,976,16,32,32,1,top left,10
 doorframe_wall_west,976,48,32,32,1,top left,10
 doorframe_wall_east,976,80,32,32,1,top left,10

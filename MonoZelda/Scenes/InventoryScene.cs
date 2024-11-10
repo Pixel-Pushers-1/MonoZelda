@@ -80,6 +80,10 @@ namespace MonoZelda.Scenes
             }
         }
 
+        public void UnloadContent()
+        {
+        }
+
         public bool ToggleInventory()
         {
             isInventoryOpen = !isInventoryOpen;

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Link;
@@ -28,10 +29,11 @@ public class RoomScene : Scene
     private ProjectileManager projectileManager;
     private PlayerCollisionManager playerCollision;
     private CollisionController collisionController;
-    private List<IGameUpdate> updateables;
+    private List<IGameUpdate> updateables = new();
+    private List<IDisposable> disposables = new();
+    private List<IEnemy> enemies = new();
     private ItemFactory itemFactory;
     private EnemyFactory enemyFactory;
-    private List<IEnemy> enemies = new();
     private Dictionary<IEnemy, EnemyCollisionManager> enemyDictionary = new();
     private List<EnemyCollisionManager> enemyCollisions = new();
     private List<EnemyProjectileCollisionManager> enemyProjectileCollisions = new();
@@ -44,13 +46,10 @@ public class RoomScene : Scene
         this.commandManager = commandManager;
         this.collisionController = collisionController;
         this.room = room;
-        updateables = new List<IGameUpdate>();
     }
 
     public override void LoadContent(ContentManager contentManager)
     {
-        // Need to wait for LoadContent because MonoZeldaGame is going to clear everything before calling this.
-        LoadRoom(contentManager);
 
         // create player sprite classes
         playerSprite = new PlayerSpriteManager();
@@ -81,6 +80,8 @@ public class RoomScene : Scene
         commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerSprite));
+
+        LoadRoom(contentManager);
     }
 
     private void LoadRoom(ContentManager contentManager)
@@ -165,10 +166,14 @@ public class RoomScene : Scene
         {
             var transitionCommand = commandManager.GetCommand(CommandType.RoomTransitionCommand);
 
-            var dDoor = DoorFactory.CreateDoor(door, transitionCommand, collisionController, enemies);
+            var dDoor = DoorFactory.CreateDoor(door, transitionCommand, collisionController, enemies, projectileManager);
             if (dDoor is IGameUpdate updateable)
             {
                 updateables.Add(updateable);
+            }
+            if (dDoor is IDisposable disposable)
+            {
+                disposables.Add(disposable);
             }
         }
     }
@@ -204,5 +209,13 @@ public class RoomScene : Scene
         }
 
         playerCollision.Update();
+    }
+
+    public override void UnloadContent()
+    {
+        foreach (var disposable in disposables)
+        {
+            disposable.Dispose();
+        }
     }
 }

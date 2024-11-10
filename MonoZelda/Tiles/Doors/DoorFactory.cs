@@ -4,13 +4,14 @@ using MonoZelda.Commands;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Enemies;
+using MonoZelda.Link.Projectiles;
 using MonoZelda.Scenes;
 
 namespace MonoZelda.Tiles.Doors;
 
 internal static class DoorFactory
 {
-    public static IDoor CreateDoor(DoorSpawn door, ICommand roomTransitionCommand, CollisionController c, List<IEnemy> enemies)
+    public static IDoor CreateDoor(DoorSpawn door, ICommand roomTransitionCommand, CollisionController c, List<IEnemy> enemies, ProjectileManager pm)
     {
         var doorType = DoorTypeMap[door.Type];
         
@@ -18,7 +19,7 @@ internal static class DoorFactory
         {
             DoorType.NormalDoor => new DungeonDoor(door, roomTransitionCommand, c),
             DoorType.LockedDoor => new KeyDoor(door, roomTransitionCommand, c),
-            DoorType.BombableWall => new BombableWall(door, roomTransitionCommand, c),
+            DoorType.BombableWall => new BombableWall(door, roomTransitionCommand, c, pm),
             DoorType.DiamondDoor => new DiamondDoor(door, roomTransitionCommand, c, enemies),
             DoorType.Wall => new Wall(door, c),
             _ => throw new InvalidEnumArgumentException()
