@@ -127,9 +127,19 @@ public class ProjectileManager
         {
             return;
         }
+        //prevent candle use in more than one room
+        if (EquippedProjectile == ProjectileType.CandleBlue && PlayerState.IsCandleUsed)
+        {
+            return; 
+        }
 
         itemFired = projectileFactory.GetProjectileObject(EquippedProjectile, player);
         setupProjectile(EquippedProjectile);
+
+        if (EquippedProjectile == ProjectileType.CandleBlue)
+        {
+            PlayerState.IsCandleUsed = true;
+        }
     }
 
     public void UpdatedProjectileState()

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoZelda.Commands.GameCommands;
 using MonoZelda.Link.Projectiles;
 using System.Diagnostics;
 
@@ -13,7 +14,11 @@ public static class PlayerState
     {
         Direction = Direction.Down;
         Position = new Point(500, 700);
-        
+        IsCandleUsed = false;
+    }
+    public static void Reset()
+    {
+        IsCandleUsed = false;
     }
 
     public static int Health
@@ -46,6 +51,7 @@ public static class PlayerState
     public static int Keys { get; set; }
     public static bool IsDead { get; private set; }
     public static bool IsKnockedBack { get; set; }
+    public static bool IsCandleUsed { get; set; }   
     public static int MaxHealth { get; set; } = INITIAL_HP;
     public static Point Position { get; set; }
     public static Direction Direction { get; set; }
