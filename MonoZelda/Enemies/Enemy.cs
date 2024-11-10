@@ -61,6 +61,36 @@ namespace MonoZelda.Enemies
             StateMachine.ChangeDirection(Direction);
         }
 
+        public virtual void CheckBounds()
+        {
+            if (Pos.X <= TileSize * 2 + 31 || Pos.X >= TileSize * 14 - 31 || Pos.Y <= TileSize * 5 + 31 || Pos.Y >= TileSize * 12 - 31)
+            {
+                if (Pos.Y <= TileSize * 5 + 31)
+                {
+                    var pos = Pos;
+                    pos.Y++;
+                    Pos = pos;
+                } else if (Pos.Y >= TileSize * 12 - 31)
+                {
+                    var pos = Pos;
+                    pos.Y--;
+                    Pos = pos;
+                }else if (Pos.X <= TileSize * 2 + 31)
+                {
+                    var pos = Pos;
+                    pos.X++;
+                    Pos = pos;
+                }else if (Pos.X >= TileSize * 14 - 31)
+                {
+                    var pos = Pos;
+                    pos.X--;
+                    Pos = pos;
+                }
+                ChangeDirection();
+                PixelsMoved = 0;
+            }
+        }
+
         public virtual void Update()
         {
             if (PixelsMoved >= TileSize)
@@ -72,6 +102,7 @@ namespace MonoZelda.Enemies
             {
                 PixelsMoved++;
             }
+            CheckBounds();
             Pos = StateMachine.Update(this, Pos);
             EnemyCollision.Update(Width, Height, Pos);
         }

@@ -61,13 +61,14 @@ namespace MonoZelda.Enemies.EnemyClasses
                 PixelsMoved++;
                 spawnTimer += MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
             }
+            CheckBounds();
             Pos = StateMachine.Update(this, Pos);
             EnemyCollision.Update(Width,Height,Pos);
         }
 
         public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
         {
-            base.TakeDamage(0, collisionDirection, damage);
+            base.TakeDamage(0, collisionDirection, 1);
         }
     }
 }

@@ -92,7 +92,7 @@ namespace MonoZelda.Scenes
             inventoryScene.LoadContent(contentManager);
 
             // We begin by revealing the the first room
-            currentRoom = roomManager.LoadRoom(StartRoom);
+            currentRoom = roomManager.LoadRoom("RoomTest");
             activeScene = new EnterDungeonScene(this, currentRoom, graphicsDevice);
             activeScene.LoadContent(contentManager);
         }

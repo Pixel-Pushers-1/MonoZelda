@@ -89,7 +89,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             {
                 Attack();
             }
-
+            CheckBounds();
             Pos = StateMachine.Update(this, Pos);
             PixelsMoved++;
             EnemyCollision.Update(Width,Height,Pos);

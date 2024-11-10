@@ -68,20 +68,6 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
         }
 
-        public void CheckBounds()
-        {
-            if (Pos.X <= TileSize* 2 + 31 || Pos.X >= TileSize * 14 - 31 || Pos.Y <= TileSize*5 + 31 || Pos.Y >= TileSize * 12 - 31)
-            {
-                if (Pos.Y <= TileSize * 5 + 31)
-                {
-                    var pos = Pos;
-                    pos.Y++;
-                    Pos = pos;
-                }
-                ChangeDirection();
-            }
-        }
-
         public override void Update()
         {
             var playerPos = PlayerState.Position;
@@ -123,9 +109,9 @@ namespace MonoZelda.Enemies.EnemyClasses
                 Retreat();
             }
 
+            CheckBounds();
             Pos = StateMachine.Update(this, Pos);
             EnemyCollision.Update(Width, Height, Pos);
-            CheckBounds();
         }
 
         public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)

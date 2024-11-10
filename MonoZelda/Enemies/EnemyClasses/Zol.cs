@@ -51,6 +51,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 PixelsMoved += 2;
                 Pos = StateMachine.Update(this, Pos);
             }
+            CheckBounds();
             EnemyCollision.Update(Width, Height, Pos);
         }
     }

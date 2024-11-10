@@ -132,6 +132,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             {
                 entry.Value.Update();
             }
+            CheckBounds();
             EnemyCollision.Update(Width, Height, new Point(Pos.X - 16, Pos.Y - 16));
         }
 
