@@ -22,8 +22,6 @@ namespace MonoZelda.Enemies.EnemyClasses
         private EnemyStateMachine stateMachine;
         private CollisionController collisionController;
         private EnemyCollisionManager enemyCollision;
-        private PlayerState player;
-
         private int pixelsMoved;
         private int health = 3;
         private int tileSize = 64;
@@ -35,7 +33,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Alive = true;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController ,PlayerState player)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
             this.collisionController = collisionController;
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Rope);
@@ -43,13 +41,12 @@ namespace MonoZelda.Enemies.EnemyClasses
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
             Pos = spawnPosition;
-            this.player = player;
             enemyCollision = new EnemyCollisionManager(this, Width, Height);
             pixelsMoved = 0;
             stateMachine = new EnemyStateMachine(enemyDict);
         }
 
-        public void ChangeDirection()
+        public override void ChangeDirection()
         {
             stateMachine.SetSprite("rope_left");
             switch (rnd.Next(1, 5))
@@ -72,7 +69,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             stateMachine.ChangeDirection(direction);
         }
 
-        public void Update()
+        public override void Update()
         {
             if (pixelsMoved >= tileSize)
             {
@@ -87,7 +84,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             enemyCollision.Update(Width, Height, Pos);
         }
 
-        public void TakeDamage(Boolean stun, Direction collisionDirection)
+        public override void TakeDamage(Boolean stun, Direction collisionDirection)
         {
             if (stun)
             {

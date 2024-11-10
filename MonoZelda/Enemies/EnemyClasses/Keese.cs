@@ -22,10 +22,10 @@ namespace MonoZelda.Enemies.EnemyClasses
             Alive = true;
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, PlayerState player)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Keese);
-            base.EnemySpawn(enemyDict, spawnPosition, collisionController, player);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController);
             speed = 0;
             speedUpTimer = 0;
             StateMachine.SetSprite("keese_blue");

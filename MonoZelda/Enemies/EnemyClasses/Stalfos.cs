@@ -16,10 +16,10 @@ namespace MonoZelda.Enemies.EnemyClasses
             Alive = true;
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, PlayerState player)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Stalfos);
-            base.EnemySpawn(enemyDict, spawnPosition, collisionController, player);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController);
             StateMachine.SetSprite("stalfos");
         }
     }

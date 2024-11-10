@@ -30,8 +30,7 @@ namespace MonoZelda.Enemies
         public EnemyStateMachine.Direction Direction { get; set; }
         private readonly Random rnd = new Random();
 
-        public virtual void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            PlayerState player)
+        public virtual void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);

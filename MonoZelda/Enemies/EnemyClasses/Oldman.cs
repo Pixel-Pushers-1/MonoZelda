@@ -16,7 +16,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, PlayerState player)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
             Pos = spawnPosition;
             StateMachine = new EnemyStateMachine(enemyDict);

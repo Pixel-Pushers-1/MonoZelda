@@ -19,7 +19,6 @@ namespace MonoZelda.Enemies.EnemyClasses
         private Point spawnPoint;
         private int moveDelay;
         private bool projectileActive;
-        private PlayerState player;
 
         public Aquamentus()
         {
@@ -32,11 +31,10 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, PlayerState player)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Aquamentus);
-            base.EnemySpawn(enemyDict, spawnPosition, collisionController, player);
-            this.player = player;
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController);
             spawnPoint = spawnPosition;
             StateMachine.SetSprite("aquamentus_left");
             StateMachine.ChangeDirection(EnemyStateMachine.Direction.Left);
@@ -85,7 +83,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void CreateFireballs()
         {
-            var move = player.Position.ToVector2() - Pos.ToVector2();
+            var move = PlayerState.Position.ToVector2() - Pos.ToVector2();
             move = Vector2.Divide(move, (float)Math.Sqrt(move.X * move.X + move.Y * move.Y)) * 6;
             if (!projectileActive)
             {

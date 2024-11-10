@@ -8,6 +8,7 @@ using MonoZelda.Dungeons;
 using MonoZelda.Link;
 using MonoZelda.Sprites;
 using System;
+using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.UI;
 
 namespace MonoZelda.Scenes

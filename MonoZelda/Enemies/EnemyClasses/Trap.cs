@@ -11,7 +11,6 @@ namespace MonoZelda.Enemies.EnemyClasses
     public class Trap : Enemy
     {
         private readonly Random rnd = new();
-        private PlayerState player;
         private Boolean attacking;
         private Boolean retreating;
 
@@ -22,13 +21,12 @@ namespace MonoZelda.Enemies.EnemyClasses
             Alive = true;
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, PlayerState player)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Trap);
-            base.EnemySpawn(enemyDict, spawnPosition, collisionController, player);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController);
             attacking = false;
             retreating = false;
-            this.player = player;
             StateMachine.SetSprite("bladetrap");
             StateMachine.Spawning = false;
         }
@@ -86,7 +84,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public override void Update()
         {
-            var playerPos = player.Position;
+            var playerPos = PlayerState.Position;
             if (Math.Abs(playerPos.Y - Pos.Y) < 60 && !attacking)
             {
                 if (playerPos.X - Pos.X > 0)

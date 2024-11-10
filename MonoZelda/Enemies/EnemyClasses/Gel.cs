@@ -23,10 +23,10 @@ namespace MonoZelda.Enemies.EnemyClasses
             Alive = true;
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, PlayerState Player)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Gel);
-            base.EnemySpawn(enemyDict, spawnPosition, collisionController, Player);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController);
             spawnTimer = 0;
             readyToJump = false;
             StateMachine.SetSprite("gel_turquoise");

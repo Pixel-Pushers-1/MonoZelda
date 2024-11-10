@@ -52,12 +52,11 @@ public class RoomScene : Scene
 
     public override void LoadContent(ContentManager contentManager)
     {
-        playerSprite = new PlayerSpriteManager(playerState);
+        playerSprite = new PlayerSpriteManager();
         // Need to wait for LoadContent because MonoZeldaGame is going to clear everything before calling this.
         LoadRoom(contentManager);
 
         // create player sprite classes
-        playerSprite = new PlayerSpriteManager();
         var playerSpriteDict = new SpriteDict(SpriteType.Player, SpriteLayer.Player, PlayerState.Position);
         playerSprite.SetPlayerSpriteDict(playerSpriteDict);
 
@@ -117,7 +116,7 @@ public class RoomScene : Scene
 
     private void SpawnEnemies(ContentManager contentManager)
     {
-        enemyFactory = new EnemyFactory(collisionController, playerState);
+        enemyFactory = new EnemyFactory(collisionController);
         foreach (var enemySpawn in room.GetEnemySpawns())
         {
             enemies.Add(enemyFactory.CreateEnemy(enemySpawn.EnemyType, new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32)));

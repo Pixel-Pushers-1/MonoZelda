@@ -16,7 +16,6 @@ namespace MonoZelda.Enemies.EnemyClasses
             BottomLeft, BottomRight, TopLeft, TopRight, LeftBottom, LeftTop, RightTop, RightBottom, None
         }
         private readonly Random rnd = new();
-        private PlayerState player;
         private Boolean grabbed;
         private CommandManager commandManager;
         private PlayerAdjacentWall adjacentWall = PlayerAdjacentWall.None;
@@ -34,13 +33,12 @@ namespace MonoZelda.Enemies.EnemyClasses
             Alive = true;
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, PlayerState player)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
             EnemyHitbox = new EnemyCollidable(new Rectangle(-100, -100, Width, Height), EnemyList.Wallmaster);
-            base.EnemySpawn(enemyDict, spawnPosition, collisionController, player);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController);
             spawned = true;
             timer = (float)(rnd.NextDouble()  - rnd.Next(0,2))*-1;
-            this.player = player;
             Pos = new Point(-100, -100);
             StateMachine.Spawning = false;
             grabbed = false;
@@ -100,7 +98,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public override void Update()
         {
-            playerPos = player.Position;
+            playerPos = PlayerState.Position;
             adjacentWall = PlayerAdjacentWall.None;
             if (spawned)
             {
@@ -198,10 +196,6 @@ namespace MonoZelda.Enemies.EnemyClasses
                 else if (timer >= 2.9)
                 {
                     StateMachine.ChangeDirection(returnDirection);
-                    if (grabbed)
-                    {
-                        player.Position = Pos;
-                    }
                 }
                 else if (spawned)
                 {
