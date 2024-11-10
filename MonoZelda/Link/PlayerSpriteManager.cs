@@ -18,7 +18,7 @@ public class PlayerSpriteManager
     private Direction playerDirection;
     private SpriteDict playerSpriteDict;
     private Vector2 playerPosition;
-    private float playerSpeed = 4.0f;
+    private float playerSpeed = 6.0f;
     private double timer;
 
     private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
