@@ -44,11 +44,13 @@ namespace MonoZelda.UI
             //set ProjectileSprite
             Point projPosition = WidgetLocation + margin + new Point(88, 12);
             equippedProjectileSprite = new SpriteDict(SpriteType.HUD, SpriteLayer.HUD, projPosition);
+            
             //set SwordSprite
             Point swordPosition = WidgetLocation + margin + new Point(184, 12);
             swordSprite = new SpriteDict(SpriteType.HUD, SpriteLayer.HUD, swordPosition);
             swordSprite.SetSprite("woodensword");
-            
+            UpdateProjectileSprite(); 
+
 
 
 
