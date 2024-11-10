@@ -14,27 +14,46 @@ namespace MonoZelda.Tiles
     {
         private const int HALF_TILE = 16;
         private ICollidable collider;
-        private readonly CollisionHitboxDraw hitbox;
+        private CollisionHitboxDraw hitbox;
         private bool isOpen;
 
         public BombableWall(DoorSpawn spawnPoint, ICommand roomTransitionCommand, CollisionController c)
             : base(spawnPoint, roomTransitionCommand, c)
         {
+            isOpen = spawnPoint.Type is 
+                Dungeon1Sprite.wall_bombed_east or 
+                Dungeon1Sprite.wall_bombed_north or 
+                Dungeon1Sprite.wall_bombed_south or 
+                Dungeon1Sprite.wall_bombed_west;
+            
+            if (!isOpen)
+                MakeBombable();
+            else
+                SetMaskSprite(GetBombedMaskSprite());
+        }
+
+        private void MakeBombable()
+        {
             hitbox = new CollisionHitboxDraw(this);
-            c.AddCollidable(this);
+            CollisionController.AddCollidable(this);
             
             // Create collider to block entry, HALF_TILE makes the door flush with the wall
-            var offset = spawnPoint.Direction == DoorDirection.North ? 
-                new Point(0, -spawnPoint.Bounds.Size.Y / 2 + HALF_TILE) : new Point(0, 0);
+            var offset = Spawn.Direction == DoorDirection.North ? 
+                new Point(0, -Spawn.Bounds.Size.Y / 2 + HALF_TILE) : new Point(0, 0);
             
-            var bounds = new Rectangle(spawnPoint.Position + offset, spawnPoint.Bounds.Size);
+            var bounds = new Rectangle(Spawn.Position + offset, Spawn.Bounds.Size);
             
             collider = new StaticBoundaryCollidable(bounds);
-            c.AddCollidable(collider);
+            CollisionController.AddCollidable(collider);
         }
 
         protected override Dungeon1Sprite GetMaskSprite()
         {
+            if (isOpen)
+            {
+                return GetBombedSprite();
+            }
+            
             return Direction switch
             {
                 DoorDirection.North => Dungeon1Sprite.doorframe_wall_north,
