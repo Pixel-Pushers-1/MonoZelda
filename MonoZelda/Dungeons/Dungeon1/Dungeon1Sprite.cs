@@ -97,7 +97,6 @@ public enum Dungeon1Sprite
     room_black,
     room_item,
     room_passage,
-    unknown,
     bombable_wall_east,
     bombable_wall_north,
     bombable_wall_south,
@@ -106,4 +105,5 @@ public enum Dungeon1Sprite
     diamond_door_north,
     diamond_door_south,
     diamond_door_west,
+    unknown,
 }
