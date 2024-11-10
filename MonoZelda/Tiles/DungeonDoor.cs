@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Commands;
@@ -12,6 +13,8 @@ namespace MonoZelda.Dungeons
 {
     internal class DungeonDoor : IDoor
     {
+        private const int SAFE_EDGE = 16;
+        
         public DoorDirection Direction => spawnPont.Direction;
         public Point Position { get; set; }
         private ICommand transitionCommand;
@@ -30,12 +33,51 @@ namespace MonoZelda.Dungeons
             spriteDict = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, spawnPont.Position);
             spriteDict.SetSprite(spawnPont.Type.ToString());
 
-            // TODO: Setup trigger bounds loaction based on direction
-            trigger = new TriggerCollidable(spawnPont.Bounds);
-            trigger.OnTrigger += Transition;
+            trigger = CreateActivateTrigger();
             c.AddCollidable(trigger);
+            
+            AddDoorMask();
+        }
 
+        private void AddDoorMask()
+        {
+            var mask = new SpriteDict(SpriteType.Blocks, SpriteLayer.Player + 1, spawnPont.Position);
+            switch (Direction)
+            {
+                case DoorDirection.North:
+                    mask.SetSprite(nameof(Dungeon1Sprite.doorframe_door_north));
+                    break;
+                case DoorDirection.South:
+                    mask.SetSprite(nameof(Dungeon1Sprite.doorframe_door_south));
+                    break;
+                case DoorDirection.West:
+                    mask.SetSprite(nameof(Dungeon1Sprite.doorframe_door_west));
+                    break;
+                case DoorDirection.East:
+                    mask.SetSprite(nameof(Dungeon1Sprite.doorframe_door_east));
+                    break;
+            }
+        }
+
+        private TriggerCollidable CreateActivateTrigger()
+        {
+            // Move the trigger off the screen by one door size - SAFE_EDGE to prevent the player
+            // from slipping around the door
+            var offset = spawnPont.Direction switch
+            {
+                DoorDirection.North => new Point(0, -spawnPont.Bounds.Size.Y + SAFE_EDGE),
+                DoorDirection.South => new Point(0, spawnPont.Bounds.Size.Y - SAFE_EDGE),
+                DoorDirection.West => new Point(-spawnPont.Bounds.Size.X + SAFE_EDGE, 0),
+                DoorDirection.East => new Point(spawnPont.Bounds.Size.X - SAFE_EDGE, 0),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            
+            var bounds = new Rectangle(spawnPont.Position + offset, spawnPont.Bounds.Size);
+            
+            trigger = new TriggerCollidable(bounds);
             trigger.OnTrigger += Transition;
+            
+            return trigger;
         }
 
         public void Open()
@@ -76,10 +118,10 @@ namespace MonoZelda.Dungeons
             }
         }
 
-        private void Transition(Direction d)
+        private void Transition(Direction transitionDirection)
         {
             trigger.OnTrigger -= Transition;
-            transitionCommand.Execute(spawnPont.Destination);
+            transitionCommand.Execute(spawnPont.Destination,transitionDirection);
         }
     }
 }

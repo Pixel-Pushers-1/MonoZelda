@@ -1,11 +1,8 @@
 ﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
-using System.Diagnostics;
 using System.Collections.Generic;
-using System;
-using System.Reflection.Metadata;
-using System.Security.Cryptography.X509Certificates;
+using MonoZelda.Dungeons;
 
 namespace MonoZelda.Link;
 
@@ -23,7 +20,6 @@ public class PlayerSpriteManager
     private Vector2 playerPosition;
     private float playerSpeed = 4.0f;
     private double timer;
-    private PlayerState playerState;
 
     private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
     {
@@ -33,10 +29,9 @@ public class PlayerSpriteManager
        { Direction.Right, "right" }
     };
 
-    public PlayerSpriteManager(PlayerState playerStateMachine)
+    public PlayerSpriteManager()
     {
-        playerPosition = playerStateMachine.Position.ToVector2();
-        playerState = playerStateMachine;
+        playerPosition = PlayerState.Position.ToVector2();
     }
 
     public Direction PlayerDirection
@@ -52,13 +47,14 @@ public class PlayerSpriteManager
     {
         playerPosition = position;
         playerSpriteDict.Position = position.ToPoint();
-        playerState.Position = position.ToPoint();
+        PlayerState.Position = position.ToPoint();
     }
 
     public void SetPlayerSpriteDict(SpriteDict spriteDict)
     {
         playerSpriteDict = spriteDict;
-        playerDirection = Direction.Down;
+        playerSpriteDict.SetSprite($"walk_{DirectionToStringMap[PlayerState.Direction]}");
+        playerDirection = PlayerState.Direction;
     }
 
     public void Move(PlayerMoveCommand moveCommand)
@@ -71,14 +67,7 @@ public class PlayerSpriteManager
         playerDirection = moveCommand.PlayerDirection;
 
         // Determine movement vector
-        Vector2 movement = playerDirection switch
-        {
-            Direction.Up => new Vector2(0, -1),
-            Direction.Down => new Vector2(0, 1),
-            Direction.Left => new Vector2(-1, 0),
-            Direction.Right => new Vector2(1, 0),
-            _ => Vector2.Zero
-        };
+        Vector2 movement = DungeonConstants.DirectionVector[playerDirection];
 
         // Get direction string from the dictionary
         if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))

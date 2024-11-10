@@ -26,8 +26,8 @@ public class PlayerCollisionManager
         this.player = player;
         this.damageCommand = damageCommand;
         this.playerHitbox = playerHitbox;
-        this.width = 64;
-        this.height = 64;
+        this.width = 52;
+        this.height = 52;
 
         Vector2 playerPosition = player.GetPlayerPosition();
         Rectangle bounds = new Rectangle(

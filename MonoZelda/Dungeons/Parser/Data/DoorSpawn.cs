@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Dungeons.Parser.Data;
+using MonoZelda.Sprites;
 
 namespace MonoZelda.Dungeons
 {

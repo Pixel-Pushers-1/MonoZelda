@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using MonoZelda.Dungeons;
+using MonoZelda.Link;
 using MonoZelda.Scenes;
 
 namespace MonoZelda.Commands.GameCommands
@@ -23,9 +24,10 @@ namespace MonoZelda.Commands.GameCommands
             }
 
             var destination = metadata[0];
+            Direction collisionDirection = (Direction)metadata[1];
             if (destination is string dest && !string.IsNullOrEmpty(dest))
             {
-                dungeonScene.TransitionRoom(dest);
+                dungeonScene.TransitionRoom(dest,collisionDirection);
             }
         }
 

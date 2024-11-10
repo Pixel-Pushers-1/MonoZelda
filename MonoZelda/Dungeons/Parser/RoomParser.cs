@@ -79,6 +79,9 @@ namespace MonoZelda.Dungeons.Parser
 
         private void InvokeParser(string cell, Point position, DungeonRoom room)
         {
+            // cell format is category_enum
+            if(!cell.Contains('_')) return;
+            
             // First part defines the Enum Type
             var enumType = cell[..cell.IndexOf('_')];
             // The rest is the enum value
