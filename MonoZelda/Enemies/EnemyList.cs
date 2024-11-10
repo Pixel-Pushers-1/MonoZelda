@@ -13,6 +13,5 @@
         Trap,
         Wallmaster,
         Zol,
-        OldManText,
     }
 }
