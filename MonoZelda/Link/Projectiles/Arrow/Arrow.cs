@@ -6,7 +6,7 @@ namespace MonoZelda.Link.Projectiles;
 public class Arrow : ProjectileFactory, IProjectile
 {
     private bool Finished;
-    private const float PROJECTILE_SPEED = 6f;
+    private const float PROJECTILE_SPEED = 8f;
     private const int TILES_TO_TRAVEL = 3;
     private int tilesTraveled;
     private bool rotate;
