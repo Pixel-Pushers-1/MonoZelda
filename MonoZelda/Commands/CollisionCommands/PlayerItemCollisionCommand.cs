@@ -1,5 +1,6 @@
 ﻿using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Link;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Commands.CollisionCommands;
@@ -23,7 +24,6 @@ public class PlayerItemCollisionCommand : ICommand
         ICollidable collidableA = (ICollidable) metadata[0];
         ICollidable collidableB = (ICollidable) metadata[1];
         CollisionController collisionController = (CollisionController) metadata[2];
-
         //it's possible that checking A and B is not necessary if CollisionController is forcing an order 
         ItemCollidable itemCollidable;
 
@@ -41,6 +41,7 @@ public class PlayerItemCollisionCommand : ICommand
         itemCollidable.PlaySound();
         itemCollidable.UnregisterHitbox();
         collisionController.RemoveCollidable(itemCollidable);
+        
     }
 
     public void UnExecute()

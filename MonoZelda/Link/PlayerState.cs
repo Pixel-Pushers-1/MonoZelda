@@ -13,6 +13,9 @@ public static class PlayerState
     {
         Direction = Direction.Down;
         Position = new Point(500, 700);
+        Rupees = 20;
+        Bombs = 20;
+        Keys = 20;
     }
 
     public static int Health
