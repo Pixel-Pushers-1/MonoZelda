@@ -110,7 +110,9 @@ namespace MonoZelda.Scenes
         {
             collisionController.Clear();
             SpriteDrawer.Reset();
-            
+            //reset playerStateParams
+            PlayerState.Reset();
+           
             // Complication due to SpriteDict getting cleared, need to re-init the UI
             inventoryScene.LoadContent(contentManager, currentRoom);
         }

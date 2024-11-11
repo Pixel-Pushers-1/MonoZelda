@@ -12,6 +12,6 @@
         Stalfos,
         Trap,
         Wallmaster,
-        Zol
+        Zol,
     }
 }

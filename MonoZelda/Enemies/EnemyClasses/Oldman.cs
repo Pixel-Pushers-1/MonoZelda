@@ -18,7 +18,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
-            Pos = spawnPosition;
+            Pos = new Point(spawnPosition.X -32, spawnPosition.Y + 64);
             StateMachine = new EnemyStateMachine(enemyDict);
             StateMachine.SetSprite("oldman");
             PixelsMoved = 0;
