@@ -32,6 +32,11 @@ public static class PlayerState
         }
     }
 
+    public static bool IsMaxHealth()
+    {
+        return Health == INITIAL_HP;
+    }
+
     public static void TakeDamage()
     {
         if (!IsDead)
