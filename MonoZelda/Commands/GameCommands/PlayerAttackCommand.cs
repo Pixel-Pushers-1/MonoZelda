@@ -22,12 +22,25 @@ public class PlayerAttackCommand : ICommand
 
     public void Execute(params object[] metadata)
     {
-        // use sword projectile
-        if (projectileManager.ProjectileFired == false)
+        if (PlayerState.IsMaxHealth())
         {
-            projectileManager.useSword(player);
-            player?.Attack();
+            // fire sword beam
+            if (projectileManager.ProjectileFired == false)
+            {
+                projectileManager.useSwordBeam(player);
+                player?.Attack();
+            }
         }
+        else
+        {
+            // use sword projectile
+            if (projectileManager.ProjectileFired == false)
+            {
+                projectileManager.useSword(player);
+                player?.Attack();
+            }
+        }
+        
     }
 
     public void UnExecute()
