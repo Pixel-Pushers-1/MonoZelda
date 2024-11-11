@@ -32,6 +32,7 @@ public class RoomScene : Scene
     private ItemFactory itemFactory;
     private EnemyFactory enemyFactory;
     private List<IEnemy> enemies = new();
+    private Dictionary<IEnemy, EnemySpawn> enemySpawnPoints = new();
     private Dictionary<IEnemy, EnemyCollisionManager> enemyDictionary = new();
     private List<EnemyCollisionManager> enemyCollisions = new();
     private List<EnemyProjectileCollisionManager> enemyProjectileCollisions = new();
@@ -123,7 +124,11 @@ public class RoomScene : Scene
         enemyFactory = new EnemyFactory(collisionController);
         foreach(var enemySpawn in room.GetEnemySpawns())
         {
-            enemies.Add(enemyFactory.CreateEnemy(enemySpawn.EnemyType, new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32)));
+            var enemy = enemyFactory.CreateEnemy(enemySpawn.EnemyType,
+                new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32));
+            
+            enemies.Add(enemy);
+            enemySpawnPoints.Add(enemy, enemySpawn);
         }
         foreach (var enemy in enemies)
         {
@@ -189,6 +194,10 @@ public class RoomScene : Scene
             {
                 enemies.Remove(entry.Key);
                 enemyDictionary.Remove(entry.Key);
+                if(enemySpawnPoints.Remove(entry.Key, out var spawnPoint))
+                {
+                    room.Remove(spawnPoint);
+                }
             }
             entry.Key.Update(gameTime);
             if (entry.Key.GetType() == typeof(Aquamentus))
