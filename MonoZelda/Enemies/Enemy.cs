@@ -13,6 +13,10 @@ namespace MonoZelda.Enemies
     public abstract class Enemy
     {
         public const int TileSize = 64;
+        private const int LeftBound = TileSize * 2 + 31;
+        private const int RightBound = TileSize * 14 - 31;
+        private const int TopBound = TileSize * 5 + 31;
+        private const int BottomBound = TileSize * 12 - 31;
 
         public Point Pos { get; set; }
 
@@ -64,24 +68,24 @@ namespace MonoZelda.Enemies
 
         public virtual void CheckBounds()
         {
-            if (Pos.X <= TileSize * 2 + 31 || Pos.X >= TileSize * 14 - 31 || Pos.Y <= TileSize * 5 + 31 || Pos.Y >= TileSize * 12 - 31)
+            if (Pos.X <= LeftBound || Pos.X >= RightBound || Pos.Y <= TopBound || Pos.Y >= BottomBound)
             {
-                if (Pos.Y <= TileSize * 5 + 31)
+                if (Pos.Y <= TopBound)
                 {
                     var pos = Pos;
                     pos.Y++;
                     Pos = pos;
-                } else if (Pos.Y >= TileSize * 12 - 31)
+                } else if (Pos.Y >= BottomBound)
                 {
                     var pos = Pos;
                     pos.Y--;
                     Pos = pos;
-                }else if (Pos.X <= TileSize * 2 + 31)
+                }else if (Pos.X <= LeftBound)
                 {
                     var pos = Pos;
                     pos.X++;
                     Pos = pos;
-                }else if (Pos.X >= TileSize * 14 - 31)
+                }else if (Pos.X >= RightBound)
                 {
                     var pos = Pos;
                     pos.X--;
