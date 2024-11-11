@@ -24,5 +24,9 @@ namespace MonoZelda.Scenes
         {
 
         }
+        
+        public virtual void UnloadContent()
+        {
+        }
     }
 }

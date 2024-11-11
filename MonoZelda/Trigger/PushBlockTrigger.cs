@@ -8,10 +8,11 @@ using MonoZelda.Sprites;
 using MonoZelda.Tiles;
 using System;
 using System.Collections.Generic;
+using MonoZelda.Scenes;
 
 namespace MonoZelda.Trigger
 {
-    internal class PushBlockTrigger : TriggerCollidable
+    internal class PushBlockTrigger : TriggerCollidable, IGameUpdate
     {
         private static readonly int PUSH_DELAY = 30;
         private int pushCounter = 0;
@@ -62,7 +63,7 @@ namespace MonoZelda.Trigger
             return Rectangle.Intersect(Bounds, other.Bounds);
         }
 
-        public void Update()
+        public void Update(GameTime time)
         {
             blockDict.Position = Bounds.Location;
 

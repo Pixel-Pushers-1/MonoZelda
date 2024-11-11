@@ -9,4 +9,5 @@ public interface IScene
     void Update(GameTime gameTime);
     void LoadContent(ContentManager contentManager);
     public void Draw(SpriteBatch batch);
+    void UnloadContent();
 }

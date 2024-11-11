@@ -13,6 +13,7 @@ namespace MonoZelda.Dungeons
         List<Rectangle> GetStaticRoomColliders();
         List<Rectangle> GetStaticBoundaryColliders();
         List<EnemySpawn> GetEnemySpawns();
+        void Remove(EnemySpawn spawn);
         List<ItemSpawn> GetItemSpawns();
         List<TriggerSpawn> GetTriggers();
     }
