@@ -10,7 +10,7 @@ using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
-    public class Rope : IEnemy
+    public class Rope : Enemy
     {
         public Point Pos { get; set; }
         public EnemyCollidable EnemyHitbox { get; set; }
@@ -21,7 +21,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
         private EnemyStateMachine stateMachine;
         private CollisionController collisionController;
-
+        private EnemyCollisionManager enemyCollision;
         private int pixelsMoved;
         private int health = 3;
         private int tileSize = 64;
@@ -33,7 +33,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Alive = true;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
             this.collisionController = collisionController;
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Rope);
@@ -41,11 +41,12 @@ namespace MonoZelda.Enemies.EnemyClasses
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
             Pos = spawnPosition;
+            enemyCollision = new EnemyCollisionManager(this, Width, Height);
             pixelsMoved = 0;
             stateMachine = new EnemyStateMachine(enemyDict);
         }
 
-        public void ChangeDirection()
+        public override void ChangeDirection()
         {
             stateMachine.SetSprite("rope_left");
             switch (rnd.Next(1, 5))
@@ -68,7 +69,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             stateMachine.ChangeDirection(direction);
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update()
         {
             if (pixelsMoved >= tileSize)
             {
@@ -79,12 +80,13 @@ namespace MonoZelda.Enemies.EnemyClasses
             {
                 pixelsMoved++;
             }
-            Pos = stateMachine.Update(this, Pos, gameTime);
+            Pos = stateMachine.Update(this, Pos);
+            enemyCollision.Update(Width, Height, Pos);
         }
 
-        public void TakeDamage(Boolean stun, Direction collisionDirection)
+        public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
         {
-            if (stun)
+            if (stunTime > 0)
             {
                 stateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
                 pixelsMoved = -128;
@@ -100,7 +102,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 else
                 {
                     SoundManager.PlaySound("LOZ_Enemy_Die", false);
-                    stateMachine.Die();
+                    stateMachine.Die(false);
                     EnemyHitbox.UnregisterHitbox();
                     collisionController.RemoveCollidable(EnemyHitbox);
                 }

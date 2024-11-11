@@ -8,6 +8,7 @@ using MonoZelda.Dungeons;
 using MonoZelda.Link;
 using MonoZelda.Sprites;
 using System;
+using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.UI;
 
 namespace MonoZelda.Scenes
@@ -44,6 +45,8 @@ namespace MonoZelda.Scenes
             commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this));
             commandManager.ReplaceCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand(this));
             commandManager.ReplaceCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand(this));
+            commandManager.ReplaceCommand(CommandType.PlayerEnemyCollisionCommand,
+                new PlayerEnemyCollisionCommand(commandManager));
         }
 
         public void TransitionRoom(string roomName, Direction transitionDirection)
@@ -89,7 +92,7 @@ namespace MonoZelda.Scenes
             inventoryScene.LoadContent(contentManager);
 
             // We begin by revealing the the first room
-            currentRoom = roomManager.LoadRoom(StartRoom);
+            currentRoom = roomManager.LoadRoom("RoomTest");
             activeScene = new EnterDungeonScene(this, currentRoom, graphicsDevice);
             activeScene.LoadContent(contentManager);
         }
