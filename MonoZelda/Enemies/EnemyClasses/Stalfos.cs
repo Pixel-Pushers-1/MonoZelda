@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Items;
 using MonoZelda.Link;
 using MonoZelda.Sprites;
 
@@ -16,10 +17,10 @@ namespace MonoZelda.Enemies.EnemyClasses
             Alive = true;
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
         {
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Stalfos);
-            base.EnemySpawn(enemyDict, spawnPosition, collisionController);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasItem);
             StateMachine.SetSprite("stalfos");
         }
     }

@@ -91,7 +91,7 @@ public class RoomScene : Scene
         CreateStaticColliders();
         CreateTriggers(contentManager);
         SpawnItems(contentManager);
-        SpawnEnemies(contentManager);
+        SpawnEnemies();
     }
 
     private void CreateTriggers(ContentManager contentManager)
@@ -113,12 +113,12 @@ public class RoomScene : Scene
         }
     }
 
-    private void SpawnEnemies(ContentManager contentManager)
+    private void SpawnEnemies()
     {
         enemyFactory = new EnemyFactory(collisionController);
         foreach (var enemySpawn in room.GetEnemySpawns())
         {
-            enemies.Add(enemyFactory.CreateEnemy(enemySpawn.EnemyType, new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32)));
+            enemies.Add(enemyFactory.CreateEnemy(enemySpawn.EnemyType, new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32), itemFactory, enemySpawn.HasKey));
         }
     }
 
@@ -174,7 +174,20 @@ public class RoomScene : Scene
         {
             if (!enemy.Alive)
             {
+                var itemRooms = new List<string> { "Room16", "Room12", "Room2", "Room5" };
                 enemies.Remove(enemy);
+                if (enemies.Count == 0 && itemRooms.Contains(room.RoomName))
+                {
+                    if (room.RoomName == "Room12")
+                    {
+                        itemFactory.CreateItem(ItemList.Boomerang, new Point(500, 400));
+                    }
+                    else
+                    {
+                        itemFactory.CreateItem(ItemList.Key, new Point(500, 400));
+                    }
+                    SoundManager.PlaySound("LOZ_Key_Appear", false);
+                }
             }
             enemy.Update();
         }

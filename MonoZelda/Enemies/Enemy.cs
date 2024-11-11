@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Items;
 using MonoZelda.Link;
 using MonoZelda.Sound;
 using MonoZelda.Sprites;
@@ -30,7 +31,7 @@ namespace MonoZelda.Enemies
         public EnemyStateMachine.Direction Direction { get; set; }
         private readonly Random rnd = new Random();
 
-        public virtual void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        public virtual void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
         {
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
@@ -38,7 +39,7 @@ namespace MonoZelda.Enemies
             Pos = spawnPosition;
             CollisionController = collisionController;
             EnemyCollision = new EnemyCollisionManager(this, Width, Height);
-            StateMachine = new EnemyStateMachine(enemyDict);
+            StateMachine = new EnemyStateMachine(enemyDict, itemFactory, hasItem);
         }
 
         public virtual void ChangeDirection()
@@ -86,8 +87,9 @@ namespace MonoZelda.Enemies
                     pos.X--;
                     Pos = pos;
                 }
+
+                StateMachine.TakingKnockback = false;
                 ChangeDirection();
-                PixelsMoved = 0;
             }
         }
 
