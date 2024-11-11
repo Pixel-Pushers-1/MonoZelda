@@ -13,13 +13,8 @@ using MonoZelda.Commands.GameCommands;
 using MonoZelda.Enemies;
 using System.Collections.Generic;
 using MonoZelda.Enemies.EnemyProjectiles;
-using MonoZelda.Commands.CollisionCommands;
-using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Trigger;
-using MonoZelda.HUD;
-using System.Linq;
 using MonoZelda.Sound;
-using MonoZelda.UI;
 
 namespace MonoZelda.Scenes;
 
@@ -34,9 +29,9 @@ public class RoomScene : Scene
     private List<ITrigger> triggers;
     private ItemFactory itemFactory;
     private EnemyFactory enemyFactory;
-    private List<IEnemy> enemies = new();
-    private Dictionary<IEnemy, EnemySpawn> enemySpawnPoints = new();
-    private Dictionary<IEnemy, EnemyCollisionManager> enemyDictionary = new();
+    private List<Enemy> enemies = new();
+    private Dictionary<Enemy, EnemySpawn> enemySpawnPoints = new();
+    private Dictionary<Enemy, EnemyCollisionManager> enemyDictionary = new();
     private List<EnemyCollisionManager> enemyCollisions = new();
     private List<EnemyProjectileCollisionManager> enemyProjectileCollisions = new();
     private IDungeonRoom room;
@@ -81,7 +76,7 @@ public class RoomScene : Scene
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(projectileManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerEquipProjectileCommand, new PlayerEquipProjectileCommand(projectileManager));   
-        commandManager.ReplaceCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand(projectileManager, playerSprite));
+        //commandManager.ReplaceCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand(projectileManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerSprite));
@@ -120,11 +115,14 @@ public class RoomScene : Scene
         enemyFactory = new EnemyFactory(collisionController);
         foreach(var enemySpawn in room.GetEnemySpawns())
         {
-            enemies.Add(enemyFactory.CreateEnemy(enemySpawn.EnemyType, new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32)));
+            var enemy = enemyFactory.CreateEnemy(enemySpawn.EnemyType,
+                new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32));
+            enemies.Add(enemy);
+            enemySpawnPoints.Add(enemy,enemySpawn);
         }
         foreach (var enemy in enemies)
         {
-            enemyDictionary.Add(enemy, new EnemyCollisionManager(enemy, collisionController, enemy.Width, enemy.Height));
+            enemyDictionary.Add(enemy, new EnemyCollisionManager(enemy, enemy.Width, enemy.Height));
         }
     }
 
@@ -176,10 +174,11 @@ public class RoomScene : Scene
             projectileManager.UpdatedProjectileState();
         }
 
-        foreach(KeyValuePair<IEnemy, EnemyCollisionManager> entry in enemyDictionary)
+        foreach(KeyValuePair<Enemy, EnemyCollisionManager> entry in enemyDictionary)
         {
             if (!entry.Key.Alive) // remove dead enemies from lists (hopefully this is useful for re-entering rooms)
             {
+                room.Remove(enemySpawnPoints[entry.Key]);
                 enemyDictionary.Remove(entry.Key);
                 enemies.Remove(entry.Key);
             }

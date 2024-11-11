@@ -21,9 +21,9 @@ namespace MonoZelda.Tiles
         private IDungeonRoom room;
         private bool isOpen;
         private ICollidable collider;
-        private List<IEnemy> enemies;
+        private List<Enemy> enemies;
         
-        public DiamondDoor(DoorSpawn door, ICommand roomTransitionCommand, CollisionController c, List<IEnemy> enemies) 
+        public DiamondDoor(DoorSpawn door, ICommand roomTransitionCommand, CollisionController c, List<Enemy> enemies) 
             : base(door, roomTransitionCommand, c)
         {
             this.enemies = enemies;

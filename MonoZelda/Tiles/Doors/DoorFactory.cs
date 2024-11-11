@@ -11,7 +11,7 @@ namespace MonoZelda.Tiles.Doors;
 
 internal static class DoorFactory
 {
-    public static IDoor CreateDoor(DoorSpawn door, ICommand roomTransitionCommand, CollisionController c, List<IEnemy> enemies)
+    public static IDoor CreateDoor(DoorSpawn door, ICommand roomTransitionCommand, CollisionController c, List<Enemy> enemies)
     {
         var doorType = DoorTypeMap[door.Type];
         
