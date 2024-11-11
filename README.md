@@ -10,9 +10,10 @@ Monogame implementation of OG Zelda by team Pixel Pushers
 - Move Right -> D or Right Arrow
 - Move Left -> A or Left Arrow
 - Toggle Hitboxes -> G
-- Use Item -> D1 - D6
-- Fire Sword Beam -> T
+- Equip Item -> D1 - D6
+- Use Item -> F
 - Player Attack -> Z or N
+- Mute Game Sound -> M
 - Change Room -> Left Click on Door
 
 # Special Notes
