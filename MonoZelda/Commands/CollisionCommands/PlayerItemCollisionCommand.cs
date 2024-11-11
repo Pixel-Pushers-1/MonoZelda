@@ -36,11 +36,7 @@ public class PlayerItemCollisionCommand : ICommand
             itemCollidable = (ItemCollidable)collidableB;
         }
 
-        SpriteDict collidableDict = itemCollidable.CollidableDict;
-        collidableDict.Unregister();
-        itemCollidable.PlaySound();
-        itemCollidable.UnregisterHitbox();
-        collisionController.RemoveCollidable(itemCollidable);
+        itemCollidable.HandleCollision(collisionController);
     }
 
     public void UnExecute()

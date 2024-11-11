@@ -1,35 +1,26 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
-using MonoZelda.Sprites;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Items.ItemClasses;
 
-public class Triforce : IItem
+public class Triforce : Item
 {
-    private ItemCollidable triforceCollidable;
-    private bool itemPickedUp;
-
-    public bool ItemPickedUp
+    public Triforce()
     {
-        get
-        {
-            return itemPickedUp;
-        }
-        set
-        {
-            itemPickedUp = value;
-        }
+        itemType = ItemList.Triforce;
     }
 
-    public void itemSpawn(SpriteDict triforceDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(SpriteDict triforceDict, Point spawnPosition, CollisionController collisionController)
     {
-        triforceCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 60, 60), ItemList.Triforce);
-        collisionController.AddCollidable(triforceCollidable);
-        triforceCollidable.setSpriteDict(triforceDict);
-        triforceDict.Position = spawnPosition;
+        base.ItemSpawn(triforceDict, spawnPosition, collisionController);   
         triforceDict.SetSprite("triforce");
     }
 
+    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    {
+        SoundManager.PlaySound("LOZ_Get_Item", false);
+        base.HandleCollision(itemCollidableDict, collisionController);
+    }
 }

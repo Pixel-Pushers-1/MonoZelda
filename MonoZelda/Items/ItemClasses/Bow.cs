@@ -1,34 +1,25 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
-using MonoZelda.Sprites;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Items.ItemClasses;
-public class Bow : IItem
+public class Bow : Item
 {
-    private ItemCollidable bowCollidable;
-    private bool itemPickedUp;
-
-    public bool ItemPickedUp
+    public Bow()
     {
-        get
-        {
-            return itemPickedUp;
-        }
-        set
-        {
-            itemPickedUp = value;
-        }
+        itemType = ItemList.Bow;
     }
 
-    public void itemSpawn(SpriteDict bowDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(SpriteDict bowDict, Point spawnPosition, CollisionController collisionController)
     {
-        bowCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), ItemList.Bow);
-        collisionController.AddCollidable(bowCollidable);
-        bowCollidable.setSpriteDict(bowDict);
-        bowDict.Position = spawnPosition;
+        base.ItemSpawn(bowDict, spawnPosition, collisionController);
         bowDict.SetSprite("bow");
     }
 
+    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    {
+        SoundManager.PlaySound("LOZ_Get_Item", false);
+        base.HandleCollision(itemCollidableDict, collisionController);
+    }
 }

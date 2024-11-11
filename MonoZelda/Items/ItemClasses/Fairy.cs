@@ -1,35 +1,26 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
-using MonoZelda.Sprites;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Items.ItemClasses;
 
-public class Fairy : IItem
+public class Fairy : Item
 {
-    private ItemCollidable fairyCollidable;
-    private bool itemPickedUp;
-
-    public bool ItemPickedUp
+    public Fairy()
     {
-        get
-        {
-            return itemPickedUp;
-        }
-        set
-        {
-            itemPickedUp = value;
-        }
+        itemType = ItemList.Fairy;
     }
 
-    public void itemSpawn(SpriteDict fairyDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(SpriteDict fairyDict, Point spawnPosition, CollisionController collisionController)
     {
-        fairyCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), ItemList.Fairy);
-        collisionController.AddCollidable(fairyCollidable);
-        fairyCollidable.setSpriteDict(fairyDict);
-        fairyDict.Position = spawnPosition;
+        base.ItemSpawn(fairyDict, spawnPosition, collisionController);
         fairyDict.SetSprite("fairy");
     }
 
+    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    {
+        SoundManager.PlaySound("LOZ_Get_Item", false);
+        base.HandleCollision(itemCollidableDict, collisionController);
+    }
 }

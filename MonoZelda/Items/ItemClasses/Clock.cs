@@ -1,35 +1,26 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
-using MonoZelda.Sprites;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Items.ItemClasses;
 
-public class Clock : IItem
+public class Clock : Item
 {
-    private ItemCollidable clockCollidable;
-    private bool itemPickedUp;
-
-    public bool ItemPickedUp
+    public Clock()
     {
-        get
-        {
-            return itemPickedUp;
-        }
-        set
-        {
-            itemPickedUp = value;
-        }
+        itemType = ItemList.Clock;
     }
 
-    public void itemSpawn(SpriteDict clockDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(SpriteDict clockDict, Point spawnPosition, CollisionController collisionController)
     {
-        clockCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 60, 60), ItemList.Clock);
-        collisionController.AddCollidable(clockCollidable);
-        clockCollidable.setSpriteDict(clockDict);
-        clockDict.Position = spawnPosition;
+        base.ItemSpawn(clockDict, spawnPosition, collisionController);
         clockDict.SetSprite("clock");
     }
 
+    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    {
+        SoundManager.PlaySound("LOZ_Get_Item", false);
+        base.HandleCollision(itemCollidableDict, collisionController);
+    }
 }

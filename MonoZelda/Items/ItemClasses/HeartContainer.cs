@@ -1,35 +1,27 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
-using MonoZelda.Sprites;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Items.ItemClasses;
 
-public class HeartContainer : IItem
+public class HeartContainer : Item
 {
-    private ItemCollidable heartcontainerCollidable;
-    private bool itemPickedUp;
-
-    public bool ItemPickedUp
+    public HeartContainer()
     {
-        get
-        {
-            return itemPickedUp;
-        }
-        set
-        {
-            itemPickedUp = value;
-        }
+        itemType = ItemList.HeartContainer;
     }
 
-    public void itemSpawn(SpriteDict heartcontainerDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(SpriteDict heartcontainerDict, Point spawnPosition, CollisionController collisionController)
     {
-        heartcontainerCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 60, 60), ItemList.HeartContainer);
-        collisionController.AddCollidable(heartcontainerCollidable);
-        heartcontainerCollidable.setSpriteDict(heartcontainerDict);
-        heartcontainerDict.Position = spawnPosition;
+        base.ItemSpawn(heartcontainerDict, spawnPosition, collisionController); 
         heartcontainerDict.SetSprite("heartcontainer");
+    }
+
+    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    {
+        SoundManager.PlaySound("LOZ_Get_Item", false);
+        base.HandleCollision(itemCollidableDict, collisionController);
     }
 
 }

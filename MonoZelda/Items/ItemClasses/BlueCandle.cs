@@ -3,32 +3,27 @@ using MonoZelda.Collision;
 using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Items.ItemClasses;
 
-public class BlueCandle : IItem
+public class BlueCandle : Item
 {
-    private ItemCollidable bluecandleCollidable;
-    private bool itemPickedUp;
-
-    public bool ItemPickedUp
+    public BlueCandle()
     {
-        get
-        {
-            return itemPickedUp;
-        }
-        set
-        {
-            itemPickedUp = value;
-        }
+        itemType = ItemList.BlueCandle;
     }
 
-    public void itemSpawn(SpriteDict bluecandleDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(SpriteDict bluecandleDict, Point spawnPosition, CollisionController collisionController)
     {
-        bluecandleCollidable = new ItemCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 28, 60), ItemList.BlueCandle);
-        collisionController.AddCollidable(bluecandleCollidable);
-        bluecandleCollidable.setSpriteDict(bluecandleDict);
-        bluecandleDict.Position = spawnPosition;
-        bluecandleDict.SetSprite("candle_blue");    }
+        base.ItemSpawn(bluecandleDict, spawnPosition, collisionController);
+        bluecandleDict.SetSprite("candle_blue");
+    }
+
+    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    {
+        SoundManager.PlaySound("LOZ_Get_Item", false);
+        base.HandleCollision(itemCollidableDict, collisionController);
+    }
 }
 
