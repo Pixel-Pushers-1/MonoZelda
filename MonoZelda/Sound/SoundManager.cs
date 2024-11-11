@@ -8,20 +8,20 @@ namespace MonoZelda.Sound;
 public static class SoundManager
 {
     private static ContentManager contentManager;
-    private static Dictionary<string, SoundEffectInstance> soundEffects;
+    private static Dictionary<string, SoundEffectInstance> gameSoundEffects;
     private static bool Muted;
 
     // Static initialization method to set up ContentManager and other resources
     public static void Initialize(ContentManager content)
     {
         contentManager = content;
-        soundEffects = new Dictionary<string, SoundEffectInstance>();
+        gameSoundEffects = new Dictionary<string, SoundEffectInstance>();
         Muted = false;  
     }
 
     public static void PlaySound(string soundName, bool Looped)
     {
-        if (!soundEffects.ContainsKey(soundName))
+        if (!gameSoundEffects.ContainsKey(soundName))
         {
             // load sound
             string soundFilePath = "Sound/" + soundName;
@@ -30,32 +30,31 @@ public static class SoundManager
             soundInstance.IsLooped = Looped;
 
             // Add sound instance to the dictionary
-            soundEffects.Add(soundName, soundInstance);
+            soundInstance.Volume = Muted ? 0 : 1;
+            gameSoundEffects.Add(soundName, soundInstance);
 
             // play sound
             soundInstance.Play();
         }
         else
         {
-            soundEffects[soundName].Play();
+            gameSoundEffects[soundName].Play();
         }
     }
 
     public static void StopSound(string soundName)
     {
-        if (soundEffects.ContainsKey(soundName))
+        if (gameSoundEffects.ContainsKey(soundName))
         {
-            SoundEffectInstance soundInstance = soundEffects[soundName];
+            SoundEffectInstance soundInstance = gameSoundEffects[soundName];
             soundInstance.Stop();
-            soundEffects.Remove(soundName);
         }
     }
 
     public static void ChangeMuteState()
     {
         Muted = !Muted;
-        System.Diagnostics.Debug.WriteLine("Muted: " + Muted);
-        foreach (SoundEffectInstance soundEffect in soundEffects.Values)
+        foreach (SoundEffectInstance soundEffect in gameSoundEffects.Values)
         {
             soundEffect.Volume = Muted ? 0 : 1;
         }
@@ -63,10 +62,10 @@ public static class SoundManager
 
     public static void ClearSoundDictionary()
     {
-        foreach (SoundEffectInstance soundEffect in soundEffects.Values)
+        foreach (SoundEffectInstance soundEffect in gameSoundEffects.Values)
         {
             soundEffect.Dispose();
         }
-        soundEffects.Clear();
+        gameSoundEffects.Clear();
     }
 }
