@@ -33,10 +33,14 @@ namespace MonoZelda.UI
 
         public override void Draw(SpriteBatch sb)
         {
-            // Draw inventory counts in the correct location
-            sb.DrawString(font, "00", (WidgetLocation + rupeeCountPosition).ToVector2(), Color.White);
-            sb.DrawString(font, PlayerState.Keys.ToString("00"), (WidgetLocation + keyCountPosition).ToVector2(), Color.White);
-            sb.DrawString(font, "00", (WidgetLocation + bombCountPosition).ToVector2(), Color.White);
+            //format ruppees
+            string rupeeCount = PlayerState.Rupees.ToString("D2");
+            string keyCount = PlayerState.Keys.ToString("D2");
+            string bombCount = PlayerState.Bombs.ToString("D2");
+            //draw rupppessw
+            sb.DrawString(font, rupeeCount, (WidgetLocation + rupeeCountPosition).ToVector2(), Color.White);
+            sb.DrawString(font, keyCount, (WidgetLocation + keyCountPosition).ToVector2(), Color.White);
+            sb.DrawString(font, bombCount, (WidgetLocation + bombCountPosition).ToVector2(), Color.White);
         }
 
         public override void Load(ContentManager content)

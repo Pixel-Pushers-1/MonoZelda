@@ -1,0 +1,534 @@
+[33mcommit 1cab5c84d4b8628a60a0bf23feb8d2ea0953757b[m[33m ([m[1;36mHEAD -> [m[1;32mJoshua-Klasmeier-HUD-Stuff[m[33m, [m[1;31morigin/Joshua-Klasmeier-HUD-Stuff[m[33m)[m
+Merge: f426de2 2fa70dc
+Author: RobertEGreenslade12 <greenslade.12@osu.edu>
+Date:   Sun Nov 10 23:47:37 2024 -0500
+
+    Merge branch 'Sprint4' into Joshua-Klasmeier-HUD-Stuff
+
+[33mcommit 2fa70dcd0288fb9b7b06e731ec3cf07a416b5a53[m[33m ([m[1;31morigin/Sprint4[m[33m, [m[1;31morigin/Calvin-L-Item-Dropping[m[33m, [m[1;32mSprint4[m[33m)[m
+Author: RobertEGreenslade12 <greenslade.12@osu.edu>
+Date:   Sun Nov 10 23:44:25 2024 -0500
+
+    Sword beam when full health (#101)
+    
+    * Joshua klasmeier player direction bug (#78)
+    
+    * keyboard controller update and set initial direction for player
+    
+    * keyboard controller refeactor
+    
+    * removed extraneous code
+    
+    ---------
+    
+    Co-authored-by: xrs6969 <118093553+xrs6969@users.noreply.github.com>
+    
+    * Projectile Refactor (#80)
+    
+    * Moving around projectile classes
+    
+    * Updates
+    
+    * Updates
+    
+    * Updates
+    
+    * Updates
+    
+    * Updates
+    
+    * Updates
+    
+    * Updates
+    
+    * Updates
+    
+    * Fixed Player Collision Bug
+    
+    * Updates
+    
+    * Collidables Refactor (#81)
+    
+    * Moving around projectile classes
+    
+    * Fixed Player Collision Bug
+    
+    * Collision Refactor
+    
+    * Error Fixing
+    
+    * Remove Collidable Class
+    
+    * Removing uneeded lines of code
+    
+    * Fixed invisible hitbox being made when projectile fired with wooden sword (#86)
+    
+    Co-authored-by: robbie <robbieg1515@gmail.com>
+    
+    * Added oneshot animations (#83)
+    
+    * Initial Implementation
+    Added implementation for the fundamental behavior of oneshot animations. Much refactoring still needs to be done in the classes that use `SpriteDict` to adapt to these changes and how time is delt with project-wide.
+    
+    * Initial Implementation
+    Added implementation for the fundamental behavior of oneshot animations. Much refactoring still needs to be done in the classes that use `SpriteDict` to adapt to these changes and how time is delt with project-wide.
+    
+    * Calvin enemy damage stun and more (#85)
+    
+    * Damage and stun for stalfos
+    
+    * Goriya damage/stun, boomerang collisions handling, remove dead enemies from lists in DungeonScene
+    
+    * Knockback mostly working on stalfos
+    
+    * Lots of stuff
+    
+    ---------
+    
+    Co-authored-by: xsedim <127362018+xsedim@users.noreply.github.com>
+    
+    * JS - Refactor Room Loading (#82)
+    
+    * Break appart room loading into a memory stream part, a tokenizer (convert csv parts to named strings) part, and a parser part to build a concerte DungeonRoom from the tokens.
+    
+    * Created a RoomParser to take the token and parsing details out of the Dungeon Manager.
+    
+    * Fix merge errors
+    
+    * Support boundaryCollision and roomCollision types.
+    RoomCellParser now includes a direciton property.
+    
+    * Fixed BoundaryCollisionCell Parser
+    
+    ---------
+    
+    Co-authored-by: Om Kurkure <kurkureom@gmail.com>
+    
+    * Joshua klasmeier player state machine (#88)
+    
+    * update
+    
+    * this commit isa  naming refactir will continue to refactor in the future
+    
+    * added invulernabiliity frames
+    
+    * Changed timer logic
+    Changed timers in `PlayerCollisionManager` to be based on seconds instead of frames and made const variables for timer set values. Also removed debug statement.
+    
+    ---------
+    
+    Co-authored-by: Carson Miller <xsedim@gmail.com>
+    
+    * Joshua klasmeier hud (#89)
+    
+    * update
+    
+    * this commit isa  naming refactir will continue to refactor in the future
+    
+    * added invulernabiliity frames
+    
+    * refactored player and added HUD functionality
+    
+    * added more HUD stuff and fixed projecetile bugs along with misc refactoring
+    
+    * Joshua klasmeier player state machine (#88)
+    
+    * update
+    
+    * this commit isa  naming refactir will continue to refactor in the future
+    
+    * added invulernabiliity frames
+    
+    * Changed timer logic
+    Changed timers in `PlayerCollisionManager` to be based on seconds instead of frames and made const variables for timer set values. Also removed debug statement.
+    
+    ---------
+    
+    Co-authored-by: Carson Miller <xsedim@gmail.com>
+    
+    * update
+    
+    * this commit isa  naming refactir will continue to refactor in the future
+    
+    * added invulernabiliity frames
+    
+    * refactored player and added HUD functionality
+    
+    * added more HUD stuff and fixed projecetile bugs along with misc refactoring
+    
+    * refactored player and added HUD functionality
+    
+    * added more HUD stuff and fixed projecetile bugs along with misc refactoring
+    
+    * Rebase on Sprint4
+    
+    * Fixing errors
+    
+    ---------
+    
+    Co-authored-by: Carson Miller <xsedim@gmail.com>
+    
+    * Adding/editing sprite sheets (#91)
+    
+    Added HUD spritesheet and added doorframes to the tiles spritesheet.
+    
+    Also added a new column of data to the sprite CSVs of FPS for the animations to play at. Oneshot animations that depend on animation length will be affected by changing this value. (But all unchanged sprites use the same default of 10 fps.)
+    
+    For example, link now attacks with his sword faster and stays on the "use item" sprite for longer. Further fine tuning can be done by modifying the CSV files. (So long as necessary logic is using the oneshot animation system.)
+    
+    NOTE: I did not update `SpriteData.cs` to include the new HUD sprite because I know there are significant pending changes in that file, so I think adding it later will be easier than introducing merge conflicts.
+    
+    * Carson smarter sprite drawing (#90)
+    
+    * Changed SpriteDict constructor to not require a ContentManager
+    I did this by storing textures in the TextureData class and adding a SpriteType enum that is passed to SpriteDicts instead, so more logic is done internally now.
+    
+    * Removed a massive amount of ContentManager and GraphicsDevice parameter passing
+    
+    ---------
+    
+    Co-authored-by: joshua-klasmeier <klasmeier.1@buckeyemail.osu.edu>
+    
+    * JS - Scene Expanson (#87)
+    
+    * Break appart room loading into a memory stream part, a tokenizer (convert csv parts to named strings) part, and a parser part to build a concerte DungeonRoom from the tokens.
+    
+    * Created a RoomParser to take the token and parsing details out of the Dungeon Manager.
+    
+    * Fix merge errors
+    
+    * Support boundaryCollision and roomCollision types.
+    RoomCellParser now includes a direciton property.
+    
+    * Functional rework of DungeonScene to support Entrance, UI, Transitions, and Mario room scenes.
+    
+    * Move HudManager into UI widgets.
+    
+    * Carson nice HUD (#92)
+    
+    * Font and health changes
+    Changed font from arial to original NES Zelda font.
+    Link's health is now represented in half-hearts instead of full hearts, which update appropriately when Link takes damage.
+    
+    * Added accurate HUD visuals
+    Most of the HUD is still static and does not update according to game events, but at least it looks nice.
+    
+    * Bomb delay works as expected: (#95)
+    
+    * JS-Parser Enemy Keys (Also HUD animation) (#94)
+    
+    * - EnemySpawn now defines HasKey boolean
+    - Created InventoryToggleCommand to animate the inventory open and closed
+    
+    * Move ToggleInventoryCommand to before None, I'm not an animal.
+    
+    * Sound Implmentation (#93)
+    
+    * Break appart room loading into a memory stream part, a tokenizer (convert csv parts to named strings) part, and a parser part to build a concerte DungeonRoom from the tokens.
+    
+    * Created a RoomParser to take the token and parsing details out of the Dungeon Manager.
+    
+    * Fix merge errors
+    
+    * Support boundaryCollision and roomCollision types.
+    RoomCellParser now includes a direciton property.
+    
+    * Fixed BoundaryCollisionCell Parser
+    
+    * Added Sound files and some test sound effects
+    
+    * Added sound for parts of the game
+    
+    * Added sound for enemies
+    
+    * Added Item Sounds
+    
+    * Updates
+    
+    * Adding Mute functionality and refactoring how sounds are played
+    
+    * Fixing Merge Errors and Added command to mute sound
+    
+    * Updates
+    
+    ---------
+    
+    Co-authored-by: Josh <slaven.18@osu.edu>
+    Co-authored-by: xsedim <127362018+xsedim@users.noreply.github.com>
+    
+    * Transition scene (#96)
+    
+    * Break appart room loading into a memory stream part, a tokenizer (convert csv parts to named strings) part, and a parser part to build a concerte DungeonRoom from the tokens.
+    
+    * Created a RoomParser to take the token and parsing details out of the Dungeon Manager.
+    
+    * Fix merge errors
+    
+    * Support boundaryCollision and roomCollision types.
+    RoomCellParser now includes a direciton property.
+    
+    * Functional rework of DungeonScene to support Entrance, UI, Transitions, and Mario room scenes.
+    
+    * Added Room Transition(Temporary)
+    
+    * Added Door to transition
+    
+    * Fix Link image spawning on top left corner
+    
+    * Removing uneeded code in Transition scene
+    
+    * Removing some unneeded code
+    
+    * Updates
+    
+    * Fixing Merge Errors
+    
+    * Fixing currentRoom issue in DungeonScene
+    
+    * Animating Link Entrance into room
+    
+    * Fixing Link Entrance
+    
+    * Fixing some errors
+    
+    * Fixing Some Bugs
+    
+    * Fixing Errors
+    
+    * Fixing Errors
+    
+    * Fixing Player Bounds
+    
+    * Retaining EquippedProjectile after transitioning rooms
+    
+    * Draw transition scene sprites mostly at their correct layer.
+    
+    ---------
+    
+    Co-authored-by: Josh <slaven.18@osu.edu>
+    
+    * JS Door Frames (#97)
+    
+    * Appropriately sized doorway triggers. Doorway frames.
+    
+    * Throw appropriate exception when passing an unexpected DoorType to CreateDoor.
+    
+    * Boundary collision corner rects for north/south doors.
+    
+    * Sword beam when full health
+    
+    ---------
+    
+    Co-authored-by: joshua-klasmeier <klasmeier.1@buckeyemail.osu.edu>
+    Co-authored-by: xrs6969 <118093553+xrs6969@users.noreply.github.com>
+    Co-authored-by: OmKurkure <120071215+OmKurkure@users.noreply.github.com>
+    Co-authored-by: robbie <robbieg1515@gmail.com>
+    Co-authored-by: xsedim <127362018+xsedim@users.noreply.github.com>
+    Co-authored-by: Calvin Long <long.2108@buckeyemail.osu.edu>
+    Co-authored-by: Josh <slaven.18@osu.edu>
+    Co-authored-by: Om Kurkure <kurkureom@gmail.com>
+    Co-authored-by: Carson Miller <xsedim@gmail.com>
+
+[33mcommit f426de28beea4dd8b464abc370ee22efa6965ad4[m
+Merge: b02e82d de21db8
+Author: xrs6969 <klasmeier.1@buckeyemail.osu.edu>
+Date:   Sun Nov 10 21:26:04 2024 -0500
+
+    merge
+
+[33mcommit de21db89f555d7f9e722180a086548317385b3dc[m
+Author: Calvin Long <long.2108@buckeyemail.osu.edu>
+Date:   Sun Nov 10 21:07:13 2024 -0500
+
+    Calvin L player aware enemies (#98)
+    
+    * Creates and updates enemyCollisionManagers inside of each enemy class instead of in dungeon scene.
+    
+    * Implemented Trap
+    
+    * Fixed bug where goriya boomerang could not return to goriya if player was standing between boomerang and goriya.
+    
+    * Wallmaster movement spawning and respawning
+    
+    * Aquamentus fireballs target player (some creative liberties here)
+    
+    * Wallmaster grab in commands
+    
+    * Aquamentus fireball changes
+    
+    * Fixed goriya boomerang bugs (I hope)
+    
+    * Replaced IEnemy interface with Enemy abstract class
+    
+    * Clean up
+    
+    * Fixing
+    
+    * Changed stun to be a float stunTimer. Added an int damage parameter to TakeDamage.
+    
+    * Changed enemies to check for bound on their own rather than through collison.
+
+[33mcommit b02e82de1a51770be74dc697dfd740879596c75f[m
+Author: xrs6969 <klasmeier.1@buckeyemail.osu.edu>
+Date:   Sun Nov 10 15:05:12 2024 -0500
+
+    fix bug
+
+[33mcommit cacb9db55690a5ebfb96dabe636743e36a6dd9be[m
+Author: xrs6969 <klasmeier.1@buckeyemail.osu.edu>
+Date:   Sun Nov 10 14:16:44 2024 -0500
+
+    candle can only be used once per room
+
+[33mcommit 52384afcf5bfcd9f6084678a3eaf64bf4be219df[m
+Author: xrs6969 <klasmeier.1@buckeyemail.osu.edu>
+Date:   Sun Nov 10 13:56:42 2024 -0500
+
+    fix
+
+[33mcommit 76bb2d080ce19ddab79eea3e38bdf7afebf7cc5f[m
+Author: xrs6969 <klasmeier.1@buckeyemail.osu.edu>
+Date:   Sun Nov 10 13:54:54 2024 -0500
+
+    oldmandroom
+
+[33mcommit d4475ccffee38fb0f304d1f4f3d25ad22f340d6f[m
+Author: xrs6969 <klasmeier.1@buckeyemail.osu.edu>
+Date:   Sun Nov 10 12:30:40 2024 -0500
+
+    increased proj speed and player speed
+
+[33mcommit 3f8c437bd2a93500b287aabaad3aa11b5a7e63be[m
+Author: xrs6969 <klasmeier.1@buckeyemail.osu.edu>
+Date:   Sun Nov 10 12:25:26 2024 -0500
+
+    handle proj firing when have resources
+
+[33mcommit 83b498340a91a2b3448824f6a6e82b2397dd9239[m
+Author: xrs6969 <klasmeier.1@buckeyemail.osu.edu>
+Date:   Sun Nov 10 12:15:54 2024 -0500
+
+    Update Key Bomb, and Rupee when picked up
+
+[33mcommit 64d7e94774d6f5e043923a5fa09c1c95b7f44ceb[m
+Author: xrs6969 <klasmeier.1@buckeyemail.osu.edu>
+Date:   Sat Nov 9 22:04:08 2024 -0500
+
+    added rupee bomb and key update
+
+[33mcommit 6766bccc5aa79cf0488e364f3a7a0673da2e93e8[m
+Author: xrs6969 <klasmeier.1@buckeyemail.osu.edu>
+Date:   Sat Nov 9 21:48:37 2024 -0500
+
+    Added Weapon Support
+
+[33mcommit 75cb170a05e062a09928b779bc76c904370bc78f[m
+Author: xrs6969 <klasmeier.1@buckeyemail.osu.edu>
+Date:   Sat Nov 9 18:35:01 2024 -0500
+
+    Fixed Hearts not moving when inventory opened
+
+[33mcommit d7a8e788995219c37c51a875c4521d953f1db40d[m
+Author: Josh <slaven.18@osu.edu>
+Date:   Sat Nov 9 18:28:18 2024 -0500
+
+    JS Door Frames (#97)
+    
+    * Appropriately sized doorway triggers. Doorway frames.
+    
+    * Throw appropriate exception when passing an unexpected DoorType to CreateDoor.
+    
+    * Boundary collision corner rects for north/south doors.
+
+[33mcommit 8db6242fe74adc8c418de990e13b1a69e892f9ff[m
+Author: OmKurkure <120071215+OmKurkure@users.noreply.github.com>
+Date:   Fri Nov 8 19:39:13 2024 -0500
+
+    Transition scene (#96)
+    
+    * Break appart room loading into a memory stream part, a tokenizer (convert csv parts to named strings) part, and a parser part to build a concerte DungeonRoom from the tokens.
+    
+    * Created a RoomParser to take the token and parsing details out of the Dungeon Manager.
+    
+    * Fix merge errors
+    
+    * Support boundaryCollision and roomCollision types.
+    RoomCellParser now includes a direciton property.
+    
+    * Functional rework of DungeonScene to support Entrance, UI, Transitions, and Mario room scenes.
+    
+    * Added Room Transition(Temporary)
+    
+    * Added Door to transition
+    
+    * Fix Link image spawning on top left corner
+    
+    * Removing uneeded code in Transition scene
+    
+    * Removing some unneeded code
+    
+    * Updates
+    
+    * Fixing Merge Errors
+    
+    * Fixing currentRoom issue in DungeonScene
+    
+    * Animating Link Entrance into room
+    
+    * Fixing Link Entrance
+    
+    * Fixing some errors
+    
+    * Fixing Some Bugs
+    
+    * Fixing Errors
+    
+    * Fixing Errors
+    
+    * Fixing Player Bounds
+    
+    * Retaining EquippedProjectile after transitioning rooms
+    
+    * Draw transition scene sprites mostly at their correct layer.
+    
+    ---------
+    
+    Co-authored-by: Josh <slaven.18@osu.edu>
+
+[33mcommit 1425ab2207e92667c5b19cec216174e778b25910[m
+Author: OmKurkure <120071215+OmKurkure@users.noreply.github.com>
+Date:   Fri Nov 8 15:41:34 2024 -0500
+
+    Sound Implmentation (#93)
+    
+    * Break appart room loading into a memory stream part, a tokenizer (convert csv parts to named strings) part, and a parser part to build a concerte DungeonRoom from the tokens.
+    
+    * Created a RoomParser to take the token and parsing details out of the Dungeon Manager.
+    
+    * Fix merge errors
+    
+    * Support boundaryCollision and roomCollision types.
+    RoomCellParser now includes a direciton property.
+    
+    * Fixed BoundaryCollisionCell Parser
+    
+    * Added Sound files and some test sound effects
+    
+    * Added sound for parts of the game
+    
+    * Added sound for enemies
+    
+    * Added Item Sounds
+    
+    * Updates
+    
+    * Adding Mute functionality and refactoring how sounds are played
+    
+    * Fixing Merge Errors and Added command to mute sound
+    
+    * Updates
+    
+    ---------
+    
+    Co-authored-by: Josh <slaven.18@osu.edu>
+    Co-authored-by: xsedim <127362018+xsedim@users.noreply.github.com>

@@ -13,10 +13,13 @@ using MonoZelda.Commands.GameCommands;
 using MonoZelda.Enemies;
 using System.Collections.Generic;
 using MonoZelda.Enemies.EnemyProjectiles;
+using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Trigger;
+using MonoZelda.HUD;
+using System.Linq;
 using MonoZelda.Sound;
-using MonoZelda.Tiles.Doors;
+using MonoZelda.UI;
 
 namespace MonoZelda.Scenes;
 
@@ -28,7 +31,7 @@ public class RoomScene : Scene
     private ProjectileManager projectileManager;
     private PlayerCollisionManager playerCollision;
     private CollisionController collisionController;
-    private List<IGameUpdate> updateables;
+    private List<ITrigger> triggers;
     private ItemFactory itemFactory;
     private EnemyFactory enemyFactory;
     private List<IEnemy> enemies = new();
@@ -45,7 +48,7 @@ public class RoomScene : Scene
         this.commandManager = commandManager;
         this.collisionController = collisionController;
         this.room = room;
-        updateables = new List<IGameUpdate>();
+        triggers = new List<ITrigger>();
     }
 
     public override void LoadContent(ContentManager contentManager)
@@ -60,7 +63,6 @@ public class RoomScene : Scene
 
         // Play Dungeon Theme
         SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
-        
 
         //create player and player collision manager
         var takeDamageCommand = new PlayerTakeDamageCommand(playerSprite);
@@ -68,12 +70,10 @@ public class RoomScene : Scene
         collisionController.AddCollidable(playerHitbox);
         playerCollision = new PlayerCollisionManager(playerSprite, playerHitbox, collisionController, takeDamageCommand);
 
-        
         // create projectile object and spriteDict
         var projectileDict = new SpriteDict(SpriteType.Projectiles, 0, new Point(0, 0));
         projectileManager = new ProjectileManager(collisionController, projectileDict);
 
-        
         // Create itemFactory and HUDManager
         itemFactory = new ItemFactory(collisionController);
 
@@ -94,7 +94,6 @@ public class RoomScene : Scene
         CreateTriggers(contentManager);
         SpawnItems(contentManager);
         SpawnEnemies(contentManager);
-        LoadDoors();
     }
 
     private void CreateTriggers(ContentManager contentManager)
@@ -102,10 +101,7 @@ public class RoomScene : Scene
         foreach(var trigger in room.GetTriggers())
         {
             var t = TriggerFactory.CreateTrigger(trigger.Type, collisionController, trigger.Position);
-            if(t is IGameUpdate updateable)
-            {
-                updateables.Add(updateable);
-            }
+            triggers.Add(t);
         }
     }
 
@@ -124,11 +120,7 @@ public class RoomScene : Scene
         enemyFactory = new EnemyFactory(collisionController);
         foreach(var enemySpawn in room.GetEnemySpawns())
         {
-            var enemy = enemyFactory.CreateEnemy(enemySpawn.EnemyType,
-                new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32));
-            
-            enemies.Add(enemy);
-            enemySpawnPoints.Add(enemy, enemySpawn);
+            enemies.Add(enemyFactory.CreateEnemy(enemySpawn.EnemyType, new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32)));
         }
         foreach (var enemy in enemies)
         {
@@ -163,21 +155,17 @@ public class RoomScene : Scene
         var f = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, DungeonConstants.BackgroundPosition);
         f.SetSprite(room.RoomSprite.ToString());
 
-        
-    }
-
-    private void LoadDoors()
-    {
+        // Doors
         var doors = room.GetDoors();
         foreach (var door in doors)
         {
+            // TODO: Load kinds on concrete doors based on the door type
+            // TODO: This might be better as a factory method
+            // Speculating that the bombabale door will want to modify it's DoorSpawn to be bombed
+
             var transitionCommand = commandManager.GetCommand(CommandType.RoomTransitionCommand);
 
-            var dDoor = DoorFactory.CreateDoor(door, transitionCommand, collisionController, enemies);
-            if (dDoor is IGameUpdate updateable)
-            {
-                updateables.Add(updateable);
-            }
+            var dungeonDoor = new DungeonDoor(door, transitionCommand, collisionController);
         }
     }
 
@@ -192,27 +180,9 @@ public class RoomScene : Scene
         {
             if (!entry.Key.Alive) // remove dead enemies from lists (hopefully this is useful for re-entering rooms)
             {
-                enemies.Remove(entry.Key);
                 enemyDictionary.Remove(entry.Key);
-                if(enemySpawnPoints.Remove(entry.Key, out var spawnPoint))
-                {
-                    room.Remove(spawnPoint);
-                }
+                enemies.Remove(entry.Key);
             }
-            entry.Key.Update(gameTime);
-            if (entry.Key.GetType() == typeof(Aquamentus))
-            {
-                entry.Value.Update(entry.Key.Width, entry.Key.Height, new Point(entry.Key.Pos.X - 16, entry.Key.Pos.Y - 16));
-            }
-            else
-            {
-                entry.Value.Update(entry.Key.Width, entry.Key.Height, entry.Key.Pos);
-            }
-        }
-        
-        foreach (var updateable in updateables)
-        {
-            updateable.Update(gameTime);
         }
 
         playerCollision.Update();

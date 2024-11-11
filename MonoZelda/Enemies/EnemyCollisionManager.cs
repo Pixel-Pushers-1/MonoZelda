@@ -11,13 +11,12 @@ namespace MonoZelda.Enemies
         private int height;
         private Point pos;
         private EnemyCollidable enemyHitbox;
-        private CollisionController collisionController;
 
-        public IEnemy enemy { get; private set; }
+        public Enemy Enemy { get; private set; }
 
-        public EnemyCollisionManager(IEnemy enemy, CollisionController collisionController, int width, int height)
+        public EnemyCollisionManager(Enemy enemy, int width, int height)
         {
-            this.enemy = enemy;
+            this.Enemy = enemy;
             this.enemyHitbox = enemy.EnemyHitbox;
             this.width = width;
             this.height = height;
@@ -29,7 +28,6 @@ namespace MonoZelda.Enemies
                 width,
                 height
             );
-            this.collisionController = collisionController;
 
             enemyHitbox.Bounds = bounds;
             enemyHitbox.setCollisionManager(this);
@@ -57,7 +55,7 @@ namespace MonoZelda.Enemies
 
         public void HandleStaticCollision(Direction collisionDirection, Rectangle intersection)
         {
-            pos = enemy.Pos;
+            pos = Enemy.Pos;
             switch (collisionDirection)
             {
                 case Direction.Left:
@@ -73,8 +71,8 @@ namespace MonoZelda.Enemies
                     pos.Y += intersection.Height;
                     break;
             }
-            enemy.ChangeDirection();
-            enemy.Pos = pos;
+            Enemy.ChangeDirection();
+            Enemy.Pos = pos;
         }
     }
 }

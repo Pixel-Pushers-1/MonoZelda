@@ -18,7 +18,7 @@ public class PlayerSpriteManager
     private Direction playerDirection;
     private SpriteDict playerSpriteDict;
     private Vector2 playerPosition;
-    private float playerSpeed = 4.0f;
+    private float playerSpeed = 6.0f;
     private double timer;
 
     private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
@@ -79,6 +79,7 @@ public class PlayerSpriteManager
         // Apply movement to player and sprite
         playerPosition += playerSpeed * movement;
         playerSpriteDict.Position = playerPosition.ToPoint();
+        PlayerState.Position = playerPosition.ToPoint();
     }
         
     public void StandStill(PlayerStandingCommand standCommand)
@@ -96,6 +97,7 @@ public class PlayerSpriteManager
             timer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         }
         playerSpriteDict.Position = playerPosition.ToPoint();
+        PlayerState.Position = playerPosition.ToPoint();
     }
 
     public void PlayerDeath()

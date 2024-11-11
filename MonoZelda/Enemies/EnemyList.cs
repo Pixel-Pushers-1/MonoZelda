@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MonoZelda.Enemies
+﻿namespace MonoZelda.Enemies
 {
     public enum EnemyList
     {
@@ -18,6 +12,6 @@ namespace MonoZelda.Enemies
         Stalfos,
         Trap,
         Wallmaster,
-        Zol
+        Zol,
     }
 }

@@ -7,7 +7,7 @@ namespace MonoZelda.Link.Projectiles;
 public class BoomerangBlue : ProjectileFactory, IProjectile
 {
     private bool Finished;
-    private const float PROJECTILE_SPEED = 6f;
+    private const float PROJECTILE_SPEED = 8f;
     private const int TILES_TO_TRAVEL = 5;
     private int tilesTraveled;
     private Vector2 initialPosition;

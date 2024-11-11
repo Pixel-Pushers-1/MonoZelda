@@ -1,7 +1,5 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Enemies.EnemyProjectiles;
@@ -13,15 +11,29 @@ namespace MonoZelda.Enemies.GoriyaFolder
     {
         public Point Pos { get; set; }
         public SpriteDict BoomerangSpriteDict { get; private set; }
+        public bool Active { get; set; }
         public EnemyProjectileCollidable ProjectileHitbox { get; set; }
+        private EnemyStateMachine.Direction attackDirection;
         private float velocity = 360;
         private float attackTimer;
         private float dt;
+        private Boolean returning;
         private CollisionController collisionController;
+        private Vector2 movement;
 
-        public GoriyaBoomerang(Point pos, CollisionController collisionController)
+        public GoriyaBoomerang(Point pos, CollisionController collisionController, EnemyStateMachine.Direction direction)
         {
-            this.Pos = pos;
+            
+            movement = direction switch
+            {
+                EnemyStateMachine.Direction.Up => new Vector2(0, -1),
+                EnemyStateMachine.Direction.Down => new Vector2(0, 1),
+                EnemyStateMachine.Direction.Left => new Vector2(-1, 0),
+                EnemyStateMachine.Direction.Right => new Vector2(1, 0),
+                _ => Vector2.Zero
+            };
+            this.Pos = (pos.ToVector2() + movement*30).ToPoint();
+            returning = false;
             this.collisionController = collisionController;
             BoomerangSpriteDict = new(SpriteType.Enemies, 0, new Point(0, 0));
             BoomerangSpriteDict.SetSprite("boomerang");
@@ -32,45 +44,36 @@ namespace MonoZelda.Enemies.GoriyaFolder
         public void ViewProjectile(bool view, bool goriyaAlive)
         {
             BoomerangSpriteDict.Enabled = view;
-            if(!goriyaAlive)
+            if (!goriyaAlive)
             {
                 collisionController.RemoveCollidable(ProjectileHitbox);
                 ProjectileHitbox.UnregisterHitbox();
             }
         }
 
-        public void Follow(Point newPos)
-        {
-            Pos = newPos;
-            velocity = Math.Abs(velocity);
-            attackTimer = 0;
-        }
-
         public void ProjectileCollide()
         {
-            velocity *= -1;
+            if (!returning)
+            {
+                velocity *= -1;
+                returning = true;
+            }
         }
 
-        public void Update(GameTime gameTime, EnemyStateMachine.Direction attackDirection, Point enemyPos)
+        public void Update (EnemyStateMachine.Direction direction, Point enemyPos)
         {
-            dt = (float) MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+            attackDirection = direction;
+            dt = (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
             attackTimer += dt;
             var pos = new Vector2();
             pos = Pos.ToVector2();
             if (attackTimer < 1 || velocity < 0)
             {
-                Vector2 movement = attackDirection switch
-                {
-                    EnemyStateMachine.Direction.Up => new Vector2(0, -1),
-                    EnemyStateMachine.Direction.Down => new Vector2(0, 1),
-                    EnemyStateMachine.Direction.Left => new Vector2(-1, 0),
-                    EnemyStateMachine.Direction.Right => new Vector2(1, 0),
-                    _ => Vector2.Zero
-                };
                 pos += (velocity * movement) * dt;
             }
             else
             {
+                returning = true;
                 velocity *= -1;
                 attackTimer = 0;
             }
