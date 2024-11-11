@@ -19,6 +19,8 @@ public class ProjectileManager
     private ProjectileFactory projectileFactory;
     private SpriteDict projectileDict;
     private bool activateHitbox;
+    private bool isSwordAttack;
+    private bool isSwordBeamAttack;
 
     private readonly Dictionary<Keys, ProjectileType> keyProjectileMap = new Dictionary<Keys, ProjectileType>
     {
@@ -46,6 +48,8 @@ public class ProjectileManager
     {
         projectileFired = false;
         activateHitbox = false;
+        isSwordAttack = false;
+        isSwordBeamAttack = false;
         projectileDict.Enabled = false;
         this.collisionController = collisionController;
         this.projectileDict = projectileDict;
@@ -85,6 +89,15 @@ public class ProjectileManager
         if (!hasRequiredResources(equippedProjectile))
         {
             return;
+        }
+        
+        if (equippedProjectile == ProjectileType.WoodenSword)
+        {
+            isSwordAttack = true;
+        }
+        else if (equippedProjectile == ProjectileType.WoodenSwordBeam)
+        {
+            isSwordBeamAttack = true;
         }
 
         deductResources(equippedProjectile);
@@ -149,7 +162,21 @@ public class ProjectileManager
             // Init projectile collidable
             if (activateHitbox && projectileCollidable is null)
             {
-                projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), EquippedProjectile);
+                if (isSwordAttack)
+                {
+                    projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), ProjectileType.WoodenSword);
+                    isSwordAttack = false;
+                }
+                else if (isSwordBeamAttack)
+                {
+                    projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), ProjectileType.WoodenSwordBeam);
+                    isSwordBeamAttack = false;
+                }
+                else
+                {
+                    projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), EquippedProjectile);
+
+                }
                 projectileCollidable.setProjectileManager(this);
                 collisionController.AddCollidable(projectileCollidable);
             }
