@@ -5,6 +5,7 @@ using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Link;
 using MonoZelda.Sound;
+using MonoZelda.Items;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
@@ -32,7 +33,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Alive = true;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
         {
             this.collisionController = collisionController;
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Dodongo);
@@ -42,7 +43,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Pos = spawnPosition;
             enemyCollision = new EnemyCollisionManager(this, Width, Height);
             pixelsMoved = 0;
-            stateMachine = new EnemyStateMachine(enemyDict);
+            stateMachine = new EnemyStateMachine(enemyDict, itemFactory, hasItem);
         }
 
         public void ChangeDirection()

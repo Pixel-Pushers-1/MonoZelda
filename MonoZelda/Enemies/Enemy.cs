@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Items;
 using MonoZelda.Link;
 using MonoZelda.Sound;
 using MonoZelda.Sprites;
@@ -12,6 +13,10 @@ namespace MonoZelda.Enemies
     public abstract class Enemy
     {
         public const int TileSize = 64;
+        private const int LeftBound = TileSize * 2 + 31;
+        private const int RightBound = TileSize * 14 - 31;
+        private const int TopBound = TileSize * 5 + 31;
+        private const int BottomBound = TileSize * 12 - 31;
 
         public Point Pos { get; set; }
 
@@ -30,7 +35,7 @@ namespace MonoZelda.Enemies
         public EnemyStateMachine.Direction Direction { get; set; }
         private readonly Random rnd = new Random();
 
-        public virtual void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        public virtual void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
         {
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
@@ -38,7 +43,7 @@ namespace MonoZelda.Enemies
             Pos = spawnPosition;
             CollisionController = collisionController;
             EnemyCollision = new EnemyCollisionManager(this, Width, Height);
-            StateMachine = new EnemyStateMachine(enemyDict);
+            StateMachine = new EnemyStateMachine(enemyDict, itemFactory, hasItem);
         }
 
         public virtual void ChangeDirection()
@@ -63,31 +68,32 @@ namespace MonoZelda.Enemies
 
         public virtual void CheckBounds()
         {
-            if (Pos.X <= TileSize * 2 + 31 || Pos.X >= TileSize * 14 - 31 || Pos.Y <= TileSize * 5 + 31 || Pos.Y >= TileSize * 12 - 31)
+            if (Pos.X <= LeftBound || Pos.X >= RightBound || Pos.Y <= TopBound || Pos.Y >= BottomBound)
             {
-                if (Pos.Y <= TileSize * 5 + 31)
+                if (Pos.Y <= TopBound)
                 {
                     var pos = Pos;
                     pos.Y++;
                     Pos = pos;
-                } else if (Pos.Y >= TileSize * 12 - 31)
+                } else if (Pos.Y >= BottomBound)
                 {
                     var pos = Pos;
                     pos.Y--;
                     Pos = pos;
-                }else if (Pos.X <= TileSize * 2 + 31)
+                }else if (Pos.X <= LeftBound)
                 {
                     var pos = Pos;
                     pos.X++;
                     Pos = pos;
-                }else if (Pos.X >= TileSize * 14 - 31)
+                }else if (Pos.X >= RightBound)
                 {
                     var pos = Pos;
                     pos.X--;
                     Pos = pos;
                 }
+
+                StateMachine.TakingKnockback = false;
                 ChangeDirection();
-                PixelsMoved = 0;
             }
         }
 
