@@ -52,5 +52,9 @@ internal static class DoorFactory
         { Dungeon1Sprite.door_open_north, DoorType.NormalDoor },
         { Dungeon1Sprite.door_open_south, DoorType.NormalDoor },
         { Dungeon1Sprite.door_open_west, DoorType.NormalDoor },
+        { Dungeon1Sprite.door_closed_south, DoorType.DiamondDoor },
+        { Dungeon1Sprite.door_closed_north, DoorType.DiamondDoor },
+        { Dungeon1Sprite.door_closed_east, DoorType.DiamondDoor },
+        { Dungeon1Sprite.door_closed_west, DoorType.DiamondDoor },
     };
 }

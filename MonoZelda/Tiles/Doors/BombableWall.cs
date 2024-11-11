@@ -20,6 +20,8 @@ namespace MonoZelda.Tiles
         public BombableWall(DoorSpawn spawnPoint, ICommand roomTransitionCommand, CollisionController c)
             : base(spawnPoint, roomTransitionCommand, c)
         {
+            hitbox = new CollisionHitboxDraw(this);
+            
             isOpen = spawnPoint.Type is 
                 Dungeon1Sprite.wall_bombed_east or 
                 Dungeon1Sprite.wall_bombed_north or 
@@ -110,7 +112,7 @@ namespace MonoZelda.Tiles
         {
             if (other is PlayerProjectileCollidable collidable 
                 && collidable.projectileType == ProjectileType.Bomb 
-                && Spawn.Bounds.Intersects(collidable.Bounds))
+                && other.Bounds.Intersects(collider.Bounds))
             {
                 var newSprite = GetBombedSprite();
                 SpriteDict.SetSprite(newSprite.ToString());

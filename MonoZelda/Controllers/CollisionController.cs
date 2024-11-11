@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Commands;
 using MonoZelda.Link;
+using MonoZelda.Tiles;
 
 namespace MonoZelda.Controllers;
 
@@ -10,6 +11,8 @@ public class CollisionController : IController
 {
 
     private List<ICollidable> _gameObjects;
+    private Queue<ICollidable> _removeQueue;
+    private Queue<ICollidable> _addQueue;
     private CommandManager _commandManager;
 
     private Dictionary<(CollidableType, CollidableType), CommandType>_collisionCommandDictionary;
@@ -36,6 +39,8 @@ public class CollisionController : IController
         };
 
         _gameObjects = new List<ICollidable>();
+        _removeQueue = new Queue<ICollidable>();
+        _addQueue = new Queue<ICollidable>();
     }
 
     public void Update(GameTime gameTime)
@@ -49,6 +54,15 @@ public class CollisionController : IController
                 ICollidable collidableB = _gameObjects[j];
 
                 // Check for a collision between objA and objB
+                if(collidableA is BombableWall && collidableB is PlayerProjectileCollidable)
+                {
+                    int devbug = 1;
+                }
+                if(collidableA is BombableWall)
+                {
+                    int devbug = 1;
+                }
+                
                 if (IsColliding(collidableA, collidableB))
                 {
                     // Grab the metadata we need to know about the collision
@@ -59,16 +73,28 @@ public class CollisionController : IController
                 }
             }
         }
+        
+        // Remove any objects that need to be removed
+        while (_removeQueue.Count > 0)
+        {
+            _gameObjects.Remove(_removeQueue.Dequeue());
+        }
+        
+        // Add any objects that need to be added
+        while (_addQueue.Count > 0)
+        {
+            _gameObjects.Add(_addQueue.Dequeue());
+        }
     }
 
     public void AddCollidable(ICollidable collidable)
     {
-        _gameObjects.Add(collidable);
+        _addQueue.Enqueue(collidable);
     }
 
     public void RemoveCollidable(ICollidable collidable)
     {
-        _gameObjects.Remove(collidable);
+        _removeQueue.Enqueue(collidable);
     }
 
     public void Reset()

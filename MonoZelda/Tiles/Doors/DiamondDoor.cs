@@ -50,7 +50,7 @@ namespace MonoZelda.Tiles
                 Dungeon1Sprite.diamond_door_north => Dungeon1Sprite.door_closed_north,
                 Dungeon1Sprite.diamond_door_south => Dungeon1Sprite.door_closed_south,
                 Dungeon1Sprite.diamond_door_west => Dungeon1Sprite.door_closed_west,
-                _ => throw new InvalidEnumArgumentException()
+                _ => Spawn.Type
             };
         }
         
@@ -62,7 +62,7 @@ namespace MonoZelda.Tiles
                 Dungeon1Sprite.diamond_door_north => Dungeon1Sprite.door_open_north,
                 Dungeon1Sprite.diamond_door_south => Dungeon1Sprite.door_open_south,
                 Dungeon1Sprite.diamond_door_west => Dungeon1Sprite.door_open_west,
-                _ => throw new InvalidEnumArgumentException()
+                _ => Spawn.Type
             };
         }
 
