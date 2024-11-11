@@ -27,7 +27,7 @@ namespace MonoZelda.Tiles
             
             var bounds = new Rectangle(spawnPoint.Position + offset, spawnPoint.Bounds.Size);
             
-            collider = new StaticBoundaryCollidable(bounds);
+            collider = new StaticRoomCollidable(bounds);
             c.AddCollidable(collider);
             
             // Move the underlying trigger to match

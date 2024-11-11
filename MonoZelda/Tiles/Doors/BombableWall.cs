@@ -45,7 +45,7 @@ namespace MonoZelda.Tiles
             
             var bounds = new Rectangle(Spawn.Position + offset, Spawn.Bounds.Size);
             
-            collider = new StaticBoundaryCollidable(bounds);
+            collider = new StaticRoomCollidable(bounds);
             CollisionController.AddCollidable(collider);
         }
 
@@ -98,7 +98,7 @@ namespace MonoZelda.Tiles
 
         public Rectangle Bounds
         {
-            get => collider.Bounds;
+            get => collider?.Bounds ?? Spawn.Bounds;
             set => collider.Bounds = value;
         }
         
@@ -118,6 +118,7 @@ namespace MonoZelda.Tiles
                 SpriteDict.SetSprite(newSprite.ToString());
                 Spawn.Type = newSprite;
                 SetMaskSprite(GetBombedMaskSprite());
+                UnregisterHitbox();
                 
                 CollisionController.RemoveCollidable(collider);
                 CollisionController.RemoveCollidable(this);
