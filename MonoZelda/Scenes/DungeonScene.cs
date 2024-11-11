@@ -24,7 +24,6 @@ namespace MonoZelda.Scenes
         private bool isPaused;
 
         public string StartRoom { get; private set; }
-
         private IScene activeScene;
 
         public DungeonScene(string startRoom, GraphicsDevice graphicsDevice, CommandManager commandManager)

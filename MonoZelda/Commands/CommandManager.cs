@@ -15,6 +15,7 @@ public enum CommandType
     PlayerFireProjectileCommand,
     PlayerFireSwordBeamCommand,
     ResetCommand,
+    EndGameCommand,
     PlayerStandingCommand,
     StartGameCommand,
     LoadRoomCommand,
@@ -50,6 +51,7 @@ public class CommandManager
         AddCommand(CommandType.PlayerEquipProjectileCommand, new PlayerEquipProjectileCommand());
         AddCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
         AddCommand(CommandType.ResetCommand, new ResetCommand());
+        AddCommand(CommandType.EndGameCommand, new EndGameCommand());
         AddCommand(CommandType.StartGameCommand, new StartGameCommand());
         AddCommand(CommandType.LoadRoomCommand, new LoadRoomCommand());
         AddCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand());

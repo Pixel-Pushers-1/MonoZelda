@@ -2,25 +2,25 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
 using MonoZelda.Collision;
+using System.Collections.Generic;
+using MonoZelda.Enemies;
+using MonoZelda.Link;
 
 namespace MonoZelda.Items.ItemClasses;
 
 public abstract class Item
 {
+    protected PlayerSpriteManager playerSprite;
     protected ItemCollidable itemCollidable;
+    protected List<IEnemy> roomEnemyList;
+    protected List<Item> updateList;
     protected ItemList itemType;
-    private bool itemPickedUp;
 
-    public bool ItemPickedUp
+    public Item(List<IEnemy> roomEnemyList, PlayerSpriteManager playerSprite,List<Item> updateList)
     {
-        get
-        {
-            return itemPickedUp;
-        }
-        set
-        {
-            itemPickedUp = value;
-        }
+        this.roomEnemyList = roomEnemyList;
+        this.updateList = updateList;
+        this.playerSprite = playerSprite;
     }
 
     public virtual void ItemSpawn(SpriteDict itemDict, Point  spawnPosition, CollisionController collisionController)

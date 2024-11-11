@@ -1,9 +1,6 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Sprites;
 using MonoZelda.Items;
-using System.Collections.Generic;
-using System;
-using MonoZelda.Sound;
 using MonoZelda.Items.ItemClasses;
 using MonoZelda.Controllers;
 
@@ -13,8 +10,8 @@ public class ItemCollidable : ICollidable
 {
     public CollidableType type { get; set; }
     public Rectangle Bounds { get; set; }
-    
-    private SpriteDict CollidableDict;
+    public SpriteDict CollidableDict { get; set; }
+
     private ItemList itemType;
     private Item item;
     private readonly CollisionHitboxDraw hitbox;

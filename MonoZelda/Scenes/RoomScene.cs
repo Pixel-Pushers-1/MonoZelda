@@ -13,12 +13,9 @@ using MonoZelda.Commands.GameCommands;
 using MonoZelda.Enemies;
 using System.Collections.Generic;
 using MonoZelda.Enemies.EnemyProjectiles;
-using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Trigger;
-using MonoZelda.HUD;
 using MonoZelda.Sound;
-using MonoZelda.UI;
 
 namespace MonoZelda.Scenes;
 
@@ -72,9 +69,6 @@ public class RoomScene : Scene
         var projectileDict = new SpriteDict(SpriteType.Projectiles, 0, new Point(0, 0));
         projectileManager = new ProjectileManager(collisionController, projectileDict);
 
-        // Create itemFactory and HUDManager
-        itemFactory = new ItemFactory(collisionController);
-
         // replace required commands
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(projectileManager, playerSprite));
@@ -106,11 +100,8 @@ public class RoomScene : Scene
     private void SpawnItems(ContentManager contentManager)
     {
         // Create itemFactory object
-        itemFactory = new ItemFactory(collisionController);
-        foreach (var itemSpawn in room.GetItemSpawns())
-        {
-            itemFactory.CreateItem(itemSpawn.ItemType, itemSpawn.Position);
-        }
+        itemFactory = new ItemFactory(collisionController,room.GetItemSpawns(),enemies,playerSprite);
+        itemFactory.CreateRoomItems();
     }
 
     private void SpawnEnemies(ContentManager contentManager)
