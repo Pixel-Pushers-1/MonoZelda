@@ -92,7 +92,7 @@ namespace MonoZelda.Scenes
             inventoryScene.LoadContent(contentManager);
 
             // We begin by revealing the the first room
-            currentRoom = roomManager.LoadRoom("RoomTest");
+            currentRoom = roomManager.LoadRoom(StartRoom);
             activeScene = new EnterDungeonScene(this, currentRoom, graphicsDevice);
             activeScene.LoadContent(contentManager);
         }
@@ -113,6 +113,8 @@ namespace MonoZelda.Scenes
             //reset playerStateParams
             PlayerState.Reset();
            
+            activeScene.UnloadContent();
+            
             // Complication due to SpriteDict getting cleared, need to re-init the UI
             inventoryScene.LoadContent(contentManager, currentRoom);
         }
