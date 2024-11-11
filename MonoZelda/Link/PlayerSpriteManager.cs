@@ -79,6 +79,7 @@ public class PlayerSpriteManager
         // Apply movement to player and sprite
         playerPosition += playerSpeed * movement;
         playerSpriteDict.Position = playerPosition.ToPoint();
+        PlayerState.Position = playerPosition.ToPoint();
     }
         
     public void StandStill(PlayerStandingCommand standCommand)
@@ -96,6 +97,7 @@ public class PlayerSpriteManager
             timer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         }
         playerSpriteDict.Position = playerPosition.ToPoint();
+        PlayerState.Position = playerPosition.ToPoint();
     }
 
     public void PlayerDeath()

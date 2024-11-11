@@ -1,7 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
 using System;
@@ -9,17 +6,8 @@ using MonoZelda.Link;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
-    public class Oldman : IEnemy
+    public class Oldman : Enemy
     {
-        public Point Pos { get; set; }
-        private SpriteDict oldmanSpriteDict;
-        public EnemyCollidable EnemyHitbox { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public bool Alive { get; set; }
-
-        private int spawnTimer;
-
         public Oldman()
         {
             Width = 64;
@@ -28,7 +16,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
         {
             //adjusted position to spawn in middle of screen since we cant with current implementation
             Point adjustedPosition = new Point(spawnPosition.X - 32, spawnPosition.Y + 64);
@@ -51,9 +39,17 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public void Update(GameTime gameTime)
         {
+            if (spawnTimer >= 64)
+            {
+                oldmanSpriteDict.SetSprite("oldman");
+            }
+            else
+            {
+                spawnTimer++;
+            }
         }
 
-        public void TakeDamage(Boolean stun, Direction collisionDirection)
+        public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
         {
             // oldman is immortal
         }
