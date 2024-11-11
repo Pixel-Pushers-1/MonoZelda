@@ -13,7 +13,7 @@ public static class PlayerState
     public static void Initialize()
     {
         Direction = Direction.Down;
-        Position = new Point(500, 700);
+        Position = new Point(515, 725);
         IsCandleUsed = false;
         IsDead = false;
         IsKnockedBack = false;
