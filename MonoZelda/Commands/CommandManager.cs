@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Commands.CollisionCommands;
+using System.Net.Http;
 
 namespace MonoZelda.Commands;
 
@@ -32,6 +33,7 @@ public enum CommandType
     ToggleGizmosCommand,
     ToggleInventoryCommand,
     PlayerProjectileDoorCollisionCommand,
+    PlayerDeathCommand,
     None
 }
 
@@ -64,6 +66,7 @@ public class CommandManager
         AddCommand(CommandType.PlayerProjectileStaticBoundaryCollisionCommand, new PlayerProjectileStaticBoundaryCollisionCommand());
         AddCommand(CommandType.ToggleGizmosCommand, new ToggleGizmosCommand());
         AddCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand());
+        AddCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand());
     }
 
     public void Execute(CommandType commandType, params object[] metadata)
