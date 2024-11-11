@@ -25,7 +25,8 @@ public class EnemyPlayerProjectileCollisionCommand : ICommand
 
         PlayerProjectileCollidable projectileCollidable;
         EnemyCollidable enemyCollidable;
-        Boolean stun = false;
+        float stunTime = 0;
+        int damage = 1;
 
         if (collidableA.type == CollidableType.PlayerProjectile)
         {
@@ -46,11 +47,18 @@ public class EnemyPlayerProjectileCollisionCommand : ICommand
         if (projectileCollidable.projectileType == ProjectileType.Boomerang ||
             projectileCollidable.projectileType == ProjectileType.BoomerangBlue)
         {
-            stun = true;
+            stunTime = 2;
+            damage = 0;
         }
+
+        if (projectileCollidable.projectileType == ProjectileType.Bomb)
+        {
+            damage = 2;
+        }
+
         collisionController.RemoveCollidable(projectileCollidable);
-        IEnemy enemy = enemyCollidable.getEnemy();
-        enemy.TakeDamage(stun, collisionDirection);
+        Enemy enemy = enemyCollidable.getEnemy();
+        enemy.TakeDamage(stunTime, collisionDirection, damage);
     }
 
     public void UnExecute()

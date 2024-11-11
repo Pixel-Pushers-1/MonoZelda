@@ -17,6 +17,7 @@ using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Trigger;
 using MonoZelda.HUD;
+using System.Linq;
 using MonoZelda.Sound;
 using MonoZelda.UI;
 
@@ -33,8 +34,8 @@ public class RoomScene : Scene
     private List<ITrigger> triggers;
     private ItemFactory itemFactory;
     private EnemyFactory enemyFactory;
-    private List<IEnemy> enemies = new();
-    private Dictionary<IEnemy, EnemyCollisionManager> enemyDictionary = new();
+    private List<Enemy> enemies = new();
+    private Dictionary<Enemy, EnemyCollisionManager> enemyDictionary = new();
     private List<EnemyCollisionManager> enemyCollisions = new();
     private List<EnemyProjectileCollisionManager> enemyProjectileCollisions = new();
     private IDungeonRoom room;
@@ -51,11 +52,11 @@ public class RoomScene : Scene
 
     public override void LoadContent(ContentManager contentManager)
     {
+        playerSprite = new PlayerSpriteManager();
         // Need to wait for LoadContent because MonoZeldaGame is going to clear everything before calling this.
         LoadRoom(contentManager);
 
         // create player sprite classes
-        playerSprite = new PlayerSpriteManager();
         var playerSpriteDict = new SpriteDict(SpriteType.Player, SpriteLayer.Player, PlayerState.Position);
         playerSprite.SetPlayerSpriteDict(playerSpriteDict);
 
@@ -116,13 +117,9 @@ public class RoomScene : Scene
     private void SpawnEnemies(ContentManager contentManager)
     {
         enemyFactory = new EnemyFactory(collisionController);
-        foreach(var enemySpawn in room.GetEnemySpawns())
+        foreach (var enemySpawn in room.GetEnemySpawns())
         {
             enemies.Add(enemyFactory.CreateEnemy(enemySpawn.EnemyType, new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32)));
-        }
-        foreach (var enemy in enemies)
-        {
-            enemyDictionary.Add(enemy, new EnemyCollisionManager(enemy, collisionController, enemy.Width, enemy.Height));
         }
     }
 
@@ -174,22 +171,13 @@ public class RoomScene : Scene
             projectileManager.UpdatedProjectileState();
         }
 
-        foreach(KeyValuePair<IEnemy, EnemyCollisionManager> entry in enemyDictionary)
+        foreach (var enemy in enemies.ToList())
         {
-            if (!entry.Key.Alive) // remove dead enemies from lists (hopefully this is useful for re-entering rooms)
+            if (!enemy.Alive)
             {
-                enemies.Remove(entry.Key);
-                enemyDictionary.Remove(entry.Key);
+                enemies.Remove(enemy);
             }
-            entry.Key.Update(gameTime);
-            if (entry.Key.GetType() == typeof(Aquamentus))
-            {
-                entry.Value.Update(entry.Key.Width, entry.Key.Height, new Point(entry.Key.Pos.X - 16, entry.Key.Pos.Y - 16));
-            }
-            else
-            {
-                entry.Value.Update(entry.Key.Width, entry.Key.Height, entry.Key.Pos);
-            }
+            enemy.Update();
         }
 
         playerCollision.Update();

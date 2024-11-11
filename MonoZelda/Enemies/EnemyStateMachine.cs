@@ -1,6 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using MonoZelda.Sprites;
-using MonoZelda.Link;
 
 namespace MonoZelda.Enemies
 {
@@ -65,16 +65,23 @@ namespace MonoZelda.Enemies
             }
         }
 
-        public void Die()
+        public void Die(Boolean respawning)
         {
-            Dead = true;
-            animationTimer = 0;
-            enemySpriteDict.SetSprite("death");
+            if (respawning)
+            {
+                enemySpriteDict.Enabled = false;
+            }
+            else
+            {
+                Dead = true;
+                animationTimer = 0;
+                enemySpriteDict.SetSprite("death");
+            }
         }
 
-        public Point Update(IEnemy enemy, Point position, GameTime gameTime)
+        public Point Update(Enemy enemy, Point position)
         {
-            dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            dt = (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
             Vector2 enemyPosition = position.ToVector2();
             if (knockback)
             {
@@ -121,6 +128,10 @@ namespace MonoZelda.Enemies
                     _ => Vector2.Zero
                 };
                 enemyPosition += (velocity * movement)*dt;
+                if (direction != Direction.None)
+                {
+                    enemySpriteDict.Enabled = true;
+                }
                 enemySpriteDict.SetSprite(currentSprite);
             }
 

@@ -1,16 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Sprites;
 using System;
-using Microsoft.Xna.Framework.Content;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
-using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Link;
 using MonoZelda.Sound;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
-    public class Dodongo : IEnemy
+    public class Dodongo : Enemy
     {
         public Point Pos { get; set; }
         private readonly Random rnd = new();
@@ -21,8 +19,9 @@ namespace MonoZelda.Enemies.EnemyClasses
         private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
         private EnemyStateMachine stateMachine;
         private CollisionController collisionController;
-        private int pixelsMoved;
+        private EnemyCollisionManager enemyCollision;
 
+        private int pixelsMoved;
         private int health = 6;
         private int tileSize = 64;
 
@@ -41,6 +40,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             EnemyHitbox.setSpriteDict(enemyDict);
             enemyDict.Position = spawnPosition;
             Pos = spawnPosition;
+            enemyCollision = new EnemyCollisionManager(this, Width, Height);
             pixelsMoved = 0;
             stateMachine = new EnemyStateMachine(enemyDict);
         }
@@ -73,7 +73,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             stateMachine.ChangeDirection(direction);
         }
 
-        public void Update(GameTime gameTime)
+        public void Update()
         {
             if (pixelsMoved >= tileSize)
             {
@@ -83,8 +83,9 @@ namespace MonoZelda.Enemies.EnemyClasses
             else
             {
                 pixelsMoved++;
-                Pos = stateMachine.Update(this, Pos, gameTime);
+                Pos = stateMachine.Update(this, Pos);
             }
+            enemyCollision.Update(Width, Height, Pos);
         }
 
         public void TakeDamage(Boolean stun, Direction collisionDirection)
@@ -95,7 +96,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 if (health == 0)
                 {
                     SoundManager.PlaySound("LOZ_Enemy_Hit", false);
-                    stateMachine.Die();
+                    stateMachine.Die(false);
                     EnemyHitbox.UnregisterHitbox();
                     collisionController.RemoveCollidable(EnemyHitbox);
                 }
