@@ -12,9 +12,11 @@ using MonoZelda.Items;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Enemies;
 using System.Collections.Generic;
+using System.Linq;
 using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Trigger;
 using MonoZelda.Sound;
+using MonoZelda.Tiles.Doors;
 
 namespace MonoZelda.Scenes;
 
@@ -31,9 +33,6 @@ public class RoomScene : Scene
     private EnemyFactory enemyFactory;
     private List<Enemy> enemies = new();
     private Dictionary<Enemy, EnemySpawn> enemySpawnPoints = new();
-    private Dictionary<Enemy, EnemyCollisionManager> enemyDictionary = new();
-    private List<EnemyCollisionManager> enemyCollisions = new();
-    private List<EnemyProjectileCollisionManager> enemyProjectileCollisions = new();
     private IDungeonRoom room;
     private string roomName;
 
@@ -120,10 +119,6 @@ public class RoomScene : Scene
             enemies.Add(enemy);
             enemySpawnPoints.Add(enemy,enemySpawn);
         }
-        foreach (var enemy in enemies)
-        {
-            enemyDictionary.Add(enemy, new EnemyCollisionManager(enemy, enemy.Width, enemy.Height));
-        }
     }
 
     private void CreateStaticColliders()
@@ -157,13 +152,9 @@ public class RoomScene : Scene
         var doors = room.GetDoors();
         foreach (var door in doors)
         {
-            // TODO: Load kinds on concrete doors based on the door type
-            // TODO: This might be better as a factory method
-            // Speculating that the bombabale door will want to modify it's DoorSpawn to be bombed
-
             var transitionCommand = commandManager.GetCommand(CommandType.RoomTransitionCommand);
 
-            var dungeonDoor = new DungeonDoor(door, transitionCommand, collisionController);
+            DoorFactory.CreateDoor(door, transitionCommand, collisionController, enemies);
         }
     }
 
@@ -174,14 +165,14 @@ public class RoomScene : Scene
             projectileManager.UpdatedProjectileState();
         }
 
-        foreach(KeyValuePair<Enemy, EnemyCollisionManager> entry in enemyDictionary)
+        foreach (var enemy in enemies.ToList())
         {
-            if (!entry.Key.Alive) // remove dead enemies from lists (hopefully this is useful for re-entering rooms)
+            if (!enemy.Alive)
             {
-                room.Remove(enemySpawnPoints[entry.Key]);
-                enemyDictionary.Remove(entry.Key);
-                enemies.Remove(entry.Key);
+                room.Remove(enemySpawnPoints[enemy]);
+                enemies.Remove(enemy);
             }
+            enemy.Update();
         }
 
         playerCollision.Update();
