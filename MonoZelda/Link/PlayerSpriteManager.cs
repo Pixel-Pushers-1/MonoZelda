@@ -184,8 +184,15 @@ public class PlayerSpriteManager
 
     public void PickUpItem(PickUpType pickUpSprite)
     {
-        timer = PICKUP_TIME;
-        playerSpriteDict.SetSprite(pickUpSprite.ToString());
+        immobilityTimer = PICKUP_TIME;
+        if (immobilityTimer > 0)
+        {
+            playerSpriteDict.SetSprite(pickUpSprite.ToString());
+        }
+        else
+        {
+            immobilityTimer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+        }
     }
 
 }
