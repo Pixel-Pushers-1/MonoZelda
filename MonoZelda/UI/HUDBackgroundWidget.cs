@@ -1,21 +1,30 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Link;
 using MonoZelda.Sprites;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace MonoZelda.UI
 {
     internal class HUDBackgroundWidget : ScreenWidget
     {
-        private SpriteDict spriteDict;
+        private SpriteDict MiniMenu;
+        private SpriteDict Map;
+        private SpriteDict Inventory;
+
+        private Point mapOffset = new Point(0,-320);
+        private Point inventoryOffset = new Point(0,-672);
 
         public HUDBackgroundWidget(Screen screen, Point position, ContentManager cm) : base(screen, position)
         {
-            spriteDict = new(SpriteType.HUD, SpriteLayer.HUD - 1, position);
-            spriteDict.SetSprite("hud_background");
+            // Create Mini-Menu
+            MiniMenu = new(SpriteType.HUD, SpriteLayer.HUD - 1, position);
+            MiniMenu.SetSprite("hud_background");
+
+            // Create Map and Inventory Menu
+            Map = new(SpriteType.HUD, SpriteLayer.HUD - 1, position + mapOffset);
+            Map.SetSprite("map_background");
+            Inventory = new(SpriteType.HUD, SpriteLayer.HUD - 1, position + inventoryOffset);
+            Inventory.SetSprite("inventory_background");
         }
 
         public override void Draw(SpriteBatch sb)
@@ -28,7 +37,9 @@ namespace MonoZelda.UI
 
         public override void Update()
         {
-            spriteDict.Position = WidgetLocation;
+            MiniMenu.Position = WidgetLocation;
+            Map.Position = WidgetLocation + mapOffset;
+            Inventory.Position = WidgetLocation + inventoryOffset;
         }
     }
 }
