@@ -28,9 +28,8 @@ public static class PlayerState
         Keys = INITIAL_KEYS;
         EquippedProjectile = ProjectileType.None;
 
-
-
     }
+
     public static void ResetCandle()
     {
         _health = INITIAL_HP;
@@ -44,11 +43,6 @@ public static class PlayerState
         Bombs = INITIAL_BOMBS;
         Keys = INITIAL_KEYS;
 
-        IsCandleUsed = false;
-    }
-
-    public static void ChangeRoom()
-    {
         IsCandleUsed = false;
     }
 
