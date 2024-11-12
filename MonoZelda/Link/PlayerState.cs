@@ -34,6 +34,10 @@ public static class PlayerState
     public static void Reset()
     {
         _health = INITIAL_HP;
+        Rupees = INITIAL_RUPEES;
+        Bombs = INITIAL_BOMBS;
+        Keys = INITIAL_KEYS;
+
         IsCandleUsed = false;
     }
 
@@ -67,10 +71,10 @@ public static class PlayerState
         Debug.WriteLine($"Player Health: {Health}");
     }
 
-    public static int Rupees { get; set; }
-    public static int Bombs { get; set; }
-    public static int Keys { get; set; }
-    public static bool IsDead { get; set; }
+    public static int Rupees { get; set; } = INITIAL_RUPEES;
+    public static int Bombs { get; set; } = INITIAL_BOMBS;
+    public static int Keys { get; set; } = INITIAL_KEYS;
+    public static bool IsDead { get; private set; }
     public static bool IsKnockedBack { get; set; }
     public static bool IsCandleUsed { get; set; }   
     public static int MaxHealth { get; set; }
