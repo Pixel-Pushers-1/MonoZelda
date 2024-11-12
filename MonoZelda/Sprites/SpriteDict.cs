@@ -90,7 +90,9 @@ public class SpriteDict : IDrawable
         //draw current sprite
         dict[currentSprite].Draw(spriteBatch, texture, Position, GetColor());
 
-        flashingTimer -= (float) MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+        if (flashingTimer > 0f) {
+            flashingTimer -= (float) MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+        }
     }
 
     private Color GetColor() {
