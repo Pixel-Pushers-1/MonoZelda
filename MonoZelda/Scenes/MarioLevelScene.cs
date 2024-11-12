@@ -33,8 +33,10 @@ namespace MonoZelda.Scenes
             
             LoadPlayer();
             LoadCommands();
-            LoadExit();
             SpawnEnemies();
+            SpawnItems();
+            CreateStaticColliders();
+            LoadExit();
         }
 
         private void LoadExit()

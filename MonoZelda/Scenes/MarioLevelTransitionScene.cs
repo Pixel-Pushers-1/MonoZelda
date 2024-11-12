@@ -15,8 +15,8 @@ namespace MonoZelda.Scenes
         private readonly IDungeonRoom room;
         private readonly ICommand loadCommand;
 
-        private SpriteDict leftCurtain;
-        private SpriteDict rightCurtain;
+        private BlankSprite leftCurtain;
+        private BlankSprite rightCurtain;
 
         private int delay;
 
@@ -44,11 +44,9 @@ namespace MonoZelda.Scenes
 
             // the room texutres are 192 * 4 = 768 pixels wide
             var leftPosition = center - new Point(192 * 4, 0);
-            leftCurtain = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD, leftPosition);
-            leftCurtain.SetSprite(nameof(Dungeon1Sprite.room_41));
-
-            rightCurtain = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD, center);
-            rightCurtain.SetSprite(nameof(Dungeon1Sprite.room_41));
+            var curtainSize = new Point(192 * 4, 176 * 4);
+            leftCurtain = new BlankSprite(SpriteLayer.HUD, leftPosition, curtainSize, Color.Black);
+            rightCurtain = new BlankSprite(SpriteLayer.HUD, center, curtainSize, Color.Black);
         }
 
         private void EnterMarioScene()

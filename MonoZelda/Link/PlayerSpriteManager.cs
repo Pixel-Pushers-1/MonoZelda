@@ -32,7 +32,6 @@ public class PlayerSpriteManager
     private float playerSpeed = 6.0f;
     private double immobilityTimer;
     private const float PICKUP_TIME = 3f;
-    private double timer;
 
     private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
     {
@@ -184,8 +183,15 @@ public class PlayerSpriteManager
 
     public void PickUpItem(PickUpType pickUpSprite)
     {
-        timer = PICKUP_TIME;
-        playerSpriteDict.SetSprite(pickUpSprite.ToString());
+        immobilityTimer = PICKUP_TIME;
+        if(immobilityTimer > 0)
+        {
+            playerSpriteDict.SetSprite(pickUpSprite.ToString());
+        }
+        else
+        {
+            immobilityTimer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+        }
     }
 
 }
