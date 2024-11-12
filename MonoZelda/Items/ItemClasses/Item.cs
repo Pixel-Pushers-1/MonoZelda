@@ -10,17 +10,17 @@ namespace MonoZelda.Items.ItemClasses;
 
 public abstract class Item
 {
-    protected PlayerSpriteManager playerSprite;
+    protected PlayerCollisionManager playerCollision;
     protected ItemCollidable itemCollidable;
     protected List<IEnemy> roomEnemyList;
     protected List<Item> updateList;
     protected ItemList itemType;
 
-    public Item(List<IEnemy> roomEnemyList, PlayerSpriteManager playerSprite,List<Item> updateList)
+    public Item(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision,List<Item> updateList)
     {
         this.roomEnemyList = roomEnemyList;
         this.updateList = updateList;
-        this.playerSprite = playerSprite;
+        this.playerCollision = playerCollision;
     }
 
     public virtual void ItemSpawn(SpriteDict itemDict, Point  spawnPosition, CollisionController collisionController)
@@ -37,6 +37,11 @@ public abstract class Item
         itemCollidableDict.Unregister();
         itemCollidable.UnregisterHitbox();
         collisionController.RemoveCollidable(itemCollidable);
+    }
+
+    public virtual void Update()
+    {
+        // Empty
     }
 
 }

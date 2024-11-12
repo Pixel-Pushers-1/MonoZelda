@@ -11,6 +11,13 @@ public enum Direction {
     Down = -5,
     Left = 10,
     Right = -10,
+    None,
+}
+
+public enum PickUpType
+{
+    pickupitem_onehand,
+    pickupitem_twohands,
 }
 
 public class PlayerSpriteManager
@@ -19,6 +26,7 @@ public class PlayerSpriteManager
     private SpriteDict playerSpriteDict;
     private Vector2 playerPosition;
     private float playerSpeed = 4.0f;
+    private const float PICKUP_TIME = 3f;
     private double timer;
 
     private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
@@ -156,6 +164,12 @@ public class PlayerSpriteManager
             }
         }
        
+    }
+
+    public void PickUpItem(PickUpType pickUpSprite)
+    {
+        timer = PICKUP_TIME;
+        playerSpriteDict.SetSprite(pickUpSprite.ToString());
     }
 
 }

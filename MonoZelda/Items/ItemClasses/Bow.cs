@@ -9,7 +9,11 @@ using System.Collections.Generic;
 namespace MonoZelda.Items.ItemClasses;
 public class Bow : Item
 {
-    public Bow(List<IEnemy> roomEnemyList, PlayerSpriteManager playerSprite, List<Item> updateList) : base(roomEnemyList, playerSprite, updateList)
+    private const float PICKUP_TIME = 3f;
+    private SpriteDict bowDict;
+    private float timer;
+
+    public Bow(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
         itemType = ItemList.Bow;
     }
@@ -18,11 +22,28 @@ public class Bow : Item
     {
         base.ItemSpawn(bowDict, spawnPosition, collisionController);
         bowDict.SetSprite("bow");
+        this.bowDict = bowDict;
     }
 
     public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
     {
-        SoundManager.PlaySound("LOZ_Get_Item", false);
-        base.HandleCollision(itemCollidableDict, collisionController);
+        updateList.Add(this);
+        timer = PICKUP_TIME;
+        playerCollision.HandleBowCollision(bowDict);
+        SoundManager.PlaySound("LOZ_New_Weapon_Recieved", false);
+        SoundManager.Pause("LOZ_Dungeon_Theme");
+        itemCollidable.UnregisterHitbox();
+        collisionController.RemoveCollidable(itemCollidable);
+    }
+
+    public override void Update()
+    {
+        timer -= (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+        if(timer <= 0)
+        {
+            bowDict.Unregister();
+            updateList.Remove(this);
+            SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
+        }
     }
 }

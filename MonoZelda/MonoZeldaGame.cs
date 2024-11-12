@@ -46,7 +46,6 @@ public class MonoZeldaGame : Game
         commandManager.ReplaceCommand(CommandType.ExitCommand, new ExitCommand(this));
         commandManager.ReplaceCommand(CommandType.StartGameCommand, new StartGameCommand(this));
         commandManager.ReplaceCommand(CommandType.ResetCommand, new ResetCommand(this));
-        commandManager.ReplaceCommand(CommandType.EndGameCommand, new EndGameCommand(this));
 
         // create controller objects
         keyboardController = new KeyboardController(commandManager);
@@ -132,10 +131,5 @@ public class MonoZeldaGame : Game
     {
         SoundManager.ClearSoundDictionary();
         LoadScene(new MainMenuScene(GraphicsDevice));
-    }
-
-    public void EndGame()
-    {
-        LoadScene(new EndGameScene(GraphicsDevice));
     }
 }

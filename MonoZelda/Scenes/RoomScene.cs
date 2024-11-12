@@ -56,14 +56,18 @@ public class RoomScene : Scene
         var playerSpriteDict = new SpriteDict(SpriteType.Player, SpriteLayer.Player, PlayerState.Position);
         playerSprite.SetPlayerSpriteDict(playerSpriteDict);
 
-        // Play Dungeon Theme
-        SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
-
         //create player and player collision manager
         var takeDamageCommand = new PlayerTakeDamageCommand(playerSprite);
         PlayerCollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50));
         collisionController.AddCollidable(playerHitbox);
         playerCollision = new PlayerCollisionManager(playerSprite, playerHitbox, collisionController, takeDamageCommand);
+
+        // create itemFactory and spawn Items
+        itemFactory = new ItemFactory(collisionController, room.GetItemSpawns(), enemies, playerCollision);
+        SpawnItems(contentManager);
+
+        // Play Dungeon Theme
+        SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
 
         // create projectile object and spriteDict
         var projectileDict = new SpriteDict(SpriteType.Projectiles, 0, new Point(0, 0));
@@ -84,7 +88,6 @@ public class RoomScene : Scene
         LoadRoomTextures(contentManager);
         CreateStaticColliders();
         CreateTriggers(contentManager);
-        SpawnItems(contentManager);
         SpawnEnemies(contentManager);
     }
 
@@ -99,8 +102,6 @@ public class RoomScene : Scene
 
     private void SpawnItems(ContentManager contentManager)
     {
-        // Create itemFactory object
-        itemFactory = new ItemFactory(collisionController,room.GetItemSpawns(),enemies,playerSprite);
         itemFactory.CreateRoomItems();
     }
 
@@ -183,6 +184,7 @@ public class RoomScene : Scene
             }
         }
 
+        itemFactory.Update();
         playerCollision.Update();
     }
 }

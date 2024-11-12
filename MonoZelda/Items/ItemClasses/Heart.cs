@@ -10,7 +10,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Heart : Item
 {
-    public Heart(List<IEnemy> roomEnemyList, PlayerSpriteManager playerSprite, List<Item> updateList) : base(roomEnemyList, playerSprite, updateList)
+    public Heart(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
         itemType = ItemList.Heart;
     }
@@ -23,6 +23,7 @@ public class Heart : Item
 
     public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
     {
+        PlayerState.Health += 2;
         SoundManager.PlaySound("LOZ_Get_Heart", false);
         base.HandleCollision(itemCollidableDict, collisionController);
     }

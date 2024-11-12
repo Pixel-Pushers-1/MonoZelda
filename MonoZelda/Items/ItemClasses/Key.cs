@@ -12,7 +12,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Key : Item
 {
-    public Key(List<IEnemy> roomEnemyList, PlayerSpriteManager playerSprite, List<Item> updateList) : base(roomEnemyList, playerSprite, updateList)
+    public Key(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
         itemType = ItemList.Key;
     }

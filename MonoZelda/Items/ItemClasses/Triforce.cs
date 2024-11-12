@@ -10,7 +10,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Triforce : Item
 {
-    public Triforce(List<IEnemy> roomEnemyList, PlayerSpriteManager playerSprite, List<Item> updateList) : base(roomEnemyList, playerSprite, updateList)
+    public Triforce(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
         itemType = ItemList.Triforce;
     }

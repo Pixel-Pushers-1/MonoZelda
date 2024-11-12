@@ -40,7 +40,7 @@ internal static class TextureData
         EnemiesTexture = contentManager.Load<Texture2D>(EnemiesFile);
         TitleTexture = contentManager.Load<Texture2D>(TitleFile);
         BlankTexture = new Texture2D(graphicsDevice, 1, 1);
-        BlankTexture.SetData(new Color[] { Color.White });
+        BlankTexture.SetData(new Color[] { Color.Black });
         HUDTexture = contentManager.Load<Texture2D>(HUDFile);
     }
 

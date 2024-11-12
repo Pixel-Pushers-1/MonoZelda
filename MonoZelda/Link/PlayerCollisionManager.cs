@@ -5,6 +5,7 @@ using MonoZelda.Commands.GameCommands;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Sound;
+using MonoZelda.Sprites;
 
 namespace MonoZelda.Link;
 
@@ -67,6 +68,13 @@ public class PlayerCollisionManager
             height
         );
         playerHitbox.Bounds = newBounds;
+    }
+
+    public void HandleBowCollision(SpriteDict bowDict)
+    {
+        bowDict.Position = player.GetPlayerPosition().ToPoint() + new Point(-32, -96);
+        player.PickUpItem(PickUpType.pickupitem_onehand);
+        invulnerabilityTimer = INVULNERABILITY_TIME * 3f;
     }
 
     public void HandleEnemyProjectileCollision(Direction collisionDirection)

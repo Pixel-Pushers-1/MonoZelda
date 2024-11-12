@@ -11,13 +11,14 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Boomerang : Item
 {
-    public Boomerang(List<IEnemy> roomEnemyList, PlayerSpriteManager playerSprite, List<Item> updateList) : base(roomEnemyList, playerSprite, updateList)
+    public Boomerang(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
         itemType = ItemList.Boomerang;
     }
 
     public override void ItemSpawn(SpriteDict boomerangDict, Point spawnPosition, CollisionController collisionController)
     {
+        PlayerState.HasBoomerang = true;    
         base.ItemSpawn(boomerangDict, spawnPosition, collisionController);
         boomerangDict.SetSprite("boomerang");
     }
