@@ -98,6 +98,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 if (health > 0)
                 {
                     SoundManager.PlaySound("LOZ_Enemy_Hit", false);
+                    StateMachine.DamageFlash();
                     stateMachine.Knockback(true, collisionDirection);
                 }
                 else
