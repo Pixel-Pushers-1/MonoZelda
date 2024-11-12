@@ -39,6 +39,16 @@ public static class PlayerState
 
     public static void ChangeRoom()
     {
+        _health = INITIAL_HP;
+        Rupees = INITIAL_RUPEES;
+        Bombs = INITIAL_BOMBS;
+        Keys = INITIAL_KEYS;
+
+        IsCandleUsed = false;
+    }
+
+    public static void ChangeRoom()
+    {
         IsCandleUsed = false;
     }
 

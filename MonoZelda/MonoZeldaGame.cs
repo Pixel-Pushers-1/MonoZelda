@@ -139,6 +139,7 @@ public class MonoZeldaGame : Game
     public void ResetGame()
     {
         SoundManager.ClearSoundDictionary();
+        PlayerState.Reset();
         LoadScene(new MainMenuScene(GraphicsDevice));
     }
 }
