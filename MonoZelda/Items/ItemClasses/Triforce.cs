@@ -34,9 +34,9 @@ public class Triforce : Item
     private void InitializeSpriteDicts()
     {
         // make curtains
-        leftCurtain = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD, DungeonConstants.BackgroundPosition + DungeonConstants.adjacentTransitionRoomSpawnPoints[Direction.Right]);
+        leftCurtain = new SpriteDict(SpriteType.Blocks, SpriteLayer.DoorLayer, DungeonConstants.BackgroundPosition + DungeonConstants.adjacentTransitionRoomSpawnPoints[Direction.Right]);
         leftCurtain.SetSprite("room_41");
-        rightCurtain = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD, DungeonConstants.BackgroundPosition + DungeonConstants.adjacentTransitionRoomSpawnPoints[Direction.Left]);
+        rightCurtain = new SpriteDict(SpriteType.Blocks, SpriteLayer.DoorLayer, DungeonConstants.BackgroundPosition + DungeonConstants.adjacentTransitionRoomSpawnPoints[Direction.Left]);
         rightCurtain.SetSprite("room_41");
 
         // create fake Link and Triforce
