@@ -14,7 +14,7 @@ Monogame implementation of OG Zelda by team Pixel Pushers
 - Use Item -> F
 - Player Attack -> Z or N
 - Mute Game Sound -> M
-- Change Room -> Left Click on Door
+- Pause/Inventory -> I or Esc
 
 # Special Notes
 - For pushable blocks, keep pushing into the block for a few seconds for functionality 
