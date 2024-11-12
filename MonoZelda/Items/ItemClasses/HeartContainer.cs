@@ -23,6 +23,7 @@ public class HeartContainer : Item
 
     public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
     {
+        PlayerState.MaxHealth += 2;
         PlayerState.Health += 2;
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(itemCollidableDict, collisionController);

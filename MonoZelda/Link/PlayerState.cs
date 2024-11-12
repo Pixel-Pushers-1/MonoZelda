@@ -62,7 +62,7 @@ public static class PlayerState
     public static bool IsDead { get; set; }
     public static bool IsKnockedBack { get; set; }
     public static bool IsCandleUsed { get; set; }   
-    public static int MaxHealth { get; set; } = INITIAL_HP;
+    public static int MaxHealth { get; set; }
     public static Point Position { get; set; }
     public static Direction Direction { get; set; }
     public static ProjectileType EquippedProjectile { get; set; }

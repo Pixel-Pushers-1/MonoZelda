@@ -51,6 +51,7 @@ public class Triforce : Item
         timer = END_SCENE_TIMER;
         InitializeSpriteDicts();
         updateList.Add(this);
+        triforceDict.Unregister();
         SoundManager.ClearSoundDictionary();
         SoundManager.PlaySound("LOZ_Victory", false);
         playerCollision.HandleTriforceCollision();
