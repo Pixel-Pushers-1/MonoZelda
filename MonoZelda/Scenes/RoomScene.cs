@@ -116,7 +116,7 @@ public class RoomScene : Scene
         {
             var t = TriggerFactory.CreateTrigger(trigger, collisionController, transitionCommand);
             triggers.Add(t);
-            
+
             if (t is IGameUpdate updateable)
             {
                 updateables.Add(updateable);
@@ -215,6 +215,11 @@ public class RoomScene : Scene
                 }
             }
             enemy.Update();
+        }
+
+        foreach (var updateable in updateables)
+        {
+            updateable.Update(gameTime);
         }
 
         itemFactory.Update();
