@@ -10,7 +10,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Rupee : Item
 {
-    public Rupee(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public Rupee(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
         itemType = ItemList.Rupee;
     }
@@ -23,7 +23,7 @@ public class Rupee : Item
 
     public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
     {
-        PlayerState.Rupees += 1;
+        PlayerState.AddRupees(1);
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(itemCollidableDict, collisionController);
     }

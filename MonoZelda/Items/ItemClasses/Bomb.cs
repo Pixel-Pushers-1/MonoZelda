@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace MonoZelda.Items.ItemClasses;
 public class Bomb : Item
 {
-    public Bomb(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public Bomb(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
         itemType = ItemList.Bomb;
     }
@@ -22,7 +22,7 @@ public class Bomb : Item
 
     public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
     {
-        PlayerState.Bombs += 1;
+        PlayerState.AddBombs(1);
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(itemCollidableDict, collisionController);
     }

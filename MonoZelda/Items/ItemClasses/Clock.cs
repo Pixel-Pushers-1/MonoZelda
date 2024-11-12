@@ -10,7 +10,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Clock : Item
 {
-    public Clock(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public Clock(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
         itemType = ItemList.Clock;
     }
@@ -25,7 +25,7 @@ public class Clock : Item
     {
         foreach(var enemy in roomEnemyList)
         {
-            enemy.TakeDamage(true, Direction.None);
+            enemy.TakeDamage(3f, Direction.None, 0);
         }
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(itemCollidableDict, collisionController);

@@ -10,7 +10,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class BluePotion : Item
 {
-    public BluePotion(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public BluePotion(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
         itemType = ItemList.BluePotion;
     }

@@ -12,7 +12,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class BlueCandle : Item
 {
-    public BlueCandle(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public BlueCandle(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
         itemType = ItemList.BlueCandle;
     }

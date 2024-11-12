@@ -12,7 +12,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Key : Item
 {
-    public Key(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public Key(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
         itemType = ItemList.Key;
     }
@@ -25,6 +25,7 @@ public class Key : Item
 
     public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
     {
+        PlayerState.AddKeys(1);
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(itemCollidableDict, collisionController);
     }

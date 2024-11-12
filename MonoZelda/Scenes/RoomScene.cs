@@ -13,8 +13,6 @@ using MonoZelda.Commands.GameCommands;
 using MonoZelda.Enemies;
 using System.Collections.Generic;
 using System.Linq;
-using MonoZelda.Enemies.EnemyProjectiles;
-using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Trigger;
 using MonoZelda.Sound;
 using MonoZelda.Tiles.Doors;
@@ -64,7 +62,10 @@ public class RoomScene : Scene
 
         // create itemFactory and spawn Items
         itemFactory = new ItemFactory(collisionController, room.GetItemSpawns(), enemies, playerCollision);
-        SpawnItems(contentManager);
+        SpawnItems();
+
+        // spawnEnemies
+        SpawnEnemies();
 
         // Play Dungeon Theme
         SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
@@ -88,7 +89,6 @@ public class RoomScene : Scene
         LoadRoomTextures(contentManager);
         CreateStaticColliders();
         CreateTriggers(contentManager);
-        SpawnEnemies(contentManager);
     }
 
     private void CreateTriggers(ContentManager contentManager)
@@ -100,7 +100,7 @@ public class RoomScene : Scene
         }
     }
 
-    private void SpawnItems(ContentManager contentManager)
+    private void SpawnItems()
     {
         itemFactory.CreateRoomItems();
     }

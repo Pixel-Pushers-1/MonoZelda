@@ -10,7 +10,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Compass : Item
 {
-    public Compass(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public Compass(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
         itemType = ItemList.Compass;
     }

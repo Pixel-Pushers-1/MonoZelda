@@ -7,7 +7,7 @@ namespace MonoZelda.Link;
 
 public static class PlayerState
 {
-    private static int INITIAL_HP =6;
+    private static int INITIAL_HP = 6;
     private static int _health = INITIAL_HP;
 
     public static void Initialize()
@@ -23,16 +23,12 @@ public static class PlayerState
         Bombs = 0;
         Keys = 0;
         EquippedProjectile = ProjectileType.None;
-        Position = new Point(500, 700);
         HasBoomerang = false;
         ObtainedTriforce = false;
     }
     public static void ResetCandle()
     {
-        IsCandleUsed = false;
-        Position = new Point(500, 700);
-        HasBoomerang = false;
-        ObtainedTriforce = false;   
+        IsCandleUsed = false;  
     }
     
     public static int Health
@@ -71,7 +67,6 @@ public static class PlayerState
     public static Direction Direction { get; set; }
     public static ProjectileType EquippedProjectile { get; set; }
     public static bool HasBoomerang { get; set; }
-
     public static bool ObtainedTriforce { get; set; }
 
     public static void AddRupees(int amount) => Rupees += amount;

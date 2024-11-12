@@ -27,7 +27,7 @@ public class Fairy : Item
         { 4, new Vector2(0,1) },
     };
 
-    public Fairy(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public Fairy(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
         itemType = ItemList.Fairy;
         rnd = new Random(); 

@@ -3,25 +3,19 @@ using MonoZelda.Collision;
 using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Enemies;
+using MonoZelda.Link;
+using System.Collections.Generic;
 
 namespace MonoZelda.Items.ItemClasses
 {
-    public class Fire : IItem
+    public class Fire : Item
     {
-        private ItemCollidable fireCollidable;
-        private bool itemPickedUp;
-
-        public bool ItemPickedUp
+        public Fire(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
         {
-            get
-            {
-                return itemPickedUp;
-            }
-            set
-            {
-                itemPickedUp = value;
-            }
+            itemType = ItemList.Fire;
         }
+
 
         public void itemSpawn(SpriteDict fireDict, Point spawnPosition, CollisionController collisionController)
         {

@@ -19,7 +19,7 @@ public class Triforce : Item
     private SpriteDict FakeTriforce;
     private float timer;
 
-    public Triforce(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public Triforce(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
         itemType = ItemList.Triforce;
     }

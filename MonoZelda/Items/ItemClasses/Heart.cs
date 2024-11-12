@@ -10,7 +10,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Heart : Item
 {
-    public Heart(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public Heart(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
         itemType = ItemList.Heart;
     }

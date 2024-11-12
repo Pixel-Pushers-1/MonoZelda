@@ -13,7 +13,7 @@ public class Bow : Item
     private SpriteDict bowDict;
     private float timer;
 
-    public Bow(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public Bow(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
         itemType = ItemList.Bow;
     }

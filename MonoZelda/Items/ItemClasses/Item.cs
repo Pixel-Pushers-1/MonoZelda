@@ -12,11 +12,11 @@ public abstract class Item
 {
     protected PlayerCollisionManager playerCollision;
     protected ItemCollidable itemCollidable;
-    protected List<IEnemy> roomEnemyList;
+    protected List<Enemy> roomEnemyList;
     protected List<Item> updateList;
     protected ItemList itemType;
 
-    public Item(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision,List<Item> updateList)
+    public Item(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision,List<Item> updateList)
     {
         this.roomEnemyList = roomEnemyList;
         this.updateList = updateList;

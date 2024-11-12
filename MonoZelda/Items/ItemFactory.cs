@@ -14,11 +14,11 @@ public class ItemFactory
 { 
     private CollisionController collisionController;
     private List<ItemSpawn> itemSpawnList;
-    private List<IEnemy> roomEnemyList;
+    private List<Enemy> roomEnemyList;
     private PlayerCollisionManager playerCollision;
     private List<Item> updateList;
 
-    public ItemFactory(CollisionController collisionController, List<ItemSpawn> itemSpawnList, List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision)
+    public ItemFactory(CollisionController collisionController, List<ItemSpawn> itemSpawnList, List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision)
     {
         this.collisionController = collisionController;
         this.itemSpawnList = itemSpawnList; 

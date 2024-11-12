@@ -11,7 +11,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Boomerang : Item
 {
-    public Boomerang(List<IEnemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public Boomerang(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
         itemType = ItemList.Boomerang;
     }
