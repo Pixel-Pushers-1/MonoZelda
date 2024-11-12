@@ -236,6 +236,12 @@
 /processorParam:Quality=Best
 /build:Sound/LOZ_Text.wav
 
+#begin Sound/LOZ_Victory.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/LOZ_Victory.wav
+
 #begin Sprites/enemies.png
 /importer:TextureImporter
 /processor:TextureProcessor

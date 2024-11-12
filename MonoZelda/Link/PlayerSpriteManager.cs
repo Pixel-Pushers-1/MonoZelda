@@ -65,6 +65,11 @@ public class PlayerSpriteManager
         playerDirection = PlayerState.Direction;
     }
 
+    public void DisablePlayerSprite()
+    {
+        playerSpriteDict.Enabled = false;   
+    }
+
     public void Move(PlayerMoveCommand moveCommand)
     {
         if (timer > 0) {
@@ -87,6 +92,7 @@ public class PlayerSpriteManager
         // Apply movement to player and sprite
         playerPosition += playerSpeed * movement;
         playerSpriteDict.Position = playerPosition.ToPoint();
+        PlayerState.Position = playerPosition.ToPoint();
     }
         
     public void StandStill(PlayerStandingCommand standCommand)

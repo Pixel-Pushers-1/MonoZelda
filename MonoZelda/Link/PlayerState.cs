@@ -14,6 +14,7 @@ public static class PlayerState
         Direction = Direction.Down;
         Position = new Point(500, 700);
         HasBoomerang = false;
+        ObtainedTriforce = false;   
     }
 
     public static int Health
@@ -46,6 +47,8 @@ public static class PlayerState
     public static Direction Direction { get; set; }
     public static ProjectileType EquippedProjectile { get; set; }
     public static bool HasBoomerang { get; set; }
+
+    public static bool ObtainedTriforce { get; set; }
 
     public static void AddRupees(int amount) => Rupees += amount;
     public static void AddBombs(int amount) => Bombs += amount;

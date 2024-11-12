@@ -25,7 +25,7 @@ public abstract class Item
 
     public virtual void ItemSpawn(SpriteDict itemDict, Point  spawnPosition, CollisionController collisionController)
     {
-        itemCollidable = new ItemCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 32, 64), itemType);
+        itemCollidable = new ItemCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 60, 60), itemType);
         itemCollidable.setItem(this);
         collisionController.AddCollidable(itemCollidable);
         itemCollidable.setSpriteDict(itemDict);

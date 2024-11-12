@@ -77,6 +77,11 @@ public class PlayerCollisionManager
         invulnerabilityTimer = INVULNERABILITY_TIME * 3f;
     }
 
+    public void HandleTriforceCollision()
+    {
+        player.DisablePlayerSprite();
+    }
+
     public void HandleEnemyProjectileCollision(Direction collisionDirection)
     {
         if (invulnerabilityTimer > 0)

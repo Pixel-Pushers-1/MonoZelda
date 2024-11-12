@@ -11,4 +11,5 @@ internal static class SpriteLayer
     public const int Transition = 50;
     public const int DoorLayer = 75;
     public const int HUD = 100;
+    public const int Triforce = 125;
 }

@@ -6,6 +6,8 @@ using MonoZelda.Commands;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Scenes;
 using MonoZelda.Sound;
+using System.Runtime.CompilerServices;
+using MonoZelda.Link;
 
 namespace MonoZelda;
 
@@ -76,6 +78,11 @@ public class MonoZeldaGame : Game
 
     protected override void Update(GameTime gameTime)
     {
+        if(PlayerState.ObtainedTriforce == true)
+        {
+            this.Exit();
+        }
+
         GameTime = gameTime;
         keyboardController.Update(gameTime);
         mouseController.Update(gameTime);
@@ -118,7 +125,7 @@ public class MonoZeldaGame : Game
         if (scene is MainMenuScene)
         {
             SoundManager.StopSound("LOZ_Intro");
-            LoadDungeon("RoomTest");
+            LoadDungeon("Room14");
         }
     }
 
