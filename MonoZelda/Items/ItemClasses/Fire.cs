@@ -23,5 +23,11 @@ namespace MonoZelda.Items.ItemClasses
             base.ItemSpawn(fireDict, spawnPosition + offset, collisionController);
             fireDict.SetSprite("fire");
         }
+
+        public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+        {
+            // do nothing
+        }
+
     }
 }
