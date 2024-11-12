@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Link;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace MonoZelda.Dungeons;
 
@@ -56,4 +57,29 @@ public static class DungeonConstants
         { Direction.Up, new Vector2(0,1) },
         { Direction.Down, new Vector2(0,-1) },
     };
+
+    public static Point? GetRoomCoordinate(string roomName)
+    {
+        return roomName switch {
+            "Room1" => new Point(3,5),
+            "Room2" => new Point(2,5),
+            "Room3" => new Point(3,4),
+            "Room4" => new Point(4,5),
+            "Room5" => new Point(3,3),
+            "Room6" => new Point(2,3),
+            "Room7" => new Point(3,2),
+            "Room8" => new Point(4,3),
+            "Room9" => new Point(2,2),
+            "Room10" => new Point(1,2),
+            "Room11" => new Point(3,1),
+            "Room12" => new Point(4,2),
+            "Room13" => new Point(5,2),
+            "Room14" => new Point(5,1),
+            "Room15" => new Point(6,1),
+            "Room16" => new Point(3,0),
+            "Room17" => new Point(2,0),
+            "Room18" => new Point(1,0),
+            _ => null,
+        };
+    }
 }

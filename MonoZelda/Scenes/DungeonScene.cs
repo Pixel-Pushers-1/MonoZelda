@@ -68,6 +68,9 @@ namespace MonoZelda.Scenes
             }
             
             activeScene.LoadContent(contentManager);
+
+            //set player map marker
+            inventoryScene.SetPlayerMapMarker(DungeonConstants.GetRoomCoordinate(roomName));
         }
 
         public void LoadRoom(string roomName)
