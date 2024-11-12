@@ -2,6 +2,7 @@
 using MonoZelda.Dungeons;
 using MonoZelda.Link;
 using MonoZelda.Scenes;
+using MonoZelda.UI;
 
 namespace MonoZelda.Commands.GameCommands
 {

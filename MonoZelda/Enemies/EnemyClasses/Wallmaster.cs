@@ -213,6 +213,7 @@ namespace MonoZelda.Enemies.EnemyClasses
         public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
         {
             Health -= damage;
+            StateMachine.DamageFlash();
             if (Health <= 0 && stunTime == 0)
             {
                 StateMachine.ChangeDirection(EnemyStateMachine.Direction.None);

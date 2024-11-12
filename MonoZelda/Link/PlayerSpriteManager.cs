@@ -184,7 +184,7 @@ public class PlayerSpriteManager
     public void PickUpItem(PickUpType pickUpSprite)
     {
         immobilityTimer = PICKUP_TIME;
-        if(immobilityTimer > 0)
+        if (immobilityTimer > 0)
         {
             playerSpriteDict.SetSprite(pickUpSprite.ToString());
         }

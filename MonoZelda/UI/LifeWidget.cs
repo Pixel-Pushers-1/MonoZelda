@@ -44,6 +44,13 @@ namespace MonoZelda.UI
 
         private void SetHearts(int health)
         {
+            //add new hearts
+            while (PlayerState.MaxHealth / 2 > _hearts.Count) {
+                SpriteDict heart = new SpriteDict(SpriteType.HUD, SpriteLayer.HUD, Point.Zero);
+                _hearts.Add(heart);
+                heart.Position = WidgetLocation + margin + new Point(_hearts.IndexOf(heart) * 32, 0);
+            }
+
             for (int i = 0; i < _hearts.Count; i++) {
                 if (health >= 2)
                     _hearts[i].SetSprite("heart_full");

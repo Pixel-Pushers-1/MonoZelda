@@ -1,5 +1,6 @@
 Sprite,X,Y,W,H,Frames,Anchor,Fps
 hud_background,256,11,256,56,1,top left,10
+hud_map,272,80,64,24,1,top left,10
 inventory_background,0,16,256,88,1,top left,10
 triforce_background,0,120,256,88,1,top left,10
 map_background,256,120,256,88,1,top left,10
@@ -47,7 +48,7 @@ map_marker_green,576,128,8,4,1,top left,10
 map_marker_black,584,128,8,4,1,top left,10
 map_marker_darkgreen,592,128,8,4,1,top left,10
 map_marker_brown,600,128,8,4,1,top left,10
-map_marker_red_blinking,528,132,8,4,2,top left,2
+map_marker_red_blinking,528,132,8,4,2,top left,4
 outline_red,528,144,16,16,1,top left,10
 outline_blue,544,144,16,16,1,top left,10
 woodensword,560,144,8,16,1,top left,10

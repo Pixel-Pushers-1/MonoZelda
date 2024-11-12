@@ -13,8 +13,8 @@ public class Triforce : Item
 {
     private float END_SCENE_TIMER = 25f;
     private SpriteDict triforceDict;
-    private SpriteDict leftCurtain;
-    private SpriteDict rightCurtain;
+    private BlankSprite leftCurtain;
+    private BlankSprite rightCurtain;
     private SpriteDict FakeLink;
     private SpriteDict FakeTriforce;
     private float timer;
@@ -34,10 +34,11 @@ public class Triforce : Item
     private void InitializeSpriteDicts()
     {
         // make curtains
-        leftCurtain = new SpriteDict(SpriteType.Blocks, SpriteLayer.DoorLayer, DungeonConstants.BackgroundPosition + DungeonConstants.adjacentTransitionRoomSpawnPoints[Direction.Right]);
-        leftCurtain.SetSprite("room_41");
-        rightCurtain = new SpriteDict(SpriteType.Blocks, SpriteLayer.DoorLayer, DungeonConstants.BackgroundPosition + DungeonConstants.adjacentTransitionRoomSpawnPoints[Direction.Left]);
-        rightCurtain.SetSprite("room_41");
+        var leftPosition = new Point(-512, 192);
+        var rightPosition = new Point(1024, 192);
+        var curtainSize = new Point(512, 704);
+        leftCurtain = new BlankSprite(SpriteLayer.Triforce - 1, leftPosition, curtainSize, Color.Black);
+        rightCurtain = new BlankSprite(SpriteLayer.Triforce - 1, rightPosition, curtainSize, Color.Black);
 
         // create fake Link and Triforce
         FakeLink = new SpriteDict(SpriteType.Player, SpriteLayer.Triforce, PlayerState.Position);
