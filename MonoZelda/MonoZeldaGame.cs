@@ -83,7 +83,15 @@ public class MonoZeldaGame : Game
     {
         if(PlayerState.ObtainedTriforce == true)
         {
-            this.Exit();
+            Exit();
+        }
+
+        if (PlayerState.IsDead)
+        {
+            commandManager.Execute(CommandType.PlayerDeathCommand);
+            PlayerState.IsDead = false;
+            PlayerState.Initialize();
+
         }
 
         GameTime = gameTime;
@@ -92,13 +100,6 @@ public class MonoZeldaGame : Game
         scene.Update(gameTime);
 
         base.Update(gameTime);
-        if (PlayerState.IsDead)
-        {
-            commandManager.Execute(CommandType.PlayerDeathCommand);
-            PlayerState.IsDead = false;
-            PlayerState.Initialize();
-            
-        }
     }
 
     protected override void Draw(GameTime gameTime)

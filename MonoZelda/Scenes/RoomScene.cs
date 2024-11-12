@@ -124,7 +124,7 @@ public class RoomScene : Scene
         }
     }
 
-    private void SpawnItems()
+    protected void SpawnItems()
     {
         itemFactory.CreateRoomItems();
     }
@@ -141,7 +141,7 @@ public class RoomScene : Scene
         }
     }
 
-    private void CreateStaticColliders()
+    protected void CreateStaticColliders()
     {
         var roomColliderRects = room.GetStaticRoomColliders();
         foreach (var rect in roomColliderRects)
