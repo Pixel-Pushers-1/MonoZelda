@@ -16,7 +16,7 @@ namespace MonoZelda.Collision
         {
             this.collidable = collidable;
             texture = TextureData.GetTexture(SpriteType.Blank);
-            SpriteDrawer.RegisterDrawable(this, int.MaxValue, true);
+            SpriteDrawer.RegisterDrawable(this, SpriteLayer.Gizmos, true);
         }
 
         ~CollisionHitboxDraw() {
@@ -28,7 +28,7 @@ namespace MonoZelda.Collision
             SpriteDrawer.UnregisterDrawable(this);
         }
 
-        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch)
         {
             Rectangle Bounds = collidable.Bounds;
             spriteBatch.Draw(texture, new Rectangle(Bounds.Left, Bounds.Top, Bounds.Width, Thickness), GizmoColor);

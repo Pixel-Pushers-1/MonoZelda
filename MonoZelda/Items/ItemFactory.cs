@@ -11,7 +11,9 @@ using MonoZelda.Enemies;
 namespace MonoZelda.Items;
 
 public class ItemFactory
-{ 
+{
+    private const float FLASHING_TIME = .75f;
+
     private CollisionController collisionController;
     private List<ItemSpawn> itemSpawnList;
     private List<Enemy> roomEnemyList;
@@ -40,6 +42,7 @@ public class ItemFactory
     public void CreateItem(ItemList itemName, Point spawnPosition)
     {
         var itemDict = new SpriteDict(SpriteType.Items, 0, new Point(0, 0));
+        itemDict.SetFlashing(SpriteDict.FlashingType.OnOff, FLASHING_TIME);
         var itemType = Type.GetType($"MonoZelda.Items.ItemClasses.{itemName}");
         Item item = (Item)Activator.CreateInstance(itemType,roomEnemyList,playerCollision,updateList);
         items.Add(item);
