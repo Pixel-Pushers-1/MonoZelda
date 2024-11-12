@@ -31,9 +31,15 @@ public static class PlayerState
         ObtainedTriforce = false;
     }
 
-    public static void ResetCandle()
+    public static void Reset()
     {
-        IsCandleUsed = false;  
+        _health = INITIAL_HP;
+        IsCandleUsed = false;
+    }
+
+    public static void ChangeRoom()
+    {
+        IsCandleUsed = false;
     }
 
     public static int Health

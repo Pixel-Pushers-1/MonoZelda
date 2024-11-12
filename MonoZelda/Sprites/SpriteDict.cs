@@ -14,13 +14,15 @@ public class SpriteDict : IDrawable
         Colorful,
     }
 
-    private const float FLASHING_RATE = 20f;
-    private static Dictionary<FlashingType, List<Color>> flashingColors = new Dictionary<FlashingType, List<Color>> {
+    private static Dictionary<FlashingType, List<Color>> flashingColors = new() {
         { FlashingType.OnOff, new List<Color> { ColorData.White, ColorData.Transparent } },
         { FlashingType.Red, new List<Color> { ColorData.White, ColorData.Red } },
         { FlashingType.Colorful, new List<Color> { ColorData.Blue, ColorData.Red, ColorData.Green, ColorData.White } },
     };
 
+    /// <summary>
+    /// The screen position to draw this SpriteDict at.
+    /// </summary>
     public Point Position { get; set; }
     /// <summary>
     /// Determines whether the sprite is drawn or not.
@@ -95,6 +97,6 @@ public class SpriteDict : IDrawable
         if (flashingTimer <= 0f) {
             return ColorData.White;
         }
-        return flashingColors[flashingType][(int) (flashingTimer * FLASHING_RATE % flashingColors[flashingType].Count)];
+        return flashingColors[flashingType][(int) (flashingTimer * FlashingRate % flashingColors[flashingType].Count)];
     }
 }
