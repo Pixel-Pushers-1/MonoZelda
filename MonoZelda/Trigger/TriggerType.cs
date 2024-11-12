@@ -5,5 +5,6 @@ namespace MonoZelda.Trigger
     {
         push_block,
         secret_room,
+        mario_stairs
     }
 }
