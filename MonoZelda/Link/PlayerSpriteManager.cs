@@ -23,6 +23,7 @@ public enum PickUpType
 public class PlayerSpriteManager
 {
     private const float DAMAGE_FLASH_TIME = .5f;
+    private const float CLOCK_FLASH_TIME = 3f;
     private const float DAMAGE_IMMOBILITY_TIME = .2f;
 
     private Direction playerDirection;
@@ -74,6 +75,10 @@ public class PlayerSpriteManager
         playerSpriteDict.Enabled = false;   
     }
 
+    public void ClockFlash()
+    {
+        playerSpriteDict.SetFlashing(SpriteDict.FlashingType.Colorful, CLOCK_FLASH_TIME);
+    }
     public void Move(PlayerMoveCommand moveCommand)
     {
         if (immobilityTimer > 0) {

@@ -70,6 +70,11 @@ public class PlayerCollisionManager
         playerHitbox.Bounds = newBounds;
     }
 
+    public void HandleClockCollision()
+    {
+        player.ClockFlash();
+    }
+
     public void HandleBowCollision(SpriteDict bowDict)
     {
         bowDict.Position = player.GetPlayerPosition().ToPoint() + new Point(-32, -96);

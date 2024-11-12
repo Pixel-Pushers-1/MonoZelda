@@ -23,6 +23,7 @@ public class Clock : Item
 
     public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
     {
+        playerCollision.HandleClockCollision();
         foreach(var enemy in roomEnemyList)
         {
             enemy.TakeDamage(3f, Direction.None, 0);
