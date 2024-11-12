@@ -18,8 +18,15 @@ namespace MonoZelda.Items.ItemClasses
 
         public override void ItemSpawn(SpriteDict fireDict, Point spawnPosition, CollisionController collisionController)
         {
-            base.ItemSpawn(fireDict, spawnPosition, collisionController);
+            Point offset = new Point(0, 64);
+            base.ItemSpawn(fireDict, spawnPosition + offset, collisionController);
             fireDict.SetSprite("fire");
         }
+
+        public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+        {
+            // do nothing
+        }
+
     }
 }

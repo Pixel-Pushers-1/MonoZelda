@@ -32,7 +32,6 @@ public class PlayerSpriteManager
     private Vector2 playerPosition;
     private float playerSpeed = 6.0f;
     private double immobilityTimer;
-    private double timer;
 
     private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
     {
@@ -185,7 +184,7 @@ public class PlayerSpriteManager
     public void PickUpItem(PickUpType pickUpSprite)
     {
         immobilityTimer = PICKUP_TIME;
-        if (immobilityTimer > 0)
+        if(immobilityTimer > 0)
         {
             playerSpriteDict.SetSprite(pickUpSprite.ToString());
         }
