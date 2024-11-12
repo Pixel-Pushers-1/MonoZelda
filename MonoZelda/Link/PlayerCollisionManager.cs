@@ -3,7 +3,9 @@ using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Controllers;
+using MonoZelda.Dungeons;
 using MonoZelda.Sound;
+using MonoZelda.Sprites;
 
 namespace MonoZelda.Link;
 
@@ -68,12 +70,29 @@ public class PlayerCollisionManager
         playerHitbox.Bounds = newBounds;
     }
 
+    public void HandleClockCollision()
+    {
+        player.ClockFlash();
+    }
+
+    public void HandleBowCollision(SpriteDict bowDict)
+    {
+        bowDict.Position = player.GetPlayerPosition().ToPoint() + new Point(-32, -96);
+        player.PickUpItem(PickUpType.pickupitem_onehand);
+        invulnerabilityTimer = INVULNERABILITY_TIME * 3f;
+    }
+
+    public void HandleTriforceCollision()
+    {
+        player.DisablePlayerSprite();
+    }
+
     public void HandleEnemyProjectileCollision(Direction collisionDirection)
     {
         if (invulnerabilityTimer > 0)
             return;
 
-        if ((int)player.PlayerDirection + (int)collisionDirection == 0)
+        if (player.PlayerDirection  != collisionDirection)
         {
             damageCommand.Execute();
             invulnerabilityTimer = INVULNERABILITY_TIME;
@@ -129,13 +148,6 @@ public class PlayerCollisionManager
 
     private Vector2 GetKnockbackDirection(Direction collisionDirection)
     {
-        return collisionDirection switch
-        {
-            Direction.Up => new Vector2(0, -1),
-            Direction.Down => new Vector2(0, 1),
-            Direction.Left => new Vector2(-1, 0),
-            Direction.Right => new Vector2(1, 0),
-            _ => Vector2.Zero
-        };
+        return DungeonConstants.DirectionVector[collisionDirection];
     }
 }

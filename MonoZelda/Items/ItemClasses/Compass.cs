@@ -1,34 +1,29 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
-using MonoZelda.Collision;
+﻿using Microsoft.Xna.Framework;
 using MonoZelda.Sprites;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
+using MonoZelda.Enemies;
+using MonoZelda.Link;
+using System.Collections.Generic;
 
 namespace MonoZelda.Items.ItemClasses;
 
-public class Compass : IItem
+public class Compass : Item
 {
-    private ItemCollidable compassCollidable;
-    private bool itemPickedUp;
-
-    public bool ItemPickedUp
+    public Compass(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
-        get
-        {
-            return itemPickedUp;
-        }
-        set
-        {
-            itemPickedUp = value;
-        }
+        itemType = ItemList.Compass;
     }
 
-    public void itemSpawn(SpriteDict compassDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(SpriteDict compassDict, Point spawnPosition, CollisionController collisionController)
     {
-        compassCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 60, 60), ItemList.Compass);
-        collisionController.AddCollidable(compassCollidable);
-        compassCollidable.setSpriteDict(compassDict);
-        compassDict.Position = spawnPosition;
+        base.ItemSpawn(compassDict, spawnPosition, collisionController);
         compassDict.SetSprite("compass");
+    }
+
+    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    {
+        SoundManager.PlaySound("LOZ_Get_Item", false);
+        base.HandleCollision(itemCollidableDict, collisionController);
     }
 }

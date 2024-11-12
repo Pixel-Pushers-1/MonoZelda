@@ -10,7 +10,6 @@ namespace MonoZelda.UI
 {
     internal class ItemCountWidget : ScreenWidget
     {
-
         private SpriteFont font;
         private Point margin = new Point(10, 10);
 
@@ -42,6 +41,7 @@ namespace MonoZelda.UI
             //string spriteName = projectileSpriteMap.TryGetValue(projectileType, out var name) ? name : "arrow";
             //proj.SetSprite(spriteName);
             //set ProjectileSprite
+
             Point projPosition = WidgetLocation + margin + new Point(88, 12);
             equippedProjectileSprite = new SpriteDict(SpriteType.HUD, SpriteLayer.HUD, projPosition);
 
@@ -50,10 +50,6 @@ namespace MonoZelda.UI
             swordSprite = new SpriteDict(SpriteType.HUD, SpriteLayer.HUD, swordPosition);
             swordSprite.SetSprite("woodensword");
             UpdateProjectileSprite();
-
-
-
-
         }
 
         public override void Draw(SpriteBatch sb)
@@ -98,9 +94,6 @@ namespace MonoZelda.UI
         private void UpdateSwordSprite()
         {
             swordSprite.Position = WidgetLocation + margin + new Point(184, 12);
-
-
-
         }
     }
 }

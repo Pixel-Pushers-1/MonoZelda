@@ -15,6 +15,9 @@ namespace MonoZelda.Scenes
 {
     public class DungeonScene : Scene
     {
+        public static readonly string MARIO_ROOM = "Room18";
+        public static readonly string MARIO_ENTRANCE_ROOM = "Room17";
+        
         private IDungeonRoomLoader roomManager;
         private CollisionController collisionController;
         private GraphicsDevice graphicsDevice;
@@ -25,7 +28,6 @@ namespace MonoZelda.Scenes
         private bool isPaused;
 
         public string StartRoom { get; private set; }
-
         private IScene activeScene;
 
         public DungeonScene(string startRoom, GraphicsDevice graphicsDevice, CommandManager commandManager)
@@ -55,8 +57,16 @@ namespace MonoZelda.Scenes
 
             var nextRoom = roomManager.LoadRoom(roomName);
             var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
-
-            activeScene = new TransitionScene(currentRoom, nextRoom, command, transitionDirection);
+            
+            if (roomName == MARIO_ROOM || (roomName == MARIO_ENTRANCE_ROOM && currentRoom.RoomName == MARIO_ROOM))
+            {
+                activeScene = new MarioLevelTransitionScene(this, nextRoom, command, graphicsDevice);
+            }
+            else
+            {
+                activeScene = new TransitionScene(currentRoom, nextRoom, command, transitionDirection);
+            }
+            
             activeScene.LoadContent(contentManager);
         }
 
@@ -65,19 +75,19 @@ namespace MonoZelda.Scenes
             ResetScene();
 
             currentRoom = roomManager.LoadRoom(roomName);
-
-            // TODO: Check for the mario level
-            if (roomName == "mario")
-            {
-                activeScene = new MarioLevelScene();
-                activeScene.LoadContent(contentManager);
-                return;
-            }
             
             // Debugging purposes
             LevelTextWidget.LevelName = roomName;
 
-            activeScene = new RoomScene(graphicsDevice, commandManager, collisionController, currentRoom);
+            if (roomName == MARIO_ROOM)
+            {
+                activeScene = new MarioLevelScene(graphicsDevice, commandManager, collisionController, currentRoom);
+            }
+            else
+            {
+                activeScene = new RoomScene(graphicsDevice, commandManager, collisionController, currentRoom);
+            }
+
             activeScene.LoadContent(contentManager);
         }
 
@@ -110,9 +120,7 @@ namespace MonoZelda.Scenes
         {
             collisionController.Clear();
             SpriteDrawer.Reset();
-            //reset playerStateParams
             PlayerState.ResetCandle();
-           
             activeScene.UnloadContent();
             
             // Complication due to SpriteDict getting cleared, need to re-init the UI

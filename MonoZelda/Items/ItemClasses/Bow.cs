@@ -1,34 +1,49 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
-using MonoZelda.Sprites;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
+using MonoZelda.Enemies;
+using MonoZelda.Link;
+using System.Collections.Generic;
 
 namespace MonoZelda.Items.ItemClasses;
-public class Bow : IItem
+public class Bow : Item
 {
-    private ItemCollidable bowCollidable;
-    private bool itemPickedUp;
+    private const float PICKUP_TIME = 3f;
+    private SpriteDict bowDict;
+    private float timer;
 
-    public bool ItemPickedUp
+    public Bow(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
-        get
-        {
-            return itemPickedUp;
-        }
-        set
-        {
-            itemPickedUp = value;
-        }
+        itemType = ItemList.Bow;
     }
 
-    public void itemSpawn(SpriteDict bowDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(SpriteDict bowDict, Point spawnPosition, CollisionController collisionController)
     {
-        bowCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), ItemList.Bow);
-        collisionController.AddCollidable(bowCollidable);
-        bowCollidable.setSpriteDict(bowDict);
-        bowDict.Position = spawnPosition;
+        base.ItemSpawn(bowDict, spawnPosition, collisionController);
         bowDict.SetSprite("bow");
+        this.bowDict = bowDict;
     }
 
+    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    {
+        updateList.Add(this);
+        timer = PICKUP_TIME;
+        playerCollision.HandleBowCollision(bowDict);
+        SoundManager.PlaySound("LOZ_New_Weapon_Recieved", false);
+        SoundManager.Pause("LOZ_Dungeon_Theme");
+        itemCollidable.UnregisterHitbox();
+        collisionController.RemoveCollidable(itemCollidable);
+    }
+
+    public override void Update()
+    {
+        timer -= (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+        if(timer <= 0)
+        {
+            bowDict.Unregister();
+            updateList.Remove(this);
+            SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
+        }
+    }
 }

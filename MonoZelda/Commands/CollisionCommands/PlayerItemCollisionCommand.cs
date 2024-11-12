@@ -40,25 +40,7 @@ public class PlayerItemCollisionCommand : ICommand
             itemCollidable = (ItemCollidable)collidableB;
         }
 
-        SpriteDict collidableDict = itemCollidable.CollidableDict;
-        collidableDict.Unregister();
-        itemCollidable.PlaySound();
-        itemCollidable.UnregisterHitbox();
-        collisionController.RemoveCollidable(itemCollidable);
-        Debug.WriteLine(itemCollidable.itemType);
-        if (itemCollidable.itemType == ItemList.Rupee)
-        {
-            PlayerState.AddRupees(1);
-        }
-        else if (itemCollidable.itemType == ItemList.Bomb)
-        {
-            PlayerState.AddBombs(1);
-        }
-        else if (itemCollidable.itemType == ItemList.Key)
-        {
-            PlayerState.AddKeys(1);
-        }
-
+        itemCollidable.HandleCollision(collisionController);
     }
 
     public void UnExecute()

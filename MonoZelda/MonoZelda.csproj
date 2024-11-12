@@ -13,6 +13,7 @@
   <ItemGroup>
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
+    <None Remove="Items\ItemClasses\Item.cs~RF40601b3.TMP" />
     <None Remove="Link\Projectiles\WoodenSword\WoodenSword.cs~RF169f651b.TMP" />
     <None Remove="Scenes\TransitionScene.cs~RF12d33335.TMP" />
   </ItemGroup>
@@ -55,6 +56,9 @@
     <None Update="Content\Sprites\tiles_dungeon1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tiles\Stairs\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />

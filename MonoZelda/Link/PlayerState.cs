@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Link.Projectiles;
 using System.Diagnostics;
@@ -27,12 +27,13 @@ public static class PlayerState
         Bombs = INITIAL_BOMBS;
         Keys = INITIAL_KEYS;
         EquippedProjectile = ProjectileType.None;
-
+        HasBoomerang = false;
+        ObtainedTriforce = false;
     }
 
     public static void ResetCandle()
     {
-        IsCandleUsed = false;
+        IsCandleUsed = false;  
     }
 
     public static int Health
@@ -66,10 +67,12 @@ public static class PlayerState
     public static bool IsDead { get; set; }
     public static bool IsKnockedBack { get; set; }
     public static bool IsCandleUsed { get; set; }   
-    public static int MaxHealth { get; set; } = INITIAL_HP;
+    public static int MaxHealth { get; set; }
     public static Point Position { get; set; }
     public static Direction Direction { get; set; }
     public static ProjectileType EquippedProjectile { get; set; }
+    public static bool HasBoomerang { get; set; }
+    public static bool ObtainedTriforce { get; set; }
 
     public static void AddRupees(int amount) => Rupees += amount;
     public static void AddBombs(int amount) => Bombs += amount;

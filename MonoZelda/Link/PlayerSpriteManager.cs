@@ -1,4 +1,4 @@
-﻿using MonoZelda.Sprites;
+using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
 using System.Collections.Generic;
@@ -11,18 +11,28 @@ public enum Direction {
     Down = -5,
     Left = 10,
     Right = -10,
+    None,
+}
+
+public enum PickUpType
+{
+    pickupitem_onehand,
+    pickupitem_twohands,
 }
 
 public class PlayerSpriteManager
 {
     private const float DAMAGE_FLASH_TIME = .5f;
+    private const float CLOCK_FLASH_TIME = 3f;
     private const float DAMAGE_IMMOBILITY_TIME = .2f;
+    private const float PICKUP_TIME = 3f;
 
     private Direction playerDirection;
     private SpriteDict playerSpriteDict;
     private Vector2 playerPosition;
     private float playerSpeed = 6.0f;
     private double immobilityTimer;
+    private double timer;
 
     private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
     {
@@ -60,6 +70,15 @@ public class PlayerSpriteManager
         playerDirection = PlayerState.Direction;
     }
 
+    public void DisablePlayerSprite()
+    {
+        playerSpriteDict.Enabled = false;   
+    }
+
+    public void ClockFlash()
+    {
+        playerSpriteDict.SetFlashing(SpriteDict.FlashingType.Colorful, CLOCK_FLASH_TIME);
+    }
     public void Move(PlayerMoveCommand moveCommand)
     {
         if (immobilityTimer > 0) {
@@ -161,6 +180,19 @@ public class PlayerSpriteManager
             }
         }
        
+    }
+
+    public void PickUpItem(PickUpType pickUpSprite)
+    {
+        immobilityTimer = PICKUP_TIME;
+        if (immobilityTimer > 0)
+        {
+            playerSpriteDict.SetSprite(pickUpSprite.ToString());
+        }
+        else
+        {
+            immobilityTimer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+        }
     }
 
 }

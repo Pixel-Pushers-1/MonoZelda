@@ -1,34 +1,30 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
-using MonoZelda.Sprites;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
+using MonoZelda.Enemies;
+using MonoZelda.Link;
+using System.Collections.Generic;
 
 namespace MonoZelda.Items.ItemClasses;
 
-public class BluePotion : IItem
+public class BluePotion : Item
 {
-    private ItemCollidable bluepotionCollidable;
-    private bool itemPickedUp;
-
-    public bool ItemPickedUp
+    public BluePotion(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
-        get
-        {
-            return itemPickedUp;
-        }
-        set
-        {
-            itemPickedUp = value;
-        }
+        itemType = ItemList.BluePotion;
     }
 
-    public void itemSpawn(SpriteDict bluepotionDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(SpriteDict bluepotionDict, Point spawnPosition, CollisionController collisionController)
     {
-        bluepotionCollidable = new ItemCollidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), ItemList.BluePotion);
-        collisionController.AddCollidable(bluepotionCollidable);
-        bluepotionCollidable.setSpriteDict(bluepotionDict);
-        bluepotionDict.Position = spawnPosition;
+        base.ItemSpawn(bluepotionDict, spawnPosition, collisionController); 
         bluepotionDict.SetSprite("potion_blue");
+    }
+
+    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    {
+        PlayerState.Health = PlayerState.MaxHealth;
+        SoundManager.PlaySound("LOZ_Get_Item", false);
+        base.HandleCollision(itemCollidableDict, collisionController);
     }
 }

@@ -1,27 +1,20 @@
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using MonoZelda.Sprites;
 using MonoZelda.Items;
-using System.Collections.Generic;
-using System;
-using MonoZelda.Sound;
+using MonoZelda.Items.ItemClasses;
+using MonoZelda.Controllers;
 
 namespace MonoZelda.Collision;
 
 public class ItemCollidable : ICollidable
 {
     public CollidableType type { get; set; }
-    public ItemList itemType { get; set; }
     public Rectangle Bounds { get; set; }
     public SpriteDict CollidableDict { get; set; }
 
+    private ItemList itemType;
+    private Item item;
     private readonly CollisionHitboxDraw hitbox;
-
-    private readonly Dictionary<ItemList, Action> itemSoundEffects = new()
-    {
-       { ItemList.Heart, () => SoundManager.PlaySound("LOZ_Get_Heart" ,false) },
-       { ItemList.Rupee, () => SoundManager.PlaySound("LOZ_Get_Rupee",false) },
-    };
 
     public ItemCollidable(Rectangle bounds, ItemList itemType)
     {
@@ -31,16 +24,13 @@ public class ItemCollidable : ICollidable
         this.itemType = itemType;
     }
 
-    public void PlaySound()
+    public void setItem(Item item)
     {
-        if (itemSoundEffects.ContainsKey(itemType))
-        {
-            itemSoundEffects[itemType].Invoke();
-        }
-        else
-        {
-            SoundManager.PlaySound("LOZ_Get_Item", false);
-        }
+        this.item = item;
+    }
+    public void HandleCollision(CollisionController collisionController)
+    {
+        item.HandleCollision(CollidableDict,collisionController);
     }
 
     public void UnregisterHitbox()

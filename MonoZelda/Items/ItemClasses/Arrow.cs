@@ -1,34 +1,29 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
-using MonoZelda.Sprites;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
+using MonoZelda.Enemies;
+using MonoZelda.Link;
+using System.Collections.Generic;
 
 namespace MonoZelda.Items.ItemClasses;
 
-public class Arrow : IItem
+public class Arrow : Item
 {
-    private ItemCollidable arrowCollidable;
-    private bool itemPickedUp;
-
-    public bool ItemPickedUp
+    public Arrow(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList,playerCollision,updateList)
     {
-        get
-        {
-            return itemPickedUp;
-        }
-        set
-        {
-            itemPickedUp = value;
-        }
+        itemType = ItemList.Arrow;
     }
 
-    public void itemSpawn(SpriteDict arrowDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(SpriteDict arrowDict, Point spawnPosition, CollisionController collisionController)
     {
-        arrowCollidable = new ItemCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 32, 64), ItemList.Arrow);
-        collisionController.AddCollidable(arrowCollidable);
-        arrowCollidable.setSpriteDict(arrowDict);
-        arrowDict.Position = spawnPosition;
-        arrowDict.SetSprite("candle_blue");
+        base.ItemSpawn(arrowDict, spawnPosition, collisionController);
+        arrowDict.SetSprite("arrow");
+    }
+
+    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    {
+        SoundManager.PlaySound("LOZ_Get_Item", false);
+        base.HandleCollision(itemCollidableDict, collisionController);
     }
 }

@@ -10,6 +10,7 @@ internal static class SpriteLayer
     public const int Projectiles = 20;
     public const int Transition = 50;
     public const int DoorLayer = 75;
+    public const int Triforce = 80;
     public const int HUD = 100;
     public const int Gizmos = 200;
 }

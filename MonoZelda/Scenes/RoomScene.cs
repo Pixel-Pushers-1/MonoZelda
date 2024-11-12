@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Link;
@@ -13,7 +14,6 @@ using MonoZelda.Commands.GameCommands;
 using MonoZelda.Enemies;
 using System.Collections.Generic;
 using System.Linq;
-using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Trigger;
 using MonoZelda.Sound;
 using MonoZelda.Tiles.Doors;
@@ -27,6 +27,7 @@ public class RoomScene : Scene
     private PlayerSpriteManager playerSprite;
     private ProjectileManager projectileManager;
     private PlayerCollisionManager playerCollision;
+    private ICommand transitionCommand;
     private CollisionController collisionController;
     private List<ITrigger> triggers;
     private ItemFactory itemFactory;
@@ -35,6 +36,9 @@ public class RoomScene : Scene
     private Dictionary<Enemy, EnemySpawn> enemySpawnPoints = new();
     private IDungeonRoom room;
     private string roomName;
+    
+    private List<IGameUpdate> updateables = new();
+    private List<IDisposable> disposables = new();
 
     public RoomScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room) 
     {
@@ -50,27 +54,15 @@ public class RoomScene : Scene
         // Need to wait for LoadContent because MonoZeldaGame is going to clear everything before calling this.
         LoadRoom(contentManager);
 
-        // create player sprite classes
-        playerSprite = new PlayerSpriteManager();
-        var playerSpriteDict = new SpriteDict(SpriteType.Player, SpriteLayer.Player, PlayerState.Position);
-        playerSprite.SetPlayerSpriteDict(playerSpriteDict);
-
         // Play Dungeon Theme
         SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
 
-        //create player and player collision manager
-        var takeDamageCommand = new PlayerTakeDamageCommand(playerSprite);
-        PlayerCollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50));
-        collisionController.AddCollidable(playerHitbox);
-        playerCollision = new PlayerCollisionManager(playerSprite, playerHitbox, collisionController, takeDamageCommand);
+        LoadPlayer();
+        LoadCommands();
+    }
 
-        // create projectile object and spriteDict
-        var projectileDict = new SpriteDict(SpriteType.Projectiles, 0, new Point(0, 0));
-        projectileManager = new ProjectileManager(collisionController, projectileDict);
-
-        // Create itemFactory and HUDManager
-        itemFactory = new ItemFactory(collisionController);
-
+    protected void LoadCommands()
+    {
         // replace required commands
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(projectileManager, playerSprite));
@@ -81,35 +73,63 @@ public class RoomScene : Scene
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerSprite));
     }
 
+    protected void LoadPlayer()
+    {
+        // create player sprite classes
+        playerSprite = new PlayerSpriteManager();
+        var playerSpriteDict = new SpriteDict(SpriteType.Player, SpriteLayer.Player, PlayerState.Position);
+        playerSprite.SetPlayerSpriteDict(playerSpriteDict);
+
+        //create player and player collision manager
+        var takeDamageCommand = new PlayerTakeDamageCommand(playerSprite);
+        PlayerCollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50));
+        collisionController.AddCollidable(playerHitbox);
+        playerCollision = new PlayerCollisionManager(playerSprite, playerHitbox, collisionController, takeDamageCommand);
+
+        // create itemFactory and spawn Items
+        itemFactory = new ItemFactory(collisionController, room.GetItemSpawns(), enemies, playerCollision);
+        SpawnItems();
+
+        // spawnEnemies
+        SpawnEnemies();
+
+        // Play Dungeon Theme
+        SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
+
+        // create projectile object and spriteDict
+        var projectileDict = new SpriteDict(SpriteType.Projectiles, 0, new Point(0, 0));
+        projectileManager = new ProjectileManager(collisionController, projectileDict);
+    }
+
     private void LoadRoom(ContentManager contentManager)
     {
+        transitionCommand = commandManager.GetCommand(CommandType.RoomTransitionCommand);
+        
         LoadRoomTextures(contentManager);
         CreateStaticColliders();
         CreateTriggers(contentManager);
-        SpawnItems(contentManager);
-        SpawnEnemies();
     }
 
     private void CreateTriggers(ContentManager contentManager)
     {
         foreach(var trigger in room.GetTriggers())
         {
-            var t = TriggerFactory.CreateTrigger(trigger.Type, collisionController, trigger.Position);
+            var t = TriggerFactory.CreateTrigger(trigger, collisionController, transitionCommand);
             triggers.Add(t);
+
+            if (t is IGameUpdate updateable)
+            {
+                updateables.Add(updateable);
+            }
         }
     }
 
-    private void SpawnItems(ContentManager contentManager)
+    private void SpawnItems()
     {
-        // Create itemFactory object
-        itemFactory = new ItemFactory(collisionController);
-        foreach (var itemSpawn in room.GetItemSpawns())
-        {
-            itemFactory.CreateItem(itemSpawn.ItemType, itemSpawn.Position);
-        }
+        itemFactory.CreateRoomItems();
     }
 
-    private void SpawnEnemies()
+    protected void SpawnEnemies()
     {
         enemyFactory = new EnemyFactory(collisionController);
         foreach(var enemySpawn in room.GetEnemySpawns())
@@ -152,10 +172,19 @@ public class RoomScene : Scene
         var doors = room.GetDoors();
         foreach (var door in doors)
         {
-            var transitionCommand = commandManager.GetCommand(CommandType.RoomTransitionCommand);
-
-            DoorFactory.CreateDoor(door, transitionCommand, collisionController, enemies);
+            var gameDoor = DoorFactory.CreateDoor(door, transitionCommand, collisionController, enemies);
+            if (gameDoor is IGameUpdate updateable)
+            {
+                updateables.Add(updateable);
+            }
         }
+    }
+
+    public override void UnloadContent()
+    {
+        commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
+        commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());
+        base.UnloadContent();
     }
 
     public override void Update(GameTime gameTime)
@@ -188,6 +217,12 @@ public class RoomScene : Scene
             enemy.Update();
         }
 
+        foreach (var updateable in updateables)
+        {
+            updateable.Update(gameTime);
+        }
+
+        itemFactory.Update();
         playerCollision.Update();
     }
 }
