@@ -29,9 +29,15 @@ public static class PlayerState
     }
     public static void ResetCandle()
     {
+        _health = INITIAL_HP;
         IsCandleUsed = false;
     }
-    
+
+    public static void ChangeRoom()
+    {
+        IsCandleUsed = false;
+    }
+
     public static int Health
     {
         get => _health;

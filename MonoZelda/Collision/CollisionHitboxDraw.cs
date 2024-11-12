@@ -16,7 +16,7 @@ namespace MonoZelda.Collision
         {
             this.collidable = collidable;
             texture = TextureData.GetTexture(SpriteType.Blank);
-            SpriteDrawer.RegisterDrawable(this, int.MaxValue, true);
+            SpriteDrawer.RegisterDrawable(this, SpriteLayer.Gizmos, true);
         }
 
         ~CollisionHitboxDraw() {
