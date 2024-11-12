@@ -12,6 +12,7 @@ boomerang,80,256,8,8,8,center,10
 boomerang_blue,80,264,8,8,8,center,10
 bomb,144,256,16,16,1,center,10
 cloud,160,256,16,16,3,center,10
+cloud_slow,160,256,16,16,3,center,4
 fire,208,256,16,16,2,center,10
 woodensword_item_up,0,224,8,16,1,center,10
 woodensword_item_down,8,224,8,16,1,center,10

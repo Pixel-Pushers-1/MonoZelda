@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
@@ -126,6 +127,7 @@ namespace MonoZelda.Enemies
                 if (Health > 0)
                 {
                     SoundManager.PlaySound("LOZ_Enemy_Hit", false);
+                    StateMachine.DamageFlash();
                     StateMachine.Knockback(true, collisionDirection);
                 }
                 else
