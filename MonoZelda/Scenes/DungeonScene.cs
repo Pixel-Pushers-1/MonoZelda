@@ -120,11 +120,7 @@ namespace MonoZelda.Scenes
         {
             collisionController.Clear();
             SpriteDrawer.Reset();
-            //reset playerStateParams
             PlayerState.ResetCandle();
-            PlayerState.Reset();
-            activeScene.UnloadContent();
-           
             activeScene.UnloadContent();
             
             // Complication due to SpriteDict getting cleared, need to re-init the UI

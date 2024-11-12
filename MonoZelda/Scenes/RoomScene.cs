@@ -14,9 +14,6 @@ using MonoZelda.Commands.GameCommands;
 using MonoZelda.Enemies;
 using System.Collections.Generic;
 using System.Linq;
-using MonoZelda.Enemies.EnemyProjectiles;
-using MonoZelda.Trigger;
-using System.Linq;
 using MonoZelda.Trigger;
 using MonoZelda.Sound;
 using MonoZelda.Tiles.Doors;
@@ -141,7 +138,7 @@ public class RoomScene : Scene
         itemFactory.CreateRoomItems();
     }
 
-    private void SpawnEnemies()
+    protected void SpawnEnemies()
     {
         enemyFactory = new EnemyFactory(collisionController);
         foreach(var enemySpawn in room.GetEnemySpawns())
@@ -193,8 +190,6 @@ public class RoomScene : Scene
         }
     }
 
-            DoorFactory.CreateDoor(door, transitionCommand, collisionController, enemies);
-        }
     public override void UnloadContent()
     {
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
