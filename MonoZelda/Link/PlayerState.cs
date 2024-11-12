@@ -16,7 +16,14 @@ public static class PlayerState
         Position = new Point(500, 700);
         IsCandleUsed = false;
     }
+
     public static void Reset()
+    {
+        _health = INITIAL_HP;
+        IsCandleUsed = false;
+    }
+
+    public static void ChangeRoom()
     {
         IsCandleUsed = false;
     }

@@ -6,6 +6,8 @@ using MonoZelda.Commands;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Scenes;
 using MonoZelda.Sound;
+using MonoZelda.Link;
+using System.Diagnostics;
 
 namespace MonoZelda;
 
@@ -130,6 +132,7 @@ public class MonoZeldaGame : Game
     public void ResetGame()
     {
         SoundManager.ClearSoundDictionary();
+        PlayerState.Reset();
         LoadScene(new MainMenuScene(GraphicsDevice));
     }
 }

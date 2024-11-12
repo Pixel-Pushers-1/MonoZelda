@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Items;
@@ -9,6 +10,7 @@ namespace MonoZelda.Enemies
 {
     public class EnemyStateMachine
     {
+
         //states
         public enum Direction { Left, Right, Up, Down, UpLeft, UpRight, DownLeft, DownRight, None }
         private Direction direction = Direction.None;
@@ -18,6 +20,7 @@ namespace MonoZelda.Enemies
 
         //not states
         private const float KNOCKBACK_FORCE = 1000f;
+        private const float DAMAGE_FLASH_TIME = .5f;
         private float velocity = 120;
         private float dt;
         private double animationTimer;
@@ -53,6 +56,11 @@ namespace MonoZelda.Enemies
         public void SetSprite(string newSprite)
         {
             currentSprite = newSprite;
+        }
+
+        public void DamageFlash()
+        {
+            enemySpriteDict.SetFlashing(SpriteDict.FlashingType.Colorful, DAMAGE_FLASH_TIME);
         }
 
         public void ChangeSpeed(float newSpeed)

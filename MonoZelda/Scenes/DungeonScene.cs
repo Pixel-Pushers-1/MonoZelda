@@ -111,7 +111,7 @@ namespace MonoZelda.Scenes
             collisionController.Clear();
             SpriteDrawer.Reset();
             //reset playerStateParams
-            PlayerState.Reset();
+            PlayerState.ChangeRoom();
            
             activeScene.UnloadContent();
             
