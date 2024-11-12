@@ -13,15 +13,16 @@ public class ProjectileManager
 {
     private bool projectileFired;
     private IProjectile itemFired;
-    private ProjectileType equippedProjectile;
     private PlayerProjectileCollidable projectileCollidable;
     private CollisionController collisionController;
     private GraphicsDevice graphicsDevice;
     private ProjectileFactory projectileFactory;
     private SpriteDict projectileDict;
     private bool activateHitbox;
+    private bool isSwordAttack;
+    private bool isSwordBeamAttack;
 
-    private Dictionary<Keys, ProjectileType> keyProjectileMap = new Dictionary<Keys, ProjectileType>
+    private readonly Dictionary<Keys, ProjectileType> keyProjectileMap = new Dictionary<Keys, ProjectileType>
     {
         {Keys.D1,ProjectileType.Arrow},
         {Keys.D2,ProjectileType.ArrowBlue},
@@ -39,26 +40,71 @@ public class ProjectileManager
 
     public ProjectileType EquippedProjectile
     {
-        get => equippedProjectile;
-        private set => equippedProjectile = value;
+        get => PlayerState.EquippedProjectile;
+        private set => PlayerState.EquippedProjectile = value;
     }
 
     public ProjectileManager(CollisionController collisionController, SpriteDict projectileDict)
     {
         projectileFired = false;
         activateHitbox = false;
+        isSwordAttack = false;
+        isSwordBeamAttack = false;
         projectileDict.Enabled = false;
-        equippedProjectile = PlayerState.EquippedProjectile;
         this.collisionController = collisionController;
         this.projectileDict = projectileDict;
-        projectileFactory = new ProjectileFactory(projectileDict, new Vector2(),Direction.Down);
+        projectileFactory = new ProjectileFactory(projectileDict, new Vector2(), Direction.Down);
+    }
+
+    private bool hasRequiredResources(ProjectileType projectileType)
+    {
+        switch (projectileType)
+        {
+            case ProjectileType.Arrow:
+            case ProjectileType.ArrowBlue:
+                return PlayerState.Rupees > 0;
+            case ProjectileType.Bomb:
+                return PlayerState.Bombs > 0;
+            default:
+                return true;
+        }
+    }
+
+    private void deductResources(ProjectileType projectileType)
+    {
+        switch (projectileType)
+        {
+            case ProjectileType.Arrow:
+            case ProjectileType.ArrowBlue:
+                PlayerState.Rupees--;
+                break;
+            case ProjectileType.Bomb:
+                PlayerState.Bombs--;
+                break;
+        }
     }
 
     private void setupProjectile(ProjectileType equippedProjectile)
     {
+        if (!hasRequiredResources(equippedProjectile))
+        {
+            return;
+        }
+        
+        if (equippedProjectile == ProjectileType.WoodenSword)
+        {
+            isSwordAttack = true;
+        }
+        else if (equippedProjectile == ProjectileType.WoodenSwordBeam)
+        {
+            isSwordBeamAttack = true;
+        }
+
+        deductResources(equippedProjectile);
         projectileFired = true;
         projectileDict.Enabled = true;
-        if (equippedProjectile != ProjectileType.Bomb) {
+        if (equippedProjectile != ProjectileType.Bomb)
+        {
             activateHitbox = true;
         }
     }
@@ -67,8 +113,7 @@ public class ProjectileManager
     {
         if (keyProjectileMap.TryGetValue(pressedKey, out ProjectileType newProjectile))
         {
-            EquippedProjectile = newProjectile;  // Use the property instead of field
-            PlayerState.EquippedProjectile = equippedProjectile;
+            EquippedProjectile = newProjectile;
         }
     }
 
@@ -91,8 +136,23 @@ public class ProjectileManager
 
     public void fireEquippedProjectile(PlayerSpriteManager player)
     {
-        itemFired = projectileFactory.GetProjectileObject(EquippedProjectile, player);  // Use the property instead of field
-        setupProjectile(EquippedProjectile);  // Use the property instead of field
+        if (!hasRequiredResources(EquippedProjectile))
+        {
+            return;
+        }
+        //prevent candle use in more than one room
+        if (EquippedProjectile == ProjectileType.CandleBlue && PlayerState.IsCandleUsed)
+        {
+            return; 
+        }
+
+        itemFired = projectileFactory.GetProjectileObject(EquippedProjectile, player);
+        setupProjectile(EquippedProjectile);
+
+        if (EquippedProjectile == ProjectileType.CandleBlue)
+        {
+            PlayerState.IsCandleUsed = true;
+        }
     }
 
     public void UpdatedProjectileState()
@@ -100,11 +160,27 @@ public class ProjectileManager
         if (itemFired != null && !itemFired.hasFinished())
         {
             // Init projectile collidable
-            if (activateHitbox && projectileCollidable is null) {
-                projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), equippedProjectile);
+            if (activateHitbox && projectileCollidable is null)
+            {
+                if (isSwordAttack)
+                {
+                    projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), ProjectileType.WoodenSword);
+                    isSwordAttack = false;
+                }
+                else if (isSwordBeamAttack)
+                {
+                    projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), ProjectileType.WoodenSwordBeam);
+                    isSwordBeamAttack = false;
+                }
+                else
+                {
+                    projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), EquippedProjectile);
+
+                }
                 projectileCollidable.setProjectileManager(this);
                 collisionController.AddCollidable(projectileCollidable);
-            } else if (activateHitbox && projectileCollidable is not null)
+            }
+            else if (activateHitbox && projectileCollidable is not null)
             {
                 projectileCollidable.Bounds = itemFired.getCollisionRectangle();
             }
@@ -113,18 +189,20 @@ public class ProjectileManager
             itemFired.UpdateProjectile();
 
             // Custom check for bombs (I know this isn't great practice)
-            if (itemFired is Bomb && projectileCollidable is null) {
+            if (itemFired is Bomb && projectileCollidable is null)
+            {
                 Bomb itemFiredCls = itemFired as Bomb;
-                if (itemFiredCls.Exploded == true) {
+                if (itemFiredCls.Exploded == true)
+                {
                     activateHitbox = true;
                 }
             }
-            
         }
         else
         {
             // Reset the projectile manager for the next projectile
-            if (projectileCollidable is not null) {
+            if (projectileCollidable is not null)
+            {
                 collisionController.RemoveCollidable(projectileCollidable);
                 projectileCollidable.UnregisterHitbox();
                 projectileCollidable = null;

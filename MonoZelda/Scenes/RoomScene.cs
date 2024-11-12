@@ -12,10 +12,12 @@ using MonoZelda.Items;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Enemies;
 using System.Collections.Generic;
+using System.Linq;
 using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Trigger;
 using MonoZelda.Sound;
+using MonoZelda.Tiles.Doors;
 
 namespace MonoZelda.Scenes;
 
@@ -30,10 +32,8 @@ public class RoomScene : Scene
     private List<ITrigger> triggers;
     private ItemFactory itemFactory;
     private EnemyFactory enemyFactory;
-    private List<IEnemy> enemies = new();
-    private Dictionary<IEnemy, EnemyCollisionManager> enemyDictionary = new();
-    private List<EnemyCollisionManager> enemyCollisions = new();
-    private List<EnemyProjectileCollisionManager> enemyProjectileCollisions = new();
+    private List<Enemy> enemies = new();
+    private Dictionary<Enemy, EnemySpawn> enemySpawnPoints = new();
     private IDungeonRoom room;
     private string roomName;
 
@@ -77,7 +77,7 @@ public class RoomScene : Scene
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(projectileManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerEquipProjectileCommand, new PlayerEquipProjectileCommand(projectileManager));   
-        commandManager.ReplaceCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand(projectileManager, playerSprite));
+        //commandManager.ReplaceCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand(projectileManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerSprite));
@@ -105,16 +105,15 @@ public class RoomScene : Scene
         itemFactory.CreateRoomItems();
     }
 
-    private void SpawnEnemies(ContentManager contentManager)
+    private void SpawnEnemies()
     {
         enemyFactory = new EnemyFactory(collisionController);
         foreach(var enemySpawn in room.GetEnemySpawns())
         {
-            enemies.Add(enemyFactory.CreateEnemy(enemySpawn.EnemyType, new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32)));
-        }
-        foreach (var enemy in enemies)
-        {
-            enemyDictionary.Add(enemy, new EnemyCollisionManager(enemy, collisionController, enemy.Width, enemy.Height));
+            var enemy = enemyFactory.CreateEnemy(enemySpawn.EnemyType,
+                new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32), itemFactory, enemySpawn.HasKey);
+            enemies.Add(enemy);
+            enemySpawnPoints.Add(enemy,enemySpawn);
         }
     }
 
@@ -149,13 +148,9 @@ public class RoomScene : Scene
         var doors = room.GetDoors();
         foreach (var door in doors)
         {
-            // TODO: Load kinds on concrete doors based on the door type
-            // TODO: This might be better as a factory method
-            // Speculating that the bombabale door will want to modify it's DoorSpawn to be bombed
-
             var transitionCommand = commandManager.GetCommand(CommandType.RoomTransitionCommand);
 
-            var dungeonDoor = new DungeonDoor(door, transitionCommand, collisionController);
+            DoorFactory.CreateDoor(door, transitionCommand, collisionController, enemies);
         }
     }
 
@@ -166,22 +161,27 @@ public class RoomScene : Scene
             projectileManager.UpdatedProjectileState();
         }
 
-        foreach(KeyValuePair<IEnemy, EnemyCollisionManager> entry in enemyDictionary)
+        foreach (var enemy in enemies.ToList())
         {
-            if (!entry.Key.Alive) // remove dead enemies from lists (hopefully this is useful for re-entering rooms)
+            if (!enemy.Alive)
             {
-                enemies.Remove(entry.Key);
-                enemyDictionary.Remove(entry.Key);
+                room.Remove(enemySpawnPoints[enemy]);
+                var itemRooms = new List<string> { "Room16", "Room12", "Room2", "Room5" };
+                enemies.Remove(enemy);
+                if (enemies.Count == 0 && itemRooms.Contains(room.RoomName))
+                {
+                    if (room.RoomName == "Room12")
+                    {
+                        itemFactory.CreateItem(ItemList.Boomerang, new Point(500, 400));
+                    }
+                    else
+                    {
+                        itemFactory.CreateItem(ItemList.Key, new Point(500, 400));
+                    }
+                    SoundManager.PlaySound("LOZ_Key_Appear", false);
+                }
             }
-            entry.Key.Update(gameTime);
-            if (entry.Key.GetType() == typeof(Aquamentus))
-            {
-                entry.Value.Update(entry.Key.Width, entry.Key.Height, new Point(entry.Key.Pos.X - 16, entry.Key.Pos.Y - 16));
-            }
-            else
-            {
-                entry.Value.Update(entry.Key.Width, entry.Key.Height, entry.Key.Pos);
-            }
+            enemy.Update();
         }
 
         itemFactory.Update();

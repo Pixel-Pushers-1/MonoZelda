@@ -1,107 +1,225 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Sprites;
 using System;
-using Microsoft.Xna.Framework.Content;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
-using Microsoft.Xna.Framework.Graphics;
+using MonoZelda.Commands;
+using MonoZelda.Items;
 using MonoZelda.Link;
 using MonoZelda.Sound;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
-    public class Wallmaster : IEnemy
+    public class Wallmaster : Enemy
     {
-        public Point Pos { get; set; }
-        public EnemyCollidable EnemyHitbox { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public bool Alive { get; set; }
+        public enum PlayerAdjacentWall
+        {
+            BottomLeft, BottomRight, TopLeft, TopRight, LeftBottom, LeftTop, RightTop, RightBottom, None
+        }
         private readonly Random rnd = new();
-        private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
-        private EnemyStateMachine stateMachine;
-        private CollisionController collisionController;
-
-        private int pixelsMoved;
-        private int health = 3;
-        private int tileSize = 64;
+        private Boolean grabbed;
+        private CommandManager commandManager;
+        private PlayerAdjacentWall adjacentWall = PlayerAdjacentWall.None;
+        private EnemyStateMachine.Direction nextDirection;
+        private EnemyStateMachine.Direction returnDirection;
+        private Point playerPos;
+        private Boolean spawned;
+        private float timer;
 
         public Wallmaster()
         {
             Width = 48;
             Height = 48;
+            Health = 2;
             Alive = true;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
         {
-            this.collisionController = collisionController;
-            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Wallmaster);
-            collisionController.AddCollidable(EnemyHitbox);
-            EnemyHitbox.setSpriteDict(enemyDict);
-            enemyDict.Position = spawnPosition;
-            Pos = spawnPosition;
-            pixelsMoved = 0;
-            stateMachine = new EnemyStateMachine(enemyDict);
-            stateMachine.SetSprite("wallmaster");
-        }
-        public void ChangeDirection()
-        {
-            switch (rnd.Next(1, 5))
-            {
-                case 1:
-                    direction = EnemyStateMachine.Direction.Left;
-                    break;
-                case 2:
-                    direction = EnemyStateMachine.Direction.Right;
-                    break;
-                case 3:
-                    direction = EnemyStateMachine.Direction.Up;
-                    break;
-                case 4:
-                    direction = EnemyStateMachine.Direction.Down;
-                    break;
-            }
-            stateMachine.ChangeDirection(direction);
+            EnemyHitbox = new EnemyCollidable(new Rectangle(-100, -100, Width, Height), EnemyList.Wallmaster);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasItem);
+            spawned = true;
+            timer = (float)(rnd.NextDouble()  - rnd.Next(0,2))*-1;
+            Pos = new Point(-100, -100);
+            StateMachine.Spawning = false;
+            grabbed = false;
+            StateMachine.SetSprite("wallmaster");
         }
 
-        //Just using stalfos movement for now since wallmaster moves kind of weird
-        public void Update(GameTime gameTime)
+        public void GrabPlayer(CommandManager commandManager)
         {
-            if (pixelsMoved >= tileSize)
-            {
-                pixelsMoved = 0;
-                ChangeDirection();
-            }
-            else
-            {
-                pixelsMoved++;
-            }
-            Pos = stateMachine.Update(this, Pos, gameTime);
+            this.commandManager = commandManager;
+            grabbed = true;
+            timer = 2.9f;
         }
 
-        public void TakeDamage(Boolean stun, Direction collisionDirection)
+        public void Spawn()
         {
-            if (stun)
+            if (!spawned && adjacentWall != PlayerAdjacentWall.None)
             {
-                stateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
-                pixelsMoved = -128;
+                timer = 0;
+                spawned = true;
+                switch (adjacentWall)
+                {
+                    case PlayerAdjacentWall.BottomLeft:
+                        Pos = new Point(playerPos.X - TileSize*3, TileSize*14);
+                        StateMachine.ChangeDirection(EnemyStateMachine.Direction.Up);
+                        break;
+                    case PlayerAdjacentWall.BottomRight:
+                        Pos = new Point(playerPos.X + TileSize * 3, TileSize*14);
+                        StateMachine.ChangeDirection(EnemyStateMachine.Direction.Up);
+                        break;
+                    case PlayerAdjacentWall.TopLeft:
+                        Pos = new Point(playerPos.X + TileSize * 3, TileSize * 3);
+                        StateMachine.ChangeDirection(EnemyStateMachine.Direction.Down);
+                        break;
+                    case PlayerAdjacentWall.TopRight:
+                        Pos = new Point(playerPos.X - TileSize * 3, TileSize * 3);
+                        StateMachine.ChangeDirection(EnemyStateMachine.Direction.Down);
+                        break;
+                    case PlayerAdjacentWall.LeftTop:
+                        Pos = new Point(0, playerPos.Y - TileSize * 3);
+                        StateMachine.ChangeDirection(EnemyStateMachine.Direction.Right);
+                        break;
+                    case PlayerAdjacentWall.LeftBottom:
+                        Pos = new Point(0, playerPos.Y + TileSize * 3);
+                        StateMachine.ChangeDirection(EnemyStateMachine.Direction.Right);
+                        break;
+                    case PlayerAdjacentWall.RightTop:
+                        Pos = new Point(TileSize * 16, playerPos.Y + TileSize * 3);
+                        StateMachine.ChangeDirection(EnemyStateMachine.Direction.Left);
+                        break;
+                    case PlayerAdjacentWall.RightBottom:
+                        Pos = new Point(TileSize * 16, playerPos.Y - TileSize * 3);
+                        StateMachine.ChangeDirection(EnemyStateMachine.Direction.Left);
+                        break;
+                }
             }
-            else
+        }
+
+        public override void Update()
+        {
+            playerPos = PlayerState.Position;
+            adjacentWall = PlayerAdjacentWall.None;
+            if (spawned)
             {
-                health--;
-                if (health > 0)
+                timer += (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+            }
+
+            if (timer >= -0.1 && timer <= -0.01)
+            {
+                spawned = false;
+            }
+
+            if (!spawned)
+            {
+                //left of bottom wall
+                if (playerPos.Y >= TileSize * 11 && playerPos.X <= TileSize * 8)
                 {
-                    SoundManager.PlaySound("LOZ_Enemy_Hit", false);
-                    stateMachine.Knockback(true, collisionDirection);
+                    adjacentWall = PlayerAdjacentWall.BottomLeft;
+                    nextDirection = EnemyStateMachine.Direction.Right;
+                    returnDirection = EnemyStateMachine.Direction.Down;
                 }
-                else
+
+                //right of bottom wall
+                if (playerPos.Y >= TileSize * 11 && playerPos.X >= TileSize * 8)
                 {
-                    SoundManager.PlaySound("LOZ_Enemy_Die", false);
-                    stateMachine.Die();
-                    EnemyHitbox.UnregisterHitbox();
-                    collisionController.RemoveCollidable(EnemyHitbox);
+                    adjacentWall = PlayerAdjacentWall.BottomRight;
+                    nextDirection = EnemyStateMachine.Direction.Left;
+                    returnDirection = EnemyStateMachine.Direction.Down;
                 }
+
+                //left of top wall
+                if (playerPos.Y <= TileSize * 6 && playerPos.X <= TileSize * 8)
+                {
+                    adjacentWall = PlayerAdjacentWall.TopLeft;
+                    nextDirection = EnemyStateMachine.Direction.Left;
+                    returnDirection = EnemyStateMachine.Direction.Up;
+                }
+
+                //right of top wall
+                if (playerPos.Y <= TileSize * 6 && playerPos.X >= TileSize * 8)
+                {
+                    adjacentWall = PlayerAdjacentWall.TopRight;
+                    nextDirection = EnemyStateMachine.Direction.Right;
+                    returnDirection = EnemyStateMachine.Direction.Up;
+                }
+
+                //top of left wall
+                if (playerPos.Y <= TileSize * 8 && playerPos.X <= TileSize * 3)
+                {
+                    adjacentWall = PlayerAdjacentWall.LeftTop;
+                    nextDirection = EnemyStateMachine.Direction.Down;
+                    returnDirection = EnemyStateMachine.Direction.Left;
+                }
+
+                //bottom of left wall
+                if (playerPos.Y >= TileSize * 8 && playerPos.X <= TileSize * 3)
+                {
+                    adjacentWall = PlayerAdjacentWall.LeftBottom;
+                    nextDirection = EnemyStateMachine.Direction.Up;
+                    returnDirection = EnemyStateMachine.Direction.Left;
+                }
+
+                //top of right wall
+                if (playerPos.Y <= TileSize * 8 && playerPos.X >= TileSize * 13)
+                {
+                    adjacentWall = PlayerAdjacentWall.RightTop;
+                    nextDirection = EnemyStateMachine.Direction.Up;
+                    returnDirection = EnemyStateMachine.Direction.Right;
+                }
+
+                //bottom of right wall
+                if (playerPos.Y >= TileSize * 8 && playerPos.X >= TileSize * 13)
+                {
+                    adjacentWall = PlayerAdjacentWall.RightBottom;
+                    nextDirection = EnemyStateMachine.Direction.Down;
+                    returnDirection = EnemyStateMachine.Direction.Right;
+                }
+
+                timer = 0;
+
+            }
+
+            if (timer >= 1.30)
+            {
+                if (timer >= 4.2)
+                {
+                    StateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
+                    adjacentWall = PlayerAdjacentWall.None;
+                    StateMachine.Die(true);
+                    spawned = false;
+                    if (grabbed)
+                    {
+                        //might need to use a different type of transition here, idk what it is in game
+                        commandManager.Execute(CommandType.RoomTransitionCommand, "Room1", Link.Direction.Down);
+                    }
+                }
+                else if (timer >= 2.9)
+                {
+                    StateMachine.ChangeDirection(returnDirection);
+                    // if link is grabbed animation should start here
+                }
+                else if (spawned)
+                {
+                    StateMachine.ChangeDirection(nextDirection);
+                }
+            }
+            Spawn();
+            Pos = StateMachine.Update(this, Pos);
+            EnemyCollision.Update(Width, Height, Pos);
+        }
+
+        public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
+        {
+            Health -= damage;
+            if (Health <= 0 && stunTime == 0)
+            {
+                StateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
+                SoundManager.PlaySound("LOZ_Enemy_Die", false);
+                StateMachine.Die(true);
+                spawned = false;
+                Health = 2;
             }
         }
     }

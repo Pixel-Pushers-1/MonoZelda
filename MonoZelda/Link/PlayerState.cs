@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoZelda.Commands.GameCommands;
 using MonoZelda.Link.Projectiles;
 using System.Diagnostics;
 
@@ -6,17 +7,34 @@ namespace MonoZelda.Link;
 
 public static class PlayerState
 {
-    private static readonly int INITIAL_HP = 6;
+    private static int INITIAL_HP =6;
     private static int _health = INITIAL_HP;
 
     public static void Initialize()
     {
         Direction = Direction.Down;
+        Position = new Point(515, 725);
+        IsCandleUsed = false;
+        IsDead = false;
+        IsKnockedBack = false;
+        _health = INITIAL_HP;
+        MaxHealth = INITIAL_HP;
+        Rupees = 0;
+        Bombs = 0;
+        Keys = 0;
+        EquippedProjectile = ProjectileType.None;
+        Position = new Point(500, 700);
+        HasBoomerang = false;
+        ObtainedTriforce = false;
+    }
+    public static void ResetCandle()
+    {
+        IsCandleUsed = false;
         Position = new Point(500, 700);
         HasBoomerang = false;
         ObtainedTriforce = false;   
     }
-
+    
     public static int Health
     {
         get => _health;
@@ -26,6 +44,11 @@ public static class PlayerState
             if (_health <= 0)
                 IsDead = true;
         }
+    }
+
+    public static bool IsMaxHealth()
+    {
+        return Health == INITIAL_HP;
     }
 
     public static void TakeDamage()
@@ -40,8 +63,9 @@ public static class PlayerState
     public static int Rupees { get; set; }
     public static int Bombs { get; set; }
     public static int Keys { get; set; }
-    public static bool IsDead { get; private set; }
+    public static bool IsDead { get; set; }
     public static bool IsKnockedBack { get; set; }
+    public static bool IsCandleUsed { get; set; }   
     public static int MaxHealth { get; set; } = INITIAL_HP;
     public static Point Position { get; set; }
     public static Direction Direction { get; set; }

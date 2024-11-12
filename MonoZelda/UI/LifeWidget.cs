@@ -21,7 +21,7 @@ namespace MonoZelda.UI
             int numberOfHearts = (int) ((PlayerState.MaxHealth + 1) / 2f);
             for (int i = 0; i < numberOfHearts; i++)
             {
-                Point heartPosition = WidgetLocation + margin + new Point((i * 32), 32);
+                Point heartPosition = WidgetLocation + margin + new Point(i * 32, 0);
                 SpriteDict heart = new SpriteDict(SpriteType.HUD, SpriteLayer.HUD, heartPosition);
                 _hearts.Add(heart);
             }
@@ -52,7 +52,13 @@ namespace MonoZelda.UI
                 else
                     _hearts[i].SetSprite("heart_empty");
                 health -= 2;
+
+                Point heartPosition = WidgetLocation + margin + new Point(i * 32, 0); 
+                _hearts[i].Position = heartPosition; 
+
             }
+           
+
         }
     }
 }

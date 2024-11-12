@@ -25,8 +25,8 @@ public class PlayerSpriteManager
     private Direction playerDirection;
     private SpriteDict playerSpriteDict;
     private Vector2 playerPosition;
-    private float playerSpeed = 4.0f;
-    private const float PICKUP_TIME = 3f;
+    private float playerSpeed = 6.0f;
+private const float PICKUP_TIME = 3f;
     private double timer;
 
     private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
@@ -110,6 +110,7 @@ public class PlayerSpriteManager
             timer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         }
         playerSpriteDict.Position = playerPosition.ToPoint();
+        PlayerState.Position = playerPosition.ToPoint();
     }
 
     public void PlayerDeath()

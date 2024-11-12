@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Commands.CollisionCommands;
+using System.Net.Http;
 
 namespace MonoZelda.Commands;
 
@@ -13,7 +14,6 @@ public enum CommandType
     PlayerTakeDamageCommand,
     PlayerEquipProjectileCommand,
     PlayerFireProjectileCommand,
-    PlayerFireSwordBeamCommand,
     ResetCommand,
     PlayerStandingCommand,
     StartGameCommand,
@@ -27,12 +27,13 @@ public enum CommandType
     PlayerTriggerCollisionCommand,
     EnemyPlayerProjectileCollisionCommand,
     EnemyStaticRoomCollisionCommand,
-    EnemyStaticBoundaryCollisionCommand,
     EnemyProjectileStaticBoundaryCollisionCommand,
     PlayerProjectileStaticRoomCollisionCommand,
     PlayerProjectileStaticBoundaryCollisionCommand,
     ToggleGizmosCommand,
     ToggleInventoryCommand,
+    PlayerProjectileDoorCollisionCommand,
+    PlayerDeathCommand,
     None
 }
 
@@ -44,7 +45,6 @@ public class CommandManager
         commandMap = new Dictionary<CommandType, ICommand>();
         AddCommand(CommandType.ExitCommand, new ExitCommand());
         AddCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand());
-        AddCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand());
         AddCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());
         AddCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand());
         AddCommand(CommandType.PlayerEquipProjectileCommand, new PlayerEquipProjectileCommand());
@@ -61,12 +61,12 @@ public class CommandManager
         AddCommand(CommandType.PlayerTriggerCollisionCommand, new PlayerTriggerCollisionCommand());
         AddCommand(CommandType.EnemyPlayerProjectileCollisionCommand, new EnemyPlayerProjectileCollisionCommand());
         AddCommand(CommandType.EnemyStaticRoomCollisionCommand, new EnemyStaticRoomCollisionCommand());
-        AddCommand(CommandType.EnemyStaticBoundaryCollisionCommand, new EnemyStaticBoundaryCollisionCommand());
         AddCommand(CommandType.EnemyProjectileStaticBoundaryCollisionCommand, new EnemyProjectileStaticBoundaryCollisionCommand());
         AddCommand(CommandType.PlayerProjectileStaticRoomCollisionCommand, new PlayerProjectileStaticRoomCollisionCommand());
         AddCommand(CommandType.PlayerProjectileStaticBoundaryCollisionCommand, new PlayerProjectileStaticBoundaryCollisionCommand());
         AddCommand(CommandType.ToggleGizmosCommand, new ToggleGizmosCommand());
         AddCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand());
+        AddCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand());
     }
 
     public void Execute(CommandType commandType, params object[] metadata)
