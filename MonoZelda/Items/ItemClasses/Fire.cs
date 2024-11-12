@@ -16,7 +16,6 @@ namespace MonoZelda.Items.ItemClasses
             itemType = ItemList.Fire;
         }
 
-
         public override void ItemSpawn(SpriteDict fireDict, Point spawnPosition, CollisionController collisionController)
         {
             Point offset = new Point(0, 64);

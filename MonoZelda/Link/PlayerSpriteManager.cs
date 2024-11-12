@@ -1,4 +1,4 @@
-﻿using MonoZelda.Sprites;
+using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
 using System.Collections.Generic;
@@ -25,13 +25,13 @@ public class PlayerSpriteManager
     private const float DAMAGE_FLASH_TIME = .5f;
     private const float CLOCK_FLASH_TIME = 3f;
     private const float DAMAGE_IMMOBILITY_TIME = .2f;
+    private const float PICKUP_TIME = 3f;
 
     private Direction playerDirection;
     private SpriteDict playerSpriteDict;
     private Vector2 playerPosition;
     private float playerSpeed = 6.0f;
     private double immobilityTimer;
-    private const float PICKUP_TIME = 3f;
 
     private static readonly Dictionary<Direction, string> DirectionToStringMap = new()
     {
