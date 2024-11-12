@@ -99,27 +99,6 @@ public class RoomScene : Scene
         // create projectile object and spriteDict
         var projectileDict = new SpriteDict(SpriteType.Projectiles, 0, new Point(0, 0));
         projectileManager = new ProjectileManager(collisionController, projectileDict);
-
-        // Create itemFactory and HUDManager
-        itemFactory = new ItemFactory(collisionController);
-<<<<<<<<< Temporary merge branch 1
-
-        // replace required commands
-        commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(projectileManager, playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerEquipProjectileCommand, new PlayerEquipProjectileCommand(projectileManager));   
-        //commandManager.ReplaceCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand(projectileManager, playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerSprite));
-=========
->>>>>>>>> Temporary merge branch 2
-        //commandManager.ReplaceCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand(projectileManager, playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerSprite));
-=========
->>>>>>>>> Temporary merge branch 2
     }
 
     private void LoadRoom(ContentManager contentManager)
@@ -181,24 +160,18 @@ public class RoomScene : Scene
     private void LoadRoomTextures(ContentManager contentManager)
     {
         // Room wall border
-<<<<<<<<< Temporary merge branch 1
-            var transitionCommand = commandManager.GetCommand(CommandType.RoomTransitionCommand);
+        var r = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, DungeonConstants.DungeonPosition);
+        r.SetSprite(nameof(Dungeon1Sprite.room_exterior));
+        r.Position = DungeonConstants.DungeonPosition;
 
-            DoorFactory.CreateDoor(door, transitionCommand, collisionController, enemies);
-=========
+        // Floor background
         var f = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, DungeonConstants.BackgroundPosition);
->>>>>>>>> Temporary merge branch 2
         f.SetSprite(room.RoomSprite.ToString());
 
         // Doors
         var doors = room.GetDoors();
         foreach (var door in doors)
         {
-<<<<<<<<< Temporary merge branch 1
-            var transitionCommand = commandManager.GetCommand(CommandType.RoomTransitionCommand);
-
-            DoorFactory.CreateDoor(door, transitionCommand, collisionController, enemies);
-=========
             var gameDoor = DoorFactory.CreateDoor(door, transitionCommand, collisionController, enemies);
             if (gameDoor is IGameUpdate updateable)
             {
