@@ -38,9 +38,9 @@ namespace MonoZelda.Scenes
             {
                 ExitMarioScene();
             }
-            
+
             // center of the screen
-            var center = new Point(gd.Viewport.Width / 2, DungeonConstants.RoomPosition.Y);
+            var center = new Point(gd.Viewport.Width / 2, DungeonConstants.RoomPosition.Y - 64);
 
             // the room texutres are 192 * 4 = 768 pixels wide
             var leftPosition = center - new Point(192 * 4, 0);
@@ -81,7 +81,7 @@ namespace MonoZelda.Scenes
         public override void Update(GameTime gameTime)
         {
             // It takes a few frames before the textures load
-            if(delay < 15)
+            if(delay < 20)
             {
                 delay++;
                 return;
