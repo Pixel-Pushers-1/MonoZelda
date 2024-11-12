@@ -27,8 +27,13 @@ public static class PlayerState
         Bombs = INITIAL_BOMBS;
         Keys = INITIAL_KEYS;
         EquippedProjectile = ProjectileType.None;
-        HasBoomerang = false;
-        ObtainedTriforce = false;
+
+    }
+
+    public static void ResetCandle()
+    {
+        _health = INITIAL_HP;
+        IsCandleUsed = false;
     }
 
     public static void Reset()
@@ -38,11 +43,6 @@ public static class PlayerState
         Bombs = INITIAL_BOMBS;
         Keys = INITIAL_KEYS;
 
-        IsCandleUsed = false;
-    }
-
-    public static void ChangeRoom()
-    {
         IsCandleUsed = false;
     }
 
