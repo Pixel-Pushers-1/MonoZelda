@@ -128,8 +128,7 @@ namespace MonoZelda.Enemies
                 {
                     SoundManager.PlaySound("LOZ_Enemy_Hit", false);
                     StateMachine.DamageFlash();
-                    StateMachine.Knockback(true, PlayerState.Direction);
-                    Debug.WriteLine(PlayerState.Direction);
+                    StateMachine.Knockback(true, collisionDirection);
                 }
                 else
                 {
