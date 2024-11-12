@@ -62,6 +62,10 @@ namespace MonoZelda.Tiles
                 Dungeon1Sprite.diamond_door_north => Dungeon1Sprite.door_open_north,
                 Dungeon1Sprite.diamond_door_south => Dungeon1Sprite.door_open_south,
                 Dungeon1Sprite.diamond_door_west => Dungeon1Sprite.door_open_west,
+                Dungeon1Sprite.door_closed_south => Dungeon1Sprite.door_open_south, // Legacy closed_door support
+                Dungeon1Sprite.door_closed_north => Dungeon1Sprite.door_open_north,
+                Dungeon1Sprite.door_closed_east => Dungeon1Sprite.door_open_east,
+                Dungeon1Sprite.door_closed_west => Dungeon1Sprite.door_open_west,
                 _ => Spawn.Type
             };
         }
@@ -80,7 +84,7 @@ namespace MonoZelda.Tiles
             
             SoundManager.PlaySound("LOZ_Door_Unlock", false);
             isOpen = true;
-            SpriteDict.SetSprite(Spawn.Type.ToString());
+            SpriteDict.SetSprite(GetOpenSprite().ToString());
             Spawn.Type = GetOpenSprite();
             CollisionController.RemoveCollidable(collider);
         }

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Commands.CollisionCommands;
-using System.Net.Http;
 
 namespace MonoZelda.Commands;
 
