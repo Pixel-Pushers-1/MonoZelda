@@ -14,7 +14,7 @@ namespace MonoZelda.Tiles
         private const int HALF_TILE = 32;
         public Wall(DoorSpawn door, CollisionController c) 
         {
-            var sprite = new SpriteDict(SpriteType.Blocks, SpriteLayer.DoorLayer, door.Position);
+            var sprite = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background+1, door.Position);
             sprite.SetSprite(door.Type.ToString());
             
             // Create collider to block entry, HALF_TILE makes the door flush with the wall

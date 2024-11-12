@@ -19,9 +19,13 @@ namespace MonoZelda.Commands.CollisionCommands
                 {
                     t1.Trigger(direction);
                 }
-                if (metadata[2] is ITrigger t2)
+                if (metadata[1] is ITrigger t2)
                 {
                     t2.Trigger(direction);
+                }
+                if (metadata[2] is ITrigger t3)
+                {
+                    t3.Trigger(direction);
                 }
             }
 

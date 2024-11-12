@@ -52,17 +52,6 @@ namespace MonoZelda.Trigger
             OnTrigger += PushTrigger;
         }
 
-        // Need to make Intersect use our static collider Bounds proxy.
-        public new bool Intersects(ICollidable other)
-        {
-            return Bounds.Intersects(other.Bounds);
-        }
-
-        public new Rectangle GetIntersectionArea(ICollidable other)
-        {
-            return Rectangle.Intersect(Bounds, other.Bounds);
-        }
-
         public void Update(GameTime time)
         {
             blockDict.Position = Bounds.Location;
