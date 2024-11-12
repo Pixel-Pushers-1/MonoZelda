@@ -5,6 +5,7 @@ using MonoZelda.Sound;
 using MonoZelda.Enemies;
 using MonoZelda.Link;
 using System.Collections.Generic;
+using MonoZelda.UI;
 
 namespace MonoZelda.Items.ItemClasses;
 
@@ -23,6 +24,7 @@ public class Compass : Item
 
     public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
     {
+        HUDMapWidget.SetCompassMarkerVisible(true);
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(itemCollidableDict, collisionController);
     }
