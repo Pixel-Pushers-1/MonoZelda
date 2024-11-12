@@ -153,6 +153,7 @@ namespace MonoZelda.Enemies.EnemyClasses
                 else
                 {
                     SoundManager.PlaySound("LOZ_Boss_Hit", false);
+                    StateMachine.DamageFlash();
                 }
             }
         }

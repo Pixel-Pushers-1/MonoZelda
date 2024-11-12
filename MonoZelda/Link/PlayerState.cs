@@ -27,13 +27,12 @@ public static class PlayerState
         Bombs = INITIAL_BOMBS;
         Keys = INITIAL_KEYS;
         EquippedProjectile = ProjectileType.None;
-        HasBoomerang = false;
-        ObtainedTriforce = false;
+
     }
 
     public static void ResetCandle()
     {
-        IsCandleUsed = false;  
+        IsCandleUsed = false;
     }
 
     public static int Health
@@ -59,6 +58,10 @@ public static class PlayerState
             Health = Health - 1;
         }
         Debug.WriteLine($"Player Health: {Health}");
+    }
+
+    public static void GetHealth() {
+        Health = MathHelper.Clamp(Health + 2, 0, INITIAL_HP);
     }
 
     public static int Rupees { get; set; }

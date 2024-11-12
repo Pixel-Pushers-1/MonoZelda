@@ -5,6 +5,7 @@ using MonoZelda.Sound;
 using MonoZelda.Enemies;
 using MonoZelda.Link;
 using System.Collections.Generic;
+using MonoZelda.UI;
 
 namespace MonoZelda.Items.ItemClasses;
 
@@ -22,6 +23,7 @@ public class Map : Item
 
     public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
     {
+        HUDMapWidget.SetMapVisible(true);
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(itemCollidableDict, collisionController);
     }
