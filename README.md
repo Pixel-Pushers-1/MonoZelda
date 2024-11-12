@@ -35,15 +35,13 @@ A weekly collection of code metrics and analysis can be found in `CodeMetrics.xl
 # Sprint Reflections
 All Sprint review write ups can be found in `SprintReflections.md`.
 
-# Sprint 2
+# Sprint 4
 
-## Sprint 2 Pull Requests
+## Sprint 4 Pull Requests
 The pull requests at the link below demonstrate our teams code review and maintainability for Sprint 3.
-https://github.com/Pixel-Pushers-1/MonoZelda/pulls?q=is%3Apr+milestone%3ASprint2+
 
-## Sprint 2 Burndown
+## Sprint 4 Burndown
 A complete burndown chart of start and end times for all Sprint 2 functionality can be found at
-https://github.com/orgs/Pixel-Pushers-1/projects/1/views/4
 
 # Sprint 3
 
@@ -55,4 +53,17 @@ Code review and maintainability is not limited to the Pull Requests. We have dai
 
 ## Sprint 3 Burndown
 A complete burndown chart of start and end times for all Sprint 3 functionality can be found at
+https://github.com/orgs/Pixel-Pushers-1/projects/1/views/4?filterQuery=sprint%3A%22Sprint+3%22
+
+
+# Sprint 2
+
+## Sprint 2 Pull Requests
+The pull requests at the link below demonstrate our teams code review and maintainability for Sprint 3.
+https://github.com/Pixel-Pushers-1/MonoZelda/pulls?q=is%3Apr+milestone%3ASprint2+
+
+## Sprint 2 Burndown
+A complete burndown chart of start and end times for all Sprint 2 functionality can be found at
+https://github.com/orgs/Pixel-Pushers-1/projects/1/views/4
+
 https://github.com/orgs/Pixel-Pushers-1/projects/1/views/4?filterQuery=sprint%3A%22Sprint+3%22
