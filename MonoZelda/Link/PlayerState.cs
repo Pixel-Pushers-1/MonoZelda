@@ -63,7 +63,7 @@ public static class PlayerState
     public static int Rupees { get; set; } = INITIAL_RUPEES;
     public static int Bombs { get; set; } = INITIAL_BOMBS;
     public static int Keys { get; set; } = INITIAL_KEYS;
-    public static bool IsDead { get; private set; }
+    public static bool IsDead { get; set; }
     public static bool IsKnockedBack { get; set; }
     public static bool IsCandleUsed { get; set; }   
     public static int MaxHealth { get; set; }

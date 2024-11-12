@@ -23,7 +23,9 @@ public enum PickUpType
 public class PlayerSpriteManager
 {
     private const float DAMAGE_FLASH_TIME = .5f;
+    private const float CLOCK_FLASH_TIME = 3f;
     private const float DAMAGE_IMMOBILITY_TIME = .2f;
+    private const float PICKUP_TIME = 3f;
 
     private Direction playerDirection;
     private SpriteDict playerSpriteDict;
@@ -177,6 +179,17 @@ public class PlayerSpriteManager
             }
         }
        
+    }
+
+    public void PickUpItem(PickUpType pickUpSprite)
+    {
+        immobilityTimer = PICKUP_TIME;
+        if (immobilityTimer > 0) {
+            playerSpriteDict.SetSprite(pickUpSprite.ToString());
+        }
+        else {
+            immobilityTimer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+        }
     }
 
 }
