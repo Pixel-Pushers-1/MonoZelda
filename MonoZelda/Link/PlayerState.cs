@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Link.Projectiles;
 using System.Diagnostics;
