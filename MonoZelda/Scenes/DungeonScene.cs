@@ -123,7 +123,6 @@ namespace MonoZelda.Scenes
             SpriteDrawer.Reset();
             //reset playerStateParams
             PlayerState.ResetCandle();
-            PlayerState.Reset();
            
             activeScene.UnloadContent();
             

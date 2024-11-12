@@ -34,7 +34,7 @@ namespace MonoZelda.Scenes
             LoadPlayer();
             LoadCommands();
             LoadExit();
-            SpawnEnemies(contentManager);
+            SpawnEnemies();
         }
 
         private void LoadExit()

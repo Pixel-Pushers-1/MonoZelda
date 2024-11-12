@@ -130,7 +130,7 @@ public class RoomScene : Scene
         }
     }
 
-    private void SpawnEnemies()
+    protected void SpawnEnemies()
     {
         enemyFactory = new EnemyFactory(collisionController);
         foreach(var enemySpawn in room.GetEnemySpawns())
