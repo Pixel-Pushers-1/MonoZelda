@@ -30,10 +30,10 @@ namespace MonoZelda.Scenes
             var offset = new Point(0, 64);
             var background = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, DungeonConstants.DungeonPosition+ offset);
             background.SetSprite(nameof(Dungeon1Sprite.room_item));
-            
+
+            CreateStaticColliders();
             LoadPlayer();
             LoadCommands();
-            CreateStaticColliders();
             LoadExit();
         }
 
