@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Enemies.EnemyProjectiles;
+using MonoZelda.Items;
 using MonoZelda.Link;
 using MonoZelda.Sound;
 
@@ -31,10 +32,10 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
         {
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Aquamentus);
-            base.EnemySpawn(enemyDict, spawnPosition, collisionController);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasItem);
             spawnPoint = spawnPosition;
             StateMachine.SetSprite("aquamentus_left");
             StateMachine.ChangeDirection(EnemyStateMachine.Direction.Left);

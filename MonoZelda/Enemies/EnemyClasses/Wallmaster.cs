@@ -4,6 +4,7 @@ using System;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Commands;
+using MonoZelda.Items;
 using MonoZelda.Link;
 using MonoZelda.Sound;
 
@@ -33,10 +34,10 @@ namespace MonoZelda.Enemies.EnemyClasses
             Alive = true;
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
         {
             EnemyHitbox = new EnemyCollidable(new Rectangle(-100, -100, Width, Height), EnemyList.Wallmaster);
-            base.EnemySpawn(enemyDict, spawnPosition, collisionController);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasItem);
             spawned = true;
             timer = (float)(rnd.NextDouble()  - rnd.Next(0,2))*-1;
             Pos = new Point(-100, -100);

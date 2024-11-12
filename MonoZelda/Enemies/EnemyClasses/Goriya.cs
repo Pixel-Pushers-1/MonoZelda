@@ -4,7 +4,9 @@ using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Enemies.EnemyProjectiles;
 using MonoZelda.Enemies.GoriyaFolder;
+using MonoZelda.Items;
 using MonoZelda.Link;
+using MonoZelda.Sound;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies.EnemyClasses
@@ -25,10 +27,10 @@ namespace MonoZelda.Enemies.EnemyClasses
             projectileActive = false;
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
         {
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Goriya);
-            base.EnemySpawn(enemyDict, spawnPosition, collisionController);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasItem);
         }
 
         public override void ChangeDirection()
@@ -96,10 +98,33 @@ namespace MonoZelda.Enemies.EnemyClasses
         }
         public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
         {
-            base.TakeDamage(stunTime, collisionDirection, damage);
-            if (Health <= 0 && projectile != null)
+            if (stunTime > 0)
             {
-                projectile.ViewProjectile(false, false);
+                StateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
+                PixelsMoved = (int)(stunTime * TileSize) * -1;
+            }
+            else
+            {
+                Health -= damage;
+                if (Health > 0)
+                {
+                    SoundManager.PlaySound("LOZ_Enemy_Hit", false);
+                    if (!projectileActive)
+                    {
+                        StateMachine.Knockback(true, collisionDirection);
+                    }
+                }
+                else
+                {
+                    SoundManager.PlaySound("LOZ_Enemy_Die", false);
+                    StateMachine.Die(false);
+                    EnemyHitbox.UnregisterHitbox();
+                    CollisionController.RemoveCollidable(EnemyHitbox);
+                    if (projectile != null)
+                    {
+                        projectile.ViewProjectile(false, false);
+                    }
+                }
             }
 
         }

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Items;
 using MonoZelda.Link;
 using MonoZelda.Sprites;
 using Point = Microsoft.Xna.Framework.Point;
@@ -23,10 +24,10 @@ namespace MonoZelda.Enemies.EnemyClasses
             Alive = true;
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
         {
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Gel);
-            base.EnemySpawn(enemyDict, spawnPosition, collisionController);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasItem);
             spawnTimer = 0;
             readyToJump = false;
             StateMachine.SetSprite("gel_turquoise");
