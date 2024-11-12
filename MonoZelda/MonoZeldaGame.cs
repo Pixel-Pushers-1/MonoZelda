@@ -6,6 +6,7 @@ using MonoZelda.Commands;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Scenes;
 using MonoZelda.Sound;
+using MonoZelda.Link;
 
 namespace MonoZelda;
 
@@ -46,6 +47,7 @@ public class MonoZeldaGame : Game
         commandManager.ReplaceCommand(CommandType.ExitCommand, new ExitCommand(this));
         commandManager.ReplaceCommand(CommandType.StartGameCommand, new StartGameCommand(this));
         commandManager.ReplaceCommand(CommandType.ResetCommand, new ResetCommand(this));
+        commandManager.ReplaceCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand(this));    
 
         // create controller objects
         keyboardController = new KeyboardController(commandManager);
@@ -82,6 +84,13 @@ public class MonoZeldaGame : Game
         scene.Update(gameTime);
 
         base.Update(gameTime);
+        if (PlayerState.IsDead)
+        {
+            commandManager.Execute(CommandType.PlayerDeathCommand);
+            PlayerState.IsDead = false;
+            PlayerState.Initialize();
+            
+        }
     }
 
     protected override void Draw(GameTime gameTime)
@@ -118,7 +127,7 @@ public class MonoZeldaGame : Game
         if (scene is MainMenuScene)
         {
             SoundManager.StopSound("LOZ_Intro");
-            LoadDungeon("RoomTest");
+            LoadDungeon("Room1");
         }
     }
 

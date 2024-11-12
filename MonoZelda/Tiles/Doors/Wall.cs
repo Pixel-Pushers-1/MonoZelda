@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Commands;
 using MonoZelda.Controllers;

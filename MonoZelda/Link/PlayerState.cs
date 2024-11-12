@@ -7,20 +7,31 @@ namespace MonoZelda.Link;
 
 public static class PlayerState
 {
-    private static readonly int INITIAL_HP = 6;
+    private static int INITIAL_HP =6;
     private static int _health = INITIAL_HP;
 
     public static void Initialize()
     {
         Direction = Direction.Down;
-        Position = new Point(500, 700);
+        Position = new Point(515, 725);
         IsCandleUsed = false;
+        IsDead = false;
+        IsKnockedBack = false;
+        _health = INITIAL_HP;
+        MaxHealth = INITIAL_HP;
+        Rupees = 0;
+        Bombs = 0;
+        Keys = 0;
+        EquippedProjectile = ProjectileType.None;
+
+
+
     }
-    public static void Reset()
+    public static void ResetCandle()
     {
         IsCandleUsed = false;
     }
-
+    
     public static int Health
     {
         get => _health;
@@ -49,7 +60,7 @@ public static class PlayerState
     public static int Rupees { get; set; }
     public static int Bombs { get; set; }
     public static int Keys { get; set; }
-    public static bool IsDead { get; private set; }
+    public static bool IsDead { get; set; }
     public static bool IsKnockedBack { get; set; }
     public static bool IsCandleUsed { get; set; }   
     public static int MaxHealth { get; set; } = INITIAL_HP;

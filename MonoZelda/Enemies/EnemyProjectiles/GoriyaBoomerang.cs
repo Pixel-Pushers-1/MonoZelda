@@ -14,7 +14,7 @@ namespace MonoZelda.Enemies.GoriyaFolder
         public bool Active { get; set; }
         public EnemyProjectileCollidable ProjectileHitbox { get; set; }
         private EnemyStateMachine.Direction attackDirection;
-        private float velocity = 360;
+        private float velocity = 400;
         private float attackTimer;
         private float dt;
         private Boolean returning;

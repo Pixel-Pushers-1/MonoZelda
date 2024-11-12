@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Items;
 using MonoZelda.Link;
 using MonoZelda.Sound;
 using MonoZelda.Sprites;
@@ -33,7 +34,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Alive = true;
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
         {
             this.collisionController = collisionController;
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Rope);
@@ -43,7 +44,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Pos = spawnPosition;
             enemyCollision = new EnemyCollisionManager(this, Width, Height);
             pixelsMoved = 0;
-            stateMachine = new EnemyStateMachine(enemyDict);
+            stateMachine = new EnemyStateMachine(enemyDict, itemFactory, hasItem);
         }
 
         public override void ChangeDirection()

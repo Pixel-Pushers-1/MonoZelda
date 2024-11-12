@@ -101,8 +101,9 @@ namespace MonoZelda.Scenes
         {
             this.contentManager = contentManager;
             inventoryScene.LoadContent(contentManager);
-            
-            currentRoom = roomManager.LoadRoom(StartRoom);
+
+            // We begin by revealing the the first room
+            currentRoom = roomManager.LoadRoom("RoomTest");
             activeScene = new EnterDungeonScene(this, currentRoom, graphicsDevice);
             activeScene.LoadContent(contentManager);
         }
@@ -121,6 +122,7 @@ namespace MonoZelda.Scenes
             collisionController.Clear();
             SpriteDrawer.Reset();
             //reset playerStateParams
+            PlayerState.ResetCandle();
             PlayerState.Reset();
            
             activeScene.UnloadContent();
