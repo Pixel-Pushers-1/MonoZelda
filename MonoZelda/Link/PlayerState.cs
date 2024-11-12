@@ -60,9 +60,13 @@ public static class PlayerState
         Debug.WriteLine($"Player Health: {Health}");
     }
 
-    public static int Rupees { get; set; } = INITIAL_RUPEES;
-    public static int Bombs { get; set; } = INITIAL_BOMBS;
-    public static int Keys { get; set; } = INITIAL_KEYS;
+    public static void GetHealth() {
+        Health = MathHelper.Clamp(Health + 2, 0, INITIAL_HP);
+    }
+
+    public static int Rupees { get; set; }
+    public static int Bombs { get; set; }
+    public static int Keys { get; set; }
     public static bool IsDead { get; set; }
     public static bool IsKnockedBack { get; set; }
     public static bool IsCandleUsed { get; set; }   
