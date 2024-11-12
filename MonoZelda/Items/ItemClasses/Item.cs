@@ -16,6 +16,20 @@ public abstract class Item
     protected List<Item> updateList;
     protected ItemList itemType;
 
+    public ItemList ItemType
+    {
+        get
+        {
+            return itemType;
+        }
+        set
+        {
+            itemType = value;
+        }
+    }
+
+    public bool ItemPickedUp { get; set; }
+
     public Item(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision,List<Item> updateList)
     {
         this.roomEnemyList = roomEnemyList;
@@ -37,6 +51,7 @@ public abstract class Item
         itemCollidableDict.Unregister();
         itemCollidable.UnregisterHitbox();
         collisionController.RemoveCollidable(itemCollidable);
+        ItemPickedUp = true;
     }
 
     public virtual void Update()

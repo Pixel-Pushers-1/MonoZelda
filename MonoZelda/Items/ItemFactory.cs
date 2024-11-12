@@ -17,6 +17,7 @@ public class ItemFactory
     private List<Enemy> roomEnemyList;
     private PlayerCollisionManager playerCollision;
     private List<Item> updateList;
+    private List<Item> items;
 
     public ItemFactory(CollisionController collisionController, List<ItemSpawn> itemSpawnList, List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision)
     {
@@ -25,6 +26,7 @@ public class ItemFactory
         this.roomEnemyList = roomEnemyList;
         this.playerCollision = playerCollision;
         updateList = new List<Item>();
+        items = new List<Item>();
     }
 
     public void CreateRoomItems()
@@ -40,6 +42,7 @@ public class ItemFactory
         var itemDict = new SpriteDict(SpriteType.Items, 0, new Point(0, 0));
         var itemType = Type.GetType($"MonoZelda.Items.ItemClasses.{itemName}");
         Item item = (Item)Activator.CreateInstance(itemType,roomEnemyList,playerCollision,updateList);
+        items.Add(item);
         item.ItemSpawn(itemDict, spawnPosition, collisionController);
     }
 
@@ -48,6 +51,19 @@ public class ItemFactory
         for(int i = 0; i < updateList.Count; i++)
         {
             updateList[i].Update();
+        }
+
+        for(int i = 0; i < items.Count; i++)
+        {
+            Item item = items[i];
+            for(int j = 0; j < itemSpawnList.Count; j++)
+            {
+                ItemSpawn itemSpawn = itemSpawnList[j];
+                if(itemSpawn.ItemType == item.ItemType && item.ItemPickedUp)
+                {
+                    itemSpawnList.Remove(itemSpawn);
+                }
+            }
         }
     }
 }
