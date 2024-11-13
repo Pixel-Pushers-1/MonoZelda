@@ -43,7 +43,7 @@ https://github.com/Pixel-Pushers-1/MonoZelda/pulls?q=is%3Apr+is%3Aclosed
 
 ## Sprint 4 Burndown
 A complete burndown chart of start and end times for all Sprint 4 functionality can be found at
-https://github.com/orgs/Pixel-Pushers-1/projects/1/views/4?filterQuery=sprint%3A%22Sprint+3%22
+https://github.com/orgs/Pixel-Pushers-1/projects/1/views/4 
 
 # Sprint 3
 
@@ -55,7 +55,7 @@ Code review and maintainability is not limited to the Pull Requests. We have dai
 
 ## Sprint 3 Burndown
 A complete burndown chart of start and end times for all Sprint 3 functionality can be found at
-https://github.com/orgs/Pixel-Pushers-1/projects/1/views/4?filterQuery=sprint%3A%22Sprint+3%22
+https://github.com/orgs/Pixel-Pushers-1/projects/1/views/4 
 
 # Sprint 2
 
