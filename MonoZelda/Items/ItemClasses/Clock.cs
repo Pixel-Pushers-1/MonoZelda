@@ -1,41 +1,34 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
-using MonoZelda.Sprites;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
+using MonoZelda.Enemies;
+using MonoZelda.Link;
+using System.Collections.Generic;
 
 namespace MonoZelda.Items.ItemClasses;
 
-public class Clock : IItem
+public class Clock : Item
 {
-    private Collidable clockCollidable;
-    private bool itemPickedUp;
-    private GraphicsDevice graphicsDevice;
-
-    public bool ItemPickedUp
+    public Clock(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
-        get
-        {
-            return itemPickedUp;
-        }
-        set
-        {
-            itemPickedUp = value;
-        }
+        itemType = ItemList.Clock;
     }
 
-    public Clock(GraphicsDevice graphicsDevice)
+    public override void ItemSpawn(SpriteDict clockDict, Point spawnPosition, CollisionController collisionController)
     {
-        this.graphicsDevice = graphicsDevice;   
-    }
-
-    public void itemSpawn(SpriteDict clockDict, Point spawnPosition, CollisionController collisionController)
-    {
-        clockCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 60, 60), graphicsDevice, CollidableType.Item);
-        collisionController.AddCollidable(clockCollidable);
-        clockCollidable.setSpriteDict(clockDict);
-        clockDict.Position = spawnPosition;
+        base.ItemSpawn(clockDict, spawnPosition, collisionController);
         clockDict.SetSprite("clock");
     }
 
+    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    {
+        playerCollision.HandleClockCollision();
+        foreach(var enemy in roomEnemyList)
+        {
+            enemy.TakeDamage(3f, Direction.None, 0);
+        }
+        SoundManager.PlaySound("LOZ_Get_Item", false);
+        base.HandleCollision(itemCollidableDict, collisionController);
+    }
 }

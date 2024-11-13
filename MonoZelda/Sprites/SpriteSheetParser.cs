@@ -32,8 +32,9 @@ internal static class SpriteSheetParser
         int height = int.Parse(fields[4]) * 4;
         int frameCount = int.Parse(fields[5]);
         Sprite.AnchorType anchor = Sprite.StringToAnchorType(fields[6]);
+        float fps = float.Parse(fields[7]);
         Rectangle sourceRect = new(x, y, width, height);
-        return new Sprite(sourceRect, anchor, frameCount);
+        return new Sprite(sourceRect, anchor, frameCount, fps);
     }
 }
 

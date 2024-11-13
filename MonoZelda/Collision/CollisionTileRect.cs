@@ -6,5 +6,9 @@ public enum CollisionTileRect
     right,
     bottom,
     left,
-    full
+    full,
+    topleft,
+    topright,
+    bottomleft,
+    bottomright
 }

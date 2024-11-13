@@ -1,41 +1,31 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
-using MonoZelda.Sprites;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
+using MonoZelda.Enemies;
+using MonoZelda.Link;
+using System.Collections.Generic;
+using MonoZelda.UI;
 
 namespace MonoZelda.Items.ItemClasses;
 
-public class Map : IItem
+public class Map : Item
 {
-    private Collidable mapCollidable;
-    private bool itemPickedUp;
-    private GraphicsDevice graphicsDevice;
-
-    public bool ItemPickedUp
+    public Map(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
-        get
-        {
-            return itemPickedUp;
-        }
-        set
-        {
-            itemPickedUp = value;
-        }
+        itemType = ItemList.Map;
     }
-
-    public Map(GraphicsDevice graphicsDevice)
+    public override void ItemSpawn(SpriteDict mapDict, Point spawnPosition, CollisionController collisionController)
     {
-        this.graphicsDevice = graphicsDevice;
-    }
-
-    public void itemSpawn(SpriteDict mapDict, Point spawnPosition, CollisionController collisionController)
-    {
-        mapCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice, CollidableType.Item);
-        collisionController.AddCollidable(mapCollidable);
-        mapCollidable.setSpriteDict(mapDict);
-        mapDict.Position = spawnPosition;
+        base.ItemSpawn(mapDict, spawnPosition, collisionController);        
         mapDict.SetSprite("map");
+    }
+
+    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    {
+        HUDMapWidget.SetMapVisible(true);
+        SoundManager.PlaySound("LOZ_Get_Item", false);
+        base.HandleCollision(itemCollidableDict, collisionController);
     }
 }
 

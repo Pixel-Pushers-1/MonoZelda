@@ -1,41 +1,30 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
-using MonoZelda.Sprites;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
+using MonoZelda.Enemies;
+using MonoZelda.Link;
+using System.Collections.Generic;
 
 namespace MonoZelda.Items.ItemClasses;
 
-public class Heart : IItem
+public class Heart : Item
 {
-    private Collidable heartCollidable;
-    private bool itemPickedUp;
-    private GraphicsDevice graphicsDevice;
-
-    public bool ItemPickedUp
+    public Heart(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
-        get
-        {
-            return itemPickedUp;
-        }
-        set
-        {
-            itemPickedUp = value;
-        }
+        itemType = ItemList.Heart;
     }
 
-    public Heart(GraphicsDevice graphicsDevice)
+    public override void ItemSpawn(SpriteDict heartDict, Point spawnPosition, CollisionController collisionController)
     {
-        this.graphicsDevice = graphicsDevice;
-    }
-
-    public void itemSpawn(SpriteDict heartDict, Point spawnPosition, CollisionController collisionController)
-    {
-        heartCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 28), graphicsDevice, CollidableType.Item);
-        collisionController.AddCollidable(heartCollidable);
-        heartCollidable.setSpriteDict(heartDict);
-        heartDict.Position = spawnPosition;
+        base.ItemSpawn(heartDict, spawnPosition, collisionController);  
         heartDict.SetSprite("heart_full");
     }
 
+    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    {
+        PlayerState.Health = MathHelper.Clamp(PlayerState.Health + 2, 0, PlayerState.MaxHealth);
+        SoundManager.PlaySound("LOZ_Get_Heart", false);
+        base.HandleCollision(itemCollidableDict, collisionController);
+    }
 }

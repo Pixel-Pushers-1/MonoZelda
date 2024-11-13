@@ -1,40 +1,32 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
-using MonoZelda.Sprites;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
+using MonoZelda.Enemies;
+using MonoZelda.Link;
+using System.Collections.Generic;
 
 namespace MonoZelda.Items.ItemClasses;
 
-public class HeartContainer : IItem
+public class HeartContainer : Item
 {
-    private Collidable heartcontainerCollidable;
-    private bool itemPickedUp;
-    private GraphicsDevice graphicsDevice;
-    public bool ItemPickedUp
+    public HeartContainer(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
-        get
-        {
-            return itemPickedUp;
-        }
-        set
-        {
-            itemPickedUp = value;
-        }
+        itemType = ItemList.HeartContainer;
     }
 
-    public HeartContainer(GraphicsDevice graphicsDevice)
+    public override void ItemSpawn(SpriteDict heartcontainerDict, Point spawnPosition, CollisionController collisionController)
     {
-        this.graphicsDevice = graphicsDevice;
-    }
-
-    public void itemSpawn(SpriteDict heartcontainerDict, Point spawnPosition, CollisionController collisionController)
-    {
-        heartcontainerCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 60, 60), graphicsDevice, CollidableType.Item);
-        collisionController.AddCollidable(heartcontainerCollidable);
-        heartcontainerCollidable.setSpriteDict(heartcontainerDict);
-        heartcontainerDict.Position = spawnPosition;
+        base.ItemSpawn(heartcontainerDict, spawnPosition, collisionController); 
         heartcontainerDict.SetSprite("heartcontainer");
+    }
+
+    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    {
+        PlayerState.MaxHealth += 2;
+        PlayerState.Health += 2;
+        SoundManager.PlaySound("LOZ_Get_Item", false);
+        base.HandleCollision(itemCollidableDict, collisionController);
     }
 
 }

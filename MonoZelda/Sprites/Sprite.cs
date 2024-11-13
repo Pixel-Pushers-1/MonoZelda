@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics;
 
 namespace MonoZelda.Sprites;
 
@@ -25,6 +26,9 @@ public class Sprite
     public bool Animating { get; set; }
     public float Fps { get; set; }
 
+    private bool oneshotPlaying = false;
+    private double oneshotTimer;
+
     public Sprite(Rectangle sourceRect, AnchorType anchor = AnchorType.Center, int frameCount = 1, float fps = 10, float size = 1f, bool animating = true)
     {
         SourceRect = sourceRect;
@@ -35,10 +39,42 @@ public class Sprite
         Fps = fps;
     }
 
-    public void Draw(SpriteBatch spriteBatch, GameTime gameTime, Texture2D texture, Point position)
+    public double SetOneshot(bool value)
+    {
+        if (value) {
+            oneshotTimer = 0;
+            oneshotPlaying = true;
+        }
+        else {
+            oneshotPlaying = false;
+        }
+        //buffer to try and prevent the first frame being shown again briefly before the animation ends
+        double buffer = 0.05;
+        return FrameCount / Fps - buffer;
+    }
+
+    public void Draw(SpriteBatch spriteBatch, Texture2D texture, Point position, Color color)
     {
         //calculate source rect based on gameTime to support animation
-        int sourceX = SourceRect.X + (Animating ? (int)((gameTime.TotalGameTime.TotalSeconds * Fps) % FrameCount) * SourceRect.Width : 0);
+        double animationTime;
+        if (oneshotPlaying) {
+            //oneshot timer
+            animationTime = oneshotTimer;
+            oneshotTimer += MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+            //end oneshot animation 
+            if (oneshotTimer >= FrameCount / Fps) {
+                oneshotPlaying = false;
+            }
+        }
+        else if (Animating) {
+            //global timer
+            animationTime = MonoZeldaGame.GameTime.TotalGameTime.TotalSeconds;
+        }
+        else {
+            //not animating
+            animationTime = 0;
+        }
+        int sourceX = SourceRect.X + (int) (animationTime * Fps % FrameCount) * SourceRect.Width;
         Rectangle currentSource = new(sourceX, SourceRect.Y, SourceRect.Width, SourceRect.Height);
 
         //calculate destination rect based on position, size, and anchor
@@ -47,7 +83,7 @@ public class Sprite
         Rectangle destinationRect = new(destRectPos, destRectSize.ToPoint());
 
         //draw the sprite
-        spriteBatch.Draw(texture, destinationRect, currentSource, Color.White);
+        spriteBatch.Draw(texture, destinationRect, currentSource, color);
     }
 
     private static Vector2 GetNormalizedAnchorOffset(AnchorType anchorType)

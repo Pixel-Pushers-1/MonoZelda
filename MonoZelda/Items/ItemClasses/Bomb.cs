@@ -1,40 +1,29 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
-using MonoZelda.Sprites;
+﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
+using MonoZelda.Enemies;
+using MonoZelda.Link;
+using System.Collections.Generic;
 
 namespace MonoZelda.Items.ItemClasses;
-public class Bomb : IItem
+public class Bomb : Item
 {
-    private Collidable bombCollidable;
-    private bool itemPickedUp;
-    private GraphicsDevice graphicsDevice;  
-
-    public bool ItemPickedUp
+    public Bomb(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
-        get
-        {
-            return itemPickedUp;
-        }
-        set
-        {
-            itemPickedUp = value;
-        }
+        itemType = ItemList.Bomb;
     }
 
-    public Bomb(GraphicsDevice graphicsDevice)  
+    public override void ItemSpawn(SpriteDict bombDict, Point spawnPosition, CollisionController collisionController)
     {
-        this.graphicsDevice = graphicsDevice;
-    }
-
-    public void itemSpawn(SpriteDict bombDict, Point spawnPosition, CollisionController collisionController)
-    {
-        bombCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice, CollidableType.Item);
-        collisionController.AddCollidable(bombCollidable);
-        bombCollidable.setSpriteDict(bombDict);
-        bombDict.Position = spawnPosition;
+        base.ItemSpawn(bombDict, spawnPosition, collisionController);  
         bombDict.SetSprite("bomb");   
     }
 
+    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    {
+        PlayerState.AddBombs(1);
+        SoundManager.PlaySound("LOZ_Get_Item", false);
+        base.HandleCollision(itemCollidableDict, collisionController);
+    }
 }

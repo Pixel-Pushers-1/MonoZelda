@@ -2,149 +2,160 @@
 using MonoZelda.Sprites;
 using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Content;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Enemies.EnemyProjectiles;
-using Microsoft.Xna.Framework.Graphics;
+using MonoZelda.Items;
+using MonoZelda.Link;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
-    public class Aquamentus : IEnemy
+    public class Aquamentus : Enemy
     {
-        public Point Pos { get; set; }
-        public Collidable EnemyHitbox { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-        private CardinalEnemyStateMachine stateMachine;
         private readonly Random rnd = new();
-        private SpriteDict aquamentusSpriteDict;
-        private readonly GraphicsDevice graphicsDevice;
-        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.Left;
 
         private List<IEnemyProjectile> fireballs = new();
-        private Dictionary<IEnemyProjectile, EnemyProjectileCollision> projectileDictionary = new();
-        private int midAngle = 180;
-
+        private Dictionary<IEnemyProjectile, EnemyProjectileCollisionManager> projectileDictionary = new();
         private Point spawnPoint;
-        private int pixelsMoved;
-        private int tileSize = 64;
         private int moveDelay;
-        private double attackDelay;
-        private bool projectileActiveOrNot;
+        private bool projectileActive;
 
-        public Aquamentus(GraphicsDevice graphicsDevice)
+        public Aquamentus()
         {
-            this.graphicsDevice = graphicsDevice;
-            projectileActiveOrNot = true;
-            pixelsMoved = 0;
+            projectileActive = false;
             moveDelay = rnd.Next(1, 4);
-            attackDelay = 0;
-            Width = 92;
-            Height = 92;
+            Width = 32;
+            Height = 84;
+            Health = 6;
+            Alive = true;
 
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            ContentManager contentManager)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
         {
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Aquamentus);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasItem);
             spawnPoint = spawnPosition;
-            EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 60, 60), graphicsDevice, CollidableType.Enemy);
-            collisionController.AddCollidable(EnemyHitbox);
-            EnemyHitbox.setSpriteDict(enemyDict);
-            enemyDict.Position = spawnPosition;
-            enemyDict.SetSprite("aquamentus_left");
-            aquamentusSpriteDict = enemyDict;
-            Pos = spawnPosition;
-            pixelsMoved = 0;
-            stateMachine = new CardinalEnemyStateMachine();
-            stateMachine.ChangeDirection(CardinalEnemyStateMachine.Direction.Left);
-            fireballs.Add(new AquamentusFireball(spawnPosition, contentManager, graphicsDevice, collisionController, midAngle + 45));
-            fireballs.Add(new AquamentusFireball(spawnPosition, contentManager, graphicsDevice, collisionController, midAngle));
-            fireballs.Add(new AquamentusFireball(spawnPosition, contentManager, graphicsDevice, collisionController, midAngle - 45));
-            foreach (var projectile in fireballs)
-            {
-                projectileDictionary.Add(projectile, new EnemyProjectileCollision(projectile, collisionController));
-            }
-            EnemyHitbox.setEnemy(this);
+            StateMachine.SetSprite("aquamentus_left");
+            StateMachine.ChangeDirection(EnemyStateMachine.Direction.Left);
+            StateMachine.Spawning = false;
+            StateMachine.ChangeSpeed(60);
         }
 
-        public void ChangeDirection()
+        public override void ChangeDirection()
         {
-            switch (direction)
+            switch (Direction)
             {
-                case CardinalEnemyStateMachine.Direction.Left:
-                    direction = CardinalEnemyStateMachine.Direction.Right;
-                    stateMachine.ChangeDirection(direction);
+                case EnemyStateMachine.Direction.Left:
+                    Direction = EnemyStateMachine.Direction.Right;
+                    StateMachine.ChangeDirection(Direction);
                     break;
-                case CardinalEnemyStateMachine.Direction.Right:
-                    direction = CardinalEnemyStateMachine.Direction.Left;
-                    stateMachine.ChangeDirection(direction);
+                case EnemyStateMachine.Direction.Right:
+                    Direction = EnemyStateMachine.Direction.Left;
+                    StateMachine.ChangeDirection(Direction);
                     break;
             }
         }
 
-        public void Attack(GameTime gameTime)
+        public void Attack()
         {
-            fireballs.ForEach(fireball => fireball.ViewProjectile(projectileActiveOrNot));
-            fireballs.ForEach(fireball => fireball.Update(gameTime, CardinalEnemyStateMachine.Direction.Left, Pos));
-            if (gameTime.TotalGameTime.TotalSeconds >= attackDelay + 4)
+            fireballs.ForEach(fireball => fireball.Update( EnemyStateMachine.Direction.Left, Pos));
+            var tempActive = false;
+            foreach (var entry in projectileDictionary)
             {
-                fireballs.ForEach(fireball => fireball.Follow(Pos));
-                attackDelay = gameTime.TotalGameTime.TotalSeconds;
+                if (entry.Key.Active)
+                {
+                    tempActive = true;
+                }
+
+                if (!entry.Key.Active)
+                {
+                    fireballs.Remove(entry.Key);
+                    projectileDictionary.Remove(entry.Key);
+                }
+            }
+
+            if (!tempActive)
+            {
+                projectileActive = false;
             }
         }
 
-        public void Update(GameTime gameTime)
+        public void CreateFireballs()
         {
-            Pos = stateMachine.Update(Pos);
-            aquamentusSpriteDict.Position = Pos;
-            pixelsMoved++;
-            if (Pos.X > spawnPoint.X || Pos.X < spawnPoint.X - tileSize*5)
+            var move = PlayerState.Position.ToVector2() - Pos.ToVector2();
+            move = Vector2.Divide(move, (float)Math.Sqrt(move.X * move.X + move.Y * move.Y)) * 6;
+            if (!projectileActive)
+            {
+                projectileActive = true;
+                fireballs.Add(new AquamentusFireball(Pos, CollisionController, new Vector2(move.X,move.Y - 2)));
+                fireballs.Add(new AquamentusFireball(Pos, CollisionController, move));
+                fireballs.Add(new AquamentusFireball(Pos, CollisionController, new Vector2(move.X, move.Y + 2)));
+                foreach (var projectile in fireballs)
+                {
+                    projectileDictionary.Add(projectile, new EnemyProjectileCollisionManager(projectile));
+                }
+            }
+        }
+
+        public override void Update()
+        {
+            Pos = StateMachine.Update(this, Pos);
+            PixelsMoved++;
+            if (Pos.X > spawnPoint.X + 10 || Pos.X < spawnPoint.X - TileSize*5 - 10)
             {
                 ChangeDirection();
-                pixelsMoved = 0;
+                PixelsMoved = 0;
             }
             else
             {
-                if (pixelsMoved >= tileSize*moveDelay)
+                if (PixelsMoved >= TileSize*moveDelay)
                 {
-                    pixelsMoved = 0;
+                    PixelsMoved = 0;
                     ChangeDirection();
                     moveDelay = rnd.Next(1, 5);
                 }
             }
 
-            if (gameTime.TotalGameTime.TotalSeconds >= attackDelay)
+            if (fireballs.Count == 0 && Health > 0)
             {
-                if (gameTime.TotalGameTime.TotalSeconds <= attackDelay + 0.1)
-                {
-                    fireballs.ForEach(fireball => fireball.Follow(Pos));
-                    aquamentusSpriteDict.SetSprite("aquamentus_left_mouthopen");
-                }
-                else if (gameTime.TotalGameTime.TotalSeconds >= attackDelay + 0.5)
-                {
-                    aquamentusSpriteDict.SetSprite("aquamentus_left");
-                }
-
-                Attack(gameTime);
+                SoundManager.PlaySound("LOZ_Boss_Scream1", false);
+                CreateFireballs();
+                StateMachine.SetSprite("aquamentus_left_mouthopen");
             }
-
-            foreach (KeyValuePair<IEnemyProjectile, EnemyProjectileCollision> entry in projectileDictionary)
+            else
+            {
+                StateMachine.SetSprite("aquamentus_left");
+                Attack();
+            }
+            foreach (KeyValuePair<IEnemyProjectile, EnemyProjectileCollisionManager> entry in projectileDictionary)
             {
                 entry.Value.Update();
             }
+            CheckBounds();
+            EnemyCollision.Update(Width, Height, new Point(Pos.X - 16, Pos.Y - 16));
         }
 
-        public void KillEnemy()
+        public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
         {
-            projectileActiveOrNot = false;
-            aquamentusSpriteDict.Enabled = false;
-            foreach(IEnemyProjectile projectile in fireballs)
+            if (stunTime == 0)
             {
-                projectile.ViewProjectile(projectileActiveOrNot);
+                Health -= damage;
+                if (Health == 0)
+                {
+                    SoundManager.PlaySound("LOZ_Enemy_Die", false);
+                    fireballs.ForEach(fireball => fireball.ProjectileCollide());
+                    StateMachine.Die(false);
+                    EnemyHitbox.UnregisterHitbox();
+                    CollisionController.RemoveCollidable(EnemyHitbox);
+                }
+                else
+                {
+                    SoundManager.PlaySound("LOZ_Boss_Hit", false);
+                    StateMachine.DamageFlash();
+                }
             }
-            EnemyHitbox.UnregisterHitbox();
         }
     }
 }

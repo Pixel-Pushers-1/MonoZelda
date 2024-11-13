@@ -1,118 +1,75 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Items;
+using MonoZelda.Link;
 using MonoZelda.Sprites;
 using Point = Microsoft.Xna.Framework.Point;
-using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
-    public class Gel : IEnemy
+    public class Gel : Enemy
     {
-        private CardinalEnemyStateMachine stateMachine;
-        public Point Pos { get; set; }
-        public Collidable EnemyHitbox { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-        private readonly Random rnd = new();
-        private SpriteDict gelSpriteDict;
-        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.None;
-        private readonly GraphicsDevice graphicsDevice;
-
-        private int tileSize = 64;
-        private int spawnTimer;
-        private int pixelsMoved;
+        private double spawnTimer;
         private int jumpCount = 3;
         private bool readyToJump;
+        private Random rnd = new Random();
 
-        public Gel(GraphicsDevice graphicsDevice)
+        public Gel()
         {
-            this.graphicsDevice = graphicsDevice;
-            Width = 64;
-            Height = 64;
+            Width = 32;
+            Height = 32;
+            Health = 1;
+            Alive = true;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            ContentManager contentManager)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
         {
-            EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, CollidableType.Enemy);
-            collisionController.AddCollidable(EnemyHitbox);
-            gelSpriteDict = enemyDict;
-            EnemyHitbox.setSpriteDict(gelSpriteDict);
-            gelSpriteDict.Position = spawnPosition;
-            gelSpriteDict.SetSprite("cloud");
-            Pos = spawnPosition;
-            pixelsMoved = 0;
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Gel);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasItem);
             spawnTimer = 0;
             readyToJump = false;
-            stateMachine = new CardinalEnemyStateMachine();
-            EnemyHitbox.setEnemy(this);
+            StateMachine.SetSprite("gel_turquoise");
         }
 
-        public void ChangeDirection()
+        public override void Update()
         {
-            stateMachine.ChangeDirection(direction);
-            gelSpriteDict.SetSprite("gel_turquoise");
-        }
-
-
-        public void Update(GameTime gameTime)
-        {
-            if (spawnTimer > 63 && spawnTimer < 65)
+            if (spawnTimer > 1 && spawnTimer < 1.05)
             {
                 readyToJump = true;
-                Width = 32;
-                Height = 32;
             }
             if (readyToJump)
             {
-                spawnTimer = 65;
-                switch (rnd.Next(1, 5))
-                {
-                    case 1:
-                        direction = CardinalEnemyStateMachine.Direction.Left;
-                        break;
-                    case 2:
-                        direction = CardinalEnemyStateMachine.Direction.Right;
-                        break;
-                    case 3:
-                        direction = CardinalEnemyStateMachine.Direction.Up;
-                        break;
-                    case 4:
-                        direction = CardinalEnemyStateMachine.Direction.Down;
-                        break;
-                }
+                spawnTimer = 1.05;
                 ChangeDirection();
                 readyToJump = false;
             }
-            else if (pixelsMoved >= tileSize * jumpCount)
+            else if (PixelsMoved >= TileSize * jumpCount)
             {
-                direction = CardinalEnemyStateMachine.Direction.None;
-                ChangeDirection();
-                pixelsMoved++;
-                if (pixelsMoved >= tileSize * jumpCount + 30)
+                Direction = EnemyStateMachine.Direction.None;
+                StateMachine.ChangeDirection(Direction);
+                PixelsMoved++;
+                if (PixelsMoved >= TileSize * jumpCount + 30)
                 {
                     readyToJump = true;
                     jumpCount = rnd.Next(1, 4);
-                    pixelsMoved = 0;
+                    PixelsMoved = 0;
                 }
             }
             else
             {
-                pixelsMoved++;
-                spawnTimer++;
-                gelSpriteDict.Position = Pos;
+                PixelsMoved++;
+                spawnTimer += MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
             }
-            Pos = stateMachine.Update(Pos);
+            CheckBounds();
+            Pos = StateMachine.Update(this, Pos);
+            EnemyCollision.Update(Width,Height,Pos);
         }
 
-        public void KillEnemy()
+        public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
         {
-            gelSpriteDict.Enabled = false;
-            EnemyHitbox.UnregisterHitbox();
+            base.TakeDamage(0, collisionDirection, 1);
         }
     }
 }

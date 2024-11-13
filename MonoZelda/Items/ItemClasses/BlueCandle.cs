@@ -3,38 +3,30 @@ using MonoZelda.Collision;
 using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
+using MonoZelda.Enemies;
+using MonoZelda.Link;
+using System.Collections.Generic;
 
 namespace MonoZelda.Items.ItemClasses;
 
-public class BlueCandle : IItem
+public class BlueCandle : Item
 {
-    private Collidable bluecandleCollidable;
-    private bool itemPickedUp;
-    private GraphicsDevice graphicsDevice;
-
-    public bool ItemPickedUp
+    public BlueCandle(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
-        get
-        {
-            return itemPickedUp;
-        }
-        set
-        {
-            itemPickedUp = value;
-        }
+        itemType = ItemList.BlueCandle;
     }
 
-    public BlueCandle(GraphicsDevice graphicsDevice)
+    public override void ItemSpawn(SpriteDict bluecandleDict, Point spawnPosition, CollisionController collisionController)
     {
-        this.graphicsDevice = graphicsDevice;
+        base.ItemSpawn(bluecandleDict, spawnPosition, collisionController);
+        bluecandleDict.SetSprite("candle_blue");
     }
 
-    public void itemSpawn(SpriteDict bluecandleDict, Point spawnPosition, CollisionController collisionController)
+    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
     {
-        bluecandleCollidable = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 28, 60), graphicsDevice, CollidableType.Item);
-        collisionController.AddCollidable(bluecandleCollidable);
-        bluecandleCollidable.setSpriteDict(bluecandleDict);
-        bluecandleDict.Position = spawnPosition;
-        bluecandleDict.SetSprite("candle_blue");    }
+        SoundManager.PlaySound("LOZ_Get_Item", false);
+        base.HandleCollision(itemCollidableDict, collisionController);
+    }
 }
 

@@ -3,5 +3,5 @@ using Microsoft.Xna.Framework.Graphics;
 
 public interface IDrawable
 {
-	public void Draw(SpriteBatch spriteBatch, GameTime gameTime);
+	public void Draw(SpriteBatch spriteBatch);
 }

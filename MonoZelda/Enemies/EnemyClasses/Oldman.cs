@@ -1,62 +1,36 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
 using System;
+using MonoZelda.Items;
+using MonoZelda.Link;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
-    public class Oldman : IEnemy
+    public class Oldman : Enemy
     {
-        public Point Pos { get; set; }
-        private SpriteDict oldmanSpriteDict;
-        private GraphicsDevice graphicsDevice;
-        public Collidable EnemyHitbox { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-
-        private int spawnTimer;
-
-        public Oldman(GraphicsDevice graphicsDevice)
+        public Oldman()
         {
-            this.graphicsDevice = graphicsDevice;
             Width = 64;
             Height = 64;
+            Alive = true;
 
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            ContentManager contentManager)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
         {
-            EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 60, 60), graphicsDevice, CollidableType.Enemy);
-            collisionController.AddCollidable(EnemyHitbox);
-            EnemyHitbox.setSpriteDict(enemyDict);
-            enemyDict.Position = spawnPosition;
-            enemyDict.SetSprite("cloud");
-            oldmanSpriteDict = enemyDict;
-            Pos = spawnPosition;
-            spawnTimer = 0;
+            Pos = new Point(spawnPosition.X -32, spawnPosition.Y + 64);
+            StateMachine = new EnemyStateMachine(enemyDict, itemFactory, hasItem);
+            StateMachine.SetSprite("oldman");
+            PixelsMoved = 0;
         }
 
-        public void ChangeDirection()
+        public override void Update()
         {
+            StateMachine.Update(this, Pos);
         }
 
-        public void Update(GameTime gameTime)
-        {
-            if (spawnTimer >= 64)
-            {
-                oldmanSpriteDict.SetSprite("oldman");
-            }
-            else
-            {
-                spawnTimer++;
-            }
-        }
-
-        public void KillEnemy()
+        public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
         {
             // oldman is immortal
         }

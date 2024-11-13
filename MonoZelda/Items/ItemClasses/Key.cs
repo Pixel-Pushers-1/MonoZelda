@@ -3,38 +3,30 @@ using MonoZelda.Collision;
 using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Sound;
+using MonoZelda.Enemies;
+using MonoZelda.Link;
+using System.Collections.Generic;
 
 namespace MonoZelda.Items.ItemClasses;
 
-public class Key : IItem
+public class Key : Item
 {
-    private Collidable keyCollidable;
-    private bool itemPickedUp;
-    private GraphicsDevice graphicsDevice;
-    public bool ItemPickedUp
+    public Key(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
     {
-        get
-        {
-            return itemPickedUp;
-        }
-        set
-        {
-            itemPickedUp = value;
-        }
+        itemType = ItemList.Key;
     }
 
-    public Key(GraphicsDevice graphicsDevice)
+    public override void ItemSpawn(SpriteDict keyDict, Point spawnPosition, CollisionController collisionController)
     {
-        this.graphicsDevice = graphicsDevice;
-    }
-
-    public void itemSpawn(SpriteDict keyDict, Point spawnPosition, CollisionController collisionController)
-    {
-        keyCollidable = new Collidable(new Rectangle(spawnPosition.X,spawnPosition.Y, 28, 60), graphicsDevice, CollidableType.Item);
-        collisionController.AddCollidable(keyCollidable);
-        keyCollidable.setSpriteDict(keyDict);
-        keyDict.Position = spawnPosition;
+        base.ItemSpawn(keyDict, spawnPosition, collisionController);    
         keyDict.SetSprite("key_0");
     }
 
+    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    {
+        PlayerState.AddKeys(1);
+        SoundManager.PlaySound("LOZ_Get_Item", false);
+        base.HandleCollision(itemCollidableDict, collisionController);
+    }
 }

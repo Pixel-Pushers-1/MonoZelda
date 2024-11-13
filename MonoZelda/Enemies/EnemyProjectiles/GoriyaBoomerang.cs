@@ -1,7 +1,5 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Enemies.EnemyProjectiles;
@@ -13,66 +11,73 @@ namespace MonoZelda.Enemies.GoriyaFolder
     {
         public Point Pos { get; set; }
         public SpriteDict BoomerangSpriteDict { get; private set; }
-        private int speed = 4;
-        private int pixelsMoved;
+        public bool Active { get; set; }
+        public EnemyProjectileCollidable ProjectileHitbox { get; set; }
+        private EnemyStateMachine.Direction attackDirection;
+        private float velocity = 400;
+        private float attackTimer;
+        private float dt;
+        private Boolean returning;
         private CollisionController collisionController;
-        public Collidable ProjectileHitbox { get; set; }
+        private Vector2 movement;
 
-        public GoriyaBoomerang(Point pos, ContentManager contentManager, GraphicsDevice graphicsDevice, CollisionController collisionController)
+        public GoriyaBoomerang(Point pos, CollisionController collisionController, EnemyStateMachine.Direction direction)
         {
-            this.Pos = pos;
+            
+            movement = direction switch
+            {
+                EnemyStateMachine.Direction.Up => new Vector2(0, -1),
+                EnemyStateMachine.Direction.Down => new Vector2(0, 1),
+                EnemyStateMachine.Direction.Left => new Vector2(-1, 0),
+                EnemyStateMachine.Direction.Right => new Vector2(1, 0),
+                _ => Vector2.Zero
+            };
+            this.Pos = (pos.ToVector2() + movement*30).ToPoint();
+            returning = false;
             this.collisionController = collisionController;
-            BoomerangSpriteDict = new(contentManager.Load<Texture2D>(TextureData.Enemies), SpriteCSVData.Enemies, 0, new Point(0, 0));
+            BoomerangSpriteDict = new(SpriteType.Enemies, 0, new Point(0, 0));
             BoomerangSpriteDict.SetSprite("boomerang");
-            ViewProjectile(false);
-            ProjectileHitbox = new Collidable(new Rectangle(pos.X, pos.Y, 30, 30), graphicsDevice, CollidableType.EnemyProjectile);
-            ProjectileHitbox.setEnemyProjectile(this);
+            ViewProjectile(false, true);
+            ProjectileHitbox = new EnemyProjectileCollidable(new Rectangle(pos.X, pos.Y, 30, 30));
             collisionController.AddCollidable(ProjectileHitbox);
         }
-        public void ViewProjectile(bool view)
+        public void ViewProjectile(bool view, bool goriyaAlive)
         {
             BoomerangSpriteDict.Enabled = view;
-            if(view == false && ProjectileHitbox != null)
+            if (!goriyaAlive)
             {
                 collisionController.RemoveCollidable(ProjectileHitbox);
                 ProjectileHitbox.UnregisterHitbox();
             }
         }
 
-        public void Follow(Point newPos)
+        public void ProjectileCollide()
         {
-            Pos = newPos;
-            speed = Math.Abs(speed);
+            if (!returning)
+            {
+                velocity *= -1;
+                returning = true;
+            }
         }
 
-        public void Update(GameTime gameTime, CardinalEnemyStateMachine.Direction attackDirection, Point enemyPos)
+        public void Update (EnemyStateMachine.Direction direction, Point enemyPos)
         {
-            var pos = new Point();
-            pos = Pos;
-            if ((Math.Abs(enemyPos.X - pos.X) <= 192 && Math.Abs(enemyPos.Y - pos.Y) <= 192 )|| speed < 0)
+            attackDirection = direction;
+            dt = (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+            attackTimer += dt;
+            var pos = new Vector2();
+            pos = Pos.ToVector2();
+            if (attackTimer < 1 || velocity < 0)
             {
-                switch (attackDirection)
-                {
-                    case CardinalEnemyStateMachine.Direction.Left:
-                        pos.X -= speed;
-                        break;
-                    case CardinalEnemyStateMachine.Direction.Right:
-                        pos.X += speed;
-                        break;
-                    case CardinalEnemyStateMachine.Direction.Up:
-                        pos.Y -= speed;
-                        break;
-                    case CardinalEnemyStateMachine.Direction.Down:
-                        pos.Y += speed;
-                        break;
-                }
+                pos += (velocity * movement) * dt;
             }
             else
             {
-                speed *= -1;
+                returning = true;
+                velocity *= -1;
+                attackTimer = 0;
             }
-
-            Pos = pos;
+            Pos = pos.ToPoint();
             BoomerangSpriteDict.Position = Pos;
         }
     }

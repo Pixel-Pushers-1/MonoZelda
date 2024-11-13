@@ -1,10 +1,8 @@
 ﻿using MonoZelda.Link;
 
-namespace MonoZelda.Trigger
+namespace MonoZelda.Trigger;
+
+public interface ITrigger
 {
-    public interface ITrigger
-    {
-        public void Trigger(Direction direction);
-        public void Update();
-    }
+    public void Trigger(Direction direction);
 }

@@ -1,41 +1,31 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using MonoZelda.Dungeons;
+using MonoZelda.Scenes;
 
 namespace MonoZelda.Commands.GameCommands
 {
     internal class LoadRoomCommand : ICommand
     {
-        private MonoZeldaGame game;
-        private IDungeonRoom room;
+        private DungeonScene dungeonScene;
 
         public LoadRoomCommand() { }
 
-        public LoadRoomCommand(MonoZeldaGame game, IDungeonRoom room)
+        public LoadRoomCommand(DungeonScene dungeonScene)
         {
-            this.game = game;
-            this.room = room;
+            this.dungeonScene = dungeonScene;
         }
 
         public void Execute(params object[] metadata)
         {
-            MouseState mouseState = (MouseState)metadata[0];
-            if (room == null || game == null)
+            if (dungeonScene == null)
             {
                 return;
             }
 
-            // TODO: Logic in the command is bad but this is temporary
-            var doors = room.GetDoors();
-
-            // CommandManager dosn't expose a method to get commands, so we can't assign this in the mouse controller
-
-            foreach (var door in doors)
+            var destination = metadata[0];
+            if (destination is string dest && !string.IsNullOrEmpty(dest))
             {
-                if (door.Bounds.Contains(mouseState.X, mouseState.Y) && !string.IsNullOrEmpty(door.Destination))
-                {
-                    game.LoadDungeon(door.Destination);
-                    return;
-                }
+                dungeonScene.LoadRoom(dest);
             }
         }
 

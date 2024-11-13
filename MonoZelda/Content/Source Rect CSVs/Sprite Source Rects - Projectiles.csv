@@ -1,23 +1,24 @@
-Sprite,X,Y,W,H,Frames,Anchor
-arrow_green_up,0,256,8,16,1,center
-arrow_green_down,8,256,8,16,1,center
-arrow_green_right,16,256,16,8,1,center
-arrow_green_left,16,264,16,8,1,center
-arrow_blue_up,32,256,8,16,1,center
-arrow_blue_down,40,256,8,16,1,center
-arrow_blue_right,48,256,16,8,1,center
-arrow_blue_left,48,264,16,8,1,center
-poof,64,256,8,8,1,center
-boomerang,80,256,8,8,8,center
-boomerang_blue,80,264,8,8,8,center
-bomb,144,256,16,16,1,center
-cloud,160,256,16,16,3,center
-fire,208,256,16,16,2,center
-woodensword_item_up,0,224,8,16,1,center
-woodensword_item_down,8,224,8,16,1,center
-woodensword_item_right,16,224,16,8,1,center
-woodensword_item_left,16,232,16,8,1,center
-woodensword_effect_NW,32,224,8,10,1,bottom right
-woodensword_effect_NE,40,224,8,10,1,bottom left
-woodensword_effect_SW,32,234,8,10,1,top right
-woodensword_effect_SE,40,234,8,10,1,top left
+Sprite,X,Y,W,H,Frames,Anchor,Fps
+arrow_green_up,0,256,8,16,1,center,10
+arrow_green_down,8,256,8,16,1,center,10
+arrow_green_right,16,256,16,8,1,center,10
+arrow_green_left,16,264,16,8,1,center,10
+arrow_blue_up,32,256,8,16,1,center,10
+arrow_blue_down,40,256,8,16,1,center,10
+arrow_blue_right,48,256,16,8,1,center,10
+arrow_blue_left,48,264,16,8,1,center,10
+poof,64,256,8,8,1,center,10
+boomerang,80,256,8,8,8,center,10
+boomerang_blue,80,264,8,8,8,center,10
+bomb,144,256,16,16,1,center,10
+cloud,160,256,16,16,3,center,10
+cloud_slow,160,256,16,16,3,center,4
+fire,208,256,16,16,2,center,10
+woodensword_item_up,0,224,8,16,1,center,10
+woodensword_item_down,8,224,8,16,1,center,10
+woodensword_item_right,16,224,16,8,1,center,10
+woodensword_item_left,16,232,16,8,1,center,10
+woodensword_effect_NW,32,224,8,10,1,bottom right,10
+woodensword_effect_NE,40,224,8,10,1,bottom left,10
+woodensword_effect_SW,32,234,8,10,1,top right,10
+woodensword_effect_SE,40,234,8,10,1,top left,10

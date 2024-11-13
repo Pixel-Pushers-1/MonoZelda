@@ -1,103 +1,59 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Items;
+using MonoZelda.Link;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
-    public class Zol : IEnemy
+    public class Zol : Enemy
     {
-        private CardinalEnemyStateMachine stateMachine;
-        public Point Pos { get; set; }
-        public Collidable EnemyHitbox { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
         private readonly Random rnd = new();
-        private SpriteDict zolSpriteDict;
-        private CardinalEnemyStateMachine.Direction direction = CardinalEnemyStateMachine.Direction.None;
-        private readonly GraphicsDevice graphicsDevice;
-
-        private int tileSize = 64;
-        private int pixelsMoved;
         private bool readyToJump;
 
-        public Zol(GraphicsDevice graphicsDevice)
+        public Zol()
         {
-            this.graphicsDevice = graphicsDevice;
-            Width = 64;
-            Height = 64;
+            Width = 48;
+            Height = 48;
+            Health = 2;
+            Alive = true;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController,
-            ContentManager contentManager)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
         {
-            EnemyHitbox = new Collidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), graphicsDevice, CollidableType.Enemy);
-            collisionController.AddCollidable(EnemyHitbox);
-            zolSpriteDict = enemyDict;
-            EnemyHitbox.setSpriteDict(zolSpriteDict);
-            zolSpriteDict.Position = spawnPosition;
-            zolSpriteDict.SetSprite("cloud");
-            Pos = spawnPosition;
-            pixelsMoved = 0;
+            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Zol);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasItem);
             readyToJump = false;
-            stateMachine = new CardinalEnemyStateMachine();
-            EnemyHitbox.setEnemy(this);
-        }
-        public void ChangeDirection()
-        {
-            stateMachine.ChangeDirection(direction);
-            zolSpriteDict.SetSprite("zol_brown");
+            StateMachine.SetSprite("zol_brown");
         }
 
-
-        public void Update(GameTime gameTime)
+        public override void Update()
         {
             if (readyToJump)
             {
-                switch (rnd.Next(1, 5))
-                {
-                    case 1:
-                        direction = CardinalEnemyStateMachine.Direction.Left;
-                        break;
-                    case 2:
-                        direction = CardinalEnemyStateMachine.Direction.Right;
-                        break;
-                    case 3:
-                        direction = CardinalEnemyStateMachine.Direction.Up;
-                        break;
-                    case 4:
-                        direction = CardinalEnemyStateMachine.Direction.Down;
-                        break;
-                }
                 readyToJump = false;
                 ChangeDirection();
             }
-            else if (pixelsMoved >= tileSize)
+            else if (PixelsMoved >= TileSize)
             {
-                direction = CardinalEnemyStateMachine.Direction.None;
-                ChangeDirection();
-                pixelsMoved++;
-                if (pixelsMoved >= tileSize + 30)
+                Direction = EnemyStateMachine.Direction.None;
+                StateMachine.ChangeDirection(Direction);
+                PixelsMoved ++;
+                if (PixelsMoved >= TileSize + 30)
                 {
-                    pixelsMoved = 0;
+                    PixelsMoved = 0;
                     readyToJump = true;
                 }
             }
             else
             {
-                pixelsMoved++;
-                Pos = stateMachine.Update(Pos);
-                zolSpriteDict.Position = Pos;
+                PixelsMoved += 2;
+                Pos = StateMachine.Update(this, Pos);
             }
-        }
-
-        public void KillEnemy()
-        {
-            zolSpriteDict.Enabled = false;
-            EnemyHitbox.UnregisterHitbox();
+            CheckBounds();
+            EnemyCollision.Update(Width, Height, Pos);
         }
     }
 }

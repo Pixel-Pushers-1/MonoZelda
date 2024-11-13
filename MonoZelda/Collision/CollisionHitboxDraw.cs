@@ -9,14 +9,14 @@ namespace MonoZelda.Collision
         public Color GizmoColor { get; set; } = Color.White;
         public int Thickness { get; set; } = 1;
 
-        private Collidable collidable;
+        private ICollidable collidable;
         private Texture2D texture;
 
-        public CollisionHitboxDraw(Collidable collidable, GraphicsDevice graphicsDevice)
+        public CollisionHitboxDraw(ICollidable collidable)
         {
             this.collidable = collidable;
-            CreateTexture(graphicsDevice);
-            SpriteDrawer.RegisterDrawable(this, int.MaxValue, true);
+            texture = TextureData.GetTexture(SpriteType.Blank);
+            SpriteDrawer.RegisterDrawable(this, SpriteLayer.Gizmos, true);
         }
 
         ~CollisionHitboxDraw() {
@@ -28,13 +28,7 @@ namespace MonoZelda.Collision
             SpriteDrawer.UnregisterDrawable(this);
         }
 
-        private void CreateTexture(GraphicsDevice graphicsDevice)
-        {
-            texture = new Texture2D(graphicsDevice, 1, 1);
-            texture.SetData(new Color[] { Color.White });
-        }
-
-        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch)
         {
             Rectangle Bounds = collidable.Bounds;
             spriteBatch.Draw(texture, new Rectangle(Bounds.Left, Bounds.Top, Bounds.Width, Thickness), GizmoColor);

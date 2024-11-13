@@ -1,6 +1,11 @@
 ﻿using MonoZelda.Collision;
 using MonoZelda.Controllers;
+using MonoZelda.Items;
+using MonoZelda.Items.ItemClasses;
+using MonoZelda.Link;
 using MonoZelda.Sprites;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace MonoZelda.Commands.CollisionCommands;
 
@@ -20,25 +25,22 @@ public class PlayerItemCollisionCommand : ICommand
 
     public void Execute(params object[] metadata)
     {
-        Collidable collidableA = (Collidable) metadata[0];
-        Collidable collidableB = (Collidable) metadata[1];
+        ICollidable collidableA = (ICollidable) metadata[0];
+        ICollidable collidableB = (ICollidable) metadata[1];
         CollisionController collisionController = (CollisionController) metadata[2];
-
         //it's possible that checking A and B is not necessary if CollisionController is forcing an order 
+        ItemCollidable itemCollidable;
+
         if (collidableA.type == CollidableType.Item)
         {
-            SpriteDict collidableDict = collidableA.CollidableDict;
-            collidableDict.Unregister();
-            collidableA.UnregisterHitbox();
-            collisionController.RemoveCollidable(collidableA);
+            itemCollidable = (ItemCollidable)collidableA;
         }
         else
         {
-            SpriteDict collidableDict = collidableB.CollidableDict;
-            collidableDict.Unregister();
-            collidableB.UnregisterHitbox();
-            collisionController.RemoveCollidable(collidableB);
+            itemCollidable = (ItemCollidable)collidableB;
         }
+
+        itemCollidable.HandleCollision(collisionController);
     }
 
     public void UnExecute()

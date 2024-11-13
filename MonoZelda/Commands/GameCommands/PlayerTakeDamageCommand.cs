@@ -1,28 +1,30 @@
 ﻿using MonoZelda.Link;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Commands.GameCommands;
 
 public class PlayerTakeDamageCommand : ICommand
 {
-    private Player player;
+    private PlayerSpriteManager playerSprite;
 
     public PlayerTakeDamageCommand()
     {
         //empty
     }
 
-    public PlayerTakeDamageCommand(Player player)
+    public PlayerTakeDamageCommand(PlayerSpriteManager playerSprite)
     {
-        this.player = player;
+        this.playerSprite = playerSprite;
     }
 
     public void Execute(params object[] metadata)
     {
-        if (player == null)
-            return;
+        // Play damage sound
+        SoundManager.PlaySound("LOZ_Link_Hurt", false);
 
         // Apply damage to player
-        player.TakeDamage();
+        PlayerState.TakeDamage();
+        playerSprite.TakeDamage();
     }
 
     public void UnExecute()
