@@ -2,56 +2,53 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
 using MonoZelda.Collision;
-using System.Collections.Generic;
-using MonoZelda.Enemies;
-using MonoZelda.Link;
 
 namespace MonoZelda.Items.ItemClasses;
 
 public abstract class Item
 {
-    protected PlayerCollisionManager playerCollision;
+    private const float FLASHING_TIME = 0.75f;
+    protected ItemManager itemManager;
+    protected SpriteDict itemDict;
     protected ItemCollidable itemCollidable;
-    protected List<Enemy> roomEnemyList;
-    protected List<Item> updateList;
     protected ItemList itemType;
+    protected Rectangle itemBounds;
+    protected bool itemPickedUp;
 
-    public ItemList ItemType
+    public bool ItemPickedUp
     {
-        get
-        {
-            return itemType;
-        }
-        set
-        {
-            itemType = value;
-        }
+        get { return itemPickedUp; }
     }
 
-    public bool ItemPickedUp { get; set; }
-
-    public Item(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision,List<Item> updateList)
+    public Item(ItemManager itemManager)
     {
-        this.roomEnemyList = roomEnemyList;
-        this.updateList = updateList;
-        this.playerCollision = playerCollision;
+        itemPickedUp = false;
+        this.itemManager = itemManager;
     }
 
-    public virtual void ItemSpawn(SpriteDict itemDict, Point  spawnPosition, CollisionController collisionController)
+    public virtual void ItemSpawn(Point spawnPosition, CollisionController collisionController)
     {
-        itemCollidable = new ItemCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, 60, 60), itemType);
-        itemCollidable.setItem(this);
+        // create item SpriteDict
+        itemDict = new SpriteDict(SpriteType.Items, SpriteLayer.Items, spawnPosition);
+        itemDict.SetFlashing(SpriteDict.FlashingType.OnOff, FLASHING_TIME);
+
+        // create item Collidable 
+        itemCollidable = new ItemCollidable(itemBounds, itemType);
         collisionController.AddCollidable(itemCollidable);
-        itemCollidable.setSpriteDict(itemDict);
-        itemDict.Position = spawnPosition;
+
     }
 
-    public virtual void HandleCollision(SpriteDict itemCollidableDict,CollisionController collisionController)
+    public virtual void HandleCollision(CollisionController collisionController)
     {
-        itemCollidableDict.Unregister();
+        // unregister collidable and remove from collisionController
         itemCollidable.UnregisterHitbox();
         collisionController.RemoveCollidable(itemCollidable);
-        ItemPickedUp = true;
+
+        // unregister spriteDict
+        itemDict.Unregister();
+
+        // update pickUp boolean
+        itemPickedUp = true;
     }
 
     public virtual void Update()

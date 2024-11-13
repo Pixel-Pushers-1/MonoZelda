@@ -1,32 +1,26 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using MonoZelda.Collision;
-using MonoZelda.Sprites;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
 using MonoZelda.Sound;
-using MonoZelda.Enemies;
-using MonoZelda.Link;
-using System.Collections.Generic;
 
 namespace MonoZelda.Items.ItemClasses;
 
 public class BlueCandle : Item
 {
-    public BlueCandle(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public BlueCandle(ItemManager itemManager) : base(itemManager)
     {
         itemType = ItemList.BlueCandle;
     }
 
-    public override void ItemSpawn(SpriteDict bluecandleDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(Point spawnPosition, CollisionController collisionController)
     {
-        base.ItemSpawn(bluecandleDict, spawnPosition, collisionController);
-        bluecandleDict.SetSprite("candle_blue");
+        base.ItemSpawn(spawnPosition, collisionController);
+        itemDict.SetSprite("candle_blue");
     }
 
-    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    public override void HandleCollision(CollisionController collisionController)
     {
         SoundManager.PlaySound("LOZ_Get_Item", false);
-        base.HandleCollision(itemCollidableDict, collisionController);
+        base.HandleCollision(collisionController);
     }
 }
 

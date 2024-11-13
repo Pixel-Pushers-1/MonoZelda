@@ -1,29 +1,26 @@
-﻿using MonoZelda.Sprites;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
 using MonoZelda.Sound;
-using MonoZelda.Enemies;
 using MonoZelda.Link;
-using System.Collections.Generic;
 
 namespace MonoZelda.Items.ItemClasses;
 public class Bomb : Item
 {
-    public Bomb(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public Bomb(ItemManager itemManager) : base(itemManager)
     {
         itemType = ItemList.Bomb;
     }
 
-    public override void ItemSpawn(SpriteDict bombDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(Point spawnPosition, CollisionController collisionController)
     {
-        base.ItemSpawn(bombDict, spawnPosition, collisionController);  
-        bombDict.SetSprite("bomb");   
+        base.ItemSpawn(spawnPosition, collisionController);  
+        itemDict.SetSprite("bomb");   
     }
 
-    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    public override void HandleCollision(CollisionController collisionController)
     {
         PlayerState.AddBombs(1);
         SoundManager.PlaySound("LOZ_Get_Item", false);
-        base.HandleCollision(itemCollidableDict, collisionController);
+        base.HandleCollision(collisionController);
     }
 }

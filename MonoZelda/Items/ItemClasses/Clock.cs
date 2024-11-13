@@ -1,5 +1,4 @@
-﻿using MonoZelda.Sprites;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
 using MonoZelda.Sound;
 using MonoZelda.Enemies;
@@ -10,18 +9,23 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class Clock : Item
 {
-    public Clock(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    private List<Enemy> roomEnemyList;
+    private PlayerCollisionManager playerCollision;
+
+    public Clock(ItemManager itemManager) : base(itemManager)
     {
         itemType = ItemList.Clock;
     }
 
-    public override void ItemSpawn(SpriteDict clockDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(Point spawnPosition, CollisionController collisionController)
     {
-        base.ItemSpawn(clockDict, spawnPosition, collisionController);
-        clockDict.SetSprite("clock");
+        base.ItemSpawn(spawnPosition, collisionController);
+        itemDict.SetSprite("clock");
+        roomEnemyList = itemManager.RoomEnemyList;
+        playerCollision = itemManager.PlayerCollision;
     }
 
-    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    public override void HandleCollision(CollisionController collisionController)
     {
         playerCollision.HandleClockCollision();
         foreach(var enemy in roomEnemyList)
@@ -29,6 +33,6 @@ public class Clock : Item
             enemy.TakeDamage(3f, Direction.None, 0);
         }
         SoundManager.PlaySound("LOZ_Get_Item", false);
-        base.HandleCollision(itemCollidableDict, collisionController);
+        base.HandleCollision(collisionController);
     }
 }

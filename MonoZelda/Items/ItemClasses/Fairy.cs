@@ -12,11 +12,10 @@ namespace MonoZelda.Items.ItemClasses;
 public class Fairy : Item
 {
     private Random rnd;
-    private const float FAIRY_ALIVE = 3f;
+    private int randomNum;
     private float timer;
     private float directionUpdateTimer;
-    private int randomNum;
-    private SpriteDict fairyDict;
+    private const float FAIRY_ALIVE = 3f;
     private const float FAIRY_SPEED = 12f;
 
     private Dictionary<int, Vector2> DirectionVector = new()
@@ -33,20 +32,24 @@ public class Fairy : Item
         rnd = new Random(); 
     }
 
-    public override void ItemSpawn(SpriteDict fairyDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(Point spawnPosition, CollisionController collisionController)
     {
-        base.ItemSpawn(fairyDict, spawnPosition, collisionController);
-        fairyDict.SetSprite("fairy");
-        this.fairyDict = fairyDict;
+        base.ItemSpawn(spawnPosition, collisionController);
+        itemDict.SetSprite("fairy");
     }
 
-    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    public override void HandleCollision(CollisionController collisionController)
     {
-        updateList.Add(this);
+        // 
+        itemManager.AddUpdateItem(this);
         timer = FAIRY_ALIVE;
-        randomNum = 1;
+        randomNum = rnd.Next(1,5);
+
+        // update playerHealth and play Fairy Sound
         PlayerState.Health = PlayerState.MaxHealth;
         SoundManager.PlaySound("LOZ_Fairy_Heal", false);
+
+        // unregister collidable and remove from collisionController
         itemCollidable.UnregisterHitbox();
         collisionController.RemoveCollidable(itemCollidable);
     }
