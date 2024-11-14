@@ -28,19 +28,9 @@ namespace MonoZelda.UI
             { ProjectileType.Bomb, "bomb" },
             { ProjectileType.CandleBlue, "candle_blue" },
         };
-        public ItemCountWidget(SpriteFont spriteFont, Screen screen, Point position, ContentManager contentManager) : base(screen, position)
+        public ItemCountWidget(SpriteFont spriteFont, Screen screen, Point position) : base(screen, position)
         {
             font = spriteFont;
-
-            // TODO: Projectile manager needs to update PlayerState
-
-            //show equipped projecetilie
-            //ProjectileType projectileType = playerState.EquippedProjectile;
-            //Point projPosition = new Point(450, 75);
-            //var proj = new SpriteDict(contentManager.Load<Texture2D>("Sprites/items"), SpriteCSVData.Items, 0, projPosition);
-            //string spriteName = projectileSpriteMap.TryGetValue(projectileType, out var name) ? name : "arrow";
-            //proj.SetSprite(spriteName);
-            //set ProjectileSprite
 
             Point projPosition = WidgetLocation + margin + new Point(88, 12);
             equippedProjectileSprite = new SpriteDict(SpriteType.HUD, SpriteLayer.HUD, projPosition);

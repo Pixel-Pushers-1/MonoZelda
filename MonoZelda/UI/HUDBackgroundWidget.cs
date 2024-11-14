@@ -14,7 +14,7 @@ namespace MonoZelda.UI
         private Point mapOffset = new Point(0,-320);
         private Point inventoryOffset = new Point(0,-672);
 
-        public HUDBackgroundWidget(Screen screen, Point position, ContentManager cm) : base(screen, position)
+        public HUDBackgroundWidget(Screen screen, Point position) : base(screen, position)
         {
             // Create Mini-Menu
             MiniMenu = new(SpriteType.HUD, SpriteLayer.HUD - 1, position);
