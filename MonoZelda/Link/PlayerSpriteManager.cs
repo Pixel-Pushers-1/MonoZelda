@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
 using System.Collections.Generic;
 using MonoZelda.Dungeons;
+using System.Diagnostics;
 
 namespace MonoZelda.Link;
 
@@ -78,8 +79,13 @@ public class PlayerSpriteManager
     {
         playerSpriteDict.SetFlashing(SpriteDict.FlashingType.Colorful, CLOCK_FLASH_TIME);
     }
+
     public void Move(PlayerMoveCommand moveCommand)
     {
+        if (!PlayerState.CanMove) {
+            return;
+        }
+
         if (immobilityTimer > 0) {
             immobilityTimer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
             return;
@@ -102,7 +108,7 @@ public class PlayerSpriteManager
         playerSpriteDict.Position = playerPosition.ToPoint();
         PlayerState.Position = playerPosition.ToPoint();
     }
-        
+
     public void StandStill(PlayerStandingCommand standCommand)
     {
         if (immobilityTimer <= 0)
