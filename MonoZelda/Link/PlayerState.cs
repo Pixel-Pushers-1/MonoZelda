@@ -20,7 +20,6 @@ public static class PlayerState
         Position = new Point(515, 725);
         IsCandleUsed = false;
         IsDead = false;
-        CanMove = true;
         IsKnockedBack = false;
         _health = INITIAL_HP;
         MaxHealth = INITIAL_HP;
@@ -69,7 +68,6 @@ public static class PlayerState
     public static int Bombs { get; set; }
     public static int Keys { get; set; }
     public static bool IsDead { get; set; }
-    public static bool CanMove { get; set; }
     public static bool IsKnockedBack { get; set; }
     public static bool IsCandleUsed { get; set; }   
     public static int MaxHealth { get; set; }

@@ -135,17 +135,7 @@ namespace MonoZelda.Scenes
         public void ToggleInventory()
         {
             isPaused = inventoryScene.ToggleInventory();
-            PlayerState.CanMove = !isPaused;
-        }
-
-        public void Pause()
-        {
-            isPaused = true;
-        }
-        
-        public void UnPause()
-        {
-            isPaused = false;
+            (activeScene as RoomScene)?.SetPaused(isPaused);
         }
     }
 }

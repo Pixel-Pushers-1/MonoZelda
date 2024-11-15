@@ -82,10 +82,6 @@ public class PlayerSpriteManager
 
     public void Move(PlayerMoveCommand moveCommand)
     {
-        if (!PlayerState.CanMove) {
-            return;
-        }
-
         if (immobilityTimer > 0) {
             immobilityTimer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
             return;
