@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using MonoZelda.Controllers;
+﻿using MonoZelda.Controllers;
 using MonoZelda.Sound;
 using MonoZelda.Link;
+using MonoZelda.Dungeons;
 
 namespace MonoZelda.Items.ItemClasses;
 
@@ -12,9 +12,9 @@ public class BluePotion : Item
         itemType = ItemList.BluePotion;
     }
 
-    public override void ItemSpawn(Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
-        base.ItemSpawn(spawnPosition, collisionController); 
+        base.ItemSpawn(itemSpawn, collisionController); 
         itemDict.SetSprite("potion_blue");
     }
 

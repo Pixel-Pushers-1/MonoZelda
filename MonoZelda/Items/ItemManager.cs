@@ -9,9 +9,9 @@ namespace MonoZelda.Items;
 public class ItemManager
 {
     private List<ItemSpawn> roomSpawnList;
+    private List<Item> itemUpdateList;
     private List<Enemy> roomEnemyList;
     private PlayerCollisionManager playerCollision;
-    private List<Item> itemUpdateList;
 
     public ItemManager(List<ItemSpawn> roomSpawnList, List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision)
     {
@@ -34,6 +34,16 @@ public class ItemManager
     public PlayerCollisionManager PlayerCollision
     {
         get { return playerCollision; }
+    }
+
+    public void AddRoomSpawnItem(ItemSpawn itemSpawn)
+    {
+        roomSpawnList.Add(itemSpawn);   
+    }
+
+    public void RemoveRoomSpawnItem(ItemSpawn itemSpawn)
+    {
+        roomSpawnList.Remove(itemSpawn);
     }
 
     public void AddUpdateItem(Item item)

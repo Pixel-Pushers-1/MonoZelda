@@ -1,30 +1,30 @@
-﻿using MonoZelda.Sprites;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
 using MonoZelda.Sound;
 using MonoZelda.Enemies;
 using MonoZelda.Link;
 using System.Collections.Generic;
+using MonoZelda.Dungeons;
 
 namespace MonoZelda.Items.ItemClasses;
 
 public class Heart : Item
 {
-    public Heart(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public Heart(ItemManager itemManager) : base(itemManager)
     {
         itemType = ItemList.Heart;
     }
 
-    public override void ItemSpawn(SpriteDict heartDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
-        base.ItemSpawn(heartDict, spawnPosition, collisionController);  
-        heartDict.SetSprite("heart_full");
+        base.ItemSpawn(itemSpawn, collisionController);  
+        itemDict.SetSprite("heart_full");
     }
 
-    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    public override void HandleCollision(CollisionController collisionController)
     {
         PlayerState.Health = MathHelper.Clamp(PlayerState.Health + 2, 0, PlayerState.MaxHealth);
         SoundManager.PlaySound("LOZ_Get_Heart", false);
-        base.HandleCollision(itemCollidableDict, collisionController);
+        base.HandleCollision(collisionController);
     }
 }

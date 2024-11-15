@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
 using MonoZelda.Collision;
+using MonoZelda.Dungeons;
 
 namespace MonoZelda.Items.ItemClasses;
 
@@ -26,16 +27,15 @@ public abstract class Item
         this.itemManager = itemManager;
     }
 
-    public virtual void ItemSpawn(Point spawnPosition, CollisionController collisionController)
+    public virtual void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
         // create item SpriteDict
-        itemDict = new SpriteDict(SpriteType.Items, SpriteLayer.Items, spawnPosition);
+        itemDict = new SpriteDict(SpriteType.Items, SpriteLayer.Items, itemSpawn.Position);
         itemDict.SetFlashing(SpriteDict.FlashingType.OnOff, FLASHING_TIME);
 
         // create item Collidable 
         itemCollidable = new ItemCollidable(itemBounds, itemType);
         collisionController.AddCollidable(itemCollidable);
-
     }
 
     public virtual void HandleCollision(CollisionController collisionController)

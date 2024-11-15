@@ -2,16 +2,17 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
 using MonoZelda.Sound;
-using MonoZelda.Enemies;
 using MonoZelda.Link;
-using System.Collections.Generic;
 using MonoZelda.Dungeons;
+using MonoZelda.Collision;
 
 namespace MonoZelda.Items.ItemClasses;
 
 public class Triforce : Item
 {
+    private float FLASHING_TIME = 0.75f;
     private float END_SCENE_TIMER = 25f;
+    private PlayerCollisionManager playerCollision;
     private SpriteDict triforceDict;
     private BlankSprite leftCurtain;
     private BlankSprite rightCurtain;
@@ -19,16 +20,21 @@ public class Triforce : Item
     private SpriteDict FakeTriforce;
     private float timer;
 
-    public Triforce(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public Triforce(ItemManager itemManager) : base(itemManager)
     {
         itemType = ItemList.Triforce;
+        playerCollision = itemManager.PlayerCollision;
     }
 
-    public override void ItemSpawn(SpriteDict triforceDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
-        base.ItemSpawn(triforceDict, spawnPosition + new Point(32,12), collisionController);   
-        triforceDict.SetSprite("triforce");
-        this.triforceDict = triforceDict;
+        // create item SpriteDict
+        itemDict = new SpriteDict(SpriteType.Items, SpriteLayer.Items, itemSpawn.Position + new Point(32, 12));
+        itemDict.SetFlashing(SpriteDict.FlashingType.OnOff, FLASHING_TIME);
+
+        // create item Collidable 
+        itemCollidable = new ItemCollidable(itemBounds, itemType);
+        collisionController.AddCollidable(itemCollidable);
     }
 
     private void InitializeSpriteDicts()
@@ -47,11 +53,11 @@ public class Triforce : Item
         FakeTriforce.SetSprite("triforce");
     }
 
-    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    public override void HandleCollision(CollisionController collisionController)
     {
         timer = END_SCENE_TIMER;
         InitializeSpriteDicts();
-        updateList.Add(this);
+        itemManager.AddUpdateItem(this);
         triforceDict.Unregister();
         SoundManager.ClearSoundDictionary();
         SoundManager.PlaySound("LOZ_Victory", false);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
+using MonoZelda.Dungeons;
 using MonoZelda.Sound;
 
 namespace MonoZelda.Items.ItemClasses;
@@ -11,9 +12,9 @@ public class Arrow : Item
         itemType = ItemList.Arrow;
     }
 
-    public override void ItemSpawn(Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
-        base.ItemSpawn(spawnPosition, collisionController);
+        base.ItemSpawn(itemSpawn, collisionController);
         itemDict.SetSprite("arrow");
     }
 

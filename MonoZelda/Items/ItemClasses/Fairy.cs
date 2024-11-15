@@ -1,11 +1,11 @@
-﻿using MonoZelda.Sprites;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
 using MonoZelda.Sound;
 using MonoZelda.Enemies;
 using MonoZelda.Link;
 using System.Collections.Generic;
 using System;
+using MonoZelda.Dungeons;
 
 namespace MonoZelda.Items.ItemClasses;
 
@@ -26,21 +26,21 @@ public class Fairy : Item
         { 4, new Vector2(0,1) },
     };
 
-    public Fairy(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public Fairy(ItemManager itemManager) : base(itemManager)
     {
         itemType = ItemList.Fairy;
         rnd = new Random(); 
     }
 
-    public override void ItemSpawn(Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
-        base.ItemSpawn(spawnPosition, collisionController);
+        base.ItemSpawn(itemSpawn, collisionController);
         itemDict.SetSprite("fairy");
     }
 
     public override void HandleCollision(CollisionController collisionController)
     {
-        // 
+        // Add fairy as an update item in itemManager list
         itemManager.AddUpdateItem(this);
         timer = FAIRY_ALIVE;
         randomNum = rnd.Next(1,5);
@@ -58,7 +58,7 @@ public class Fairy : Item
     {
         timer -= (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         directionUpdateTimer += (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
-        Vector2 fairyPosition = fairyDict.Position.ToVector2();
+        Vector2 fairyPosition = itemDict.Position.ToVector2();
         if (timer > 0)
         {
             // get movement vector
@@ -71,12 +71,12 @@ public class Fairy : Item
 
             // update fairy position
             fairyPosition += FAIRY_SPEED * movementVector;
-            fairyDict.Position = fairyPosition.ToPoint();
+            itemDict.Position = fairyPosition.ToPoint();
         }
         else
         {
-            fairyDict.Unregister();
-            updateList.Remove(this);
+            itemDict.Unregister();
+            itemManager.RemoveUpdateItem(this);
         }
         
     }

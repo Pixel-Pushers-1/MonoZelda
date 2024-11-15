@@ -23,18 +23,24 @@ public class ItemFactory
         List<ItemSpawn> itemSpawnList = itemManager.RoomSpawnList;
         foreach (var itemSpawn in itemSpawnList)
         {
-            CreateItem(itemSpawn);
+            CreateItem(itemSpawn, false);
         }
     }
 
-    public void CreateItem(ItemSpawn itemSpawn)
+    public void CreateItem(ItemSpawn itemSpawn, Boolean dropItem)
     {
         // Get itemClass
         var itemType = Type.GetType($"MonoZelda.Items.ItemClasses.{itemSpawn.ItemType}");
         Item item = (Item)Activator.CreateInstance(itemType,itemManager);
 
         // Spawn Item
-        item.ItemSpawn(itemSpawn.Position, collisionController);
+        item.ItemSpawn(itemSpawn, collisionController);
+
+        // Check if item is in spawnList
+        if(dropItem == true)
+        {
+            itemManager.AddRoomSpawnItem(itemSpawn);
+        }
     }
 }
 
