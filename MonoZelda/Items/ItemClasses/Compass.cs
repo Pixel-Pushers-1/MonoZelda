@@ -1,4 +1,5 @@
-﻿using MonoZelda.Controllers;
+﻿using Microsoft.Xna.Framework;
+using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Sound;
 using MonoZelda.UI;
@@ -14,6 +15,7 @@ public class Compass : Item
 
     public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
+        itemBounds = new Rectangle(itemSpawn.Position, new Point(56, 56));
         base.ItemSpawn(itemSpawn, collisionController);
         itemDict.SetSprite("compass");
     }

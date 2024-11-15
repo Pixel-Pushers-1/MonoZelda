@@ -54,15 +54,25 @@ public class Triforce : Item
 
     public override void HandleCollision(CollisionController collisionController)
     {
+        // update player sprite
+        playerCollision.HandleTriforceCollision();
         timer = END_SCENE_TIMER;
         InitializeSpriteDicts();
         itemManager.AddUpdateItem(this);
         itemDict.Unregister();
+
+        // play victory sound
         SoundManager.ClearSoundDictionary();
         SoundManager.PlaySound("LOZ_Victory", false);
-        playerCollision.HandleTriforceCollision();
+
+        // unregister collidable and remove from collisionController
         itemCollidable.UnregisterHitbox();
         collisionController.RemoveCollidable(itemCollidable);
+        itemCollidable.UnregisterHitbox();
+        collisionController.RemoveCollidable(itemCollidable);
+
+        // remove item from roomSpawn list
+        itemManager.RemoveRoomSpawnItem(itemSpawn);
     }
 
     public override void Update()

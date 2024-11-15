@@ -22,6 +22,7 @@ public class Clock : Item
 
     public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
+        itemBounds = new Rectangle(itemSpawn.Position, new Point(56, 56));
         base.ItemSpawn(itemSpawn, collisionController);
         itemDict.SetSprite("clock");
         roomEnemyList = itemManager.RoomEnemyList;

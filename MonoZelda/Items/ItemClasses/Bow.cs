@@ -2,6 +2,7 @@
 using MonoZelda.Sound;
 using MonoZelda.Link;
 using MonoZelda.Dungeons;
+using Microsoft.Xna.Framework;
 
 namespace MonoZelda.Items.ItemClasses;
 
@@ -18,6 +19,7 @@ public class Bow : Item
 
     public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
+        itemBounds = new Rectangle(itemSpawn.Position, new Point(24, 56));
         base.ItemSpawn(itemSpawn, collisionController);
         itemDict.SetSprite("bow");
         playerCollision = itemManager.PlayerCollision;
@@ -37,6 +39,9 @@ public class Bow : Item
         // Unregister collidables and remove from collisionController
         itemCollidable.UnregisterHitbox();
         collisionController.RemoveCollidable(itemCollidable);
+
+        // remove item from roomSpawn list
+        itemManager.RemoveRoomSpawnItem(itemSpawn);
     }
 
     public override void Update()

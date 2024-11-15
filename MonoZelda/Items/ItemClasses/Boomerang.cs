@@ -2,6 +2,7 @@
 using MonoZelda.Sound;
 using MonoZelda.Link;
 using MonoZelda.Dungeons;
+using Microsoft.Xna.Framework;
 namespace MonoZelda.Items.ItemClasses;
 
 public class Boomerang : Item
@@ -13,7 +14,7 @@ public class Boomerang : Item
 
     public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
-        PlayerState.HasBoomerang = true;    
+        itemBounds = new Rectangle(itemSpawn.Position, new Point(32, 32));
         base.ItemSpawn(itemSpawn, collisionController);
         itemDict.SetSprite("boomerang");
     }

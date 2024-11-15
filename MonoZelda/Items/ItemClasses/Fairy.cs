@@ -34,6 +34,7 @@ public class Fairy : Item
 
     public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
+        itemBounds = new Rectangle(itemSpawn.Position, new Point(24,56));
         base.ItemSpawn(itemSpawn, collisionController);
         itemDict.SetSprite("fairy");
     }
@@ -52,6 +53,9 @@ public class Fairy : Item
         // unregister collidable and remove from collisionController
         itemCollidable.UnregisterHitbox();
         collisionController.RemoveCollidable(itemCollidable);
+
+        // remove item from roomSpawn list
+        itemManager.RemoveRoomSpawnItem(itemSpawn);
     }
 
     public override void Update()

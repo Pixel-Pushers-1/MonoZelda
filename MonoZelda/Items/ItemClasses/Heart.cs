@@ -17,6 +17,7 @@ public class Heart : Item
 
     public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
+        itemBounds = new Rectangle(itemSpawn.Position, new Point(24, 24));
         base.ItemSpawn(itemSpawn, collisionController);  
         itemDict.SetSprite("heart_full");
     }

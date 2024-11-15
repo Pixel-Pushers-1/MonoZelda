@@ -12,6 +12,7 @@ public abstract class Item
     protected ItemManager itemManager;
     protected SpriteDict itemDict;
     protected ItemCollidable itemCollidable;
+    protected ItemSpawn itemSpawn;
     protected ItemList itemType;
     protected Rectangle itemBounds;
     protected bool itemPickedUp;
@@ -35,7 +36,11 @@ public abstract class Item
 
         // create item Collidable 
         itemCollidable = new ItemCollidable(itemBounds, itemType);
+        itemCollidable.setItem(this);
         collisionController.AddCollidable(itemCollidable);
+
+        // store itemSpawn for removal
+        this.itemSpawn = itemSpawn;
     }
 
     public virtual void HandleCollision(CollisionController collisionController)
@@ -48,6 +53,7 @@ public abstract class Item
         itemDict.Unregister();
 
         // update pickUp boolean
+        itemManager.RemoveRoomSpawnItem(itemSpawn);
         itemPickedUp = true;
     }
 

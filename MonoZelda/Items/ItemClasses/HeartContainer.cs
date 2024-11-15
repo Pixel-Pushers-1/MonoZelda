@@ -4,6 +4,7 @@ using MonoZelda.Enemies;
 using MonoZelda.Link;
 using System.Collections.Generic;
 using MonoZelda.Dungeons;
+using Microsoft.Xna.Framework;
 
 namespace MonoZelda.Items.ItemClasses;
 
@@ -16,6 +17,7 @@ public class HeartContainer : Item
 
     public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
+        itemBounds = new Rectangle(itemSpawn.Position, new Point(56, 56));
         base.ItemSpawn(itemSpawn, collisionController); 
         itemDict.SetSprite("heartcontainer");
     }

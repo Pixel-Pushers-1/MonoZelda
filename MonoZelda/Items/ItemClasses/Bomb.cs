@@ -2,6 +2,7 @@
 using MonoZelda.Sound;
 using MonoZelda.Link;
 using MonoZelda.Dungeons;
+using Microsoft.Xna.Framework;
 
 namespace MonoZelda.Items.ItemClasses;
 public class Bomb : Item
@@ -13,6 +14,7 @@ public class Bomb : Item
 
     public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
+        itemBounds = new Rectangle(itemSpawn.Position, new Point(24, 56));
         base.ItemSpawn(itemSpawn, collisionController);  
         itemDict.SetSprite("bomb");   
     }

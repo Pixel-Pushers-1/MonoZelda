@@ -1,4 +1,5 @@
-﻿using MonoZelda.Controllers;
+﻿using Microsoft.Xna.Framework;
+using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Sound;
 
@@ -13,6 +14,7 @@ public class BlueCandle : Item
 
     public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
+        itemBounds = new Rectangle(itemSpawn.Position, new Point(24, 56));
         base.ItemSpawn(itemSpawn, collisionController);
         itemDict.SetSprite("candle_blue");
     }

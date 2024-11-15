@@ -18,6 +18,7 @@ public class Key : Item
 
     public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
+        itemBounds = new Rectangle(itemSpawn.Position, new Point(24, 56));
         base.ItemSpawn(itemSpawn, collisionController);    
         itemDict.SetSprite("key_0");
     }

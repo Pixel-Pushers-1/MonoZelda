@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Controllers;
@@ -73,6 +72,7 @@ public class PlayerCollisionManager
     public void HandleClockCollision()
     {
         player.ClockFlash();
+        invulnerabilityTimer = INVULNERABILITY_TIME;
     }
 
     public void HandleBowCollision(SpriteDict bowDict)
