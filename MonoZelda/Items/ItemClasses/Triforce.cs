@@ -13,7 +13,6 @@ public class Triforce : Item
     private float FLASHING_TIME = 0.75f;
     private float END_SCENE_TIMER = 25f;
     private PlayerCollisionManager playerCollision;
-    private SpriteDict triforceDict;
     private BlankSprite leftCurtain;
     private BlankSprite rightCurtain;
     private SpriteDict FakeLink;
@@ -58,7 +57,7 @@ public class Triforce : Item
         timer = END_SCENE_TIMER;
         InitializeSpriteDicts();
         itemManager.AddUpdateItem(this);
-        triforceDict.Unregister();
+        itemDict.Unregister();
         SoundManager.ClearSoundDictionary();
         SoundManager.PlaySound("LOZ_Victory", false);
         playerCollision.HandleTriforceCollision();
