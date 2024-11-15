@@ -102,7 +102,7 @@ public class PlayerSpriteManager
         playerSpriteDict.Position = playerPosition.ToPoint();
         PlayerState.Position = playerPosition.ToPoint();
     }
-        
+    
     public void StandStill(PlayerStandingCommand standCommand)
     {
         if (immobilityTimer <= 0)
