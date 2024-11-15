@@ -8,7 +8,6 @@ namespace MonoZelda.Items;
 
 public class ItemFactory
 {
-    private const float FLASHING_TIME = .75f;
     private CollisionController collisionController;
     private ItemManager itemManager;
 

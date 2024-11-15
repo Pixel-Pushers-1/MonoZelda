@@ -5,19 +5,15 @@ using MonoZelda.Sound;
 using MonoZelda.Link;
 using MonoZelda.Dungeons;
 using MonoZelda.Collision;
+using System;
 
 namespace MonoZelda.Items.ItemClasses;
 
 public class Triforce : Item
 {
     private float FLASHING_TIME = 0.75f;
-    private float END_SCENE_TIMER = 25f;
     private PlayerCollisionManager playerCollision;
-    private BlankSprite leftCurtain;
-    private BlankSprite rightCurtain;
-    private SpriteDict FakeLink;
-    private SpriteDict FakeTriforce;
-    private float timer;
+    private event Action LevelComplete;
 
     public Triforce(ItemManager itemManager) : base(itemManager)
     {
@@ -36,60 +32,33 @@ public class Triforce : Item
         collisionController.AddCollidable(itemCollidable);
     }
 
-    private void InitializeSpriteDicts()
-    {
-        // make curtains
-        var leftPosition = new Point(-512, 192);
-        var rightPosition = new Point(1024, 192);
-        var curtainSize = new Point(512, 704);
-        leftCurtain = new BlankSprite(SpriteLayer.Triforce - 1, leftPosition, curtainSize, Color.Black);
-        rightCurtain = new BlankSprite(SpriteLayer.Triforce - 1, rightPosition, curtainSize, Color.Black);
+    //private void InitializeSpriteDicts()
+    //{
+    //    // make curtains
+    //    var leftPosition = new Point(-512, 192);
+    //    var rightPosition = new Point(1024, 192);
+    //    var curtainSize = new Point(512, 704);
+    //    leftCurtain = new BlankSprite(SpriteLayer.Triforce - 1, leftPosition, curtainSize, Color.Black);
+    //    rightCurtain = new BlankSprite(SpriteLayer.Triforce - 1, rightPosition, curtainSize, Color.Black);
 
-        // create fake Link and Triforce
-        FakeLink = new SpriteDict(SpriteType.Player, SpriteLayer.Triforce, PlayerState.Position);
-        FakeLink.SetSprite("pickupitem_twohands");
-        FakeTriforce = new SpriteDict(SpriteType.Items, SpriteLayer.Triforce, PlayerState.Position + new Point(-32, -84));
-        FakeTriforce.SetSprite("triforce");
-    }
+    //    // create fake Link and Triforce
+    //    FakeLink = new SpriteDict(SpriteType.Player, SpriteLayer.Triforce, PlayerState.Position);
+    //    FakeLink.SetSprite("pickupitem_twohands");
+    //    FakeTriforce = new SpriteDict(SpriteType.Items, SpriteLayer.Triforce, PlayerState.Position + new Point(-32, -84));
+    //    FakeTriforce.SetSprite("triforce");
+    //}
 
     public override void HandleCollision(CollisionController collisionController)
     {
-        // update player sprite
-        playerCollision.HandleTriforceCollision();
-        timer = END_SCENE_TIMER;
-        InitializeSpriteDicts();
-        itemManager.AddUpdateItem(this);
-        itemDict.Unregister();
-
-        // play victory sound
-        SoundManager.ClearSoundDictionary();
-        SoundManager.PlaySound("LOZ_Victory", false);
-
         // unregister collidable and remove from collisionController
-        itemCollidable.UnregisterHitbox();
-        collisionController.RemoveCollidable(itemCollidable);
+        itemDict.Unregister();
         itemCollidable.UnregisterHitbox();
         collisionController.RemoveCollidable(itemCollidable);
 
         // remove item from roomSpawn list
         itemManager.RemoveRoomSpawnItem(itemSpawn);
-    }
 
-    public override void Update()
-    {
-        timer -= (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
-        if (timer > 0) 
-        {
-            if (leftCurtain.Position.X != 0 && rightCurtain.Position.X != 512)
-            {
-                leftCurtain.Position += new Point(4, 0);
-                rightCurtain.Position += new Point(-4, 0);
-            }
-        }
-        else
-        {
-            PlayerState.ObtainedTriforce = true;
-        }
+        // call the end game envent
+        LevelComplete?.Invoke();
     }
-
 }

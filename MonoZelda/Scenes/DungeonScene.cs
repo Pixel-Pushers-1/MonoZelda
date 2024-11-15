@@ -73,6 +73,11 @@ namespace MonoZelda.Scenes
             inventoryScene.SetPlayerMapMarker(DungeonConstants.GetRoomCoordinate(roomName));
         }
 
+        public void LevelCompleteScene()
+        {
+            activeScene = new LevelCompleteScene();
+        }
+
         public void LoadRoom(string roomName)
         {
             ResetScene();
