@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
 using System.Collections.Generic;
 using MonoZelda.Dungeons;
-using System.Diagnostics;
 
 namespace MonoZelda.Link;
 
@@ -15,14 +14,12 @@ public enum Direction {
     None,
 }
 
-public enum PickUpType
-{
+public enum PickUpType {
     pickupitem_onehand,
     pickupitem_twohands,
 }
 
-public class PlayerSpriteManager
-{
+public class PlayerSpriteManager {
     private const float DAMAGE_FLASH_TIME = .5f;
     private const float CLOCK_FLASH_TIME = 3f;
     private const float DAMAGE_IMMOBILITY_TIME = .2f;
@@ -42,46 +39,37 @@ public class PlayerSpriteManager
        { Direction.Right, "right" }
     };
 
-    public PlayerSpriteManager()
-    {
+    public PlayerSpriteManager() {
         playerPosition = PlayerState.Position.ToVector2();
     }
 
-    public Direction PlayerDirection
-    {
+    public Direction PlayerDirection {
         get { return playerDirection; }
     }
-    public Vector2 GetPlayerPosition()
-    {
+    public Vector2 GetPlayerPosition() {
         return playerPosition;
     }
 
-    public void SetPosition(Vector2 position)
-    {
+    public void SetPosition(Vector2 position) {
         playerPosition = position;
         playerSpriteDict.Position = position.ToPoint();
         PlayerState.Position = position.ToPoint();
     }
 
-    public void SetPlayerSpriteDict(SpriteDict spriteDict)
-    {
+    public void SetPlayerSpriteDict(SpriteDict spriteDict) {
         playerSpriteDict = spriteDict;
         playerSpriteDict.SetSprite($"walk_{DirectionToStringMap[PlayerState.Direction]}");
         playerDirection = PlayerState.Direction;
     }
 
-    public void DisablePlayerSprite()
-    {
-        playerSpriteDict.Enabled = false;   
+    public void DisablePlayerSprite() {
+        playerSpriteDict.Enabled = false;
     }
 
-    public void ClockFlash()
-    {
+    public void ClockFlash() {
         playerSpriteDict.SetFlashing(SpriteDict.FlashingType.Colorful, CLOCK_FLASH_TIME);
     }
-
-    public void Move(PlayerMoveCommand moveCommand)
-    {
+    public void Move(PlayerMoveCommand moveCommand) {
         if (immobilityTimer > 0) {
             immobilityTimer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
             return;
@@ -93,8 +81,7 @@ public class PlayerSpriteManager
         Vector2 movement = DungeonConstants.DirectionVector[playerDirection];
 
         // Get direction string from the dictionary
-        if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
-        {
+        if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString)) {
             string spriteName = $"walk_{directionString}";
             playerSpriteDict.SetSprite(spriteName);
         }
@@ -105,13 +92,10 @@ public class PlayerSpriteManager
         PlayerState.Position = playerPosition.ToPoint();
     }
 
-    public void StandStill(PlayerStandingCommand standCommand)
-    {
-        if (immobilityTimer <= 0)
-        {
+    public void StandStill(PlayerStandingCommand standCommand) {
+        if (immobilityTimer <= 0) {
             // Get direction string from the dictionary
-            if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
-            {
+            if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString)) {
                 string spriteName = $"standing_{directionString}";
                 playerSpriteDict.SetSprite(spriteName);
             }
@@ -123,27 +107,21 @@ public class PlayerSpriteManager
         PlayerState.Position = playerPosition.ToPoint();
     }
 
-    public void PlayerDeath()
-    {
-        if (immobilityTimer <= 0)
-        {
+    public void PlayerDeath() {
+        if (immobilityTimer <= 0) {
             string spriteName = "hurt_down";
             playerSpriteDict.SetSprite(spriteName);
             immobilityTimer = playerSpriteDict.SetSpriteOneshot(spriteName);
         }
-        else
-        {
+        else {
             immobilityTimer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         }
     }
 
-    public void Attack()
-    {
-        if (immobilityTimer <= 0)
-        {
+    public void Attack() {
+        if (immobilityTimer <= 0) {
             // Get direction string from the dictionary
-            if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
-            {
+            if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString)) {
                 string spriteName = $"woodensword_{directionString}";
                 immobilityTimer = playerSpriteDict.SetSpriteOneshot(spriteName);
             }
@@ -153,45 +131,36 @@ public class PlayerSpriteManager
         }
     }
 
-    public void UseItem()
-    {
-        if(immobilityTimer <= 0)
-        {
+    public void UseItem() {
+        if (immobilityTimer <= 0) {
             // Get direction string from the dictionary
-            if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
-            {
+            if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString)) {
                 string spriteName = $"useitem_{directionString}";
                 immobilityTimer = playerSpriteDict.SetSpriteOneshot(spriteName);
             }
-        } 
+        }
         else {
             immobilityTimer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         }
     }
 
-    public void TakeDamage()
-    {
-        if (immobilityTimer <= 0)
-        {
+    public void TakeDamage() {
+        if (immobilityTimer <= 0) {
             // Get direction string from the dictionary
-            if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
-            {
+            if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString)) {
                 playerSpriteDict.SetFlashing(SpriteDict.FlashingType.Colorful, DAMAGE_FLASH_TIME);
                 immobilityTimer = DAMAGE_IMMOBILITY_TIME;
             }
         }
-       
+
     }
 
-    public void PickUpItem(PickUpType pickUpSprite)
-    {
+    public void PickUpItem(PickUpType pickUpSprite) {
         immobilityTimer = PICKUP_TIME;
-        if (immobilityTimer > 0)
-        {
+        if (immobilityTimer > 0) {
             playerSpriteDict.SetSprite(pickUpSprite.ToString());
         }
-        else
-        {
+        else {
             immobilityTimer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         }
     }
