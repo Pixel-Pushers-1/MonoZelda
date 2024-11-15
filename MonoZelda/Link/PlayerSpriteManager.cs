@@ -96,13 +96,13 @@ public class PlayerSpriteManager
             string spriteName = $"walk_{directionString}";
             playerSpriteDict.SetSprite(spriteName);
         }
-        
+
         // Apply movement to player and sprite
         playerPosition += playerSpeed * movement;
         playerSpriteDict.Position = playerPosition.ToPoint();
         PlayerState.Position = playerPosition.ToPoint();
     }
-    
+        
     public void StandStill(PlayerStandingCommand standCommand)
     {
         if (immobilityTimer <= 0)
