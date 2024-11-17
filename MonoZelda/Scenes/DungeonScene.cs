@@ -10,10 +10,11 @@ using MonoZelda.Sprites;
 using System;
 using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.UI;
+using MonoZelda.Save;
 
 namespace MonoZelda.Scenes
 {
-    public class DungeonScene : Scene
+    public class DungeonScene : Scene, ISaveable
     {
         public static readonly string MARIO_ROOM = "Room18";
         public static readonly string MARIO_ENTRANCE_ROOM = "Room17";
@@ -24,6 +25,7 @@ namespace MonoZelda.Scenes
         private CommandManager commandManager;
         private ContentManager contentManager;
         private InventoryScene inventoryScene;
+        private SaveManager saveManager;
         private IDungeonRoom currentRoom;
         
         public bool isPaused { get; private set; }
@@ -145,6 +147,25 @@ namespace MonoZelda.Scenes
         public void UnPause()
         {
             isPaused = false;
+        }
+
+        public void Save(SaveState save)
+        {
+            save.RoomName = currentRoom.RoomName;
+            PlayerState.Save(save);
+            roomManager.Save(save);
+        }
+
+        public void Load(SaveState save)
+        {
+            // Hack to prevent PlayerState from gettin changed.
+            commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());
+            commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
+
+            currentRoom = save.Rooms[save.RoomName];
+            PlayerState.Position = currentRoom.SpawnPoint;
+            roomManager.Load(save);
+            PlayerState.Load(save);
         }
     }
 }

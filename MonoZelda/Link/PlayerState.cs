@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Dungeons.Parser.Data;
 using MonoZelda.Link.Projectiles;
+using MonoZelda.Save;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -87,4 +88,30 @@ public static class PlayerState
     public static void AddRupees(int amount) => Rupees += amount;
     public static void AddBombs(int amount) => Bombs += amount;
     public static void AddKeys(int amount) => Keys += amount;
+
+    public static void Save(SaveState save)
+    {
+        save.MaxHealth = MaxHealth;
+        save.EquipedProjectile = save.EquipedProjectile;
+        save.HasBoomerang = HasBoomerang;
+        save.ObtainedTriforce = ObtainedTriforce;
+        save.Health = Health;
+        save.BombCount = Bombs;
+        save.RupeeCount = Rupees;
+        save.KeyCount = Keys;
+        save.Keyring = Keyring;
+    }
+
+    public static void Load(SaveState save)
+    {
+        MaxHealth = save.MaxHealth;
+        EquippedProjectile = save.EquipedProjectile;
+        HasBoomerang = save.HasBoomerang;
+        ObtainedTriforce = save.ObtainedTriforce;
+        Health = save.Health;
+        Bombs = save.BombCount;
+        Rupees = save.RupeeCount;
+        Keys = save.KeyCount;
+        Keyring = save.Keyring;
+    }
 }
