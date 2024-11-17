@@ -21,37 +21,51 @@ namespace MonoZelda.Tiles
         public KeyDoor(DoorSpawn spawnPoint, ICommand roomTransitionCommand, CollisionController c) 
             : base(spawnPoint, roomTransitionCommand, c)
         {
+            BlockDoor(spawnPoint, c);
+        }
+
+        private void BlockDoor(DoorSpawn spawnPoint, CollisionController c)
+        {
+            if(collider != null)
+            {
+                c.RemoveCollidable(collider);
+            }
+
             // Create collider to block entry, HALF_TILE makes the door flush with the wall
-            var offset = spawnPoint.Direction == DoorDirection.North ? 
+            var offset = spawnPoint.Direction == DoorDirection.North ?
                 new Point(0, -spawnPoint.Bounds.Size.Y / 2 + HALF_TILE) : new Point(0, 0);
-            
+
             var bounds = new Rectangle(spawnPoint.Position + offset, spawnPoint.Bounds.Size);
-            
             collider = new StaticRoomCollidable(bounds);
             c.AddCollidable(collider);
-            
+
             // Move the underlying trigger to match
             DoorTrigger.Bounds = bounds;
-            
         }
 
         protected override void Transition(Direction transitionDirection)
         {
             if(!isOpen && PlayerState.Keys > 0)
             {
-                PlayerState.Keys--;
-                var openSprite = GetOpenSprite();
-                SpriteDict.SetSprite(openSprite.ToString());
-                Spawn.Type = openSprite;
-                ResetDoorTrigger();
-                SoundManager.PlaySound("LOZ_Door_Unlock", false);
-                CollisionController.RemoveCollidable(collider);
-                isOpen = true;
+                Unlock(Spawn.Direction);
             }
-            else if(isOpen)
+            else
             {
                 base.Transition(transitionDirection);
             }
+        }
+
+        private void Unlock(DoorDirection transitionDirection)
+        {
+            PlayerState.Keys--;
+            PlayerState.Keyring.Add((Spawn.Destination, transitionDirection.Reverse()));
+            var openSprite = GetOpenSprite();
+            SpriteDict.SetSprite(openSprite.ToString());
+            Spawn.Type = openSprite;
+            ResetDoorTrigger();
+            SoundManager.PlaySound("LOZ_Door_Unlock", false);
+            CollisionController.RemoveCollidable(collider);
+            isOpen = true;
         }
 
         private Dungeon1Sprite GetOpenSprite()

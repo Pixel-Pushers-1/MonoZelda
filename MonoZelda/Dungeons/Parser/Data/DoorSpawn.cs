@@ -10,7 +10,8 @@ namespace MonoZelda.Dungeons
         public Rectangle Bounds { get; set; }
         public DoorDirection Direction { get; set; }
 
-        public DoorSpawn(string destination, DoorDirection direction, Point position, Dungeon1Sprite sprite) : base(position, sprite)
+        public DoorSpawn(string destination, DoorDirection direction, Point position, Dungeon1Sprite sprite, string room) 
+            : base(position, sprite,room)
         {
             // Doors are 2x2 tiles
             var width = DungeonConstants.TileWidth * 2;

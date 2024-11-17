@@ -17,6 +17,7 @@ using System.Linq;
 using MonoZelda.Trigger;
 using MonoZelda.Sound;
 using MonoZelda.Tiles.Doors;
+using MonoZelda.Dungeons.Dungeon1;
 
 namespace MonoZelda.Scenes;
 

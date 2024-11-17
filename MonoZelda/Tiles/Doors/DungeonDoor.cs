@@ -140,7 +140,7 @@ namespace MonoZelda.Dungeons
         protected virtual void Transition(Direction transitionDirection)
         {
             DoorTrigger.OnTrigger -= Transition;
-            transitionCommand.Execute(Spawn.Destination,transitionDirection);
+            transitionCommand.Execute(Spawn.Destination, transitionDirection);
         }
     }
 }

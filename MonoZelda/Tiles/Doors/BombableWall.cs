@@ -5,6 +5,7 @@ using MonoZelda.Commands;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Dungeons.Parser.Data;
+using MonoZelda.Link;
 using MonoZelda.Link.Projectiles;
 using MonoZelda.Sprites;
 
@@ -114,17 +115,25 @@ namespace MonoZelda.Tiles
                 && collidable.projectileType == ProjectileType.Bomb 
                 && other.Bounds.Intersects(collider.Bounds))
             {
-                var newSprite = GetBombedSprite();
-                SpriteDict.SetSprite(newSprite.ToString());
-                Spawn.Type = newSprite;
-                SetMaskSprite(GetBombedMaskSprite());
-                UnregisterHitbox();
-                
-                CollisionController.RemoveCollidable(collider);
-                CollisionController.RemoveCollidable(this);
+                BombWall();
             }
 
             return false;
+        }
+
+        private void BombWall()
+        {
+            PlayerState.Keyring.Add((Spawn.Destination, Spawn.Direction.Reverse()));
+
+            isOpen = true;
+            var newSprite = GetBombedSprite();
+            SpriteDict.SetSprite(newSprite.ToString());
+            Spawn.Type = newSprite;
+            SetMaskSprite(GetBombedMaskSprite());
+            UnregisterHitbox();
+
+            CollisionController.RemoveCollidable(collider);
+            CollisionController.RemoveCollidable(this);
         }
 
         public Rectangle GetIntersectionArea(ICollidable other)

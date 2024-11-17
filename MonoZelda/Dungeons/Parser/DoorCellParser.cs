@@ -28,7 +28,7 @@ namespace MonoZelda.Dungeons.Parser
                 // Doors are 2x2 tiles
                 var width = DungeonConstants.TileWidth * 2;
                 var height = DungeonConstants.TileHeight * 2;
-                var door = new DoorSpawn(destination, direction, position, doorSprite);
+                var door = new DoorSpawn(destination, direction, position, doorSprite, room.RoomName);
 
                 room.AddDoor(door);
             }

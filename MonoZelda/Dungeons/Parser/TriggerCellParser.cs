@@ -10,7 +10,7 @@ namespace MonoZelda.Dungeons.Parser
         {
             if (Enum.TryParse(cell, out TriggerType trigger))
             {
-                var triggerSpawn = new TriggerSpawn(position, trigger);
+                var triggerSpawn = new TriggerSpawn(position, trigger, room.RoomName);
                 room.AddTrigger(triggerSpawn);
             }
         }
