@@ -6,6 +6,7 @@ using MonoZelda.Link;
 using MonoZelda.Dungeons;
 using MonoZelda.Collision;
 using System;
+using MonoZelda.Events;
 
 namespace MonoZelda.Items.ItemClasses;
 
@@ -23,30 +24,12 @@ public class Triforce : Item
 
     public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
-        // create item SpriteDict
-        itemDict = new SpriteDict(SpriteType.Items, SpriteLayer.Items, itemSpawn.Position + new Point(32, 12));
-        itemDict.SetFlashing(SpriteDict.FlashingType.OnOff, FLASHING_TIME);
-
-        // create item Collidable 
-        itemCollidable = new ItemCollidable(itemBounds, itemType);
-        collisionController.AddCollidable(itemCollidable);
+        Point offset = new Point(32, 12);
+        itemBounds = new Rectangle(itemSpawn.Position + offset, new Point(56, 56));
+        itemSpawn.Position += offset;
+        base.ItemSpawn(itemSpawn, collisionController);
+        itemDict.SetSprite("triforce");
     }
-
-    //private void InitializeSpriteDicts()
-    //{
-    //    // make curtains
-    //    var leftPosition = new Point(-512, 192);
-    //    var rightPosition = new Point(1024, 192);
-    //    var curtainSize = new Point(512, 704);
-    //    leftCurtain = new BlankSprite(SpriteLayer.Triforce - 1, leftPosition, curtainSize, Color.Black);
-    //    rightCurtain = new BlankSprite(SpriteLayer.Triforce - 1, rightPosition, curtainSize, Color.Black);
-
-    //    // create fake Link and Triforce
-    //    FakeLink = new SpriteDict(SpriteType.Player, SpriteLayer.Triforce, PlayerState.Position);
-    //    FakeLink.SetSprite("pickupitem_twohands");
-    //    FakeTriforce = new SpriteDict(SpriteType.Items, SpriteLayer.Triforce, PlayerState.Position + new Point(-32, -84));
-    //    FakeTriforce.SetSprite("triforce");
-    //}
 
     public override void HandleCollision(CollisionController collisionController)
     {
@@ -59,6 +42,6 @@ public class Triforce : Item
         itemManager.RemoveRoomSpawnItem(itemSpawn);
 
         // call the end game envent
-        LevelComplete?.Invoke();
+        EventManager.TriggerLevelCompletionAnimation();
     }
 }

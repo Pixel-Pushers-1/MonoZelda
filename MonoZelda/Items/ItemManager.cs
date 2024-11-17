@@ -59,9 +59,9 @@ public class ItemManager
 
     public void Update()
     {
-        foreach(var item in itemUpdateList)
+        for(int i = 0; i < itemUpdateList.Count; i++)
         {
-            item.Update();
+            itemUpdateList[i].Update();
         }
     }
 }
