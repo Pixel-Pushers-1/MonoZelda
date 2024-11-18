@@ -32,14 +32,14 @@ public class ItemFactory
         var itemType = Type.GetType($"MonoZelda.Items.ItemClasses.{itemSpawn.ItemType}");
         Item item = (Item)Activator.CreateInstance(itemType,itemManager);
 
-        // Spawn Item
-        item.ItemSpawn(itemSpawn, collisionController);
-
         // Check if item is in spawnList
-        if(dropItem == true)
+        if (dropItem == true && itemSpawn.ItemType == ItemList.Key)
         {
             itemManager.AddRoomSpawnItem(itemSpawn);
         }
+
+        // Spawn Item
+        item.ItemSpawn(itemSpawn, collisionController);
     }
 }
 
