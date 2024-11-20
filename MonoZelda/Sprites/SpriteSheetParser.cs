@@ -25,11 +25,10 @@ internal static class SpriteSheetParser
 
     private static Sprite ParseSprite(string[] fields)
     {
-        //scale up source rect data by 4 since image is upscaled by 4
-        int x = int.Parse(fields[1]) * 4;
-        int y = int.Parse(fields[2]) * 4;
-        int width = int.Parse(fields[3]) * 4;
-        int height = int.Parse(fields[4]) * 4;
+        int x = int.Parse(fields[1]);
+        int y = int.Parse(fields[2]);
+        int width = int.Parse(fields[3]);
+        int height = int.Parse(fields[4]);
         int frameCount = int.Parse(fields[5]);
         Sprite.AnchorType anchor = Sprite.StringToAnchorType(fields[6]);
         float fps = float.Parse(fields[7]);

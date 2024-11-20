@@ -101,7 +101,9 @@ public class MonoZeldaGame : Game
     {
         GraphicsDevice.Clear(Color.Black);
 
-        spriteBatch.Begin();
+        SamplerState samplerState = new();
+        samplerState.Filter = TextureFilter.Point;
+        spriteBatch.Begin(SpriteSortMode.Deferred, null, samplerState);
 
         // SpriteDrawer draws all drawables
         SpriteDrawer.Draw(spriteBatch, gameTime);

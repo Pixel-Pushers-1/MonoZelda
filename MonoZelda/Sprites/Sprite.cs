@@ -29,7 +29,7 @@ public class Sprite
     private bool oneshotPlaying = false;
     private double oneshotTimer;
 
-    public Sprite(Rectangle sourceRect, AnchorType anchor = AnchorType.Center, int frameCount = 1, float fps = 10, float size = 1f, bool animating = true)
+    public Sprite(Rectangle sourceRect, AnchorType anchor = AnchorType.Center, int frameCount = 1, float fps = 10, float size = 4f, bool animating = true)
     {
         SourceRect = sourceRect;
         Anchor = anchor;
