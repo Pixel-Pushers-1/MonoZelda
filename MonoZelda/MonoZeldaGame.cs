@@ -144,6 +144,7 @@ public class MonoZeldaGame : Game
     {
         SoundManager.ClearSoundDictionary();
         HUDMapWidget.Reset();
+        InventoryMapWidget.Reset();
         LoadScene(new MainMenuScene(GraphicsDevice));
     }
 }
