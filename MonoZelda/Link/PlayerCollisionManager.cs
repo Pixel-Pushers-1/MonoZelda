@@ -6,6 +6,7 @@ using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Sound;
 using MonoZelda.Sprites;
+using System.Diagnostics;
 
 namespace MonoZelda.Link;
 
@@ -126,11 +127,12 @@ public class PlayerCollisionManager
 
     public void HandleEnemyCollision(Direction collisionDirection)
     {
+
         if (invulnerabilityTimer > 0f)
             return;
         if (knockbackTimer <= 0)
         {
-            Vector2 knockbackDirection = GetKnockbackDirection(collisionDirection);
+            Vector2 knockbackDirection = GetKnockbackDirection(collisionDirection)*-1;
             knockbackVelocity = knockbackDirection * KNOCKBACK_FORCE;
             knockbackTimer = KNOCKBACK_TIME;
             invulnerabilityTimer = INVULNERABILITY_TIME;
