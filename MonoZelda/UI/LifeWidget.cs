@@ -14,7 +14,7 @@ namespace MonoZelda.UI
 
         private List<SpriteDict> _hearts = new();
 
-        public LifeWidget(Screen screen, Point position, ContentManager cm) : base(screen, position)
+        public LifeWidget(Screen screen, Point position) : base(screen, position)
         {
 
             //create heart sprites

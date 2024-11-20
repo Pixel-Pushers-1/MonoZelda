@@ -73,6 +73,10 @@ public class ProjectileFactory
 
     public IProjectile GetProjectileObject(ProjectileType currentProjectile, PlayerSpriteManager player)
     {
+        if (currentProjectile == ProjectileType.None) {
+            return null;
+        }
+
         playSoundEffects[currentProjectile].Invoke();
         playerPosition = player.GetPlayerPosition();
         playerDirection = player.PlayerDirection;

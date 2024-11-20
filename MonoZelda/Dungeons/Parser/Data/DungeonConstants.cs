@@ -82,4 +82,50 @@ public static class DungeonConstants
             _ => null,
         };
     }
+
+    public static HashSet<Point> GetAllRoomCoordinates() {
+        return new HashSet<Point> {
+            new Point(3, 5),
+            new Point(2, 5),
+            new Point(3, 4),
+            new Point(4, 5),
+            new Point(3, 3),
+            new Point(2, 3),
+            new Point(3, 2),
+            new Point(4, 3),
+            new Point(2, 2),
+            new Point(1, 2),
+            new Point(3, 1),
+            new Point(4, 2),
+            new Point(5, 2),
+            new Point(5, 1),
+            new Point(6, 1),
+            new Point(3, 0),
+            new Point(2, 0),
+            new Point(1, 0),
+        };
+    }
+    public static string GetRoomMapSprite(Point coord) {
+        return coord switch {
+            Point(3, 5) => "map_room_NEW",
+            Point(2, 5) => "map_room_E",
+            Point(3, 4) => "map_room_NS",
+            Point(4, 5) => "map_room_W",
+            Point(3, 3) => "map_room_NESW",
+            Point(2, 3) => "map_room_NE",
+            Point(3, 2) => "map_room_NESW",
+            Point(4, 3) => "map_room_NW",
+            Point(2, 2) => "map_room_ESW",
+            Point(1, 2) => "map_room_E",
+            Point(3, 1) => "map_room_NS",
+            Point(4, 2) => "map_room_ESW",
+            Point(5, 2) => "map_room_NW",
+            Point(5, 1) => "map_room_ES",
+            Point(6, 1) => "map_room_W",
+            Point(3, 0) => "map_room_SW",
+            Point(2, 0) => "map_room_EW",
+            Point(1, 0) => "map_room_E",
+            _ => null,
+        };
+    }
 }
