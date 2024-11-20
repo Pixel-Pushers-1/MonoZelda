@@ -72,7 +72,7 @@ public class PlayerCollisionManager
     public void HandleClockCollision()
     {
         player.ClockFlash();
-        invulnerabilityTimer = INVULNERABILITY_TIME;
+        invulnerabilityTimer = INVULNERABILITY_TIME*4f;
     }
 
     public void HandleBowCollision(SpriteDict bowDict)
