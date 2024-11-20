@@ -187,6 +187,20 @@ public class RoomScene : Scene
         base.UnloadContent();
     }
 
+    public void SetPaused(bool paused) {
+        if (paused) {
+            commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new EmptyCommand());
+            commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new EmptyCommand());
+            commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new EmptyCommand());
+        }
+        else {
+            commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
+            commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(projectileManager, playerSprite));
+            commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, playerSprite));
+        }
+
+    }
+
     public override void Update(GameTime gameTime)
     {
         if (projectileManager.ProjectileFired == true)

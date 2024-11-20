@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MonoZelda.Dungeons;
 using MonoZelda.Link;
 using MonoZelda.Sprites;
 using System.Collections.Generic;
@@ -15,19 +16,19 @@ internal class HUDMapWidget : ScreenWidget
 
     //consts
     private static readonly Point roomSpacing = new(32, 16);
-    private static readonly Point compassMarkerOffset = new(96 + 32 * 3, 80 - 16 * 4);
+    private static readonly Point compassMarkerOffset = new(192, 16);
 
     //static data
     private static bool mapEnabled;
-    private static Point playerMarkerOffset = new(96, 80);
+    private static Point playerMarkerOffset = (Point) DungeonConstants.GetRoomCoordinate("Room1") * roomSpacing;
     private static bool compassMarkerEnabled;
 
     //instance vars
-    private static SpriteDict map;
-    private static SpriteDict playerMarker;
-    private static SpriteDict compassMarker;
+    private SpriteDict map;
+    private SpriteDict playerMarker;
+    private SpriteDict compassMarker;
 
-    public HUDMapWidget(Screen screen, Point position, ContentManager cm) : base(screen, position)
+    public HUDMapWidget(Screen screen, Point position) : base(screen, position)
     {
         //set up singleton
         instance = this;
@@ -70,17 +71,17 @@ internal class HUDMapWidget : ScreenWidget
 
     public static void SetCompassMarkerVisible(bool visible) {
         compassMarkerEnabled = visible;
-        compassMarker.Enabled = visible;
+        instance.compassMarker.Enabled = visible;
     }
 
     public static void SetMapVisible(bool visible) {
         mapEnabled = visible;
-        map.Enabled = visible;
+        instance.map.Enabled = visible;
     }
 
     public static void Reset() {
         mapEnabled = false;
-        playerMarkerOffset = new(96, 80);
+        playerMarkerOffset = (Point) DungeonConstants.GetRoomCoordinate("Room1") * roomSpacing;
         compassMarkerEnabled = false;
     }
 }
