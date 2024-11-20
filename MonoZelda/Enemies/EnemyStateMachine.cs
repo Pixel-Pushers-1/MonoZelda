@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Items;
-using MonoZelda.Sound;
 using MonoZelda.Sprites;
+using MonoZelda.Dungeons;
 
 namespace MonoZelda.Enemies
 {
@@ -128,9 +127,9 @@ namespace MonoZelda.Enemies
             {
                 if (enemy.GetType() == typeof(Aquamentus))
                 {
-                    itemFactory.CreateItem(ItemList.HeartContainer, new Point(764,516));
+                    itemFactory.CreateItem(new ItemSpawn(pos,ItemList.HeartContainer), true);
                 }
-                itemFactory.CreateItem(item, new Point(pos.X - 16, pos.Y - 32));
+                itemFactory.CreateItem(new ItemSpawn(new Point(pos.X - 16, pos.Y - 32),item),true);
                 itemSpawned = true;
             }
         }
