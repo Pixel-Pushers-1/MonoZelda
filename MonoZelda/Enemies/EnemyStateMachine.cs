@@ -4,6 +4,8 @@ using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Items;
 using MonoZelda.Sprites;
 using MonoZelda.Dungeons;
+using MonoZelda.Link;
+using System.Diagnostics;
 
 namespace MonoZelda.Enemies
 {
@@ -32,6 +34,7 @@ namespace MonoZelda.Enemies
         private SpriteDict keyDict;
         private bool hasItem;
         private bool itemSpawned = false;
+        private bool xpSpawned = false;
 
         public EnemyStateMachine(SpriteDict spriteDict, ItemFactory itemFactory, bool hasItem)
         {
@@ -165,6 +168,12 @@ namespace MonoZelda.Enemies
                 {
                     enemySpriteDict.Enabled = false;
                     enemy.Alive = false;
+                    if(!xpSpawned)
+                    {
+                        PlayerState.AddXP(20);
+                        xpSpawned = true;
+                    }
+
                     if (enemy.GetType() != typeof(Keese) && enemy.GetType() != typeof(Gel))
                     {
                         DropItem(position, enemy);

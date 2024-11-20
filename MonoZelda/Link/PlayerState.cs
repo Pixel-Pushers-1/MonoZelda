@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Link.Projectiles;
+using System;
 using System.Diagnostics;
 
 namespace MonoZelda.Link;
@@ -13,6 +14,15 @@ public static class PlayerState
     private static readonly int INITIAL_KEYS = 0;
 
     private static int _health = INITIAL_HP;
+
+
+    //RPG
+
+    // RPG
+    private static readonly int INITIAL_LEVEL = 1;
+    private static readonly int XP_BASE = 100; 
+    private static readonly float XP_SCALING = 1.5f; 
+
 
     public static void Initialize()
     {
@@ -27,7 +37,8 @@ public static class PlayerState
         Bombs = INITIAL_BOMBS;
         Keys = INITIAL_KEYS;
         EquippedProjectile = ProjectileType.None;
-
+        Level = INITIAL_LEVEL;
+        XP = 0;
     }
 
     public static void ResetCandle()
@@ -77,6 +88,27 @@ public static class PlayerState
     public static bool HasBoomerang { get; set; }
     public static bool ObtainedTriforce { get; set; }
 
+    // RPG 
+    public static int Level { get; private set; }
+    public static int XP { get; private set; }
+
+    public static int GetXPToLevelUp()
+    {
+        return (int)(XP_BASE * Math.Pow(XP_SCALING, Level - 1));
+    }
+
+    public static void AddXP(int amount)
+    {
+        XP += amount;
+        // does player have enough xp to level up?
+        while (XP >= GetXPToLevelUp()) 
+        {
+            XP -= GetXPToLevelUp(); 
+            Level++; 
+            Debug.WriteLine($"Level Up! New Level: {Level}");
+        }
+        Debug.WriteLine($"XP: {XP}");
+    }
     public static void AddRupees(int amount) => Rupees += amount;
     public static void AddBombs(int amount) => Bombs += amount;
     public static void AddKeys(int amount) => Keys += amount;
