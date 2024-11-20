@@ -1,31 +1,28 @@
-﻿using MonoZelda.Collision;
-using MonoZelda.Sprites;
-using Microsoft.Xna.Framework;
-using MonoZelda.Controllers;
+﻿using MonoZelda.Controllers;
 using MonoZelda.Sound;
-using MonoZelda.Enemies;
 using MonoZelda.Link;
-using System.Collections.Generic;
-
+using MonoZelda.Dungeons;
+using Microsoft.Xna.Framework;
 namespace MonoZelda.Items.ItemClasses;
 
 public class Boomerang : Item
 {
-    public Boomerang(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public Boomerang(ItemManager itemManager) : base(itemManager)
     {
         itemType = ItemList.Boomerang;
     }
 
-    public override void ItemSpawn(SpriteDict boomerangDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
-        PlayerState.HasBoomerang = true;    
-        base.ItemSpawn(boomerangDict, spawnPosition, collisionController);
-        boomerangDict.SetSprite("boomerang");
+        itemBounds = new Rectangle(itemSpawn.Position, new Point(32, 32));
+        base.ItemSpawn(itemSpawn, collisionController);
+        itemDict.SetSprite("boomerang");
     }
 
-    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    public override void HandleCollision(CollisionController collisionController)
     {
+        PlayerState.HasBoomerang = true;
         SoundManager.PlaySound("LOZ_Get_Item", false);
-        base.HandleCollision(itemCollidableDict, collisionController);
+        base.HandleCollision(collisionController);
     }
 }

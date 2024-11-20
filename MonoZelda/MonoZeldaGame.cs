@@ -81,11 +81,6 @@ public class MonoZeldaGame : Game
 
     protected override void Update(GameTime gameTime)
     {
-        if(PlayerState.ObtainedTriforce == true)
-        {
-            Exit();
-        }
-
         if (PlayerState.IsDead)
         {
             commandManager.Execute(CommandType.PlayerDeathCommand);

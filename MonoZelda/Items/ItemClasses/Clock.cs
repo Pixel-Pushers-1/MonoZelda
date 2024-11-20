@@ -1,34 +1,42 @@
-﻿using MonoZelda.Sprites;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
 using MonoZelda.Sound;
 using MonoZelda.Enemies;
 using MonoZelda.Link;
 using System.Collections.Generic;
+using MonoZelda.Dungeons;
 
 namespace MonoZelda.Items.ItemClasses;
 
 public class Clock : Item
 {
-    public Clock(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    private List<Enemy> roomEnemyList;
+    private PlayerCollisionManager playerCollision;
+    private const float ENEMY_STUN_TIME = 3f;
+    private const int ENEMY_DAMAGE = 0;
+
+    public Clock(ItemManager itemManager) : base(itemManager)
     {
         itemType = ItemList.Clock;
     }
 
-    public override void ItemSpawn(SpriteDict clockDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
-        base.ItemSpawn(clockDict, spawnPosition, collisionController);
-        clockDict.SetSprite("clock");
+        itemBounds = new Rectangle(itemSpawn.Position, new Point(56, 56));
+        base.ItemSpawn(itemSpawn, collisionController);
+        itemDict.SetSprite("clock");
+        roomEnemyList = itemManager.RoomEnemyList;
+        playerCollision = itemManager.PlayerCollision;
     }
 
-    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    public override void HandleCollision(CollisionController collisionController)
     {
         playerCollision.HandleClockCollision();
         foreach(var enemy in roomEnemyList)
         {
-            enemy.TakeDamage(3f, Direction.None, 0);
+            enemy.TakeDamage(ENEMY_STUN_TIME, Direction.None, ENEMY_DAMAGE);
         }
         SoundManager.PlaySound("LOZ_Get_Item", false);
-        base.HandleCollision(itemCollidableDict, collisionController);
+        base.HandleCollision(collisionController);
     }
 }
