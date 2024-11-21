@@ -63,11 +63,6 @@
   <ItemGroup>
     <Folder Include="Tiles\Stairs\" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Update="UI\XpBarWidget.cs">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Compile>
-  </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />
     <Exec Command="dotnet tool restore" />
