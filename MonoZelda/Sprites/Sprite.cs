@@ -53,8 +53,36 @@ public class Sprite
         return FrameCount / Fps - buffer;
     }
 
+    //supports changing the color of the sprite based on color param
     public void Draw(SpriteBatch spriteBatch, Texture2D texture, Point position, Color color)
     {
+        Rectangle currentSource = GetCurrentSourceRect();
+
+        //calculate destination rect based on position, size, and anchor
+        Vector2 destRectSize = new(SourceRect.Width * Size, SourceRect.Height * Size);
+        Point destRectPos = position - (destRectSize * GetNormalizedAnchorOffset(Anchor)).ToPoint();
+        Rectangle destinationRect = new(destRectPos, destRectSize.ToPoint());
+
+        //draw the sprite
+        spriteBatch.Draw(texture, destinationRect, currentSource, color);
+    }
+
+    //supports slicing the sprite horizontally based on progressNormalized param
+    public void Draw(SpriteBatch spriteBatch, Texture2D texture, Point position, float progressNormalized)
+    {
+        Rectangle currentSource = GetCurrentSourceRect();
+        currentSource.Width = (int) (currentSource.Width * progressNormalized);
+
+        //calculate destination rect based on position, size, anchor, and progress
+        Vector2 destRectSize = new(SourceRect.Width * Size * progressNormalized, SourceRect.Height * Size);
+        Point destRectPos = position - (destRectSize * GetNormalizedAnchorOffset(Anchor)).ToPoint();
+        Rectangle destinationRect = new(destRectPos, destRectSize.ToPoint());
+
+        //draw the sprite
+        spriteBatch.Draw(texture, destinationRect, currentSource, Color.White);
+    }
+
+    private Rectangle GetCurrentSourceRect() {
         //calculate source rect based on gameTime to support animation
         double animationTime;
         if (oneshotPlaying) {
@@ -75,15 +103,7 @@ public class Sprite
             animationTime = 0;
         }
         int sourceX = SourceRect.X + (int) (animationTime * Fps % FrameCount) * SourceRect.Width;
-        Rectangle currentSource = new(sourceX, SourceRect.Y, SourceRect.Width, SourceRect.Height);
-
-        //calculate destination rect based on position, size, and anchor
-        Vector2 destRectSize = new(SourceRect.Width * Size, SourceRect.Height * Size);
-        Point destRectPos = position - (destRectSize * GetNormalizedAnchorOffset(Anchor)).ToPoint();
-        Rectangle destinationRect = new(destRectPos, destRectSize.ToPoint());
-
-        //draw the sprite
-        spriteBatch.Draw(texture, destinationRect, currentSource, color);
+        return new(sourceX, SourceRect.Y, SourceRect.Width, SourceRect.Height);
     }
 
     private static Vector2 GetNormalizedAnchorOffset(AnchorType anchorType)
