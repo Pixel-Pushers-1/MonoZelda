@@ -1,12 +1,15 @@
 ﻿using Microsoft.VisualBasic.FileIO;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace MonoZelda.Sprites;
 
 internal static class SpriteSheetParser
 {
-    public static void Parse(SpriteDict toPopulate, string csvName)
+    public static Dictionary<string, Sprite> Parse(string csvName)
     {
+        Dictionary<string, Sprite> dict = new();
+
         //set up text parser
         using TextFieldParser textFieldParser = new(csvName);
         textFieldParser.TextFieldType = FieldType.Delimited;
@@ -19,8 +22,9 @@ internal static class SpriteSheetParser
         while (!textFieldParser.EndOfData)
         {
             string[] fields = textFieldParser.ReadFields();
-            toPopulate.Add(ParseSprite(fields), fields[0]);
+            dict.Add(fields[0], ParseSprite(fields));
         }
+        return dict;
     }
 
     private static Sprite ParseSprite(string[] fields)
