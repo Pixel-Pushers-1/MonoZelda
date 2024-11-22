@@ -26,7 +26,7 @@ public static class PlayerState
         Rupees = INITIAL_RUPEES;
         Bombs = INITIAL_BOMBS;
         Keys = INITIAL_KEYS;
-        EquippedProjectile = ProjectileType.None;
+        EquippedWeapon = WeaponType.None;
 
     }
 
@@ -73,7 +73,7 @@ public static class PlayerState
     public static int MaxHealth { get; set; }
     public static Point Position { get; set; }
     public static Direction Direction { get; set; }
-    public static ProjectileType EquippedProjectile { get; set; }
+    public static WeaponType EquippedWeapon { get; set; }
     public static bool HasBoomerang { get; set; }
     public static bool ObtainedTriforce { get; set; }
 

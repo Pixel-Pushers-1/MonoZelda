@@ -101,6 +101,7 @@ public class PlayerSpriteManager
         playerPosition += playerSpeed * movement;
         playerSpriteDict.Position = playerPosition.ToPoint();
         PlayerState.Position = playerPosition.ToPoint();
+        PlayerState.Direction = playerDirection;
     }
         
     public void StandStill(PlayerStandingCommand standCommand)
@@ -119,6 +120,7 @@ public class PlayerSpriteManager
         }
         playerSpriteDict.Position = playerPosition.ToPoint();
         PlayerState.Position = playerPosition.ToPoint();
+        PlayerState.Direction = playerDirection;
     }
 
     public void PlayerDeath()

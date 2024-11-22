@@ -31,8 +31,6 @@ public class KeyboardController : IController
             {new (Keys.D2, true), CommandType.PlayerEquipProjectileCommand},
             {new (Keys.D3, true), CommandType.PlayerEquipProjectileCommand},
             {new (Keys.D4, true), CommandType.PlayerEquipProjectileCommand},
-            {new (Keys.D5, true), CommandType.PlayerEquipProjectileCommand},
-            {new (Keys.D6, true), CommandType.PlayerEquipProjectileCommand},
             {new (Keys.F, true), CommandType.PlayerFireProjectileCommand},
             {new (Keys.Z, true), CommandType.PlayerAttackCommand},
             {new (Keys.N, true), CommandType.PlayerAttackCommand},

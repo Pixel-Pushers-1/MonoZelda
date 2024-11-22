@@ -1,61 +1,46 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using MonoZelda.Collision;
+﻿using Microsoft.Xna.Framework.Input;
 using MonoZelda.Controllers;
-using MonoZelda.Sprites;
 using System.Collections.Generic;
 
 namespace MonoZelda.Link.Projectiles;
 
 public class ProjectileManager
 {
-    private bool projectileFired;
-    private IProjectile itemFired;
-    private PlayerProjectileCollidable projectileCollidable;
     private CollisionController collisionController;
-    private GraphicsDevice graphicsDevice;
     private ProjectileFactory projectileFactory;
-    private SpriteDict projectileDict;
-    private bool activateHitbox;
-    private bool isSwordAttack;
-    private bool isSwordBeamAttack;
+    private List<IProjectile> projectiles;
 
-    private readonly Dictionary<Keys, ProjectileType> keyProjectileMap = new Dictionary<Keys, ProjectileType>
+    private readonly Dictionary<Keys, WeaponType> keyWeaponMap = new()
     {
-        {Keys.D1,ProjectileType.Arrow},
-        {Keys.D2,ProjectileType.ArrowBlue},
-        {Keys.D3,ProjectileType.Boomerang},
-        {Keys.D4,ProjectileType.BoomerangBlue},
-        {Keys.D5,ProjectileType.Bomb},
-        {Keys.D6,ProjectileType.CandleBlue},
+        {Keys.D1,WeaponType.Bow},
+        {Keys.D2,WeaponType.Boomerang},
+        {Keys.D3,WeaponType.CandleBlue},
+        {Keys.D4,WeaponType.Bomb}
     };
 
-    public bool ProjectileFired
+    private readonly Dictionary<WeaponType, ProjectileType> weaponProjectileMap = new()
     {
-        get => projectileFired;
-        set => projectileFired = value;
+        {WeaponType.Bow, ProjectileType.Arrow},
+        {WeaponType.Boomerang, ProjectileType.Boomerang},
+        {WeaponType.CandleBlue, ProjectileType.Fire },
+        {WeaponType.Bomb, ProjectileType.Bomb },
+    };
+
+    public WeaponType EquippedWeapon
+    {
+        get => PlayerState.EquippedWeapon;
+        private set => PlayerState.EquippedWeapon = value;
     }
 
-    public ProjectileType EquippedProjectile
+    public ProjectileManager(CollisionController collisionController)
     {
-        get => PlayerState.EquippedProjectile;
-        private set => PlayerState.EquippedProjectile = value;
-    }
-
-    public ProjectileManager(CollisionController collisionController, SpriteDict projectileDict)
-    {
-        projectileFired = false;
-        activateHitbox = false;
-        isSwordAttack = false;
-        isSwordBeamAttack = false;
-        projectileDict.Enabled = false;
+        EquippedWeapon = WeaponType.None;
+        projectiles = new List<IProjectile>();
         this.collisionController = collisionController;
-        this.projectileDict = projectileDict;
-        projectileFactory = new ProjectileFactory(projectileDict, new Vector2(), Direction.Down);
+        projectileFactory = new ProjectileFactory();
     }
 
-    private bool hasRequiredResources(ProjectileType projectileType)
+    private bool HasRequiredResources(ProjectileType projectileType)
     {
         switch (projectileType)
         {
@@ -69,7 +54,7 @@ public class ProjectileManager
         }
     }
 
-    private void deductResources(ProjectileType projectileType)
+    private void DeductResources(ProjectileType projectileType)
     {
         switch (projectileType)
         {
@@ -83,131 +68,56 @@ public class ProjectileManager
         }
     }
 
-    private void setupProjectile(ProjectileType equippedProjectile)
+    public void EquipWeapon(Keys pressedKey)
     {
-        if (!hasRequiredResources(equippedProjectile))
-        {
-            return;
-        }
-        
-        if (equippedProjectile == ProjectileType.WoodenSword)
-        {
-            isSwordAttack = true;
-        }
-        else if (equippedProjectile == ProjectileType.WoodenSwordBeam)
-        {
-            isSwordBeamAttack = true;
-        }
-
-        deductResources(equippedProjectile);
-        projectileFired = true;
-        projectileDict.Enabled = true;
-        if (equippedProjectile != ProjectileType.Bomb)
-        {
-            activateHitbox = true;
-        }
+        EquippedWeapon = keyWeaponMap[pressedKey];
     }
 
-    public void equipProjectile(Keys pressedKey)
+    public void UseSword()
     {
-        if (keyProjectileMap.TryGetValue(pressedKey, out ProjectileType newProjectile))
+        IProjectile sword;
+        if(PlayerState.Health == PlayerState.MaxHealth)
         {
-            EquippedProjectile = newProjectile;
-        }
-    }
-
-    public void destroyProjectile()
-    {
-        itemFired.FinishProjectile();
-    }
-
-    public void useSword(PlayerSpriteManager player)
-    {
-        itemFired = projectileFactory.GetProjectileObject(ProjectileType.WoodenSword, player);
-        setupProjectile(ProjectileType.WoodenSword);
-    }
-
-    public void useSwordBeam(PlayerSpriteManager player)
-    {
-        itemFired = projectileFactory.GetProjectileObject(ProjectileType.WoodenSwordBeam, player);
-        setupProjectile(ProjectileType.WoodenSwordBeam);
-    }
-
-    public void fireEquippedProjectile(PlayerSpriteManager player)
-    {
-        if (!hasRequiredResources(EquippedProjectile) || EquippedProjectile == ProjectileType.None)
-        {
-            return;
-        }
-        //prevent candle use in more than one room
-        if (EquippedProjectile == ProjectileType.CandleBlue && PlayerState.IsCandleUsed)
-        {
-            return; 
-        }
-
-        itemFired = projectileFactory.GetProjectileObject(EquippedProjectile, player);
-        setupProjectile(EquippedProjectile);
-
-        if (EquippedProjectile == ProjectileType.CandleBlue)
-        {
-            PlayerState.IsCandleUsed = true;
-        }
-    }
-
-    public void UpdatedProjectileState()
-    {
-        if (itemFired != null && !itemFired.hasFinished())
-        {
-            // Init projectile collidable
-            if (activateHitbox && projectileCollidable is null)
-            {
-                if (isSwordAttack)
-                {
-                    projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), ProjectileType.WoodenSword);
-                    isSwordAttack = false;
-                }
-                else if (isSwordBeamAttack)
-                {
-                    projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), ProjectileType.WoodenSwordBeam);
-                    isSwordBeamAttack = false;
-                }
-                else
-                {
-                    projectileCollidable = new PlayerProjectileCollidable(itemFired.getCollisionRectangle(), EquippedProjectile);
-
-                }
-                projectileCollidable.setProjectileManager(this);
-                collisionController.AddCollidable(projectileCollidable);
-            }
-            else if (activateHitbox && projectileCollidable is not null)
-            {
-                projectileCollidable.Bounds = itemFired.getCollisionRectangle();
-            }
-
-            // Update the projectile
-            itemFired.UpdateProjectile();
-
-            // Custom check for bombs (I know this isn't great practice)
-            if (itemFired is Bomb && projectileCollidable is null)
-            {
-                Bomb itemFiredCls = itemFired as Bomb;
-                if (itemFiredCls.Exploded == true)
-                {
-                    activateHitbox = true;
-                }
-            }
+            sword = projectileFactory.GetProjectileObject(ProjectileType.WoodenSwordBeam,collisionController);
         }
         else
         {
-            // Reset the projectile manager for the next projectile
-            if (projectileCollidable is not null)
+            sword = projectileFactory.GetProjectileObject(ProjectileType.WoodenSword,collisionController);
+        }
+        sword.Setup();
+        projectiles.Add(sword);
+    }
+
+    public void FireProjectile()
+    {
+        // check if player has equipped a weapon
+        if (PlayerState.EquippedWeapon == WeaponType.None)
+        {
+            return;
+        }
+
+        // create projectile
+        ProjectileType projectileType = weaponProjectileMap[PlayerState.EquippedWeapon];
+        if (HasRequiredResources(projectileType))
+        {
+            DeductResources(projectileType);
+            IProjectile projectile = projectileFactory.GetProjectileObject(projectileType, collisionController);
+            projectile.Setup();
+            projectiles.Add(projectile);
+           
+        }
+    }
+
+    public void Update()
+    {
+        for (int i = 0; i < projectiles.Count; i++)
+        {
+            IProjectile projectile = projectiles[i];
+            projectile.Update();
+            if (projectile.hasFinished())
             {
-                collisionController.RemoveCollidable(projectileCollidable);
-                projectileCollidable.UnregisterHitbox();
-                projectileCollidable = null;
+                projectiles.Remove(projectile);
             }
-            projectileFired = false;
-            activateHitbox = false;
         }
     }
 }

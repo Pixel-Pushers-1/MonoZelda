@@ -99,8 +99,7 @@ public class RoomScene : Scene
         SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
 
         // create projectile object and spriteDict
-        var projectileDict = new SpriteDict(SpriteType.Projectiles, 0, new Point(0, 0));
-        projectileManager = new ProjectileManager(collisionController, projectileDict);
+        projectileManager = new ProjectileManager(collisionController);
     }
 
     private void LoadRoom(ContentManager contentManager)
@@ -205,11 +204,6 @@ public class RoomScene : Scene
 
     public override void Update(GameTime gameTime)
     {
-        if (projectileManager.ProjectileFired == true)
-        {
-            projectileManager.UpdatedProjectileState();
-        }
-
         foreach (var enemy in enemies.ToList())
         {
             if (!enemy.Alive)
@@ -238,6 +232,7 @@ public class RoomScene : Scene
             updateable.Update(gameTime);
         }
 
+        projectileManager.Update();
         itemManager.Update();
         playerCollision.Update();
     }

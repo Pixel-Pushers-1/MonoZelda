@@ -1,7 +1,6 @@
 ﻿using MonoZelda.Link;
 using MonoZelda.Link.Projectiles;
 using Microsoft.Xna.Framework.Input;
-using MonoZelda.HUD;
 
 namespace MonoZelda.Commands.GameCommands;
 
@@ -21,7 +20,7 @@ public class PlayerEquipProjectileCommand : ICommand
     public void Execute(params object[] metadata)
     {
         Keys pressedKey = (Keys)metadata[0];
-        projectileManager.equipProjectile(pressedKey);
+        projectileManager.EquipWeapon(pressedKey);
     }
 
     public void UnExecute()

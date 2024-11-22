@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Link;
-using MonoZelda.Link.Projectiles;
 using MonoZelda.Sprites;
 using System.Collections.Generic;
 
@@ -12,34 +11,34 @@ namespace MonoZelda.UI
     {
         private SpriteFont font;
         private Point margin = new Point(10, 10);
-
         private Point rupeeCountPosition = new Point(0, -12);
         private Point keyCountPosition = new Point(0, 54);
         private Point bombCountPosition = new Point(0, 86);
-
-        private SpriteDict equippedProjectileSprite;
+        private SpriteDict equippedWeaponSprite;
         private SpriteDict swordSprite;
-        private readonly Dictionary<ProjectileType, string> projectileSpriteMap = new Dictionary<ProjectileType, string>
+
+        private readonly Dictionary<WeaponType, string> weaponSpriteMap = new()
         {
-            { ProjectileType.Arrow, "arrow" },
-            { ProjectileType.ArrowBlue, "arrow_blue" },
-            { ProjectileType.Boomerang, "boomerang" },
-            { ProjectileType.BoomerangBlue, "boomerang_blue" },
-            { ProjectileType.Bomb, "bomb" },
-            { ProjectileType.CandleBlue, "candle_blue" },
+            { WeaponType.Bow, "bow" },
+            { WeaponType.Boomerang, "boomerang" },
+            { WeaponType.CandleBlue, "candle_blue" },
+            { WeaponType.Bomb, "bomb" },
         };
+
         public ItemCountWidget(SpriteFont spriteFont, Screen screen, Point position) : base(screen, position)
         {
             font = spriteFont;
 
             Point projPosition = WidgetLocation + margin + new Point(88, 12);
-            equippedProjectileSprite = new SpriteDict(SpriteType.HUD, SpriteLayer.HUD, projPosition);
+            equippedWeaponSprite = new SpriteDict(SpriteType.HUD, SpriteLayer.HUD, projPosition);
 
             //set SwordSprite
             Point swordPosition = WidgetLocation + margin + new Point(184, 12);
             swordSprite = new SpriteDict(SpriteType.HUD, SpriteLayer.HUD, swordPosition);
             swordSprite.SetSprite("woodensword");
-            UpdateProjectileSprite();
+
+            //update Weapon sprite
+            UpdateWeaponSprite();
         }
 
         public override void Draw(SpriteBatch sb)
@@ -61,23 +60,23 @@ namespace MonoZelda.UI
 
         public override void Update()
         {
-            UpdateProjectileSprite();
+            UpdateWeaponSprite();
             UpdateSwordSprite();
         }
 
-        private void UpdateProjectileSprite()
+        private void UpdateWeaponSprite()
         {
-            ProjectileType currentProjectile = PlayerState.EquippedProjectile;
-            equippedProjectileSprite.Position = WidgetLocation + margin + new Point(88, 12);
+            WeaponType currentWeapon = PlayerState.EquippedWeapon;
+            equippedWeaponSprite.Position = WidgetLocation + margin + new Point(88, 12);
 
-            if (projectileSpriteMap.TryGetValue(currentProjectile, out string spriteName))
+            if (weaponSpriteMap.TryGetValue(currentWeapon, out string spriteName))
             {
-                equippedProjectileSprite.Enabled = true;
-                equippedProjectileSprite.SetSprite(spriteName);
+                equippedWeaponSprite.Enabled = true;
+                equippedWeaponSprite.SetSprite(spriteName);
             }
             else
             {
-                equippedProjectileSprite.Enabled = false;
+                equippedWeaponSprite.Enabled = false;
             }
         }
 

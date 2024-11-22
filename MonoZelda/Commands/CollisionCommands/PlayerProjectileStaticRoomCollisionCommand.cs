@@ -28,10 +28,9 @@ public class PlayerProjectileStaticRoomCollisionCommand : ICommand
             projectileCollidable = (PlayerProjectileCollidable)collidableB;
         }
 
-        if (projectileCollidable.ProjectileManager != null && projectileCollidable.projectileType == Link.Projectiles.ProjectileType.CandleBlue)
+        if (projectileCollidable.projectileType == Link.Projectiles.ProjectileType.Fire)
         {
-            projectileCollidable.ProjectileManager.destroyProjectile();
-            collisionController.RemoveCollidable(projectileCollidable);
+            projectileCollidable.HandleCollision();
         }
     }
 

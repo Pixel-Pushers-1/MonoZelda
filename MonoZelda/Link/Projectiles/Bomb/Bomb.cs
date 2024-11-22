@@ -1,11 +1,12 @@
 ﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
 using MonoZelda.Sound;
-using System.Diagnostics;
+using MonoZelda.Controllers;
+using MonoZelda.Collision;
 
 namespace MonoZelda.Link.Projectiles;
 
-public class Bomb : ProjectileFactory, IProjectile
+public class Bomb : IProjectile
 {
     private const float EXPLODE_TIME = 1.5f;
 
@@ -22,9 +23,11 @@ public class Bomb : ProjectileFactory, IProjectile
     private float explosionTimer;
     private float animationTimer;
     private Vector2 initialPosition;
-    private Vector2 dimension = new Vector2(8, 16);
+    private Vector2 projectilePosition;
+    private PlayerProjectileCollidable projectileCollidable;
     private SpriteDict projectileDict;
     private SpriteDict[] explosionSpriteDicts;
+    private CollisionController collisionController;
     private bool exploded;
 
     public bool Exploded
@@ -32,16 +35,13 @@ public class Bomb : ProjectileFactory, IProjectile
         get => exploded;
     }
 
-    public Bomb(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection)
-    : base(projectileDict, playerPosition, playerDirection)
+    public Bomb(Vector2 spawnPosition, CollisionController collisionController)
     {
-        this.projectileDict = projectileDict;
         finished = false;
         explosionTimer = EXPLODE_TIME;
-        initialPosition = SetInitialPosition(dimension);
-        SetProjectileSprite("bomb");
-        projectileDict.Position = initialPosition.ToPoint();
+        initialPosition = spawnPosition;
         exploded = false;
+        this.collisionController = collisionController;
     }
 
     public bool hasFinished()
@@ -60,7 +60,16 @@ public class Bomb : ProjectileFactory, IProjectile
         return new Rectangle(spawnPosition.X - 192 / 2, spawnPosition.Y - 192 / 2, 192, 192);
     }
 
-    public void UpdateProjectile()
+    public void Setup()
+    {
+        projectilePosition = initialPosition;
+        SoundManager.PlaySound("LOZ_Bomb_Drop", false);
+        projectileDict = new SpriteDict(SpriteType.Projectiles, SpriteLayer.Projectiles, initialPosition.ToPoint());
+        projectileDict.SetSprite("bomb");
+        this.collisionController = collisionController; 
+    }
+
+    public void Update()
     {
         if (explosionTimer <= 0f && !exploded)
         {
@@ -72,7 +81,9 @@ public class Bomb : ProjectileFactory, IProjectile
             finished = true;
 
             //clean up spritedicts
-            projectileDict.Enabled = false;
+            projectileDict.Unregister();
+            projectileCollidable.UnregisterHitbox();
+            collisionController.RemoveCollidable(projectileCollidable);
             for (int i = 0; i < explosionSpriteDicts.Length; i++) {
                 explosionSpriteDicts[i].Unregister();
                 explosionSpriteDicts[i] = null;
@@ -87,6 +98,8 @@ public class Bomb : ProjectileFactory, IProjectile
 
     private void Explode() {
         exploded = true;
+        projectileCollidable = new PlayerProjectileCollidable(getCollisionRectangle(), ProjectileType.Bomb);
+        collisionController.AddCollidable(projectileCollidable);
         SoundManager.PlaySound("LOZ_Bomb_Blow", false);
         animationTimer = (float) projectileDict.SetSpriteOneshot("cloud_slow");
 

@@ -4,7 +4,6 @@ using MonoZelda.Controllers;
 using MonoZelda.Enemies;
 using MonoZelda.Link;
 using MonoZelda.Link.Projectiles;
-using MonoZelda.Sound;
 
 namespace MonoZelda.Commands.CollisionCommands;
 
@@ -39,10 +38,7 @@ public class EnemyPlayerProjectileCollisionCommand : ICommand
             enemyCollidable = (EnemyCollidable)collidableA;
         }
 
-        if (projectileCollidable.ProjectileManager != null)
-        {
-            projectileCollidable.ProjectileManager.destroyProjectile();
-        }
+        projectileCollidable.HandleCollision();
 
         if (projectileCollidable.projectileType == ProjectileType.Boomerang ||
             projectileCollidable.projectileType == ProjectileType.BoomerangBlue)

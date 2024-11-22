@@ -15,14 +15,12 @@ namespace MonoZelda.HUD
         private SpriteDict proj;
 
         // Dictionary to map ProjectileType to sprite names
-        Dictionary<ProjectileType, string> projectileSpriteMap = new Dictionary<ProjectileType, string>
+        Dictionary<WeaponType, string> weaponSpriteMap = new Dictionary<WeaponType, string>()
         {
-            { ProjectileType.Arrow, "arrow" },
-            { ProjectileType.ArrowBlue, "arrow_blue" },
-            { ProjectileType.Boomerang, "boomerang" },
-            { ProjectileType.BoomerangBlue, "boomerang_blue" },
-            { ProjectileType.Bomb, "bomb" },
-            { ProjectileType.CandleBlue, "fire" }
+            { WeaponType.Bow, "bow" },
+            { WeaponType.Boomerang, "boomerang" },
+            { WeaponType.CandleBlue, "candle_blue" },
+            { WeaponType.Bomb, "bomb" }
         };
 
         public HUDManager(ProjectileManager projectileManager)
@@ -60,10 +58,10 @@ namespace MonoZelda.HUD
 
 
             //show equipped projecetilie
-            ProjectileType projectileType = projectileManager.EquippedProjectile;
+            WeaponType weaponType = projectileManager.EquippedWeapon;
             Point projPosition = new Point(450, 75);
             this.proj = new SpriteDict(SpriteType.Items, 0, projPosition);
-            string spriteName = projectileSpriteMap.TryGetValue(projectileType, out var name) ? name : "arrow";
+            string spriteName = weaponSpriteMap.TryGetValue(weaponType, out var name) ? name : "arrow";
             proj.SetSprite(spriteName);
         }
 
@@ -79,9 +77,9 @@ namespace MonoZelda.HUD
         public void UpdateSelectedWeapon()
         {
             
-            ProjectileType projectileType = projectileManager.EquippedProjectile;
-            Debug.WriteLine(projectileType.ToString());
-            string spriteName = projectileSpriteMap.TryGetValue(projectileType, out var name) ? name : "arrow";
+            WeaponType weaponType = projectileManager.EquippedWeapon;
+            Debug.WriteLine(weaponType.ToString());
+            string spriteName = weaponSpriteMap.TryGetValue(weaponType, out var name) ? name : "arrow";
             proj.SetSprite(spriteName);
         }
     }

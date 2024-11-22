@@ -24,12 +24,9 @@ public class PlayerFireProjectileCommand : ICommand
     {
         Keys pressedKey = (Keys)metadata[0];
 
-        // fire equipped projectile
-        if (projectileManager.ProjectileFired == false)
-        {
-            projectileManager.fireEquippedProjectile(player);
-            player?.UseItem();
-        }
+        // fire projectile according to equipped weapon
+        projectileManager.FireProjectile();
+        player?.UseItem();
     }
 
     public void UnExecute()
