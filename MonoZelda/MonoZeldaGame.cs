@@ -29,6 +29,7 @@ public class MonoZeldaGame : Game, ISaveable
     private GraphicsDeviceManager graphicsDeviceManager;
     private SpriteBatch spriteBatch;
     private KeyboardController keyboardController;
+    private GamepadController gamepadController;
     private MouseController mouseController;
     private CommandManager commandManager;
     private SaveManager saveManager;
@@ -64,6 +65,7 @@ public class MonoZeldaGame : Game, ISaveable
 
         // create controller objects
         keyboardController = new KeyboardController(commandManager);
+        gamepadController = new GamepadController(commandManager, PlayerIndex.One);
         mouseController = new MouseController(commandManager);
     }
 
@@ -93,6 +95,7 @@ public class MonoZeldaGame : Game, ISaveable
     {
         GameTime = gameTime;
         keyboardController.Update(gameTime);
+        gamepadController.Update(gameTime);
         mouseController.Update(gameTime);
         scene.Update(gameTime);
 
