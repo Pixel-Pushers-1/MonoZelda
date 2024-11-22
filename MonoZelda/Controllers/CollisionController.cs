@@ -64,8 +64,17 @@ public class CollisionController : IController
                 
                 if (IsColliding(collidableA, collidableB))
                 {
+                    object[] metadata;
+
                     // Grab the metadata we need to know about the collision
-                    object[] metadata = GetMetadata(collidableA, collidableB);
+                    if (collidableA is PlayerCollidable)
+                    {
+                        metadata = GetMetadata(collidableB, collidableA);
+                    }
+                    else
+                    {
+                        metadata = GetMetadata(collidableA, collidableB);
+                    }
 
                     // Handle the collision response for both objects
                     HandleCollision(collidableA, collidableB, metadata);
@@ -82,8 +91,10 @@ public class CollisionController : IController
         // Add any objects that need to be added
         while (_addQueue.Count > 0)
         {
-            _gameObjects.Add(_addQueue.Dequeue());
+            ICollidable collidable = _addQueue.Dequeue();
+            _gameObjects.Add(collidable);
         }
+        
     }
 
     public void AddCollidable(ICollidable collidable)
@@ -104,8 +115,7 @@ public class CollisionController : IController
     // Check if two objects are colliding (AABB collision detection)
     public bool IsColliding(ICollidable collidableA, ICollidable collidableB)
     {
-        // Implement collision check logic (From Collision detection and bounding boxes)
-        return collidableA.Intersects(collidableB);
+            return collidableA.Intersects(collidableB);
     }
 
     // Handle what happens when two objects collide
