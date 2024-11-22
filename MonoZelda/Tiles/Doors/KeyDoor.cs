@@ -45,13 +45,14 @@ namespace MonoZelda.Tiles
 
         protected override void Transition(Direction transitionDirection)
         {
+            if (isOpen)
+            {
+                base.Transition(transitionDirection);
+            }
+
             if(!isOpen && PlayerState.Keys > 0)
             {
                 Unlock(Spawn.Direction);
-            }
-            else
-            {
-                base.Transition(transitionDirection);
             }
         }
 
