@@ -1,39 +1,47 @@
-﻿using MonoZelda.Sprites;
-using Microsoft.Xna.Framework;
-using MonoZelda.Controllers;
+﻿using MonoZelda.Controllers;
 using MonoZelda.Sound;
-using MonoZelda.Enemies;
 using MonoZelda.Link;
-using System.Collections.Generic;
+using MonoZelda.Dungeons;
+using Microsoft.Xna.Framework;
 
 namespace MonoZelda.Items.ItemClasses;
+
 public class Bow : Item
 {
+    private PlayerCollisionManager playerCollision;
     private const float PICKUP_TIME = 3f;
-    private SpriteDict bowDict;
     private float timer;
 
-    public Bow(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public Bow(ItemManager itemManager) : base(itemManager)
     {
         itemType = ItemList.Bow;
     }
 
-    public override void ItemSpawn(SpriteDict bowDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
-        base.ItemSpawn(bowDict, spawnPosition, collisionController);
-        bowDict.SetSprite("bow");
-        this.bowDict = bowDict;
+        itemBounds = new Rectangle(itemSpawn.Position, new Point(24, 56));
+        base.ItemSpawn(itemSpawn, collisionController);
+        itemDict.SetSprite("bow");
+        playerCollision = itemManager.PlayerCollision;
     }
 
-    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    public override void HandleCollision(CollisionController collisionController)
     {
-        updateList.Add(this);
+        // update playerSprite and itemUpdateList
+        playerCollision.HandleBowCollision(itemDict);
+        itemManager.AddUpdateItem(this);
         timer = PICKUP_TIME;
-        playerCollision.HandleBowCollision(bowDict);
+
+        // Play sounds
         SoundManager.PlaySound("LOZ_New_Weapon_Recieved", false);
         SoundManager.Pause("LOZ_Dungeon_Theme");
+
+        // Unregister collidables and remove from collisionController
         itemCollidable.UnregisterHitbox();
         collisionController.RemoveCollidable(itemCollidable);
+
+        // remove item from roomSpawn list
+        itemManager.RemoveRoomSpawnItem(itemSpawn);
     }
 
     public override void Update()
@@ -41,8 +49,8 @@ public class Bow : Item
         timer -= (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         if(timer <= 0)
         {
-            bowDict.Unregister();
-            updateList.Remove(this);
+            itemDict.Unregister();
+            itemManager.RemoveUpdateItem(this);
             SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
         }
     }
