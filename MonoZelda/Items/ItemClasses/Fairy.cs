@@ -1,22 +1,21 @@
-﻿using MonoZelda.Sprites;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
 using MonoZelda.Sound;
 using MonoZelda.Enemies;
 using MonoZelda.Link;
 using System.Collections.Generic;
 using System;
+using MonoZelda.Dungeons;
 
 namespace MonoZelda.Items.ItemClasses;
 
 public class Fairy : Item
 {
     private Random rnd;
-    private const float FAIRY_ALIVE = 3f;
+    private int randomNum;
     private float timer;
     private float directionUpdateTimer;
-    private int randomNum;
-    private SpriteDict fairyDict;
+    private const float FAIRY_ALIVE = 3f;
     private const float FAIRY_SPEED = 12f;
 
     private Dictionary<int, Vector2> DirectionVector = new()
@@ -27,35 +26,43 @@ public class Fairy : Item
         { 4, new Vector2(0,1) },
     };
 
-    public Fairy(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public Fairy(ItemManager itemManager) : base(itemManager)
     {
         itemType = ItemList.Fairy;
         rnd = new Random(); 
     }
 
-    public override void ItemSpawn(SpriteDict fairyDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
-        base.ItemSpawn(fairyDict, spawnPosition, collisionController);
-        fairyDict.SetSprite("fairy");
-        this.fairyDict = fairyDict;
+        itemBounds = new Rectangle(itemSpawn.Position, new Point(24,56));
+        base.ItemSpawn(itemSpawn, collisionController);
+        itemDict.SetSprite("fairy");
     }
 
-    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    public override void HandleCollision(CollisionController collisionController)
     {
-        updateList.Add(this);
+        // Add fairy as an update item in itemManager list
+        itemManager.AddUpdateItem(this);
         timer = FAIRY_ALIVE;
-        randomNum = 1;
+        randomNum = rnd.Next(1,5);
+
+        // update playerHealth and play Fairy Sound
         PlayerState.Health = PlayerState.MaxHealth;
         SoundManager.PlaySound("LOZ_Fairy_Heal", false);
+
+        // unregister collidable and remove from collisionController
         itemCollidable.UnregisterHitbox();
         collisionController.RemoveCollidable(itemCollidable);
+
+        // remove item from roomSpawn list
+        itemManager.RemoveRoomSpawnItem(itemSpawn);
     }
 
     public override void Update()
     {
         timer -= (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         directionUpdateTimer += (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
-        Vector2 fairyPosition = fairyDict.Position.ToVector2();
+        Vector2 fairyPosition = itemDict.Position.ToVector2();
         if (timer > 0)
         {
             // get movement vector
@@ -68,12 +75,12 @@ public class Fairy : Item
 
             // update fairy position
             fairyPosition += FAIRY_SPEED * movementVector;
-            fairyDict.Position = fairyPosition.ToPoint();
+            itemDict.Position = fairyPosition.ToPoint();
         }
         else
         {
-            fairyDict.Unregister();
-            updateList.Remove(this);
+            itemDict.Unregister();
+            itemManager.RemoveUpdateItem(this);
         }
         
     }

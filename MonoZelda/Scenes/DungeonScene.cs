@@ -7,9 +7,9 @@ using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Link;
 using MonoZelda.Sprites;
-using System;
 using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.UI;
+using MonoZelda.Events;
 
 namespace MonoZelda.Scenes
 {
@@ -40,6 +40,11 @@ namespace MonoZelda.Scenes
 
             // Start the player near the entrance
             PlayerState.Initialize();
+
+            // Subscribe to special in-game events
+            EventManager.LevelComplete += LevelCompleteScene;
+            EventManager.WallmasterGrab += WallMasterGrabScene;
+            EventManager.LinkDeath += LinkDeathScene;
 
             // create inventory scene
             inventoryScene = new InventoryScene(graphicsDevice, commandManager);
@@ -131,7 +136,25 @@ namespace MonoZelda.Scenes
             // Complication due to SpriteDict getting cleared, need to re-init the UI
             inventoryScene.LoadContent(contentManager, currentRoom);
         }
-        
+
+        private void LevelCompleteScene()
+        {
+            var startRoom = roomManager.LoadRoom(StartRoom);
+            var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
+            activeScene = new LevelCompleteScene(startRoom, command);
+            activeScene.LoadContent(contentManager);
+        }
+
+        private void WallMasterGrabScene()
+        {
+
+        }
+
+        private void LinkDeathScene()
+        {
+
+        }
+
         public void ToggleInventory()
         {
             isPaused = inventoryScene.ToggleInventory();
