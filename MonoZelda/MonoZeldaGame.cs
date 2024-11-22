@@ -81,11 +81,6 @@ public class MonoZeldaGame : Game
 
     protected override void Update(GameTime gameTime)
     {
-        if(PlayerState.ObtainedTriforce == true)
-        {
-            Exit();
-        }
-
         if (PlayerState.IsDead)
         {
             commandManager.Execute(CommandType.PlayerDeathCommand);
@@ -106,7 +101,9 @@ public class MonoZeldaGame : Game
     {
         GraphicsDevice.Clear(Color.Black);
 
-        spriteBatch.Begin();
+        SamplerState samplerState = new();
+        samplerState.Filter = TextureFilter.Point;
+        spriteBatch.Begin(SpriteSortMode.Deferred, null, samplerState);
 
         // SpriteDrawer draws all drawables
         SpriteDrawer.Draw(spriteBatch, gameTime);
@@ -149,6 +146,7 @@ public class MonoZeldaGame : Game
     {
         SoundManager.ClearSoundDictionary();
         HUDMapWidget.Reset();
+        InventoryMapWidget.Reset();
         LoadScene(new MainMenuScene(GraphicsDevice));
     }
 }

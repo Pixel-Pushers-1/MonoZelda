@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace MonoZelda.Sprites;
 
@@ -44,23 +45,13 @@ public class SpriteDict : IDrawable
         this.texture = TextureData.GetTexture(spriteType);
         Position = position;
         this.Enabled = true;
-        SpriteSheetParser.Parse(this, SpriteCSVData.GetFileName(spriteType));
+        dict = SpriteSheetParser.Parse(SpriteCSVData.GetFileName(spriteType));
+        currentSprite = dict.ElementAt(0).Key;
         SpriteDrawer.RegisterDrawable(this, priority);
     }
 
     public void Unregister() {
         SpriteDrawer.UnregisterDrawable(this);
-    }
-
-    public void Add(Sprite sprite, string name)
-    {
-        dict.Add(name, sprite);
-
-        //set current sprite to sprite being added if no sprite is currently set
-        if (currentSprite == "")
-        {
-            currentSprite = name;
-        }
     }
 
     public void SetSprite(string name)

@@ -1,31 +1,29 @@
 ﻿using Microsoft.Xna.Framework;
-using MonoZelda.Sprites;
 using MonoZelda.Controllers;
+using MonoZelda.Dungeons;
 using MonoZelda.Sound;
-using MonoZelda.Enemies;
-using MonoZelda.Link;
-using System.Collections.Generic;
 using MonoZelda.UI;
 
 namespace MonoZelda.Items.ItemClasses;
 
 public class Compass : Item
 {
-    public Compass(List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision, List<Item> updateList) : base(roomEnemyList, playerCollision, updateList)
+    public Compass(ItemManager itemManager) : base(itemManager)
     {
         itemType = ItemList.Compass;
     }
 
-    public override void ItemSpawn(SpriteDict compassDict, Point spawnPosition, CollisionController collisionController)
+    public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
-        base.ItemSpawn(compassDict, spawnPosition, collisionController);
-        compassDict.SetSprite("compass");
+        itemBounds = new Rectangle(itemSpawn.Position, new Point(56, 56));
+        base.ItemSpawn(itemSpawn, collisionController);
+        itemDict.SetSprite("compass");
     }
 
-    public override void HandleCollision(SpriteDict itemCollidableDict, CollisionController collisionController)
+    public override void HandleCollision(CollisionController collisionController)
     {
         HUDMapWidget.SetCompassMarkerVisible(true);
         SoundManager.PlaySound("LOZ_Get_Item", false);
-        base.HandleCollision(itemCollidableDict, collisionController);
+        base.HandleCollision(collisionController);
     }
 }

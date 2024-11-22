@@ -18,6 +18,10 @@ namespace MonoZelda.Scenes
         private static readonly Point HUDMapPosition = new (64, 80);
         private static readonly Point LifePosition = new (720, 128);
         private static readonly Point ItemCountPosition = new (416, 64);
+        private static readonly Point LevelTextPosition = new(10, 10);
+        private static readonly Point InventoryMapPosition = new(528, -288);
+        private static readonly Point XpBarPosition = new(712, 44);
+
         private const int INVENTORY_OPEN_Y = 704;
         private const int INVENTORY_OPEN_SPEED = 16;
 
@@ -44,11 +48,13 @@ namespace MonoZelda.Scenes
     {
         _spriteFont ??= contentManager.Load<SpriteFont>("Fonts/Basic");
 
-        Widgets.Add(typeof(HUDBackgroundWidget), new HUDBackgroundWidget(Screen, HUDBackgroundPosition, contentManager));
-        Widgets.Add(typeof(HUDMapWidget), new HUDMapWidget(Screen, HUDMapPosition, contentManager));
-        Widgets.Add(typeof(LifeWidget), new LifeWidget(Screen, LifePosition, contentManager));
-        Widgets.Add(typeof(ItemCountWidget), new ItemCountWidget(_spriteFont, Screen, ItemCountPosition, contentManager));
-        Widgets.Add(typeof(LevelTextWidget), new LevelTextWidget(_spriteFont, Screen, new Point(10, 10)));
+        Widgets.Add(typeof(HUDBackgroundWidget), new HUDBackgroundWidget(Screen, HUDBackgroundPosition));
+        Widgets.Add(typeof(HUDMapWidget), new HUDMapWidget(Screen, HUDMapPosition));
+        Widgets.Add(typeof(LifeWidget), new LifeWidget(Screen, LifePosition));
+        Widgets.Add(typeof(ItemCountWidget), new ItemCountWidget(_spriteFont, Screen, ItemCountPosition));
+        Widgets.Add(typeof(LevelTextWidget), new LevelTextWidget(_spriteFont, Screen, LevelTextPosition));
+        Widgets.Add(typeof(InventoryMapWidget), new InventoryMapWidget(Screen, InventoryMapPosition));
+        Widgets.Add(typeof(XpBarWidget), new XpBarWidget(Screen, XpBarPosition));
     }
 
     public void LoadContent(ContentManager cm, IDungeonRoom room)
@@ -95,6 +101,7 @@ namespace MonoZelda.Scenes
 
         public void SetPlayerMapMarker(Point? coord) {
             ((HUDMapWidget) Widgets[typeof(HUDMapWidget)]).SetPlayerMapMarker(coord);
+            ((InventoryMapWidget) Widgets[typeof(InventoryMapWidget)]).SetPlayerMapMarker(coord);
         }
     }
 }
