@@ -1,12 +1,9 @@
-﻿using MonoZelda.Dungeons;
+﻿using Microsoft.Xna.Framework;
+using MonoZelda.Dungeons;
 using MonoZelda.Dungeons.Parser.Data;
-using MonoZelda.Link;
 using MonoZelda.Link.Projectiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MonoZelda.Save
 {
@@ -21,8 +18,11 @@ namespace MonoZelda.Save
         public int KeyCount { get; set; }
         public int MaxHealth { get; set; }
         public bool HasBoomerang { get; set; }
+        public bool HasCompass { get; set; }
+        public bool HasMap { get; set; }
         public bool ObtainedTriforce { get; set; }
         public HashSet<(string, DoorDirection)> Keyring { get; set; }
+        public HashSet<Point> DiscoveredRooms = new();
 
         public ProjectileType EquipedProjectile { get; set; }
 

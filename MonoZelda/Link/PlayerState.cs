@@ -16,9 +16,14 @@ public static class PlayerState
     private static readonly int INITIAL_KEYS = 0;
 
     private static int _health = INITIAL_HP;
+    
 
     // (RoomName, Direction)
     public static HashSet<(string, DoorDirection)> Keyring { get; set; } = new ();
+
+    public static HashSet<Point> DiscoveredRooms { get; set; } = new();
+
+
 
     public static void Initialize()
     {
@@ -33,7 +38,10 @@ public static class PlayerState
         Bombs = INITIAL_BOMBS;
         Keys = INITIAL_KEYS;
         EquippedProjectile = ProjectileType.None;
-
+        HasMap = false;
+        HasCompass = false;
+        Keyring = new();
+        DiscoveredRooms = new();
     }
 
     public static void ResetCandle()
@@ -84,6 +92,8 @@ public static class PlayerState
     public static ProjectileType EquippedProjectile { get; set; }
     public static bool HasBoomerang { get; set; }
     public static bool ObtainedTriforce { get; set; }
+    public static bool HasCompass;
+    public static bool HasMap;
 
     public static void AddRupees(int amount) => Rupees += amount;
     public static void AddBombs(int amount) => Bombs += amount;
@@ -92,14 +102,17 @@ public static class PlayerState
     public static void Save(SaveState save)
     {
         save.MaxHealth = MaxHealth;
-        save.EquipedProjectile = save.EquipedProjectile;
+        save.EquipedProjectile = EquippedProjectile;
         save.HasBoomerang = HasBoomerang;
         save.ObtainedTriforce = ObtainedTriforce;
         save.Health = Health;
         save.BombCount = Bombs;
         save.RupeeCount = Rupees;
         save.KeyCount = Keys;
+        save.HasCompass = HasCompass;
+        save.HasMap = HasMap;
         save.Keyring = Keyring;
+        save.DiscoveredRooms = DiscoveredRooms;
     }
 
     public static void Load(SaveState save)
@@ -112,6 +125,9 @@ public static class PlayerState
         Bombs = save.BombCount;
         Rupees = save.RupeeCount;
         Keys = save.KeyCount;
+        HasCompass = save.HasCompass;
+        HasMap = save.HasMap;
         Keyring = save.Keyring;
+        DiscoveredRooms = save.DiscoveredRooms;
     }
 }

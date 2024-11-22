@@ -55,7 +55,7 @@ namespace MonoZelda.Scenes
             commandManager.ReplaceCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand(this));
             commandManager.ReplaceCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand(this));
             commandManager.ReplaceCommand(CommandType.PlayerEnemyCollisionCommand,
-                new PlayerEnemyCollisionCommand(commandManager));
+                new PlayerEnemyCollisionCommand(commandManager));           
         }
 
         public void TransitionRoom(string roomName, Direction transitionDirection)
@@ -73,11 +73,11 @@ namespace MonoZelda.Scenes
             {
                 activeScene = new TransitionScene(currentRoom, nextRoom, command, transitionDirection);
             }
-            
-            activeScene.LoadContent(contentManager);
 
             //set player map marker
             inventoryScene.SetPlayerMapMarker(DungeonConstants.GetRoomCoordinate(roomName));
+
+            activeScene.LoadContent(contentManager);
         }
 
         public void LoadRoom(string roomName)
@@ -115,6 +115,9 @@ namespace MonoZelda.Scenes
             currentRoom = roomManager.LoadRoom(StartRoom);
             activeScene = new EnterDungeonScene(this, currentRoom, graphicsDevice);
             activeScene.LoadContent(contentManager);
+
+            //set player map marker
+            inventoryScene.SetPlayerMapMarker(DungeonConstants.GetRoomCoordinate(StartRoom));
         }
 
         public override void Update(GameTime gameTime)
