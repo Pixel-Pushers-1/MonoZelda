@@ -23,11 +23,13 @@ public enum GameState
 }
 
 public enum GameType {
-    Classic,
-    Infinite,
+    classic,
+    infiniteEasy,
+    infiniteMedium,
+    infiniteHard,
 }
 
-public class MonoZeldaGame : Game, ISaveable
+public class MonoZeldaGame : Game
 {
     public static GameTime GameTime { get; private set; }
 
@@ -152,26 +154,6 @@ public class MonoZeldaGame : Game, ISaveable
         SoundManager.ClearSoundDictionary();
         HUDMapWidget.Reset();
         InventoryMapWidget.Reset();
-        PlayerState.Initialize();
         LoadScene(new MainMenuScene(commandManager));
-    }
-
-    public void Save(SaveState save)
-    {
-        if(scene is SceneManager sceneManager)
-        {
-            sceneManager.Save(save);
-        }
-    }
-
-    public void Load(SaveState save)
-    {
-        SoundManager.ClearSoundDictionary();
-        HUDMapWidget.Reset();
-
-        var loadDungeon = new SceneManager(save.RoomName, GraphicsDevice, commandManager);
-        loadDungeon.Load(save);
-
-        LoadScene(loadDungeon);
     }
 }

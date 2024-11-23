@@ -39,9 +39,7 @@ public enum CommandType
     PlayerDeathCommand,
     NavigableGridMoveCommand,
     NavigableGridExecuteCommand,
-    QuickSaveCommand,
-    QuickLoadCommand,
-    None,
+    None
 }
 
 public class CommandManager
@@ -80,8 +78,7 @@ public class CommandManager
         AddCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand());
         AddCommand(CommandType.NavigableGridMoveCommand, new NavigableGridMoveCommand());
         AddCommand(CommandType.NavigableGridExecuteCommand, new NavigableGridExecuteCommand());
-        AddCommand(CommandType.QuickSaveCommand, new QuickSaveCommand());
-        AddCommand(CommandType.QuickLoadCommand, new QuickLoadCommand());
+
     }
 
     public void Execute(CommandType commandType, params object[] metadata)
