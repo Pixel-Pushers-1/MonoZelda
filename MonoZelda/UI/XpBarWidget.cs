@@ -29,10 +29,7 @@ internal class XpBarWidget : ScreenWidget
 
     public override void Update()
     {
-        //REPLACE THIS LINE WITH ACTUAL XP LOGIC FROM PLAYERSTATE\/ \/ \/
-        SetXp((float) MonoZeldaGame.GameTime.TotalGameTime.TotalSeconds % 1f);
-        //REPLACE THIS LINE WITH ACTUAL XP LOGIC FROM PLAYERSTATE /\ /\ /\ 
-
+        SetXp((float)PlayerState.GetXPProgress());
         fullXpBarSprite.Position = WidgetLocation + barPosition;
     }
 

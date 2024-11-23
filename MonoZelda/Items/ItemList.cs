@@ -18,4 +18,5 @@ public enum ItemList
     BlueCandle,
     BluePotion,
     Fire,
+    XPOrb,
 }

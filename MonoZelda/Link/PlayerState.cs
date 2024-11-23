@@ -109,6 +109,11 @@ public static class PlayerState
         }
         Debug.WriteLine($"XP: {XP}");
     }
+    public static float GetXPProgress()
+    {
+        int xpToLevelUp = GetXPToLevelUp();
+        return (float)XP / xpToLevelUp;
+    }
     public static void AddRupees(int amount) => Rupees += amount;
     public static void AddBombs(int amount) => Bombs += amount;
     public static void AddKeys(int amount) => Keys += amount;

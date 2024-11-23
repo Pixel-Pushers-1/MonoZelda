@@ -34,7 +34,6 @@ namespace MonoZelda.Enemies
         private SpriteDict keyDict;
         private bool hasItem;
         private bool itemSpawned = false;
-        private bool xpSpawned = false;
 
         public EnemyStateMachine(SpriteDict spriteDict, ItemFactory itemFactory, bool hasItem)
         {
@@ -105,6 +104,7 @@ namespace MonoZelda.Enemies
             Random r = new Random();
             var selection = r.Next(101);
             var item = ItemList.Triforce;
+            var xp = ItemList.XPOrb;
             if (hasItem)
             {
                 item = ItemList.Key;
@@ -135,8 +135,10 @@ namespace MonoZelda.Enemies
                 itemFactory.CreateItem(new ItemSpawn(new Point(pos.X - 16, pos.Y - 32),item),true);
                 itemSpawned = true;
             }
+            //drop xp
+            itemFactory.CreateItem(new ItemSpawn(new Point(pos.X, pos.Y), xp), true);
         }
-
+        
         public Point Update(Enemy enemy, Point position)
         {
             dt = (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
@@ -168,12 +170,6 @@ namespace MonoZelda.Enemies
                 {
                     enemySpriteDict.Enabled = false;
                     enemy.Alive = false;
-                    if(!xpSpawned)
-                    {
-                        PlayerState.AddXP(20);
-                        xpSpawned = true;
-                    }
-
                     if (enemy.GetType() != typeof(Keese) && enemy.GetType() != typeof(Gel))
                     {
                         DropItem(position, enemy);
