@@ -25,7 +25,6 @@ public class KeyboardController : IController
         _pressedDirectionalKeys = new List<Keys>();
         _keyCommandDictionary = new Dictionary<(Keys key, bool oneShot), CommandType>
         {
-            {new (Keys.Enter, true), CommandType.StartGameCommand},
             {new (Keys.G, true), CommandType.ToggleGizmosCommand},
             {new (Keys.D1, true), CommandType.PlayerEquipProjectileCommand},
             {new (Keys.D2, true), CommandType.PlayerEquipProjectileCommand},
@@ -42,6 +41,15 @@ public class KeyboardController : IController
             {new (Keys.None, false), CommandType.PlayerStandingCommand},
             {new (Keys.I, true), CommandType.ToggleInventoryCommand},
             {new (Keys.Escape, true), CommandType.ToggleInventoryCommand},
+            {new (Keys.W, true), CommandType.NavigableGridMoveCommand},
+            {new (Keys.A, true), CommandType.NavigableGridMoveCommand},
+            {new (Keys.S, true), CommandType.NavigableGridMoveCommand},
+            {new (Keys.D, true), CommandType.NavigableGridMoveCommand},
+            {new (Keys.Up, true), CommandType.NavigableGridMoveCommand},
+            {new (Keys.Left, true), CommandType.NavigableGridMoveCommand},
+            {new (Keys.Down, true), CommandType.NavigableGridMoveCommand},
+            {new (Keys.Right, true), CommandType.NavigableGridMoveCommand},
+            {new (Keys.Enter, true), CommandType.NavigableGridExecuteCommand},
         };
     }
 

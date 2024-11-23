@@ -22,6 +22,13 @@ public enum GameState
     None
 }
 
+public enum GameType {
+    classic,
+    infiniteEasy,
+    infiniteMedium,
+    infiniteHard,
+}
+
 public class MonoZeldaGame : Game
 {
     public static GameTime GameTime { get; private set; }
@@ -66,8 +73,6 @@ public class MonoZeldaGame : Game
 
         base.Initialize();
     }
-
-    SpriteFont testFont;
 
     protected override void LoadContent()
     {
@@ -124,7 +129,7 @@ public class MonoZeldaGame : Game
 
     public void StartMenu()
     {
-        LoadScene(new MainMenuScene(GraphicsDevice));
+        LoadScene(new MainMenuScene(commandManager));
     }
 
     public void StartDungeon()
@@ -147,6 +152,6 @@ public class MonoZeldaGame : Game
         SoundManager.ClearSoundDictionary();
         HUDMapWidget.Reset();
         InventoryMapWidget.Reset();
-        LoadScene(new MainMenuScene(GraphicsDevice));
+        LoadScene(new MainMenuScene(commandManager));
     }
 }

@@ -33,6 +33,8 @@ public enum CommandType
     ToggleInventoryCommand,
     PlayerProjectileDoorCollisionCommand,
     PlayerDeathCommand,
+    NavigableGridMoveCommand,
+    NavigableGridExecuteCommand,
     None
 }
 
@@ -66,6 +68,9 @@ public class CommandManager
         AddCommand(CommandType.ToggleGizmosCommand, new ToggleGizmosCommand());
         AddCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand());
         AddCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand());
+        AddCommand(CommandType.NavigableGridMoveCommand, new NavigableGridMoveCommand());
+        AddCommand(CommandType.NavigableGridExecuteCommand, new NavigableGridExecuteCommand());
+
     }
 
     public void Execute(CommandType commandType, params object[] metadata)
