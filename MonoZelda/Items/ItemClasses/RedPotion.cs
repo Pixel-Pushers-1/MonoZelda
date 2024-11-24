@@ -2,6 +2,7 @@
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Link;
+using MonoZelda.Link.Equippables;
 using MonoZelda.Sound;
 
 namespace MonoZelda.Items.ItemClasses;
@@ -22,6 +23,10 @@ public class RedPotion : Item
 
     public override void HandleCollision(CollisionController collisionController)
     {
+        if (!PlayerState.EquippableInventory.Contains(EquippableType.BluePotion))
+        {
+            PlayerState.EquippableInventory.Add(EquippableType.RedPotion);
+        }
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(collisionController);
     }

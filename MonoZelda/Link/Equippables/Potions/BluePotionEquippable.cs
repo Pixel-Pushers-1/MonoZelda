@@ -14,5 +14,6 @@ public class BluePotionEquippable : IEquippable
     {
         SoundManager.PlaySound("LOZ_Drink_Potion", false);
         PlayerState.Health = PlayerState.MaxHealth;
+        PlayerState.EquippableInventory.Remove(EquippableType.BluePotion);
     }
 }

@@ -9,6 +9,8 @@ public class EquippableManager
 {
     private CollisionController collisionController;
     private ProjectileManager projectileManager;
+    private int CyclingIndex;
+    private const int NUM_EQUIPPABLES = 6;
     private readonly SwordEquippable swordEquippable;
 
     private readonly Dictionary<EquippableType, IEquippable> equippableObjects = new()
@@ -29,6 +31,7 @@ public class EquippableManager
 
     public EquippableManager(CollisionController collisionController)
     {
+        CyclingIndex = 0;
         EquippedItem = EquippableType.None;
         this.collisionController = collisionController;
         projectileManager = new ProjectileManager(collisionController);
@@ -37,13 +40,15 @@ public class EquippableManager
 
     public void CycleEquippedUtility()
     {
-        if (EquippedItem == EquippableType.RedPotion)
+        List<EquippableType> equippables = PlayerState.EquippableInventory;
+        if (CyclingIndex < equippables.Count)
         {
-            EquippedItem = EquippableType.None;
-        }
-        else
-        {
-            EquippedItem = EquippedItem + 1;
+            CyclingIndex = CyclingIndex + 1;
+            if (CyclingIndex == NUM_EQUIPPABLES)
+            {
+                CyclingIndex = 0;
+            }
+            EquippedItem = equippables[CyclingIndex - 1];
         }
     }
 

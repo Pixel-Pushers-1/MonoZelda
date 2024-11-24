@@ -15,8 +15,10 @@
     <None Remove="Commands\GameCommands\PlayerCycleEquippableCommand.cs~RF1a972e8c.TMP" />
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
+    <None Remove="Items\ItemClasses\Bow.cs~RF1cd52d4c.TMP" />
     <None Remove="Items\ItemClasses\Bow.cs~RF4b90b32.TMP" />
     <None Remove="Items\ItemClasses\Item.cs~RF40601b3.TMP" />
+    <None Remove="Items\ItemClasses\RedPotion.cs~RF1cd1bfeb.TMP" />
     <None Remove="Items\ItemClasses\Triforce.cs~RF4aa442d.TMP" />
     <None Remove="Link\Projectiles\Arrow\Arrow.cs~RFe100894.TMP" />
     <None Remove="Link\Projectiles\Arrow\Arrow.cs~RFf99f83c.TMP" />

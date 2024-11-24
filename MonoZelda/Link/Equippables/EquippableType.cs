@@ -1,4 +1,4 @@
-﻿namespace MonoZelda.Link.Projectiles;
+﻿namespace MonoZelda.Link.Equippables;
 
 public enum EquippableType
 {

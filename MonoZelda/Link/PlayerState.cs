@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
-using MonoZelda.Link.Projectiles;
+using MonoZelda.Link.Equippables;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -15,7 +15,7 @@ public static class PlayerState
 
     private static int _health = INITIAL_HP;
 
-    public static Dictionary<EquippableType, bool> EquippableInventory;
+    public static List<EquippableType> EquippableInventory;
 
     public static void Initialize()
     {
@@ -29,6 +29,7 @@ public static class PlayerState
         Rupees = INITIAL_RUPEES;
         Bombs = INITIAL_BOMBS;
         Keys = INITIAL_KEYS;
+        EquippableInventory = new List<EquippableType>();
     }
 
     public static void ResetCandle()
