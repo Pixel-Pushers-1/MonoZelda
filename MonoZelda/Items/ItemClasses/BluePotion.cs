@@ -22,7 +22,14 @@ public class BluePotion : Item
 
     public override void HandleCollision(CollisionController collisionController)
     {
-        PlayerState.Health = PlayerState.MaxHealth;
+        if (!PlayerState.UtilityInventory.ContainsKey(WeaponType.BluePotion))
+        {
+            PlayerState.UtilityInventory.Add(WeaponType.BluePotion, true);
+        }
+        else
+        {
+            PlayerState.UtilityInventory[WeaponType.BluePotion] = true;
+        }
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(collisionController);
     }

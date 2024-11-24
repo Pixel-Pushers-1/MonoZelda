@@ -6,25 +6,31 @@ using MonoZelda.Sound;
 
 namespace MonoZelda.Items.ItemClasses;
 
-public class BlueCandle : Item
+public class RedPotion : Item
 {
-    public BlueCandle(ItemManager itemManager) : base(itemManager)
+    public RedPotion(ItemManager itemManager) : base(itemManager)
     {
-        itemType = ItemList.BlueCandle;
+        itemType = ItemList.RedPotion;
     }
 
     public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
         itemBounds = new Rectangle(itemSpawn.Position, new Point(24, 56));
         base.ItemSpawn(itemSpawn, collisionController);
-        itemDict.SetSprite("candle_blue");
+        itemDict.SetSprite("potion");
     }
 
     public override void HandleCollision(CollisionController collisionController)
     {
-        PlayerState.UtilityInventory.Add(WeaponType.CandleBlue, true);
+        if (!PlayerState.UtilityInventory.ContainsKey(WeaponType.RedPotion))
+        {
+            PlayerState.UtilityInventory.Add(WeaponType.RedPotion, true);
+        }
+        else
+        {
+            PlayerState.UtilityInventory[WeaponType.RedPotion] = true;
+        }
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(collisionController);
     }
 }
-

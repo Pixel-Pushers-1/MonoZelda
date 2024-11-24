@@ -7,4 +7,6 @@ public enum WeaponType
     CandleBlue,
     Boomerang,
     Bomb,
+    RedPotion,
+    BluePotion,
 }

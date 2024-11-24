@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Link.Projectiles;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace MonoZelda.Link;
@@ -13,6 +14,8 @@ public static class PlayerState
     private static readonly int INITIAL_KEYS = 0;
 
     private static int _health = INITIAL_HP;
+
+    public static Dictionary<WeaponType, bool> UtilityInventory;
 
     public static void Initialize()
     {
@@ -75,7 +78,8 @@ public static class PlayerState
     public static WeaponType EquippedWeapon { get; set; }
     public static bool HasBoomerang { get; set; }
     public static bool ObtainedTriforce { get; set; }
-
+    public static bool BluePotionCount { get; set; }
+    public static bool RedPotionCount { get; set; }
     public static void AddRupees(int amount) => Rupees += amount;
     public static void AddBombs(int amount) => Bombs += amount;
     public static void AddKeys(int amount) => Keys += amount;

@@ -31,6 +31,7 @@ public class Bow : Item
         playerCollision.HandleBowCollision(itemDict);
         itemManager.AddUpdateItem(this);
         timer = PICKUP_TIME;
+        PlayerState.UtilityInventory.Add(WeaponType.Bow, true);
 
         // Play sounds
         SoundManager.PlaySound("LOZ_New_Weapon_Recieved", false);

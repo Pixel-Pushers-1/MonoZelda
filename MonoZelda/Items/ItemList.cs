@@ -17,5 +17,6 @@ public enum ItemList
     Clock,
     BlueCandle,
     BluePotion,
+    RedPotion,
     Fire,
 }
