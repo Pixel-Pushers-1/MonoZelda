@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using MonoZelda.Controllers;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters;
 
 namespace MonoZelda.Link.Projectiles;
 
@@ -9,14 +10,6 @@ public class ProjectileManager
     private CollisionController collisionController;
     private ProjectileFactory projectileFactory;
     private List<IProjectile> projectiles;
-
-    private readonly Dictionary<Keys, WeaponType> keyWeaponMap = new()
-    {
-        {Keys.D1,WeaponType.Bow},
-        {Keys.D2,WeaponType.Boomerang},
-        {Keys.D3,WeaponType.CandleBlue},
-        {Keys.D4,WeaponType.Bomb}
-    };
 
     private readonly Dictionary<WeaponType, ProjectileType> weaponProjectileMap = new()
     {
@@ -47,6 +40,8 @@ public class ProjectileManager
             case ProjectileType.Arrow:
             case ProjectileType.ArrowBlue:
                 return PlayerState.Rupees > 0;
+            case ProjectileType.Fire:
+                return !PlayerState.IsCandleUsed;
             case ProjectileType.Bomb:
                 return PlayerState.Bombs > 0;
             default:
@@ -62,15 +57,22 @@ public class ProjectileManager
             case ProjectileType.ArrowBlue:
                 PlayerState.Rupees--;
                 break;
+            case ProjectileType.Fire:
+                PlayerState.IsCandleUsed = true;
+                break;
             case ProjectileType.Bomb:
                 PlayerState.Bombs--;
                 break;
         }
     }
 
-    public void EquipWeapon(Keys pressedKey)
+    public void CycleWeapon()
     {
-        EquippedWeapon = keyWeaponMap[pressedKey];
+        EquippedWeapon = EquippedWeapon + 1;
+        if(EquippedWeapon == WeaponType.Bomb)
+        {
+            EquippedWeapon = WeaponType.None;
+        }
     }
 
     public void UseSword()
@@ -104,7 +106,6 @@ public class ProjectileManager
             IProjectile projectile = projectileFactory.GetProjectileObject(projectileType, collisionController);
             projectile.Setup();
             projectiles.Add(projectile);
-           
         }
     }
 

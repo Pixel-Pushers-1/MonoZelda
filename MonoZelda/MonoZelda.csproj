@@ -19,6 +19,7 @@
     <None Remove="Items\ItemClasses\Triforce.cs~RF4aa442d.TMP" />
     <None Remove="Link\Projectiles\Arrow\Arrow.cs~RFe100894.TMP" />
     <None Remove="Link\Projectiles\Arrow\Arrow.cs~RFf99f83c.TMP" />
+    <None Remove="Link\Projectiles\ProjectileManager.cs~RF194c239a.TMP" />
     <None Remove="Link\Projectiles\ProjectileManager.cs~RFea24d48.TMP" />
     <None Remove="Link\Projectiles\WoodenSword\WoodenSword.cs~RF169f651b.TMP" />
     <None Remove="Scenes\DungeonScene.cs~RFc12fbde.TMP" />

@@ -27,7 +27,6 @@ public static class PlayerState
         Bombs = INITIAL_BOMBS;
         Keys = INITIAL_KEYS;
         EquippedWeapon = WeaponType.None;
-
     }
 
     public static void ResetCandle()

@@ -4,23 +4,22 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MonoZelda.Commands.GameCommands;
 
-public class PlayerEquipProjectileCommand : ICommand
+public class PlayerCycleWeaponCommand : ICommand
 {
     private ProjectileManager projectileManager;
-    public PlayerEquipProjectileCommand()
+    public PlayerCycleWeaponCommand()
     {
         //empty
     }
 
-    public PlayerEquipProjectileCommand(ProjectileManager projectileManager)
+    public PlayerCycleWeaponCommand(ProjectileManager projectileManager)
     {
         this.projectileManager = projectileManager;
     }
 
     public void Execute(params object[] metadata)
     {
-        Keys pressedKey = (Keys)metadata[0];
-        projectileManager.EquipWeapon(pressedKey);
+        projectileManager.CycleWeapon();
     }
 
     public void UnExecute()

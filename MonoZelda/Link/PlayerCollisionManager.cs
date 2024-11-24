@@ -150,6 +150,6 @@ public class PlayerCollisionManager
 
     private Vector2 GetKnockbackDirection(Direction collisionDirection)
     {
-        return DungeonConstants.DirectionVector[collisionDirection];
+        return DungeonConstants.DirectionVector[collisionDirection] * -1;
     }
 }

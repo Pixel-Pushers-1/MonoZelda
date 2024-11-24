@@ -11,7 +11,7 @@ public enum CommandType
     PlayerAttackCommand,
     PlayerMoveCommand,
     PlayerTakeDamageCommand,
-    PlayerEquipProjectileCommand,
+    PlayerCycleWeaponCommand,
     PlayerFireProjectileCommand,
     ResetCommand,
     PlayerStandingCommand,
@@ -46,7 +46,7 @@ public class CommandManager
         AddCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand());
         AddCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());
         AddCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand());
-        AddCommand(CommandType.PlayerEquipProjectileCommand, new PlayerEquipProjectileCommand());
+        AddCommand(CommandType.PlayerCycleWeaponCommand, new PlayerCycleWeaponCommand());
         AddCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
         AddCommand(CommandType.ResetCommand, new ResetCommand());
         AddCommand(CommandType.StartGameCommand, new StartGameCommand());
