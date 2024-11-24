@@ -15,7 +15,7 @@ public static class PlayerState
 
     private static int _health = INITIAL_HP;
 
-    public static Dictionary<WeaponType, bool> UtilityInventory;
+    public static Dictionary<EquippableType, bool> EquippableInventory;
 
     public static void Initialize()
     {
@@ -29,7 +29,6 @@ public static class PlayerState
         Rupees = INITIAL_RUPEES;
         Bombs = INITIAL_BOMBS;
         Keys = INITIAL_KEYS;
-        EquippedWeapon = WeaponType.None;
     }
 
     public static void ResetCandle()
@@ -75,11 +74,9 @@ public static class PlayerState
     public static int MaxHealth { get; set; }
     public static Point Position { get; set; }
     public static Direction Direction { get; set; }
-    public static WeaponType EquippedWeapon { get; set; }
+    public static EquippableType EquippedItem { get; set; }
     public static bool HasBoomerang { get; set; }
     public static bool ObtainedTriforce { get; set; }
-    public static bool BluePotionCount { get; set; }
-    public static bool RedPotionCount { get; set; }
     public static void AddRupees(int amount) => Rupees += amount;
     public static void AddBombs(int amount) => Bombs += amount;
     public static void AddKeys(int amount) => Keys += amount;

@@ -22,7 +22,6 @@ public class BlueCandle : Item
 
     public override void HandleCollision(CollisionController collisionController)
     {
-        PlayerState.UtilityInventory.Add(WeaponType.CandleBlue, true);
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(collisionController);
     }

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Link;
+using MonoZelda.Link.Projectiles;
 using MonoZelda.Sprites;
 using System.Collections.Generic;
 
@@ -17,12 +18,14 @@ namespace MonoZelda.UI
         private SpriteDict equippedWeaponSprite;
         private SpriteDict swordSprite;
 
-        private readonly Dictionary<WeaponType, string> weaponSpriteMap = new()
+        private readonly Dictionary<EquippableType, string> equippableSpriteMap = new()
         {
-            { WeaponType.Bow, "bow" },
-            { WeaponType.Boomerang, "boomerang" },
-            { WeaponType.CandleBlue, "candle_blue" },
-            { WeaponType.Bomb, "bomb" },
+            { EquippableType.Bow, "bow" },
+            { EquippableType.Boomerang, "boomerang" },
+            { EquippableType.CandleBlue, "candle_blue" },
+            { EquippableType.Bomb, "bomb" },
+            { EquippableType.BluePotion, "potion_blue" },
+            { EquippableType.RedPotion, "potion_red" }
         };
 
         public ItemCountWidget(SpriteFont spriteFont, Screen screen, Point position) : base(screen, position)
@@ -38,7 +41,7 @@ namespace MonoZelda.UI
             swordSprite.SetSprite("woodensword");
 
             //update Weapon sprite
-            UpdateWeaponSprite();
+            UpdateEquippableSprite();
         }
 
         public override void Draw(SpriteBatch sb)
@@ -60,16 +63,16 @@ namespace MonoZelda.UI
 
         public override void Update()
         {
-            UpdateWeaponSprite();
+            UpdateEquippableSprite();
             UpdateSwordSprite();
         }
 
-        private void UpdateWeaponSprite()
+        private void UpdateEquippableSprite()
         {
-            WeaponType currentWeapon = PlayerState.EquippedWeapon;
+            EquippableType currentEquippable = PlayerState.EquippedItem;
             equippedWeaponSprite.Position = WidgetLocation + margin + new Point(88, 12);
 
-            if (weaponSpriteMap.TryGetValue(currentWeapon, out string spriteName))
+            if (equippableSpriteMap.TryGetValue(currentEquippable, out string spriteName))
             {
                 equippedWeaponSprite.Enabled = true;
                 equippedWeaponSprite.SetSprite(spriteName);

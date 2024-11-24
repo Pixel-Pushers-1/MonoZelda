@@ -7,23 +7,23 @@ namespace MonoZelda.Commands.GameCommands;
 public class PlayerAttackCommand : ICommand
 {
     private PlayerSpriteManager player;
-    private ProjectileManager projectileManager;
+    private EquippableManager equippableManager;
 
     public PlayerAttackCommand()
     {
         //empty
     }
 
-    public PlayerAttackCommand(ProjectileManager projectileManager, PlayerSpriteManager player)
+    public PlayerAttackCommand(EquippableManager equippableManager, PlayerSpriteManager player)
     {
         this.player = player;
-        this.projectileManager = projectileManager;
+        this.equippableManager = equippableManager;
     }
 
     public void Execute(params object[] metadata)
     {
         player?.Attack();
-        projectileManager?.UseSword();
+        equippableManager?.UseSwordEquippable();
     }
 
     public void UnExecute()

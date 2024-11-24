@@ -27,8 +27,8 @@ public class KeyboardController : IController
         {
             {new (Keys.Enter, true), CommandType.StartGameCommand},
             {new (Keys.G, true), CommandType.ToggleGizmosCommand},
-            {new (Keys.B, true), CommandType.PlayerCycleWeaponCommand},
-            {new (Keys.F, true), CommandType.PlayerFireProjectileCommand},
+            {new (Keys.B, true), CommandType.PlayerCycleEquippableCommand},
+            {new (Keys.F, true), CommandType.PlayerUseEquippableCommand},
             {new (Keys.Z, true), CommandType.PlayerAttackCommand},
             {new (Keys.N, true), CommandType.PlayerAttackCommand},
             {new (Keys.M, true), CommandType.MuteCommand},

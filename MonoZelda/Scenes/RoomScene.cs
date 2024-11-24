@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Link;
 using MonoZelda.Commands;
 using MonoZelda.Sprites;
-using MonoZelda.Link.Projectiles;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
@@ -25,7 +24,7 @@ public class RoomScene : Scene
     private GraphicsDevice graphicsDevice;
     private CommandManager commandManager;
     private PlayerSpriteManager playerSprite;
-    private ProjectileManager projectileManager;
+    private EquippableManager equippableManager;
     private PlayerCollisionManager playerCollision;
     private ItemManager itemManager;
     private ICommand transitionCommand;
@@ -66,10 +65,10 @@ public class RoomScene : Scene
     {
         // replace required commands
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(projectileManager, playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerCycleWeaponCommand, new PlayerCycleWeaponCommand(projectileManager));   
+        commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(equippableManager, playerSprite));
+        commandManager.ReplaceCommand(CommandType.PlayerCycleEquippableCommand, new PlayerCycleEquippableCommand(equippableManager));   
         //commandManager.ReplaceCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand(projectileManager, playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, playerSprite));
+        commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand(equippableManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerSprite));
     }
@@ -98,8 +97,8 @@ public class RoomScene : Scene
         // Play Dungeon Theme
         SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
 
-        // create projectile object and spriteDict
-        projectileManager = new ProjectileManager(collisionController);
+        // create equippableManager
+        equippableManager = new EquippableManager(collisionController);
     }
 
     private void LoadRoom(ContentManager contentManager)
@@ -192,12 +191,12 @@ public class RoomScene : Scene
         if (paused) {
             commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new EmptyCommand());
             commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new EmptyCommand());
-            commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new EmptyCommand());
+            commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new EmptyCommand());
         }
         else {
             commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
-            commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(projectileManager, playerSprite));
-            commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, playerSprite));
+            commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(equippableManager, playerSprite));
+            commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand(equippableManager, playerSprite));
         }
 
     }
@@ -232,7 +231,7 @@ public class RoomScene : Scene
             updateable.Update(gameTime);
         }
 
-        projectileManager.Update();
+        equippableManager.Update();
         itemManager.Update();
         playerCollision.Update();
     }

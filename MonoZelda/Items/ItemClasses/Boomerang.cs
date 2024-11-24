@@ -21,7 +21,6 @@ public class Boomerang : Item
 
     public override void HandleCollision(CollisionController collisionController)
     {
-        PlayerState.UtilityInventory.Add(WeaponType.Boomerang, true);
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(collisionController);
     }

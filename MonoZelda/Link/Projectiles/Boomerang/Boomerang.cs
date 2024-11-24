@@ -33,7 +33,7 @@ public class Boomerang : IProjectile
 
     private void Forward()
     {
-        Vector2 directionVector = DungeonConstants.DirectionVector[PlayerState.Direction];
+        Vector2 directionVector = DungeonConstants.DirectionVector[projectileDirection];
 
         projectilePosition += PROJECTILE_SPEED * directionVector;
         projectileCollidable.Bounds = getCollisionRectangle();

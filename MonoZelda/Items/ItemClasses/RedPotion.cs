@@ -22,14 +22,6 @@ public class RedPotion : Item
 
     public override void HandleCollision(CollisionController collisionController)
     {
-        if (!PlayerState.UtilityInventory.ContainsKey(WeaponType.RedPotion))
-        {
-            PlayerState.UtilityInventory.Add(WeaponType.RedPotion, true);
-        }
-        else
-        {
-            PlayerState.UtilityInventory[WeaponType.RedPotion] = true;
-        }
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(collisionController);
     }

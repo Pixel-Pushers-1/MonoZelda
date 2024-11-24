@@ -4,20 +4,20 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MonoZelda.Commands.GameCommands;
 
-public class PlayerFireProjectileCommand : ICommand
+public class PlayerUseEquippableCommand : ICommand
 {
     private PlayerSpriteManager player;
-    private ProjectileManager projectileManager;
+    private EquippableManager equippableManager;
 
-    public PlayerFireProjectileCommand()
+    public PlayerUseEquippableCommand()
     {
         //empty
     }
 
-    public PlayerFireProjectileCommand(ProjectileManager projectileManager, PlayerSpriteManager player)
+    public PlayerUseEquippableCommand(EquippableManager equippableManager, PlayerSpriteManager player)
     {
         this.player = player;
-        this.projectileManager = projectileManager;
+        this.equippableManager = equippableManager;
     }
 
     public void Execute(params object[] metadata)
@@ -25,8 +25,8 @@ public class PlayerFireProjectileCommand : ICommand
         Keys pressedKey = (Keys)metadata[0];
 
         // fire projectile according to equipped weapon
-        projectileManager.FireProjectile();
         player?.UseItem();
+        equippableManager?.UseEquippedItem();
     }
 
     public void UnExecute()

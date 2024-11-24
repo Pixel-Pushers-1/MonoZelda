@@ -1,7 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
-using MonoZelda.Controllers;
+﻿using MonoZelda.Controllers;
 using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters;
 
 namespace MonoZelda.Link.Projectiles;
 
@@ -10,27 +8,16 @@ public class ProjectileManager
     private CollisionController collisionController;
     private ProjectileFactory projectileFactory;
     private List<IProjectile> projectiles;
-
-    private readonly Dictionary<WeaponType, ProjectileType> weaponProjectileMap = new()
-    {
-        {WeaponType.Bow, ProjectileType.Arrow},
-        {WeaponType.Boomerang, ProjectileType.Boomerang},
-        {WeaponType.CandleBlue, ProjectileType.Fire },
-        {WeaponType.Bomb, ProjectileType.Bomb },
-    };
-
-    public WeaponType EquippedWeapon
-    {
-        get => PlayerState.EquippedWeapon;
-        private set => PlayerState.EquippedWeapon = value;
-    }
+    private bool BOOMERANG_ACTIVE;
+    private bool SWORD_BEAM_ACTIVE;
 
     public ProjectileManager(CollisionController collisionController)
     {
-        EquippedWeapon = WeaponType.None;
         projectiles = new List<IProjectile>();
         this.collisionController = collisionController;
         projectileFactory = new ProjectileFactory();
+        BOOMERANG_ACTIVE = false;
+        SWORD_BEAM_ACTIVE = false;
     }
 
     private bool HasRequiredResources(ProjectileType projectileType)
@@ -66,15 +53,6 @@ public class ProjectileManager
         }
     }
 
-    public void CycleWeapon()
-    {
-        EquippedWeapon = EquippedWeapon + 1;
-        if(EquippedWeapon == WeaponType.Bomb)
-        {
-            EquippedWeapon = WeaponType.None;
-        }
-    }
-
     public void UseSword()
     {
         IProjectile sword;
@@ -90,16 +68,8 @@ public class ProjectileManager
         projectiles.Add(sword);
     }
 
-    public void FireProjectile()
+    public void FireProjectile(ProjectileType projectileType)
     {
-        // check if player has equipped a weapon
-        if (PlayerState.EquippedWeapon == WeaponType.None)
-        {
-            return;
-        }
-
-        // create projectile
-        ProjectileType projectileType = weaponProjectileMap[PlayerState.EquippedWeapon];
         if (HasRequiredResources(projectileType))
         {
             DeductResources(projectileType);
