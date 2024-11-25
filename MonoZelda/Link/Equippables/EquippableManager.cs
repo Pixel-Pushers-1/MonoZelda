@@ -9,7 +9,7 @@ public class EquippableManager
 {
     private CollisionController collisionController;
     private ProjectileManager projectileManager;
-    private int CyclingIndex;
+    private int cyclingIndex;
     private bool isPaused;
     private readonly SwordEquippable swordEquippable;
 
@@ -29,6 +29,11 @@ public class EquippableManager
         private set => PlayerState.EquippedItem = value;
     }
 
+    public int CyclingIndex
+    {
+        set { cyclingIndex = value; }
+    }
+
     public bool IsPaused
     {
         set { isPaused = value; }
@@ -36,8 +41,7 @@ public class EquippableManager
 
     public EquippableManager(CollisionController collisionController)
     {
-        CyclingIndex = 0;
-        EquippedItem = EquippableType.None;
+        cyclingIndex = 0;
         this.collisionController = collisionController;
         projectileManager = new ProjectileManager(collisionController);
         swordEquippable = new SwordEquippable();
@@ -45,18 +49,17 @@ public class EquippableManager
 
     public void CycleEquippedUtility()
     {
-        List<EquippableType> equippables = PlayerState.EquippableInventory;
-        if ((isPaused) && (CyclingIndex <= equippables.Count))
+        InsertionOrderedList<EquippableType> equippables = PlayerState.EquippableInventory;
+        if ((isPaused) && (cyclingIndex <= equippables.Count))
         {
-            if (CyclingIndex != (equippables.Count))
+            if (cyclingIndex != (equippables.Count))
             {
-                EquippedItem = PlayerState.EquippableInventory[CyclingIndex++];
+                EquippedItem = PlayerState.EquippableInventory[cyclingIndex++];
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("In Here!");
                 EquippedItem = EquippableType.None;
-                CyclingIndex = 0;
+                cyclingIndex = 0;
             }    
         }
     }
@@ -69,7 +72,7 @@ public class EquippableManager
         }
         else
         {
-            equippableObjects[PlayerState.EquippedItem].Use(projectileManager);
+            equippableObjects[PlayerState.EquippedItem].Use(projectileManager,this);
         }
     }
 

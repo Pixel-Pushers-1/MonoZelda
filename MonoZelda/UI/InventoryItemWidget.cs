@@ -10,7 +10,8 @@ namespace MonoZelda.UI;
 
 internal class InventoryItemWidget : ScreenWidget
 { 
-    private int numItems;
+    private int rowItemCount;
+    private int rows;
     private const int SLOT_OFFSET_RIGHT = 92;
     private const int SLOT_OFFSET_DOWN = 72;
     private SpriteDict itemSelector;
@@ -46,7 +47,8 @@ internal class InventoryItemWidget : ScreenWidget
     public InventoryItemWidget(Screen screen, Point position) : base(screen,position)
     {
         // initialize formatting variables
-        numItems = 0;
+        rowItemCount = 0;
+        rows = 0;
         currentItem = PlayerState.EquippedItem;
         availableItemSprites = new();
         itemInventoryOffsetMap = new();
@@ -64,11 +66,11 @@ internal class InventoryItemWidget : ScreenWidget
     {
         foreach(var equippable in PlayerState.EquippableInventory)
         {
-            if(availableItemSprites.ContainsKey(equippable) == false)
+            if((equippable != EquippableType.None) && (availableItemSprites.ContainsKey(equippable) == false))
             {
                 // update numItems and availableInventorySlot
                 Point offset = GetEquippableOffset(equippable);
-                numItems++;
+                rowItemCount = rowItemCount + 1;
 
                 // add sprite of newItem to list of sprites
                 SpriteDict newItem = new SpriteDict(SpriteType.HUD, SpriteLayer.HUD + 1, WidgetLocation + offset);
@@ -81,34 +83,31 @@ internal class InventoryItemWidget : ScreenWidget
 
     private Point GetEquippableOffset(EquippableType equippable)
     {
-        Point offset;
-
-        if ((numItems != 0) && (numItems % 4 == 0))
+        if ((rowItemCount != 0) && (rowItemCount % 4 == 0))
         {
-            offset = new Point(0, SLOT_OFFSET_DOWN);
-        }
-        else
-        {
-            offset = new Point(SLOT_OFFSET_RIGHT * numItems,0);
+            rows = rows + 1;
+            rowItemCount = 0;
         }
 
-        return offset;    
+        Point offset = new Point(rowItemCount * SLOT_OFFSET_RIGHT, SLOT_OFFSET_DOWN * rows);
+        return offset;
     }
 
     private void UpdateSelectorPosition()
     {
         if (PlayerState.EquippedItem != EquippableType.None)
         {
-            itemSelector.Enabled = true;
             selectedItem.Enabled = true;
+            itemSelector.SetSprite("outline_red");
             itemSelector.Position = WidgetLocation + itemInventoryOffsetMap[PlayerState.EquippedItem];
             selectedItem.SetSprite(equippableSpriteMap[PlayerState.EquippedItem]);
             selectedItem.Position = WidgetLocation + equippableOffsetMap[PlayerState.EquippedItem] + SELECTED_POINT_OFFSET;
         }
         else
         {
-            itemSelector.Enabled = false;
             selectedItem.Enabled = false;
+            itemSelector.Position = WidgetLocation + itemInventoryOffsetMap[PlayerState.EquippedItem];
+            itemSelector.SetSprite("outline_blue");
         }
         
     }
@@ -120,7 +119,6 @@ internal class InventoryItemWidget : ScreenWidget
             equippable.Value.Position = WidgetLocation + itemInventoryOffsetMap[equippable.Key] + equippableOffsetMap[equippable.Key];
         }
     }
-
 
     public override void Update()
     {

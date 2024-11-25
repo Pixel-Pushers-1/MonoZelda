@@ -1,7 +1,5 @@
 using Microsoft.Xna.Framework;
-using MonoZelda.Commands.GameCommands;
 using MonoZelda.Link.Equippables;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace MonoZelda.Link;
@@ -15,7 +13,7 @@ public static class PlayerState
 
     private static int _health = INITIAL_HP;
 
-    public static List<EquippableType> EquippableInventory;
+    public static InsertionOrderedList<EquippableType> EquippableInventory;
 
     public static void Initialize()
     {
@@ -29,7 +27,7 @@ public static class PlayerState
         Rupees = INITIAL_RUPEES;
         Bombs = INITIAL_BOMBS;
         Keys = INITIAL_KEYS;
-        EquippableInventory = new List<EquippableType>();
+        EquippableInventory = new InsertionOrderedList<EquippableType>();
     }
 
     public static void ResetCandle()
