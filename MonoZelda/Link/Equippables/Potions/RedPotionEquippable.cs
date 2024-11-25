@@ -20,6 +20,7 @@ public class RedPotionEquippable : IEquippable
 
         // Update PlayerState and CyclingIndex
         PlayerState.EquippableInventory.Remove(EquippableType.RedPotion);
+        PlayerState.EquippableInventory.Add(EquippableType.BluePotion);
         PlayerState.EquippedItem = EquippableType.None;
         equippableManager.CyclingIndex = 0;
     }

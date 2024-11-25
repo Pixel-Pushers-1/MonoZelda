@@ -49,7 +49,7 @@ public class EquippableManager
 
     public void CycleEquippedUtility()
     {
-        InsertionOrderedList<EquippableType> equippables = PlayerState.EquippableInventory;
+        List<EquippableType> equippables = PlayerState.EquippableInventory;
         if ((isPaused) && (cyclingIndex <= equippables.Count))
         {
             if (cyclingIndex != (equippables.Count))

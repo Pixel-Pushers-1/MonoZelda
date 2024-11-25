@@ -47,8 +47,8 @@ internal class InventoryItemWidget : ScreenWidget
     public InventoryItemWidget(Screen screen, Point position) : base(screen,position)
     {
         // initialize formatting variables
-        rowItemCount = 0;
         rows = 0;
+        rowItemCount = 0;
         currentItem = PlayerState.EquippedItem;
         availableItemSprites = new();
         itemInventoryOffsetMap = new();
@@ -66,7 +66,7 @@ internal class InventoryItemWidget : ScreenWidget
     {
         foreach(var equippable in PlayerState.EquippableInventory)
         {
-            if((equippable != EquippableType.None) && (availableItemSprites.ContainsKey(equippable) == false))
+            if((availableItemSprites.ContainsKey(equippable) == false))
             {
                 // update numItems and availableInventorySlot
                 Point offset = GetEquippableOffset(equippable);
@@ -78,6 +78,22 @@ internal class InventoryItemWidget : ScreenWidget
                 availableItemSprites.Add(equippable, newItem);
                 itemInventoryOffsetMap.Add(equippable, offset);
             }
+        }
+    }
+
+    private void UpdateItemOrdering()
+    {
+        if (availableItemSprites.Count > PlayerState.EquippableInventory.Count)
+        {
+            rows = 0;
+            rowItemCount = 0;
+            itemInventoryOffsetMap.Clear();
+            availableItemSprites.Clear();
+            UpdateAvailableItems();
+        }
+        else
+        {
+            UpdateAvailableItems();
         }
     }
 
@@ -98,7 +114,7 @@ internal class InventoryItemWidget : ScreenWidget
         if (PlayerState.EquippedItem != EquippableType.None)
         {
             selectedItem.Enabled = true;
-            itemSelector.SetSprite("outline_red");
+            itemSelector.Enabled = true;
             itemSelector.Position = WidgetLocation + itemInventoryOffsetMap[PlayerState.EquippedItem];
             selectedItem.SetSprite(equippableSpriteMap[PlayerState.EquippedItem]);
             selectedItem.Position = WidgetLocation + equippableOffsetMap[PlayerState.EquippedItem] + SELECTED_POINT_OFFSET;
@@ -106,8 +122,7 @@ internal class InventoryItemWidget : ScreenWidget
         else
         {
             selectedItem.Enabled = false;
-            itemSelector.Position = WidgetLocation + itemInventoryOffsetMap[PlayerState.EquippedItem];
-            itemSelector.SetSprite("outline_blue");
+            itemSelector.Enabled = false;
         }
         
     }
@@ -122,7 +137,7 @@ internal class InventoryItemWidget : ScreenWidget
 
     public override void Update()
     {
-        UpdateAvailableItems();
+        UpdateItemOrdering();
         UpdateItemSpritePosition();
         UpdateSelectorPosition();
     }
