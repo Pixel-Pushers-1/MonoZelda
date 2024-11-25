@@ -8,8 +8,9 @@ using MonoZelda.Scenes;
 using MonoZelda.Sound;
 using MonoZelda.Link;
 using MonoZelda.UI;
-using System.Diagnostics;
 using MonoZelda.Save;
+using Microsoft.Xna.Framework.Input;
+
 
 namespace MonoZelda;
 
@@ -28,9 +29,7 @@ public class MonoZeldaGame : Game, ISaveable
 
     private GraphicsDeviceManager graphicsDeviceManager;
     private SpriteBatch spriteBatch;
-    private KeyboardController keyboardController;
-    private GamepadController gamepadController;
-    private MouseController mouseController;
+    private IController controller;
     private CommandManager commandManager;
     private SaveManager saveManager;
 
@@ -64,9 +63,15 @@ public class MonoZeldaGame : Game, ISaveable
         commandManager.ReplaceCommand(CommandType.QuickSaveCommand, new QuickSaveCommand(saveManager));
 
         // create controller objects
-        keyboardController = new KeyboardController(commandManager);
-        gamepadController = new GamepadController(commandManager, PlayerIndex.One);
-        mouseController = new MouseController(commandManager);
+        IController gamepadController = new GamepadController(commandManager, PlayerIndex.One);
+        if (GamePad.GetState(PlayerIndex.One).IsConnected) 
+        {
+            controller = gamepadController;
+        }
+        else 
+        {
+            controller = new KeyboardController(commandManager);
+        }
     }
 
     protected override void Initialize()
@@ -94,11 +99,8 @@ public class MonoZeldaGame : Game, ISaveable
     protected override void Update(GameTime gameTime)
     {
         GameTime = gameTime;
-        keyboardController.Update(gameTime);
-        gamepadController.Update(gameTime);
-        mouseController.Update(gameTime);
+        controller.Update(gameTime);
         scene.Update(gameTime);
-
         base.Update(gameTime);
     }
 
