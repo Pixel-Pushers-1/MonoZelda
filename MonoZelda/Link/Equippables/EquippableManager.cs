@@ -11,6 +11,7 @@ public class EquippableManager
     private ProjectileManager projectileManager;
     private int CyclingIndex;
     private const int NUM_EQUIPPABLES = 6;
+    private bool isPaused;
     private readonly SwordEquippable swordEquippable;
 
     private readonly Dictionary<EquippableType, IEquippable> equippableObjects = new()
@@ -27,6 +28,11 @@ public class EquippableManager
     {
         get => PlayerState.EquippedItem;
         private set => PlayerState.EquippedItem = value;
+    }
+
+    public bool IsPaused
+    {
+        set { isPaused = value; }
     }
 
     public EquippableManager(CollisionController collisionController)
@@ -54,7 +60,14 @@ public class EquippableManager
 
     public void UseEquippedItem()
     {
-        equippableObjects[PlayerState.EquippedItem].Use(projectileManager);
+        if (PlayerState.EquippedItem == EquippableType.None)
+        {
+            return;
+        }
+        else
+        {
+            equippableObjects[PlayerState.EquippedItem].Use(projectileManager);
+        }
     }
 
     public void UseSwordEquippable()

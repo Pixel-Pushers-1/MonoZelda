@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Link;
-using MonoZelda.Link.Projectiles;
+using MonoZelda.Link.Equippables;
 using MonoZelda.Sprites;
 using System.Collections.Generic;
 

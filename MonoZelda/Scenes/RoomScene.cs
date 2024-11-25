@@ -199,6 +199,8 @@ public class RoomScene : Scene
             commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand(equippableManager, playerSprite));
         }
 
+        // allow cycling of items since game is paused
+        equippableManager.IsPaused = paused;
     }
 
     public override void Update(GameTime gameTime)

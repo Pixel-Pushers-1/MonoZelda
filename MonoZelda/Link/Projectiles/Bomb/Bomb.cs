@@ -66,7 +66,6 @@ public class Bomb : IProjectile
         SoundManager.PlaySound("LOZ_Bomb_Drop", false);
         projectileDict = new SpriteDict(SpriteType.Projectiles, SpriteLayer.Projectiles, initialPosition.ToPoint());
         projectileDict.SetSprite("bomb");
-        this.collisionController = collisionController; 
     }
 
     public void Update()
@@ -99,6 +98,7 @@ public class Bomb : IProjectile
     private void Explode() {
         exploded = true;
         projectileCollidable = new PlayerProjectileCollidable(getCollisionRectangle(), ProjectileType.Bomb);
+        projectileCollidable.setProjectile(this);
         collisionController.AddCollidable(projectileCollidable);
         SoundManager.PlaySound("LOZ_Bomb_Blow", false);
         animationTimer = (float) projectileDict.SetSpriteOneshot("cloud_slow");

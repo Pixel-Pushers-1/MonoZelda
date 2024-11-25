@@ -13,7 +13,7 @@ namespace MonoZelda.UI
 
         public ScreenWidget(Screen screen, Point position)
         {
-            this.Screen = screen;
+            Screen = screen;
             this.position = position;
         }
 

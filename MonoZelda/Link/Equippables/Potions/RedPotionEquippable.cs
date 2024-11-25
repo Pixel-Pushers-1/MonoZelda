@@ -14,5 +14,6 @@ public class RedPotionEquippable : IEquippable
         SoundManager.PlaySound("LOZ_Drink_Potion", false);
         PlayerState.Health = PlayerState.MaxHealth;
         PlayerState.EquippableInventory.Remove(EquippableType.RedPotion);
+        PlayerState.EquippedItem = EquippableType.None;
     }
 }

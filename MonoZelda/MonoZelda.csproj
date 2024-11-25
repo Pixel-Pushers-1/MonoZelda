@@ -26,8 +26,10 @@
     <None Remove="Link\Projectiles\ProjectileManager.cs~RFea24d48.TMP" />
     <None Remove="Link\Projectiles\WoodenSword\WoodenSword.cs~RF169f651b.TMP" />
     <None Remove="Scenes\DungeonScene.cs~RFc12fbde.TMP" />
+    <None Remove="Scenes\InventoryScene.cs~RF1de48663.TMP" />
     <None Remove="Scenes\TransitionScene.cs~RF12d33335.TMP" />
     <None Remove="UI\ItemCountWidget.cs~RF1a90b5fe.TMP" />
+    <None Remove="UI\tpwsfh4j.xs0~" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
