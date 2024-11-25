@@ -18,7 +18,7 @@ namespace MonoZelda.Enemies
 
         public Enemy CreateEnemy(EnemyList enemyName, Point spawnPosition, ItemFactory itemFactory, bool hasKey)
         {
-            var enemyDict = new SpriteDict(SpriteType.Enemies, 0, new Point(0, 0));
+            var enemyDict = new SpriteDict(SpriteType.Enemies, SpriteLayer.Enemies, new Point(0, 0));
             var enemyType = Type.GetType($"MonoZelda.Enemies.EnemyClasses.{enemyName}");
             Enemy enemy = (Enemy)Activator.CreateInstance(enemyType);
             enemy.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasKey);

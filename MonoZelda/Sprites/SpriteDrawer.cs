@@ -56,7 +56,8 @@ internal static class SpriteDrawer
     {
         foreach (Drawable drawable in drawables)
         { 
-            if (DrawGizmos || !drawable.isGizmo) {
+            if (DrawGizmos || !drawable.isGizmo) 
+            {
                 drawable.iDrawable.Draw(spriteBatch);
             }
         }

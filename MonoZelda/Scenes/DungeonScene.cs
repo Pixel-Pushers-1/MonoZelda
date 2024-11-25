@@ -25,6 +25,7 @@ namespace MonoZelda.Scenes
         private ContentManager contentManager;
         private InventoryScene inventoryScene;
         private IDungeonRoom currentRoom;
+        private Effect effect;
         
         public bool isPaused { get; private set; }
         public string StartRoom { get; private set; }

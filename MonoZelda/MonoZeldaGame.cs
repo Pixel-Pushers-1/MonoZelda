@@ -9,6 +9,8 @@ using MonoZelda.Sound;
 using MonoZelda.Link;
 using MonoZelda.UI;
 using System.Diagnostics;
+using Microsoft.Xna.Framework.Content;
+using System;
 
 
 namespace MonoZelda;
@@ -32,7 +34,11 @@ public class MonoZeldaGame : Game
     private MouseController mouseController;
     private CommandManager commandManager;
 
+    public static Effect effect;
+
     private IScene scene;
+
+    private float flickerTime;
 
     public MonoZeldaGame()
     {
@@ -67,13 +73,18 @@ public class MonoZeldaGame : Game
         base.Initialize();
     }
 
-    SpriteFont testFont;
-
     protected override void LoadContent()
     {
         spriteBatch = new SpriteBatch(GraphicsDevice);
 
         TextureData.LoadTextures(Content, GraphicsDevice);
+        effect = Content.Load<Effect>("Shaders/LitSprite");
+
+        var numLineSegmentsParameter = effect.Parameters["num_line_segments"];
+        if(numLineSegmentsParameter != null)
+        {
+            numLineSegmentsParameter.SetValue(0);
+        }
 
         // Start menu goes first
         StartMenu();
@@ -90,6 +101,7 @@ public class MonoZeldaGame : Game
         }
 
         GameTime = gameTime;
+        flickerTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
         keyboardController.Update(gameTime);
         mouseController.Update(gameTime);
         scene.Update(gameTime);
@@ -103,7 +115,64 @@ public class MonoZeldaGame : Game
 
         SamplerState samplerState = new();
         samplerState.Filter = TextureFilter.Point;
-        spriteBatch.Begin(SpriteSortMode.Deferred, null, samplerState);
+
+        Matrix view = Matrix.Identity;
+
+        int width = GraphicsDevice.Viewport.Width;
+        int height = GraphicsDevice.Viewport.Height;
+        Matrix projection = Matrix.CreateOrthographicOffCenter(0, width, height, 0, 0, 1);
+
+        var VP = view * projection;
+
+        effect.Parameters["view_projection"].SetValue(VP);
+        var player_position = new Vector2(PlayerState.Position.X, height - PlayerState.Position.Y);
+        var posParameter = effect.Parameters["player_position"];
+        if(posParameter != null)
+            posParameter.SetValue(player_position);    
+
+        
+        var lightPositionsParameter = effect.Parameters["light_positions"];
+        if(lightPositionsParameter != null)
+        {
+            var testLights = new Vector3[4]
+            {
+                new Vector3(256, 64, 0),
+                new Vector3(768, 64, 0),
+                new Vector3(256, 640, 0),
+                new Vector3(768, 640, 0)
+            };
+
+            lightPositionsParameter.SetValue(testLights);
+        }
+
+        var lightColorsParameter = effect.Parameters["light_colors"];
+        if(lightColorsParameter != null)
+        {
+            var testColors = new Vector3[4];
+            for (int i = 0; i < testColors.Length; i++)
+            {
+                float intensity = 0.65f + 0.15f * (float)Math.Sin(flickerTime * 4.0f + i);
+                testColors[i] = new Vector3(1, 1, intensity);
+            }
+
+            lightColorsParameter.SetValue(testColors);
+        }
+
+        var lightActiveParameter = effect.Parameters["light_active"];
+        if(lightActiveParameter != null)
+        {
+            var testActive = new float[4] { 0, 0, 0, 0 };
+            lightActiveParameter.SetValue(testActive);
+        }
+
+        var numLightsParameter = effect.Parameters["num_lights"];
+        if(numLightsParameter != null)
+        {
+            numLightsParameter.SetValue(4);
+        }
+
+
+        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, samplerState, null, null, effect);
 
         // SpriteDrawer draws all drawables
         SpriteDrawer.Draw(spriteBatch, gameTime);
