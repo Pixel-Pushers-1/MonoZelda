@@ -2,10 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Dungeons;
-using MonoZelda.Link;
 using MonoZelda.Sprites;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace MonoZelda.UI;
 
@@ -17,6 +14,8 @@ internal class HUDMapWidget : ScreenWidget
     //consts
     private static readonly Point roomSpacing = new(32, 16);
     private static readonly Point compassMarkerOffset = new(192, 16);
+    private static readonly Point mapItemSpriteOffset = new(124,-348);
+    private static readonly Point compassItemSpriteOffset = new(108,-196);
 
     //static data
     private static bool mapEnabled;
@@ -27,6 +26,8 @@ internal class HUDMapWidget : ScreenWidget
     private SpriteDict map;
     private SpriteDict playerMarker;
     private SpriteDict compassMarker;
+    private SpriteDict compassItem;
+    private SpriteDict mapItem;
 
     public HUDMapWidget(Screen screen, Point position) : base(screen, position)
     {
@@ -42,6 +43,12 @@ internal class HUDMapWidget : ScreenWidget
         compassMarker = new(SpriteType.HUD, SpriteLayer.HUD + 1, WidgetLocation + compassMarkerOffset);
         compassMarker.SetSprite("map_marker_red_blinking");
         compassMarker.Enabled = compassMarkerEnabled;
+        compassItem = new(SpriteType.HUD, SpriteLayer.HUD + 1, WidgetLocation + mapItemSpriteOffset);
+        compassItem.SetSprite("compass");
+        compassItem.Enabled = compassMarkerEnabled;
+        mapItem = new(SpriteType.HUD, SpriteLayer.HUD + 1, WidgetLocation + compassItemSpriteOffset);
+        mapItem.SetSprite("map");
+        mapItem.Enabled = mapEnabled;
     }
 
     public override void Draw(SpriteBatch sb)
@@ -57,6 +64,8 @@ internal class HUDMapWidget : ScreenWidget
         map.Position = WidgetLocation;
         playerMarker.Position = WidgetLocation + playerMarkerOffset;
         compassMarker.Position = WidgetLocation + compassMarkerOffset;
+        compassItem.Position = WidgetLocation + compassItemSpriteOffset;
+        mapItem.Position = WidgetLocation + mapItemSpriteOffset;
     }
 
     public void SetPlayerMapMarker(Point? coord) {
@@ -72,11 +81,13 @@ internal class HUDMapWidget : ScreenWidget
     public static void SetCompassMarkerVisible(bool visible) {
         compassMarkerEnabled = visible;
         instance.compassMarker.Enabled = visible;
+        instance.compassItem.Enabled = visible; 
     }
 
     public static void SetMapVisible(bool visible) {
         mapEnabled = visible;
         instance.map.Enabled = visible;
+        instance.mapItem.Enabled = visible;
     }
 
     public static void Reset() {

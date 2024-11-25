@@ -11,7 +11,8 @@ namespace MonoZelda.UI;
 internal class InventoryItemWidget : ScreenWidget
 { 
     private int numItems;
-    private const int SLOT_OFFSET = 72;
+    private const int SLOT_OFFSET_RIGHT = 92;
+    private const int SLOT_OFFSET_DOWN = 72;
     private SpriteDict itemSelector;
     private SpriteDict selectedItem;
     private EquippableType currentItem;
@@ -84,11 +85,11 @@ internal class InventoryItemWidget : ScreenWidget
 
         if ((numItems != 0) && (numItems % 4 == 0))
         {
-            offset = new Point(0, SLOT_OFFSET);
+            offset = new Point(0, SLOT_OFFSET_DOWN);
         }
         else
         {
-            offset = new Point(SLOT_OFFSET * numItems,0);
+            offset = new Point(SLOT_OFFSET_RIGHT * numItems,0);
         }
 
         return offset;    
