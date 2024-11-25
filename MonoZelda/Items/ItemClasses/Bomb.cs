@@ -22,8 +22,8 @@ public class Bomb : Item
 
     public override void HandleCollision(CollisionController collisionController)
     {
-        PlayerState.EquippableInventory.Add(EquippableType.Bomb);
         PlayerState.AddBombs(1);
+        PlayerState.EquippableInventory.Add(EquippableType.Bomb);
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(collisionController);
     }

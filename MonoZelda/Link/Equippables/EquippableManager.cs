@@ -10,7 +10,6 @@ public class EquippableManager
     private CollisionController collisionController;
     private ProjectileManager projectileManager;
     private int CyclingIndex;
-    private const int NUM_EQUIPPABLES = 6;
     private bool isPaused;
     private readonly SwordEquippable swordEquippable;
 
@@ -47,14 +46,18 @@ public class EquippableManager
     public void CycleEquippedUtility()
     {
         List<EquippableType> equippables = PlayerState.EquippableInventory;
-        if (CyclingIndex < equippables.Count)
+        if ((isPaused) && (CyclingIndex <= equippables.Count))
         {
-            CyclingIndex = CyclingIndex + 1;
-            if (CyclingIndex == NUM_EQUIPPABLES)
+            if (CyclingIndex != (equippables.Count))
             {
-                CyclingIndex = 0;
+                EquippedItem = PlayerState.EquippableInventory[CyclingIndex++];
             }
-            EquippedItem = equippables[CyclingIndex - 1];
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("In Here!");
+                EquippedItem = EquippableType.None;
+                CyclingIndex = 0;
+            }    
         }
     }
 

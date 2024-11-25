@@ -98,9 +98,16 @@ internal class InventoryItemWidget : ScreenWidget
     {
         if (PlayerState.EquippedItem != EquippableType.None)
         {
+            itemSelector.Enabled = true;
+            selectedItem.Enabled = true;
             itemSelector.Position = WidgetLocation + itemInventoryOffsetMap[PlayerState.EquippedItem];
             selectedItem.SetSprite(equippableSpriteMap[PlayerState.EquippedItem]);
             selectedItem.Position = WidgetLocation + equippableOffsetMap[PlayerState.EquippedItem] + SELECTED_POINT_OFFSET;
+        }
+        else
+        {
+            itemSelector.Enabled = false;
+            selectedItem.Enabled = false;
         }
         
     }
