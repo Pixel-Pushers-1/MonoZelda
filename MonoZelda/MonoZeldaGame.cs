@@ -58,20 +58,7 @@ public class MonoZeldaGame : Game, ISaveable
         commandManager.ReplaceCommand(CommandType.ExitCommand, new ExitCommand(this));
         commandManager.ReplaceCommand(CommandType.StartGameCommand, new StartGameCommand(this));
         commandManager.ReplaceCommand(CommandType.ResetCommand, new ResetCommand(this));
-        commandManager.ReplaceCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand(this));
-        commandManager.ReplaceCommand(CommandType.QuickLoadCommand, new QuickLoadCommand(saveManager));
-        commandManager.ReplaceCommand(CommandType.QuickSaveCommand, new QuickSaveCommand(saveManager));
-
-        // create controller objects
-        IController gamepadController = new GamepadController(commandManager, PlayerIndex.One);
-        if (GamePad.GetState(PlayerIndex.One).IsConnected) 
-        {
-            controller = gamepadController;
-        }
-        else 
-        {
-            controller = new KeyboardController(commandManager);
-        }
+        commandManager.ReplaceCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand(this));    
     }
 
     protected override void Initialize()
@@ -98,6 +85,26 @@ public class MonoZeldaGame : Game, ISaveable
 
     protected override void Update(GameTime gameTime)
     {
+        if (controller is null) {
+            // create controller objects
+            if (GamePad.GetState(PlayerIndex.One).IsConnected) 
+            {
+                controller = new GamepadController(commandManager, PlayerIndex.One);
+
+            }
+            else 
+            {
+                controller = new KeyboardController(commandManager);
+            }
+        }
+        if (PlayerState.IsDead)
+        {
+            commandManager.Execute(CommandType.PlayerDeathCommand);
+            PlayerState.IsDead = false;
+            PlayerState.Initialize();
+
+        }
+
         GameTime = gameTime;
         controller.Update(gameTime);
         scene.Update(gameTime);
