@@ -76,6 +76,7 @@ namespace MonoZelda.Scenes
 
             //set player map marker
             inventoryScene.SetPlayerMapMarker(DungeonConstants.GetRoomCoordinate(roomName));
+            PlayerState.ResetCandle();
         }
 
         public void LoadRoom(string roomName)
@@ -126,11 +127,11 @@ namespace MonoZelda.Scenes
 
         private void ResetScene()
         {
+            // clear collidables and reset spriteDrawer
             collisionController.Clear();
             SpriteDrawer.Reset();
-            //reset playerStateParams
-            PlayerState.ResetCandle();
-           
+            
+            // unload active scene content
             activeScene.UnloadContent();
             
             // Complication due to SpriteDict getting cleared, need to re-init the UI

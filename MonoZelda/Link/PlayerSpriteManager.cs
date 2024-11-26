@@ -118,9 +118,7 @@ public class PlayerSpriteManager
         else {
             immobilityTimer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         }
-        playerSpriteDict.Position = playerPosition.ToPoint();
-        PlayerState.Position = playerPosition.ToPoint();
-        PlayerState.Direction = playerDirection;
+        playerSpriteDict.Position = PlayerState.Position;
     }
 
     public void PlayerDeath()

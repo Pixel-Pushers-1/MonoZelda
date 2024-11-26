@@ -28,6 +28,7 @@ public static class PlayerState
         Rupees = INITIAL_RUPEES;
         Bombs = INITIAL_BOMBS;
         Keys = INITIAL_KEYS;
+        EquippedItem = EquippableType.None;
         EquippableInventory = new List<EquippableType>();
     }
 
