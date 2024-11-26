@@ -12,6 +12,10 @@ public class CandleBlueEquippable : IEquippable
     public void Use(params object[] args)
     {
         ProjectileManager projectileManager = (ProjectileManager)args[0];
-        projectileManager.FireProjectile(ProjectileType.Fire);
+
+        if(PlayerState.IsCandleUsed == false)
+        {
+            projectileManager.FireProjectile(ProjectileType.Fire);
+        }
     }
 }

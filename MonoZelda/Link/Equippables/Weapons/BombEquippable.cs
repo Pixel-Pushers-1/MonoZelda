@@ -1,9 +1,4 @@
 ﻿using MonoZelda.Link.Projectiles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MonoZelda.Link.Equippables;
 
@@ -17,6 +12,17 @@ public class BombEquippable : IEquippable
     public void Use(params object[] args)
     {
         ProjectileManager projectileManager = (ProjectileManager)args[0];
-        projectileManager.FireProjectile(ProjectileType.Bomb);
+        EquippableManager equippableManager = (EquippableManager)args[1];   
+
+        if(PlayerState.Bombs != 0)
+        {
+            projectileManager.FireProjectile(ProjectileType.Bomb);
+        }
+        else
+        {
+            PlayerState.EquippableInventory.Remove(EquippableType.Bomb);
+            PlayerState.EquippedItem = 0;
+            equippableManager.CyclingIndex = 0;
+        }
     }
 }

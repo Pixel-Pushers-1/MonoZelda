@@ -7,48 +7,33 @@ public class ProjectileManager
 {
     private CollisionController collisionController;
     private ProjectileFactory projectileFactory;
-    private List<IProjectile> projectiles;
-    private bool BOOMERANG_ACTIVE;
-    private bool SWORD_BEAM_ACTIVE;
+    private Dictionary<ProjectileType, IProjectile> ActiveProjectiles;
 
+    private List<ProjectileType> SingleInstanceProjectiles = new()
+    {
+        {ProjectileType.Arrow},
+        {ProjectileType.Boomerang},
+    };
+    
     public ProjectileManager(CollisionController collisionController)
     {
-        projectiles = new List<IProjectile>();
-        this.collisionController = collisionController;
+        ActiveProjectiles = new Dictionary<ProjectileType, IProjectile>();
         projectileFactory = new ProjectileFactory();
-        BOOMERANG_ACTIVE = false;
-        SWORD_BEAM_ACTIVE = false;
+        this.collisionController = collisionController;
     }
 
-    private bool HasRequiredResources(ProjectileType projectileType)
+    private void DeductPlayerResources(ProjectileType projectileType)
     {
         switch (projectileType)
         {
             case ProjectileType.Arrow:
-            case ProjectileType.ArrowBlue:
-                return PlayerState.Rupees > 0;
-            case ProjectileType.Fire:
-                return !PlayerState.IsCandleUsed;
-            case ProjectileType.Bomb:
-                return PlayerState.Bombs > 0;
-            default:
-                return true;
-        }
-    }
-
-    private void DeductResources(ProjectileType projectileType)
-    {
-        switch (projectileType)
-        {
-            case ProjectileType.Arrow:
-            case ProjectileType.ArrowBlue:
                 PlayerState.Rupees--;
-                break;
-            case ProjectileType.Fire:
-                PlayerState.IsCandleUsed = true;
                 break;
             case ProjectileType.Bomb:
                 PlayerState.Bombs--;
+                break;
+            case ProjectileType.Fire:
+                PlayerState.IsCandleUsed = true;
                 break;
         }
     }
@@ -56,38 +41,51 @@ public class ProjectileManager
     public void UseSword()
     {
         IProjectile sword;
-        if(PlayerState.Health == PlayerState.MaxHealth)
+        if (PlayerState.Health == PlayerState.MaxHealth && ActiveProjectiles.ContainsKey(ProjectileType.WoodenSwordBeam) == false)
         {
             sword = projectileFactory.GetProjectileObject(ProjectileType.WoodenSwordBeam,collisionController);
+            ActiveProjectiles.Add(ProjectileType.WoodenSwordBeam, sword);
         }
         else
         {
             sword = projectileFactory.GetProjectileObject(ProjectileType.WoodenSword,collisionController);
+            ActiveProjectiles.Add(ProjectileType.WoodenSword, sword);
         }
         sword.Setup();
-        projectiles.Add(sword);
     }
 
     public void FireProjectile(ProjectileType projectileType)
     {
-        if (HasRequiredResources(projectileType))
+        if (SingleInstanceProjectiles.Contains(projectileType))
         {
-            DeductResources(projectileType);
+            if (ActiveProjectiles.ContainsKey(projectileType) == false)
+            {
+                IProjectile projectile = projectileFactory.GetProjectileObject(projectileType, collisionController);
+                ActiveProjectiles.Add(projectileType, projectile);
+                DeductPlayerResources(projectileType);
+                projectile.Setup();
+            }
+        }
+        else
+        {
             IProjectile projectile = projectileFactory.GetProjectileObject(projectileType, collisionController);
+            ActiveProjectiles.Add(projectileType, projectile);
             projectile.Setup();
-            projectiles.Add(projectile);
         }
     }
 
     public void Update()
     {
-        for (int i = 0; i < projectiles.Count; i++)
+        var Projectiles = new List<ProjectileType>(ActiveProjectiles.Keys);
+        
+        // loop over all active projectile objects
+        foreach(var projectile in Projectiles)
         {
-            IProjectile projectile = projectiles[i];
-            projectile.Update();
-            if (projectile.hasFinished())
+            IProjectile projectileInstance = ActiveProjectiles[projectile];
+            projectileInstance.Update();
+            if (projectileInstance.hasFinished())
             {
-                projectiles.Remove(projectile);
+                ActiveProjectiles.Remove(projectile);
             }
         }
     }

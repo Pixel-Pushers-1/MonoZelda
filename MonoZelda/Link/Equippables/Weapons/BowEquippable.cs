@@ -12,6 +12,10 @@ public class BowEquippable : IEquippable
     public void Use(params object[] args)
     {
         ProjectileManager projectileManager = (ProjectileManager)args[0];
-        projectileManager.FireProjectile(ProjectileType.Arrow);
+
+        if(PlayerState.Rupees > 0)
+        {
+            projectileManager.FireProjectile(ProjectileType.Arrow);
+        }
     }
 }

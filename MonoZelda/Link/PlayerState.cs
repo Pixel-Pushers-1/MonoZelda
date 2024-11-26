@@ -9,7 +9,7 @@ public static class PlayerState
 {
     private static readonly int INITIAL_HP = 6;
     private static readonly int INITIAL_RUPEES = 3;
-    private static readonly int INITIAL_BOMBS = 1;
+    private static readonly int INITIAL_BOMBS = 0;
     private static readonly int INITIAL_KEYS = 0;
 
     private static int _health = INITIAL_HP;
