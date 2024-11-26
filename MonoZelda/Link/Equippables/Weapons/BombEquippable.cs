@@ -12,17 +12,18 @@ public class BombEquippable : IEquippable
     public void Use(params object[] args)
     {
         ProjectileManager projectileManager = (ProjectileManager)args[0];
-        EquippableManager equippableManager = (EquippableManager)args[1];   
+        EquippableManager equippableManager = (EquippableManager)args[1];
 
-        if(PlayerState.Bombs != 0)
+        
+        if(PlayerState.Bombs > 0)
         {
             projectileManager.FireProjectile(ProjectileType.Bomb);
-        }
-        else
-        {
-            PlayerState.EquippableInventory.Remove(EquippableType.Bomb);
-            PlayerState.EquippedItem = 0;
-            equippableManager.CyclingIndex = 0;
+            if(PlayerState.Bombs == 0)
+            {
+                PlayerState.EquippableInventory.Remove(EquippableType.Bomb);
+                PlayerState.EquippedItem = 0;
+                equippableManager.CyclingIndex = 0;
+            }
         }
     }
 }

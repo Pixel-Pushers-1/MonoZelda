@@ -70,6 +70,7 @@ public class ProjectileManager
         {
             IProjectile projectile = projectileFactory.GetProjectileObject(projectileType, collisionController);
             ActiveProjectiles.Add(projectileType, projectile);
+            DeductPlayerResources(projectileType);
             projectile.Setup();
         }
     }
