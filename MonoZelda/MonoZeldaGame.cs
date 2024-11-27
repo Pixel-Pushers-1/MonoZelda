@@ -81,14 +81,6 @@ public class MonoZeldaGame : Game
 
     protected override void Update(GameTime gameTime)
     {
-        if (PlayerState.IsDead)
-        {
-            commandManager.Execute(CommandType.PlayerDeathCommand);
-            PlayerState.IsDead = false;
-            PlayerState.Initialize();
-
-        }
-
         GameTime = gameTime;
         keyboardController.Update(gameTime);
         mouseController.Update(gameTime);

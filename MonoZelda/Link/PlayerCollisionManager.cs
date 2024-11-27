@@ -3,6 +3,7 @@ using MonoZelda.Collision;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
+using MonoZelda.Events;
 using MonoZelda.Sound;
 using MonoZelda.Sprites;
 using System.Diagnostics;
@@ -45,6 +46,11 @@ public class PlayerCollisionManager
     public void Update()
     {
         UpdateBoundingBox();
+
+        if(PlayerState.Health <= 0)
+        { 
+            EventManager.TriggerLinkDeathAnimation();
+        }
 
         if (knockbackTimer > 0)
         {

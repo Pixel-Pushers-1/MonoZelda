@@ -14,4 +14,9 @@ public static class EventManager
     {
         LevelComplete?.Invoke();
     }
+
+    public static void TriggerLinkDeathAnimation()
+    {
+        LinkDeath?.Invoke();
+    }
 }

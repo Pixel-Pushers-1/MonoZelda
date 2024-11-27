@@ -27,37 +27,37 @@ namespace MonoZelda.Scenes
         private GraphicsDevice graphicsDevice;
         private bool isInventoryOpen = false;
 
-    public InventoryScene(GraphicsDevice gd, CommandManager commands)
-    {
-        // The Inventory starts mostly off-screen
-        Screen = new Screen() { Origin = new Point(0, 0) }; // Screen is helpfull for moving all the widgets at once
-        Widgets = new Dictionary<Type, IScreenWidget>();
-        graphicsDevice = gd;
-    }
+        public InventoryScene(GraphicsDevice gd, CommandManager commands)
+        {
+            // The Inventory starts mostly off-screen
+            Screen = new Screen() { Origin = new Point(0, 0) }; // Screen is helpfull for moving all the widgets at once
+            Widgets = new Dictionary<Type, IScreenWidget>();
+            graphicsDevice = gd;
+        }
 
-    public InventoryScene()
-    {
-    }
+        public InventoryScene()
+        {
+        }
 
-    public void LoadContent(ContentManager contentManager)
-    {
-        _spriteFont ??= contentManager.Load<SpriteFont>("Fonts/Basic");
+        public void LoadContent(ContentManager contentManager)
+        {
+            _spriteFont ??= contentManager.Load<SpriteFont>("Fonts/Basic");
 
-        Widgets.Add(typeof(HUDBackgroundWidget), new HUDBackgroundWidget(Screen, HUDBackgroundPosition));
-        Widgets.Add(typeof(HUDMapWidget), new HUDMapWidget(Screen, HUDMapPosition));
-        Widgets.Add(typeof(LifeWidget), new LifeWidget(Screen, LifePosition));
-        Widgets.Add(typeof(ItemCountWidget), new ItemCountWidget(_spriteFont, Screen, ItemCountPosition));
-        Widgets.Add(typeof(LevelTextWidget), new LevelTextWidget(_spriteFont, Screen, LevelTextPosition));
-        Widgets.Add(typeof(InventoryMapWidget), new InventoryMapWidget(Screen, InventoryMapPosition));
-        Widgets.Add(typeof(InventoryItemWidget), new InventoryItemWidget(Screen, InventoryPosition));
-    }
+            Widgets.Add(typeof(HUDBackgroundWidget), new HUDBackgroundWidget(Screen, HUDBackgroundPosition));
+            Widgets.Add(typeof(HUDMapWidget), new HUDMapWidget(Screen, HUDMapPosition));
+            Widgets.Add(typeof(LifeWidget), new LifeWidget(Screen, LifePosition));
+            Widgets.Add(typeof(ItemCountWidget), new ItemCountWidget(_spriteFont, Screen, ItemCountPosition));
+            Widgets.Add(typeof(LevelTextWidget), new LevelTextWidget(_spriteFont, Screen, LevelTextPosition));
+            Widgets.Add(typeof(InventoryMapWidget), new InventoryMapWidget(Screen, InventoryMapPosition));
+            Widgets.Add(typeof(InventoryItemWidget), new InventoryItemWidget(Screen, InventoryPosition));
+        }
 
-    public void LoadContent(ContentManager cm, IDungeonRoom room)
-    {
-        Widgets.Clear();
+        public void LoadContent(ContentManager cm, IDungeonRoom room)
+        {
+            Widgets.Clear();
 
-        LoadContent(cm);
-    }
+            LoadContent(cm);
+        }
 
         public void Update(GameTime gameTime)
         {

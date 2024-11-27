@@ -103,6 +103,7 @@ namespace MonoZelda.Scenes
         public override void Draw(SpriteBatch batch)
         {
             inventoryScene.Draw(batch);
+            activeScene.Draw(batch);
         }
 
         public override void LoadContent(ContentManager contentManager)
@@ -148,12 +149,14 @@ namespace MonoZelda.Scenes
 
         private void WallMasterGrabScene()
         {
-
+  
         }
 
         private void LinkDeathScene()
         {
-
+            var command = commandManager.GetCommand(CommandType.ResetCommand);
+            activeScene = new LinkDeathScene(command, graphicsDevice);
+            activeScene.LoadContent(contentManager);
         }
 
         public void ToggleInventory()
