@@ -99,7 +99,7 @@ public class PlayerCollisionManager
         if (invulnerabilityTimer > 0)
             return;
 
-        if (player.PlayerDirection  != collisionDirection)
+        if ((int)PlayerState.Direction + (int)collisionDirection != 0)
         {
             damageCommand.Execute();
             invulnerabilityTimer = INVULNERABILITY_TIME;

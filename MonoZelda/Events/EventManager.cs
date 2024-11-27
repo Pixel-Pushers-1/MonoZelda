@@ -19,4 +19,9 @@ public static class EventManager
     {
         LinkDeath?.Invoke();
     }
+
+    public static void TriggerWallMasterGrabAnimation()
+    {
+        WallmasterGrab?.Invoke();   
+    }
 }

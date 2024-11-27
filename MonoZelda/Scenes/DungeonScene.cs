@@ -10,6 +10,7 @@ using MonoZelda.Sprites;
 using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.UI;
 using MonoZelda.Events;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Scenes
 {
@@ -149,7 +150,10 @@ namespace MonoZelda.Scenes
 
         private void WallMasterGrabScene()
         {
-  
+            var startRoom = roomManager.LoadRoom(StartRoom);
+            var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
+            activeScene = new WallMasterGrabScene(startRoom, graphicsDevice);
+            activeScene.LoadContent(contentManager);
         }
 
         private void LinkDeathScene()

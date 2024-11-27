@@ -28,7 +28,9 @@
     <None Remove="Link\Projectiles\WoodenSword\WoodenSword.cs~RF169f651b.TMP" />
     <None Remove="Scenes\DungeonScene.cs~RFc12fbde.TMP" />
     <None Remove="Scenes\InventoryScene.cs~RF1de48663.TMP" />
+    <None Remove="Scenes\LinkDeathScene.cs~RF2a3a4bf9.TMP" />
     <None Remove="Scenes\TransitionScene.cs~RF12d33335.TMP" />
+    <None Remove="Scenes\WallMasterGrabScene.cs~RF2c4975f4.TMP" />
     <None Remove="UI\InventoryItemWidget.cs~RF1fce9354.TMP" />
     <None Remove="UI\ItemCountWidget.cs~RF1a90b5fe.TMP" />
     <None Remove="UI\tpwsfh4j.xs0~" />

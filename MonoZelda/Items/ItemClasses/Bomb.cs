@@ -22,8 +22,18 @@ public class Bomb : Item
 
     public override void HandleCollision(CollisionController collisionController)
     {
-        PlayerState.AddBombs(1);
-        PlayerState.EquippableInventory.Add(EquippableType.Bomb);
+        // add bomb to equippable inventory only if bomb has been removed
+        if(PlayerState.Bombs <= 0)
+        {
+            PlayerState.AddBombs(1);
+            PlayerState.EquippableInventory.Add(EquippableType.Bomb);
+        }
+        else
+        {
+            PlayerState.AddBombs(1);
+        }
+
+        // play sound and handle collision
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(collisionController);
     }

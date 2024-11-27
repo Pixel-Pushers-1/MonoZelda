@@ -17,8 +17,8 @@ public class LinkDeathScene : Scene
     private const string GameOverString = "Game Over";
     private const float DIRECTION_CHANGE_TIME = 0.1f;
     private const float ROTATING_TIME = 3f;
-    private const float KILL_LINK_TIME = 4f;
-    private const float GAME_OVER_DISPLAY_TIME = 7f;
+    private const float KILL_LINK_TIME = ROTATING_TIME + 1;
+    private const float GAME_OVER_DISPLAY_TIME = KILL_LINK_TIME + 3;
 
     // variables
     private float directionChangeTimer;
