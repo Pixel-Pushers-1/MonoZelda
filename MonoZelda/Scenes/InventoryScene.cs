@@ -18,6 +18,8 @@ namespace MonoZelda.Scenes
         private static readonly Point LevelTextPosition = new(10, 10);
         private static readonly Point InventoryMapPosition = new(528, -288);
         private static readonly Point InventoryPosition = new(516, -514);
+        private static readonly Point XpBarPosition = new(712, 44);
+
         private const int INVENTORY_OPEN_Y = 704;
         private const int INVENTORY_OPEN_SPEED = 16;
 
@@ -50,6 +52,7 @@ namespace MonoZelda.Scenes
             Widgets.Add(typeof(LevelTextWidget), new LevelTextWidget(_spriteFont, Screen, LevelTextPosition));
             Widgets.Add(typeof(InventoryMapWidget), new InventoryMapWidget(Screen, InventoryMapPosition));
             Widgets.Add(typeof(InventoryItemWidget), new InventoryItemWidget(Screen, InventoryPosition));
+            Widgets.Add(typeof(XpBarWidget), new XpBarWidget(Screen, XpBarPosition));
         }
 
         public void LoadContent(ContentManager cm, IDungeonRoom room)

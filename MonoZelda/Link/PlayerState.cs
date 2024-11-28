@@ -1,6 +1,10 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Link.Equippables;
 using System.Collections.Generic;
+using MonoZelda.Commands.GameCommands;
+using MonoZelda.Dungeons.Parser.Data;
+using MonoZelda.Link.Projectiles;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace MonoZelda.Link;
@@ -13,6 +17,9 @@ public static class PlayerState
     private static readonly int INITIAL_KEYS = 0;
 
     private static int _health = INITIAL_HP;
+
+    // (RoomName, Direction)
+    public static HashSet<(string, DoorDirection)> Keyring { get; set; } = new ();
 
     public static List<EquippableType> EquippableInventory;
 
@@ -65,6 +72,8 @@ public static class PlayerState
     public static void GetHealth() {
         Health = MathHelper.Clamp(Health + 2, 0, INITIAL_HP);
     }
+
+
 
     public static int Rupees { get; set; }
     public static int Bombs { get; set; }

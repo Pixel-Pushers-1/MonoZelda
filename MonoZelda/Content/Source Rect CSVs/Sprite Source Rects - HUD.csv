@@ -38,6 +38,7 @@ numbers_a,616,120,8,8,1,top left,10
 heart_empty,624,120,8,8,1,top left,10
 heart_half,632,120,8,8,1,top left,10
 heart_full,640,120,8,8,1,top left,10
+xpbar_full,432,80,60,5,1,top left,10
 map_marker_lime,528,128,8,4,1,top left,10
 map_marker_white,536,128,8,4,1,top left,10
 map_marker_red,544,128,8,4,1,top left,10

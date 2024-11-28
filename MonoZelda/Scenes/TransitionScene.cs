@@ -2,8 +2,10 @@
 using Microsoft.Xna.Framework.Content;
 using MonoZelda.Commands;
 using MonoZelda.Dungeons;
+using MonoZelda.Dungeons.Dungeon1;
 using MonoZelda.Link;
 using MonoZelda.Sprites;
+using MonoZelda.Tiles;
 using System.Collections.Generic;
 
 namespace MonoZelda.Scenes;
@@ -72,6 +74,12 @@ public class TransitionScene : Scene
 
         foreach (var nextDoorSpawn in nextRoom.GetDoors())
         {
+            // Apply KeyRing to doors
+            if (PlayerState.Keyring.Contains((nextDoorSpawn.RoomName, nextDoorSpawn.Direction)))
+            {
+                nextDoorSpawn.Type = nextDoorSpawn.Type.ToOpened();
+            }
+
             CreateSpriteDict(nextDoorSpawn.Type.ToString(), nextDoorSpawn.Position + DungeonConstants.adjacentTransitionRoomSpawnPoints[TransitionDirection], SpriteLayer.DoorLayer);
         }
 

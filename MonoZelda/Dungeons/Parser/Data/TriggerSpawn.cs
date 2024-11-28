@@ -6,7 +6,7 @@ namespace MonoZelda.Dungeons
 {
     public class TriggerSpawn : RoomContent<TriggerType>
     {
-        public TriggerSpawn(Point position, TriggerType type) : base(position, type)
+        public TriggerSpawn(Point position, TriggerType type, string room) : base(position, type, room)
         {
         }
     }
