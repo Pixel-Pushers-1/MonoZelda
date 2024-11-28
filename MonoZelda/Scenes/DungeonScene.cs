@@ -152,7 +152,7 @@ namespace MonoZelda.Scenes
         {
             var startRoom = roomManager.LoadRoom(StartRoom);
             var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
-            activeScene = new WallMasterGrabScene(startRoom, graphicsDevice);
+            activeScene = new WallMasterGrabScene(currentRoom.RoomSprite.ToString(), startRoom, command, graphicsDevice);
             activeScene.LoadContent(contentManager);
         }
 

@@ -7,6 +7,7 @@ using MonoZelda.Commands;
 using MonoZelda.Items;
 using MonoZelda.Link;
 using MonoZelda.Sound;
+using MonoZelda.Events;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {
@@ -191,14 +192,12 @@ namespace MonoZelda.Enemies.EnemyClasses
                     spawned = false;
                     if (grabbed)
                     {
-                        //might need to use a different type of transition here, idk what it is in game
-                        commandManager.Execute(CommandType.RoomTransitionCommand, "Room1", Link.Direction.Down);
+                        EventManager.TriggerWallMasterGrabAnimation();
                     }
                 }
                 else if (timer >= 2.9)
                 {
                     StateMachine.ChangeDirection(returnDirection);
-                    // if link is grabbed animation should start here
                 }
                 else if (spawned)
                 {

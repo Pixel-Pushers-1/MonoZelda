@@ -125,7 +125,7 @@ public class MonoZeldaGame : Game
         if (scene is MainMenuScene)
         {
             SoundManager.StopSound("LOZ_Intro");
-            LoadDungeon("Room1");
+            LoadDungeon("Room12");
         }
     }
 
