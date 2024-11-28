@@ -28,7 +28,7 @@ namespace MonoZelda.UI
             { EquippableType.RedPotion, "potion_red" }
         };
 
-        public ItemCountWidget(SpriteFont spriteFont, Screen screen, Point position, bool isPaused) : base(screen, position)
+        public ItemCountWidget(SpriteFont spriteFont, Screen screen, Point position) : base(screen, position)
         {
             font = spriteFont;
 
