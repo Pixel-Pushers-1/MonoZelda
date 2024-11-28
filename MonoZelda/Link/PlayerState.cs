@@ -104,7 +104,8 @@ public static class PlayerState
         while (XP >= GetXPToLevelUp()) 
         {
             XP -= GetXPToLevelUp(); 
-            Level++; 
+            Level++;
+            Health = MathHelper.Clamp(Health + 1, 0, MaxHealth);
             Debug.WriteLine($"Level Up! New Level: {Level}");
         }
         Debug.WriteLine($"XP: {XP}");

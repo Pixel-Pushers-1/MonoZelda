@@ -36,7 +36,7 @@ public class XPOrb : Item
 
     public override void HandleCollision(CollisionController collisionController)
     {
-        PlayerState.AddXP(10);
+        PlayerState.AddXP(20);
         SoundManager.PlaySound("LOZ_orb", false);
 
 
