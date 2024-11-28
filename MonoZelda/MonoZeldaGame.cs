@@ -132,7 +132,7 @@ public class MonoZeldaGame : Game
 
     public void LoadDungeon(string roomName)
     {
-        LoadScene(new SceneManager(roomName, GraphicsDevice, commandManager));
+        LoadScene(new DungeonSceneManager(roomName, GraphicsDevice, commandManager));
     }
 
     public void ResetGame()

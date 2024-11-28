@@ -11,7 +11,7 @@ namespace MonoZelda.Scenes
     internal class MarioLevelTransitionScene : Scene
     {
         private readonly GraphicsDevice gd;
-        private readonly SceneManager scene;
+        private readonly DungeonSceneManager scene;
         private readonly IDungeonRoom room;
         private readonly ICommand loadCommand;
 
@@ -20,7 +20,7 @@ namespace MonoZelda.Scenes
 
         private int delay;
 
-        public MarioLevelTransitionScene(SceneManager scene, IDungeonRoom room, ICommand loadCommand, GraphicsDevice gd)
+        public MarioLevelTransitionScene(DungeonSceneManager scene, IDungeonRoom room, ICommand loadCommand, GraphicsDevice gd)
         {
             this.scene = scene;
             this.gd = gd;
@@ -30,7 +30,7 @@ namespace MonoZelda.Scenes
 
         public override void LoadContent(ContentManager contentManager)
         {
-            if (room.RoomName == SceneManager.MARIO_ROOM)
+            if (room.RoomName == DungeonSceneManager.MARIO_ROOM)
             {
                 EnterMarioScene();
             }

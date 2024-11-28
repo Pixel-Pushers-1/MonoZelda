@@ -11,14 +11,14 @@ namespace MonoZelda.Scenes
     {
         private IDungeonRoom room;
         private GraphicsDevice gd;
-        private SceneManager scene;
+        private DungeonSceneManager scene;
 
         private BlankSprite leftCurtain;
         private BlankSprite rightCurtain;
 
         private int delay;
 
-        public EnterDungeonScene(SceneManager scene, IDungeonRoom room, GraphicsDevice gd)
+        public EnterDungeonScene(DungeonSceneManager scene, IDungeonRoom room, GraphicsDevice gd)
         {
             this.scene = scene;
             this.room = room;

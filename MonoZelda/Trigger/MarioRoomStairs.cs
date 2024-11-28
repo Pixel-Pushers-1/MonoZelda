@@ -35,7 +35,7 @@ public class MarioRoomStairsTrigger : TriggerCollidable, IGameUpdate, IDisposabl
     {
         if (lastDirection != 0 && direction != lastDirection)
         {
-            transitionCommand.Execute(SceneManager.MARIO_ROOM, direction);
+            transitionCommand.Execute(DungeonSceneManager.MARIO_ROOM, direction);
             OnTrigger -= MarioRoomStairs;
         }
         

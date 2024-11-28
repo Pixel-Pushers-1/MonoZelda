@@ -14,7 +14,7 @@ using MonoZelda.Sound;
 
 namespace MonoZelda.Scenes
 {
-    public class SceneManager : Scene
+    public class DungeonSceneManager : Scene
     {
         public static readonly string MARIO_ROOM = "Room18";
         public static readonly string MARIO_ENTRANCE_ROOM = "Room17";
@@ -31,7 +31,7 @@ namespace MonoZelda.Scenes
         public string StartRoom { get; private set; }
         private IScene activeScene;
 
-        public SceneManager(string startRoom, GraphicsDevice graphicsDevice, CommandManager commandManager)
+        public DungeonSceneManager(string startRoom, GraphicsDevice graphicsDevice, CommandManager commandManager)
         {
             this.graphicsDevice = graphicsDevice;
             roomManager = new DungeonManager();

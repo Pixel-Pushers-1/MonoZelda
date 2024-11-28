@@ -8,11 +8,11 @@ namespace MonoZelda.Commands.GameCommands
 {
     public class RoomTransitionCommand : ICommand
     {
-        private SceneManager dungeonScene;
+        private DungeonSceneManager dungeonScene;
 
         public RoomTransitionCommand() { }
 
-        public RoomTransitionCommand(SceneManager dungeonScene)
+        public RoomTransitionCommand(DungeonSceneManager dungeonScene)
         {
             this.dungeonScene = dungeonScene;
         }
