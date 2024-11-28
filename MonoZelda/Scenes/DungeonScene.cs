@@ -113,6 +113,7 @@ namespace MonoZelda.Scenes
 
             // We begin by revealing the the first room
             currentRoom = roomManager.LoadRoom(StartRoom);
+            currentRoom.SpawnPoint = DungeonConstants.DungeonEnteranceSpawnPoint;
             activeScene = new EnterDungeonScene(this, currentRoom, graphicsDevice);
             activeScene.LoadContent(contentManager);
 
