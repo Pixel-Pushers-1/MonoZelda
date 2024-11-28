@@ -1,10 +1,7 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Link.Equippables;
 using System.Collections.Generic;
-using MonoZelda.Commands.GameCommands;
 using MonoZelda.Dungeons.Parser.Data;
-using MonoZelda.Link.Projectiles;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace MonoZelda.Link;

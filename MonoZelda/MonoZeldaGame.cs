@@ -9,6 +9,7 @@ using MonoZelda.Sound;
 using MonoZelda.Link;
 using MonoZelda.UI;
 using System.Diagnostics;
+using MonoZelda.Events;
 
 
 namespace MonoZelda;
@@ -131,15 +132,17 @@ public class MonoZeldaGame : Game
 
     public void LoadDungeon(string roomName)
     {
-        LoadScene(new DungeonScene(roomName, GraphicsDevice, commandManager));
+        LoadScene(new SceneManager(roomName, GraphicsDevice, commandManager));
     }
 
     public void ResetGame()
     {
+        EventManager.ResetHandlers();
         SoundManager.ClearSoundDictionary();
         HUDMapWidget.Reset();
         InventoryMapWidget.Reset();
         PlayerState.Initialize();
+        SpriteDrawer.Reset();
         LoadScene(new MainMenuScene(GraphicsDevice));
     }
 }

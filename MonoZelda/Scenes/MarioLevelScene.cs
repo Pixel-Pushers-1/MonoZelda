@@ -50,7 +50,7 @@ namespace MonoZelda.Scenes
         {
             exit.OnTrigger -= Exit;
             commandManager.Execute(CommandType.RoomTransitionCommand, 
-                new object[] { DungeonScene.MARIO_ENTRANCE_ROOM, direction });
+                new object[] { SceneManager.MARIO_ENTRANCE_ROOM, direction });
         }
 
         public override void Update(GameTime gameTime)

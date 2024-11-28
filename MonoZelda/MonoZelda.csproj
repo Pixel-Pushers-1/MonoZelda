@@ -26,6 +26,7 @@
     <None Remove="Link\Projectiles\ProjectileManager.cs~RF194c239a.TMP" />
     <None Remove="Link\Projectiles\ProjectileManager.cs~RFea24d48.TMP" />
     <None Remove="Link\Projectiles\WoodenSword\WoodenSword.cs~RF169f651b.TMP" />
+    <None Remove="Scenes\151dofzs.dpj~" />
     <None Remove="Scenes\DungeonScene.cs~RFc12fbde.TMP" />
     <None Remove="Scenes\InventoryScene.cs~RF1de48663.TMP" />
     <None Remove="Scenes\LinkDeathScene.cs~RF2a3a4bf9.TMP" />

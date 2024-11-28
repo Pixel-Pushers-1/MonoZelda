@@ -1,27 +1,46 @@
-﻿using System;
+﻿using MonoZelda.Commands.GameCommands;
+using System;
 
 namespace MonoZelda.Events;
 
 public static class EventManager
 {
-    // Static events
-    public static event Action LevelComplete;
-    public static event Action WallmasterGrab;
-    public static event Action LinkDeath;
+    private static EventHandlers handlers = new EventHandlers();
+
+    public static void ResetHandlers() {
+        handlers = new EventHandlers();
+    }
+
 
     // Trigger method for level completion
     public static void TriggerLevelCompletionAnimation()
     {
-        LevelComplete?.Invoke();
+        handlers.TriggerLevelCompletionAnimation();
+    }
+
+    public static void RegisterLevelCompletionAnimation(Scenes.SceneManager dungenScene)
+    {
+        handlers.LevelComplete += dungenScene.LevelCompleteScene;
     }
 
     public static void TriggerLinkDeathAnimation()
     {
-        LinkDeath?.Invoke();
+        handlers.TriggerLinkDeathAnimation();
+    }
+
+    public static void RegisterLinkDeathAnimation(Scenes.SceneManager dungenScene)
+    {
+        handlers.LinkDeath += dungenScene.LinkDeathScene;
     }
 
     public static void TriggerWallMasterGrabAnimation()
     {
-        WallmasterGrab?.Invoke();   
+        handlers.TriggerWallMasterGrabAnimation();
+    }
+
+
+    public static void RegisterWallMasterGrabAnimation(Scenes.SceneManager dungenScene)
+    {
+        handlers.WallmasterGrab += dungenScene.WallMasterGrabScene;
     }
 }

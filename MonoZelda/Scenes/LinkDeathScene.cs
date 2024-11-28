@@ -13,7 +13,7 @@ namespace MonoZelda.Scenes;
 public class LinkDeathScene : Scene
 {
     // constants
-    private static readonly Point RED_BACKGROUND_SIZE = new Point(192*4, 112*4);
+    private static readonly Point RED_BACKGROUND_SIZE = new Point(192*4 + 8, 112*4 + 8);
     private const string GameOverString = "Game Over";
     private const float DIRECTION_CHANGE_TIME = 0.1f;
     private const float ROTATING_TIME = 3f;
@@ -65,12 +65,12 @@ public class LinkDeathScene : Scene
         spriteFont ??= contentManager.Load<SpriteFont>("Fonts/Basic");
         Center = new Point((graphicsDevice.Viewport.Width / 2)  - 128, (graphicsDevice.Viewport.Height / 2) + 16);
 
-        // create FakeLink
-        FakeLink = new SpriteDict(SpriteType.Player, SpriteLayer.Triforce, PlayerState.Position);
+        // create FakeLink and border
+        FakeLink = new SpriteDict(SpriteType.Player, SpriteLayer.HUD, PlayerState.Position);
         FakeLink.SetSprite($"standing_{DirectionStringMap[FakeLinkDirection]}");
 
         // create black and red backgrounds
-        RedBackground = new BlankSprite(SpriteLayer.Triforce - 1, DungeonConstants.BackgroundPosition, RED_BACKGROUND_SIZE, Color.Red);
+        RedBackground = new BlankSprite(SpriteLayer.HUD - 1, DungeonConstants.BackgroundPosition - new Point(8,8), RED_BACKGROUND_SIZE, Color.Red);
         BlackBackground = new BlankSprite(SpriteLayer.HUD + 1, DungeonConstants.DungeonPosition, new Point(graphicsDevice.Viewport.Width,graphicsDevice.Viewport.Height), Color.Black);
         BlackBackground.Enabled = false;
 
@@ -108,12 +108,12 @@ public class LinkDeathScene : Scene
         else if(sceneTimer < GAME_OVER_DISPLAY_TIME)
         {
             BlackBackground.Enabled = true;
-            RedBackground.Unregister();
-            FakeLink.Unregister();
             displayString = true;
         }
         else
         {
+            RedBackground.Unregister();
+            FakeLink.Unregister();
             BlackBackground.Unregister();
             resetGameCommand.Execute();
         }

@@ -14,7 +14,7 @@ using MonoZelda.Sound;
 
 namespace MonoZelda.Scenes
 {
-    public class DungeonScene : Scene
+    public class SceneManager : Scene
     {
         public static readonly string MARIO_ROOM = "Room18";
         public static readonly string MARIO_ENTRANCE_ROOM = "Room17";
@@ -31,7 +31,7 @@ namespace MonoZelda.Scenes
         public string StartRoom { get; private set; }
         private IScene activeScene;
 
-        public DungeonScene(string startRoom, GraphicsDevice graphicsDevice, CommandManager commandManager)
+        public SceneManager(string startRoom, GraphicsDevice graphicsDevice, CommandManager commandManager)
         {
             this.graphicsDevice = graphicsDevice;
             roomManager = new DungeonManager();
@@ -42,10 +42,10 @@ namespace MonoZelda.Scenes
             // Start the player near the entrance
             PlayerState.Initialize();
 
-            // Subscribe to special in-game events
-            EventManager.LevelComplete += LevelCompleteScene;
-            EventManager.WallmasterGrab += WallMasterGrabScene;
-            EventManager.LinkDeath += LinkDeathScene;
+            // Regsiter events
+            EventManager.RegisterLevelCompletionAnimation(this);
+            EventManager.RegisterWallMasterGrabAnimation(this);
+            EventManager.RegisterLinkDeathAnimation(this);
 
             // create inventory scene
             inventoryScene = new InventoryScene(graphicsDevice, commandManager);
@@ -140,7 +140,7 @@ namespace MonoZelda.Scenes
             inventoryScene.LoadContent(contentManager, currentRoom);
         }
 
-        private void LevelCompleteScene()
+        public void LevelCompleteScene()
         {
             var startRoom = roomManager.LoadRoom(StartRoom);
             var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
@@ -148,7 +148,7 @@ namespace MonoZelda.Scenes
             activeScene.LoadContent(contentManager);
         }
 
-        private void WallMasterGrabScene()
+        public void WallMasterGrabScene()
         {
             var startRoom = roomManager.LoadRoom(StartRoom);
             var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
@@ -156,7 +156,7 @@ namespace MonoZelda.Scenes
             activeScene.LoadContent(contentManager);
         }
 
-        private void LinkDeathScene()
+        public void LinkDeathScene()
         {
             var command = commandManager.GetCommand(CommandType.ResetCommand);
             activeScene = new LinkDeathScene(command, graphicsDevice);

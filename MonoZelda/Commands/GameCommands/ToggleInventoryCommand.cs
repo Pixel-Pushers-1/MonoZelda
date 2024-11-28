@@ -4,13 +4,13 @@ namespace MonoZelda.Commands.GameCommands;
 
 internal class ToggleInventoryCommand : ICommand
 {
-    private readonly DungeonScene dungeonScene;
+    private readonly SceneManager dungeonScene;
     
     public ToggleInventoryCommand()
     {
     }
     
-    public ToggleInventoryCommand(DungeonScene dungeonScene)
+    public ToggleInventoryCommand(SceneManager dungeonScene)
     {
         this.dungeonScene = dungeonScene;
     }

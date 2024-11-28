@@ -48,7 +48,8 @@ public class PlayerCollisionManager
         UpdateBoundingBox();
 
         if(PlayerState.Health <= 0)
-        { 
+        {
+            player.DisablePlayerSprite();
             EventManager.TriggerLinkDeathAnimation();
         }
 
