@@ -150,7 +150,7 @@ public class RoomScene : Scene
         var intersectors = new List<Vector4>(100);
         var roomColliderRects = room.GetStaticRoomColliders();
         var height = graphicsDevice.Viewport.Height;
-        foreach (var rect in roomColliderRects)
+        foreach (var rect in roomColliderRects.Take(1))
         {
             var collidable = new StaticRoomCollidable(rect);
             collisionController.AddCollidable(collidable);
@@ -160,13 +160,9 @@ public class RoomScene : Scene
             // intersectors.Add(new Vector4(rect.X + rect.Width, height - rect.Y, rect.X, height - (rect.Y + rect.Height))); // Top-Right to Bottom-Left
 
             // Insert top left and bottom right corners of the rectangle
-            intersectors.Add(new Vector4(rect.X, height - rect.Y, rect.X + rect.Width, height - (rect.Y + rect.Height))); // left
+            intersectors.Add(new Vector4(rect.X, height - rect.Y, rect.Width, rect.Height)); // left
         }
-
-        // one segment accross the top of the dungeon wall
-        intersectors.Add(new Vector4(0, height - 128, graphicsDevice.Viewport.Width, height - 128)); // top
-        intersectors.Add(new Vector4(0, height - 192, graphicsDevice.Viewport.Width, height - 192)); // bottom
-
+        
         var arrayIntersectors = intersectors.Take(75).ToArray();
         var parameter = MonoZeldaGame.effect.Parameters["line_segments"];
         if (parameter != null)

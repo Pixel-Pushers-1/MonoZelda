@@ -86,6 +86,13 @@ public class MonoZeldaGame : Game
             numLineSegmentsParameter.SetValue(0);
         }
 
+        var lineSegmentsParameter = effect.Parameters["line_segments"];
+        if(lineSegmentsParameter != null)
+        {
+            var testSegments = new Vector4[0];
+            lineSegmentsParameter.SetValue(testSegments);
+        }
+
         // Start menu goes first
         StartMenu();
     }
@@ -171,6 +178,7 @@ public class MonoZeldaGame : Game
             numLightsParameter.SetValue(4);
         }
 
+        effect.Techniques[0].Passes[0].Apply();
 
         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, samplerState, null, null, effect);
 
