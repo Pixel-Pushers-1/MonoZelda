@@ -5,22 +5,23 @@ using System.Collections.Generic;
 
 namespace MonoZelda.Dungeons
 {
-    internal class DungeonRoom : IDungeonRoom
+    [Serializable]
+    public class DungeonRoom : IDungeonRoom
     {
-        private List<DoorSpawn> doors;
-        private List<Rectangle> roomColliders;
-        private List<Rectangle> boundaryColliders;        
-        private List<ItemSpawn> itemSpawns;
-        private List<EnemySpawn> enemySpawns;
-        private List<TriggerSpawn> triggers;
+        public List<DoorSpawn> doors { get; set; }
+        public List<Rectangle> roomColliders { get; set; }
+        public List<Rectangle> boundaryColliders { get; set; }
+        public List<ItemSpawn> itemSpawns { get; set; }
+        public List<EnemySpawn> enemySpawns { get; set; }
+        public List<TriggerSpawn> triggers { get; set; }
 
         public string RoomName { get; private set; }
         public Dungeon1Sprite RoomSprite { get; private set; }
         public Point SpawnPoint { get; set; }
 
-        public DungeonRoom(string name, Dungeon1Sprite roomSprite)
+        public DungeonRoom(string roomName, Dungeon1Sprite roomSprite)
         {
-            RoomName = name;
+            RoomName = roomName;
             RoomSprite = roomSprite;
 
             doors = new List<DoorSpawn>();

@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Items;
+using System;
 
 namespace MonoZelda.Dungeons
 {
+    [Serializable]
     public class ItemSpawn
     {
         public Point Position { get; set; }

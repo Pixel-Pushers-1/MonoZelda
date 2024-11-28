@@ -10,10 +10,11 @@ using MonoZelda.Sprites;
 using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.UI;
 using MonoZelda.Events;
+using MonoZelda.Save;
 
 namespace MonoZelda.Scenes
 {
-    public class DungeonScene : Scene
+    public class DungeonScene : Scene, ISaveable
     {
         public static readonly string MARIO_ROOM = "Room18";
         public static readonly string MARIO_ENTRANCE_ROOM = "Room17";
@@ -24,6 +25,7 @@ namespace MonoZelda.Scenes
         private CommandManager commandManager;
         private ContentManager contentManager;
         private InventoryScene inventoryScene;
+        private SaveManager saveManager;
         private IDungeonRoom currentRoom;
         
         public bool isPaused { get; private set; }
@@ -53,7 +55,7 @@ namespace MonoZelda.Scenes
             commandManager.ReplaceCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand(this));
             commandManager.ReplaceCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand(this));
             commandManager.ReplaceCommand(CommandType.PlayerEnemyCollisionCommand,
-                new PlayerEnemyCollisionCommand(commandManager));
+                new PlayerEnemyCollisionCommand(commandManager));           
         }
 
         public void TransitionRoom(string roomName, Direction transitionDirection)
@@ -71,11 +73,11 @@ namespace MonoZelda.Scenes
             {
                 activeScene = new TransitionScene(currentRoom, nextRoom, command, transitionDirection);
             }
-            
-            activeScene.LoadContent(contentManager);
 
             //set player map marker
             inventoryScene.SetPlayerMapMarker(DungeonConstants.GetRoomCoordinate(roomName));
+
+            activeScene.LoadContent(contentManager);
         }
 
         public void LoadRoom(string roomName)
@@ -111,8 +113,12 @@ namespace MonoZelda.Scenes
 
             // We begin by revealing the the first room
             currentRoom = roomManager.LoadRoom(StartRoom);
+            currentRoom.SpawnPoint = DungeonConstants.DungeonEnteranceSpawnPoint;
             activeScene = new EnterDungeonScene(this, currentRoom, graphicsDevice);
             activeScene.LoadContent(contentManager);
+
+            //set player map marker
+            inventoryScene.SetPlayerMapMarker(DungeonConstants.GetRoomCoordinate(StartRoom));
         }
 
         public override void Update(GameTime gameTime)
@@ -159,6 +165,25 @@ namespace MonoZelda.Scenes
         {
             isPaused = inventoryScene.ToggleInventory();
             (activeScene as RoomScene)?.SetPaused(isPaused);
+        }
+
+        public void Save(SaveState save)
+        {
+            save.RoomName = currentRoom.RoomName;
+            PlayerState.Save(save);
+            roomManager.Save(save);
+        }
+
+        public void Load(SaveState save)
+        {
+            // Hack to prevent PlayerState from gettin changed.
+            commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());
+            commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
+
+            currentRoom = save.Rooms[save.RoomName];
+            PlayerState.Position = currentRoom.SpawnPoint;
+            roomManager.Load(save);
+            PlayerState.Load(save);
         }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using MonoZelda.Link;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace MonoZelda.Dungeons;
 
@@ -17,6 +18,8 @@ public static class DungeonConstants
     public static readonly Point BackgroundPosition = DungeonPosition + new Point(128, 128);
 
     public static Point RoomPosition => DungeonPosition + Margin;
+
+    public static Point DungeonEnteranceSpawnPoint = DungeonPosition + new Point(512, 512);
 
     public static readonly Point[] DoorPositions = new Point[]
     {
