@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin ../../../../../../Downloads/LOZ_orb.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:../../../../../../Downloads/LOZ_orb.wav;Sound/LOZ_orb.wav
+
 #begin Fonts/Basic.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

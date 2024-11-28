@@ -6,7 +6,7 @@ using MonoZelda.Sprites;
 using MonoZelda.Dungeons;
 using MonoZelda.Link;
 using System.Diagnostics;
-
+using MonoZelda.Sound;
 namespace MonoZelda.Enemies
 {
     public class EnemyStateMachine
@@ -104,7 +104,6 @@ namespace MonoZelda.Enemies
             Random r = new Random();
             var selection = r.Next(101);
             var item = ItemList.Triforce;
-            var xp = ItemList.XPOrb;
             if (hasItem)
             {
                 item = ItemList.Key;
@@ -135,8 +134,6 @@ namespace MonoZelda.Enemies
                 itemFactory.CreateItem(new ItemSpawn(new Point(pos.X - 16, pos.Y - 32),item),true);
                 itemSpawned = true;
             }
-            //drop xp
-            itemFactory.CreateItem(new ItemSpawn(new Point(pos.X, pos.Y), xp), true);
         }
         
         public Point Update(Enemy enemy, Point position)
@@ -166,6 +163,7 @@ namespace MonoZelda.Enemies
             {
                 animationTimer += dt;
                 keyDict.Enabled = false;
+                var xp = ItemList.XPOrb;
                 if (animationTimer >= 0.5)
                 {
                     enemySpriteDict.Enabled = false;
@@ -174,6 +172,8 @@ namespace MonoZelda.Enemies
                     {
                         DropItem(position, enemy);
                     }
+                    itemFactory.CreateItem(new ItemSpawn(new Point(position.X, position.Y), xp), true);
+
                 }
             }
             else
