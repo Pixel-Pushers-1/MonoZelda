@@ -11,8 +11,14 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Tiles\Stairs\**" />
+    <EmbeddedResource Remove="Tiles\Stairs\**" />
+    <None Remove="Tiles\Stairs\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Collision\Collidables\PlayerProjectileCollidable.cs~RFf93dd20.TMP" />
     <None Remove="Commands\GameCommands\PlayerCycleEquippableCommand.cs~RF1a972e8c.TMP" />
+    <None Remove="Dungeons\Parser\Data\DoorSpawn.cs~RF32b91219.TMP" />
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
     <None Remove="Items\ItemClasses\Bow.cs~RF1cd52d4c.TMP" />
@@ -30,6 +36,8 @@
     <None Remove="Scenes\DungeonScene.cs~RFc12fbde.TMP" />
     <None Remove="Scenes\InventoryScene.cs~RF1de48663.TMP" />
     <None Remove="Scenes\LinkDeathScene.cs~RF2a3a4bf9.TMP" />
+    <None Remove="Scenes\SceneManager.cs~RF31ba86e4.TMP" />
+    <None Remove="Scenes\SceneManager.cs~RF321cc623.TMP" />
     <None Remove="Scenes\TransitionScene.cs~RF12d33335.TMP" />
     <None Remove="Scenes\WallMasterGrabScene.cs~RF2c4975f4.TMP" />
     <None Remove="UI\InventoryItemWidget.cs~RF1fce9354.TMP" />
@@ -75,9 +83,6 @@
     <None Update="Content\Sprites\tiles_dungeon1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Tiles\Stairs\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />

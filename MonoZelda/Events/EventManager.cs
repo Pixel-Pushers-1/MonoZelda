@@ -18,7 +18,7 @@ public static class EventManager
         handlers.TriggerLevelCompletionAnimation();
     }
 
-    public static void RegisterLevelCompletionAnimation(Scenes.DungeonSceneManager dungenScene)
+    public static void RegisterLevelCompletionAnimation(Scenes.SceneManager dungenScene)
     {
         handlers.LevelComplete += dungenScene.LevelCompleteScene;
     }
@@ -28,7 +28,7 @@ public static class EventManager
         handlers.TriggerLinkDeathAnimation();
     }
 
-    public static void RegisterLinkDeathAnimation(Scenes.DungeonSceneManager dungenScene)
+    public static void RegisterLinkDeathAnimation(Scenes.SceneManager dungenScene)
     {
         handlers.LinkDeath += dungenScene.LinkDeathScene;
     }
@@ -39,7 +39,7 @@ public static class EventManager
     }
 
 
-    public static void RegisterWallMasterGrabAnimation(Scenes.DungeonSceneManager dungenScene)
+    public static void RegisterWallMasterGrabAnimation(Scenes.SceneManager dungenScene)
     {
         handlers.WallmasterGrab += dungenScene.WallMasterGrabScene;
     }

@@ -85,7 +85,7 @@ public class LinkDeathScene : Scene
         {
             batch.DrawString(spriteFont, GameOverString, Center.ToVector2(), Color.White);
         }
-}
+    }
 
     public override void Update(GameTime gameTime)
     {

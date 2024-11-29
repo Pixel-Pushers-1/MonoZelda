@@ -6,11 +6,11 @@ namespace MonoZelda.Commands.GameCommands
 {
     internal class LoadRoomCommand : ICommand
     {
-        private DungeonSceneManager dungeonScene;
+        private SceneManager dungeonScene;
 
         public LoadRoomCommand() { }
 
-        public LoadRoomCommand(DungeonSceneManager dungeonScene)
+        public LoadRoomCommand(SceneManager dungeonScene)
         {
             this.dungeonScene = dungeonScene;
         }

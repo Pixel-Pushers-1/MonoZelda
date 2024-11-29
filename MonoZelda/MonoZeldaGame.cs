@@ -8,9 +8,7 @@ using MonoZelda.Scenes;
 using MonoZelda.Sound;
 using MonoZelda.Link;
 using MonoZelda.UI;
-using System.Diagnostics;
 using MonoZelda.Events;
-
 
 namespace MonoZelda;
 
@@ -21,6 +19,14 @@ public enum GameState
     Reset,
     Quit,
     None
+}
+
+public enum GameType
+{
+    classic,
+    infiniteEasy,
+    infiniteMedium,
+    infiniteHard,
 }
 
 public class MonoZeldaGame : Game
@@ -126,13 +132,13 @@ public class MonoZeldaGame : Game
         if (scene is MainMenuScene)
         {
             SoundManager.StopSound("LOZ_Intro");
-            LoadDungeon("Room1");
+            LoadDungeon("RoomInfinite", GameType.infiniteEasy);
         }
     }
 
-    public void LoadDungeon(string roomName)
+    public void LoadDungeon(string startRoom, GameType gameMode)
     {
-        LoadScene(new DungeonSceneManager(roomName, GraphicsDevice, commandManager));
+        LoadScene(new SceneManager(gameMode, startRoom, GraphicsDevice, commandManager));
     }
 
     public void ResetGame()
@@ -142,7 +148,6 @@ public class MonoZeldaGame : Game
         HUDMapWidget.Reset();
         InventoryMapWidget.Reset();
         PlayerState.Initialize();
-        SpriteDrawer.Reset();
         LoadScene(new MainMenuScene(GraphicsDevice));
     }
 }
