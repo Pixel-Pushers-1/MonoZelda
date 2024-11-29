@@ -36,7 +36,9 @@ public enum CommandType
     ToggleInventoryCommand,
     PlayerProjectileDoorCollisionCommand,
     PlayerDeathCommand,
-    None
+    QuickSaveCommand,
+    QuickLoadCommand,
+    None,
 }
 
 public class CommandManager
@@ -72,6 +74,8 @@ public class CommandManager
         AddCommand(CommandType.ToggleGizmosCommand, new ToggleGizmosCommand());
         AddCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand());
         AddCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand());
+        AddCommand(CommandType.QuickSaveCommand, new QuickSaveCommand());
+        AddCommand(CommandType.QuickLoadCommand, new QuickLoadCommand());
     }
 
     public void Execute(CommandType commandType, params object[] metadata)

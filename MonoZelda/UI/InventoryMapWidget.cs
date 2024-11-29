@@ -17,7 +17,7 @@ internal class InventoryMapWidget : ScreenWidget
 
     //static data
     private static Point playerMarkerOffset = (Point) DungeonConstants.GetRoomCoordinate("Room1") * roomSpacing + new Point(2, 11);
-    private static HashSet<Point> discoveredRooms = new();
+    private static HashSet<Point> discoveredRooms => PlayerState.DiscoveredRooms;
 
     //instance vars
     private SpriteDict playerMarker;

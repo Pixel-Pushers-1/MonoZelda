@@ -26,7 +26,7 @@ public class Map : Item
 
     public override void HandleCollision(CollisionController collisionController)
     {
-        HUDMapWidget.SetMapVisible(true);
+        PlayerState.HasMap = true;
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(collisionController);
     }

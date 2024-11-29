@@ -8,6 +8,8 @@ using MonoZelda.Scenes;
 using MonoZelda.Sound;
 using MonoZelda.Link;
 using MonoZelda.UI;
+using System.Diagnostics;
+using MonoZelda.Save;
 
 namespace MonoZelda;
 
@@ -20,7 +22,7 @@ public enum GameState
     None
 }
 
-public class MonoZeldaGame : Game
+public class MonoZeldaGame : Game, ISaveable
 {
     public static GameTime GameTime { get; private set; }
 
@@ -29,6 +31,7 @@ public class MonoZeldaGame : Game
     private KeyboardController keyboardController;
     private MouseController mouseController;
     private CommandManager commandManager;
+    private SaveManager saveManager;
 
     private IScene scene;
 
@@ -41,6 +44,9 @@ public class MonoZeldaGame : Game
         // create Command Manager
         commandManager = new CommandManager();
 
+        // create Save Manager
+        saveManager = new SaveManager(this);
+
         // initialize soundManager
         SoundManager.Initialize(Content);
 
@@ -48,7 +54,9 @@ public class MonoZeldaGame : Game
         commandManager.ReplaceCommand(CommandType.ExitCommand, new ExitCommand(this));
         commandManager.ReplaceCommand(CommandType.StartGameCommand, new StartGameCommand(this));
         commandManager.ReplaceCommand(CommandType.ResetCommand, new ResetCommand(this));
-        commandManager.ReplaceCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand(this));    
+        commandManager.ReplaceCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand(this));
+        commandManager.ReplaceCommand(CommandType.QuickLoadCommand, new QuickLoadCommand(saveManager));
+        commandManager.ReplaceCommand(CommandType.QuickSaveCommand, new QuickSaveCommand(saveManager));
 
         // create controller objects
         keyboardController = new KeyboardController(commandManager);
@@ -123,7 +131,7 @@ public class MonoZeldaGame : Game
         if (scene is MainMenuScene)
         {
             SoundManager.StopSound("LOZ_Intro");
-            LoadDungeon("Room15");
+            LoadDungeon("Room1");
         }
     }
 
@@ -138,7 +146,25 @@ public class MonoZeldaGame : Game
         HUDMapWidget.Reset();
         InventoryMapWidget.Reset();
         PlayerState.Initialize();
-        SpriteDrawer.Reset();
         LoadScene(new MainMenuScene(GraphicsDevice));
+    }
+
+    public void Save(SaveState save)
+    {
+        if(scene is DungeonScene dungeonScene)
+        {
+            dungeonScene.Save(save);
+        }
+    }
+
+    public void Load(SaveState save)
+    {
+        SoundManager.ClearSoundDictionary();
+        HUDMapWidget.Reset();
+
+        var loadDungeon = new DungeonScene(save.RoomName, GraphicsDevice, commandManager);
+        loadDungeon.Load(save);
+
+        LoadScene(loadDungeon);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
+using MonoZelda.Link;
 using MonoZelda.Sound;
 using MonoZelda.UI;
 
@@ -22,7 +23,7 @@ public class Compass : Item
 
     public override void HandleCollision(CollisionController collisionController)
     {
-        HUDMapWidget.SetCompassMarkerVisible(true);
+        PlayerState.HasCompass = true;
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(collisionController);
     }
