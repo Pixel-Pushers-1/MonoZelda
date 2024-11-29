@@ -18,6 +18,9 @@ public enum CommandType
     StartGameCommand,
     LoadRoomCommand,
     RoomTransitionCommand,
+    LevelCompleteAnimationCommand,
+    LinkDeathAnimationCommand,
+    WallmasterGrabAnimationCommand,
     MuteCommand,
     PlayerItemCollisionCommand,
     PlayerEnemyCollisionCommand,
@@ -52,6 +55,9 @@ public class CommandManager
         AddCommand(CommandType.StartGameCommand, new StartGameCommand());
         AddCommand(CommandType.LoadRoomCommand, new LoadRoomCommand());
         AddCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand());
+        AddCommand(CommandType.LevelCompleteAnimationCommand, new LevelCompleteAnimationCommand());
+        AddCommand(CommandType.LinkDeathAnimationCommand, new LinkDeathAnimationCommand());
+        AddCommand(CommandType.WallmasterGrabAnimationCommand, new WallMasterGrabAnimationCommand());
         AddCommand(CommandType.MuteCommand, new MuteCommand());
         AddCommand(CommandType.PlayerItemCollisionCommand, new PlayerItemCollisionCommand());
         AddCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand());

@@ -9,8 +9,6 @@ using MonoZelda.Link;
 using MonoZelda.Sprites;
 using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.UI;
-using MonoZelda.Events;
-using MonoZelda.Sound;
 
 namespace MonoZelda.Scenes
 {
@@ -42,19 +40,17 @@ namespace MonoZelda.Scenes
             // Start the player near the entrance
             PlayerState.Initialize();
 
-            // Regsiter events
-            EventManager.RegisterLevelCompletionAnimation(this);
-            EventManager.RegisterWallMasterGrabAnimation(this);
-            EventManager.RegisterLinkDeathAnimation(this);
-
             // create inventory scene
             inventoryScene = new InventoryScene(graphicsDevice, commandManager);
 
+            // replace required command
+            commandManager.ReplaceCommand(CommandType.LevelCompleteAnimationCommand, new LevelCompleteAnimationCommand(this));
+            commandManager.ReplaceCommand(CommandType.LinkDeathAnimationCommand, new LinkDeathAnimationCommand(this));
+            commandManager.ReplaceCommand(CommandType.WallmasterGrabAnimationCommand, new WallMasterGrabAnimationCommand(this));
             commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this));
             commandManager.ReplaceCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand(this));
             commandManager.ReplaceCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand(this));
-            commandManager.ReplaceCommand(CommandType.PlayerEnemyCollisionCommand,
-                new PlayerEnemyCollisionCommand(commandManager));
+            commandManager.ReplaceCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand(commandManager));
         }
 
         public void TransitionRoom(string roomName, Direction transitionDirection)

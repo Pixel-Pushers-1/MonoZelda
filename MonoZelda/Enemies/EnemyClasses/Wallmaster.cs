@@ -7,7 +7,6 @@ using MonoZelda.Commands;
 using MonoZelda.Items;
 using MonoZelda.Link;
 using MonoZelda.Sound;
-using MonoZelda.Events;
 
 namespace MonoZelda.Enemies.EnemyClasses
 {

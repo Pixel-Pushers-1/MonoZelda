@@ -8,9 +8,6 @@ using MonoZelda.Scenes;
 using MonoZelda.Sound;
 using MonoZelda.Link;
 using MonoZelda.UI;
-using System.Diagnostics;
-using MonoZelda.Events;
-
 
 namespace MonoZelda;
 
@@ -126,7 +123,7 @@ public class MonoZeldaGame : Game
         if (scene is MainMenuScene)
         {
             SoundManager.StopSound("LOZ_Intro");
-            LoadDungeon("Room1");
+            LoadDungeon("Room15");
         }
     }
 
@@ -137,7 +134,6 @@ public class MonoZeldaGame : Game
 
     public void ResetGame()
     {
-        EventManager.ResetHandlers();
         SoundManager.ClearSoundDictionary();
         HUDMapWidget.Reset();
         InventoryMapWidget.Reset();
