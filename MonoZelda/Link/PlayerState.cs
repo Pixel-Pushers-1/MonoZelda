@@ -1,11 +1,8 @@
 using Microsoft.Xna.Framework;
-using MonoZelda.Commands.GameCommands;
 using MonoZelda.Dungeons.Parser.Data;
-using MonoZelda.Link.Projectiles;
 using MonoZelda.Save;
 using MonoZelda.Link.Equippables;
 using System.Collections.Generic;
-using MonoZelda.Dungeons.Parser.Data;
 using System.Diagnostics;
 
 namespace MonoZelda.Link;
@@ -16,18 +13,13 @@ public static class PlayerState
     private static readonly int INITIAL_RUPEES = 3;
     private static readonly int INITIAL_BOMBS = 0;
     private static readonly int INITIAL_KEYS = 0;
-
     private static int _health = INITIAL_HP;
-    
+
+    public static List<EquippableType> EquippableInventory;
 
     // (RoomName, Direction)
     public static HashSet<(string, DoorDirection)> Keyring { get; set; } = new ();
-
     public static HashSet<Point> DiscoveredRooms { get; set; } = new();
-
-
-
-    public static List<EquippableType> EquippableInventory;
 
     public static void Initialize()
     {
@@ -41,7 +33,6 @@ public static class PlayerState
         Rupees = INITIAL_RUPEES;
         Bombs = INITIAL_BOMBS;
         Keys = INITIAL_KEYS;
-        EquippedProjectile = ProjectileType.None;
         HasMap = false;
         HasCompass = false;
         Keyring = new();
@@ -106,7 +97,7 @@ public static class PlayerState
     public static void Save(SaveState save)
     {
         save.MaxHealth = MaxHealth;
-        save.EquipedProjectile = EquippedProjectile;
+        save.EquippableInventory = EquippableInventory;
         save.HasBoomerang = HasBoomerang;
         save.ObtainedTriforce = ObtainedTriforce;
         save.Health = Health;
@@ -122,7 +113,7 @@ public static class PlayerState
     public static void Load(SaveState save)
     {
         MaxHealth = save.MaxHealth;
-        EquippedProjectile = save.EquipedProjectile;
+        EquippableInventory = save.EquippableInventory;
         HasBoomerang = save.HasBoomerang;
         ObtainedTriforce = save.ObtainedTriforce;
         Health = save.Health;

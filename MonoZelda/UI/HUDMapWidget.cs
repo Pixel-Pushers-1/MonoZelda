@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Dungeons;
+using MonoZelda.Link;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.UI;
