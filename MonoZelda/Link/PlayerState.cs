@@ -70,8 +70,6 @@ public static class PlayerState
         Health = MathHelper.Clamp(Health + 2, 0, INITIAL_HP);
     }
 
-
-
     public static int Rupees { get; set; }
     public static int Bombs { get; set; }
     public static int Keys { get; set; }

@@ -22,9 +22,6 @@ public class PlayerUseEquippableCommand : ICommand
 
     public void Execute(params object[] metadata)
     {
-        Keys pressedKey = (Keys)metadata[0];
-
-        // fire projectile according to equipped weapon
         player?.UseItem();
         equippableManager?.UseEquippedItem();
     }

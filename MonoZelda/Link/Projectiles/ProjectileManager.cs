@@ -38,6 +38,21 @@ public class ProjectileManager
         }
     }
 
+    private bool HasRequiredResources(ProjectileType projectileType)
+    {
+        switch (projectileType)
+        {
+            case ProjectileType.Arrow:
+                return PlayerState.Rupees > 0;
+            case ProjectileType.Bomb:
+                return PlayerState.Bombs > 0;
+            case ProjectileType.Fire:
+                return !PlayerState.IsCandleUsed;
+            default:
+                return true;
+        }
+    }
+
     public void UseSword()
     {
         IProjectile sword;
@@ -58,7 +73,7 @@ public class ProjectileManager
     {
         if (SingleInstanceProjectiles.Contains(projectileType))
         {
-            if (ActiveProjectiles.ContainsKey(projectileType) == false)
+            if (HasRequiredResources(projectileType) && ActiveProjectiles.ContainsKey(projectileType) == false)
             {
                 IProjectile projectile = projectileFactory.GetProjectileObject(projectileType, collisionController);
                 ActiveProjectiles.Add(projectileType, projectile);
@@ -68,10 +83,13 @@ public class ProjectileManager
         }
         else
         {
-            IProjectile projectile = projectileFactory.GetProjectileObject(projectileType, collisionController);
-            ActiveProjectiles.Add(projectileType, projectile);
-            DeductPlayerResources(projectileType);
-            projectile.Setup();
+            if (HasRequiredResources(projectileType))
+            {
+                IProjectile projectile = projectileFactory.GetProjectileObject(projectileType, collisionController);
+                ActiveProjectiles.Add(projectileType, projectile);
+                DeductPlayerResources(projectileType);
+                projectile.Setup();
+            }
         }
     }
 
