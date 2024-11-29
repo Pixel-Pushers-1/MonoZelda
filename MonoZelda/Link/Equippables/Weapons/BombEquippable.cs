@@ -14,16 +14,12 @@ public class BombEquippable : IEquippable
         ProjectileManager projectileManager = (ProjectileManager)args[0];
         EquippableManager equippableManager = (EquippableManager)args[1];
 
-        
-        if(PlayerState.Bombs > 0)
+        projectileManager.FireProjectile(ProjectileType.Bomb);
+        if(PlayerState.Bombs == 0)
         {
-            projectileManager.FireProjectile(ProjectileType.Bomb);
-            if(PlayerState.Bombs == 0)
-            {
-                PlayerState.EquippableInventory.Remove(EquippableType.Bomb);
-                PlayerState.EquippedItem = 0;
-                equippableManager.CyclingIndex = 0;
-            }
+            PlayerState.EquippableInventory.Remove(EquippableType.Bomb);
+            PlayerState.EquippedItem = 0;
+            equippableManager.CyclingIndex = 0;
         }
     }
 }

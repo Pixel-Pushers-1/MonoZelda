@@ -37,6 +37,8 @@ public class KeyboardController : IController
             {new (Keys.None, false), CommandType.PlayerStandingCommand},
             {new (Keys.I, true), CommandType.ToggleInventoryCommand},
             {new (Keys.Escape, true), CommandType.ToggleInventoryCommand},
+            {new (Keys.F5, true), CommandType.QuickSaveCommand},
+            {new (Keys.F9, true), CommandType.QuickLoadCommand},
         };
     }
 

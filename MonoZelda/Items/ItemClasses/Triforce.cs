@@ -1,12 +1,8 @@
-﻿using MonoZelda.Sprites;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
-using MonoZelda.Sound;
 using MonoZelda.Link;
 using MonoZelda.Dungeons;
-using MonoZelda.Collision;
 using System;
-using MonoZelda.Events;
 
 namespace MonoZelda.Items.ItemClasses;
 
@@ -42,6 +38,6 @@ public class Triforce : Item
         itemManager.RemoveRoomSpawnItem(itemSpawn);
 
         // call the end game envent
-        EventManager.TriggerLevelCompletionAnimation();
+        itemManager.TriggerLevelCompleteAnimation();
     }
 }

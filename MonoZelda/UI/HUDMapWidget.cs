@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Dungeons;
+using MonoZelda.Link;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.UI;
@@ -61,6 +62,9 @@ internal class HUDMapWidget : ScreenWidget
 
     public override void Update()
     {
+        SetCompassMarkerVisible(PlayerState.HasCompass);
+        SetMapVisible(PlayerState.HasMap);
+
         map.Position = WidgetLocation;
         playerMarker.Position = WidgetLocation + playerMarkerOffset;
         compassMarker.Position = WidgetLocation + compassMarkerOffset;
@@ -78,13 +82,13 @@ internal class HUDMapWidget : ScreenWidget
         }
     }
 
-    public static void SetCompassMarkerVisible(bool visible) {
+    private void SetCompassMarkerVisible(bool visible) {
         compassMarkerEnabled = visible;
         instance.compassMarker.Enabled = visible;
         instance.compassItem.Enabled = visible; 
     }
 
-    public static void SetMapVisible(bool visible) {
+    private void SetMapVisible(bool visible) {
         mapEnabled = visible;
         instance.map.Enabled = visible;
         instance.mapItem.Enabled = visible;

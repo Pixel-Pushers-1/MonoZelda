@@ -17,6 +17,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Collision\Collidables\PlayerProjectileCollidable.cs~RFf93dd20.TMP" />
+    <None Remove="Commands\GameCommands\LinkDeathAnimationCommand.cs~RF33a921e9.TMP" />
     <None Remove="Commands\GameCommands\PlayerCycleEquippableCommand.cs~RF1a972e8c.TMP" />
     <None Remove="Dungeons\Parser\Data\DoorSpawn.cs~RF32b91219.TMP" />
     <None Remove="Icon.ico" />

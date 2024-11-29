@@ -16,7 +16,6 @@ using System.Linq;
 using MonoZelda.Trigger;
 using MonoZelda.Sound;
 using MonoZelda.Tiles.Doors;
-using MonoZelda.Dungeons.Dungeon1;
 
 namespace MonoZelda.Scenes;
 
@@ -80,13 +79,15 @@ public class RoomScene : Scene
         playerSprite.SetPlayerSpriteDict(playerSpriteDict);
 
         //create player and player collision manager
+        var linkDeathAnimationCommand = commandManager.GetCommand(CommandType.LinkDeathAnimationCommand);
         var takeDamageCommand = new PlayerTakeDamageCommand(playerSprite);
         PlayerCollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50));
         collisionController.AddCollidable(playerHitbox);
-        playerCollision = new PlayerCollisionManager(playerSprite, playerHitbox, collisionController, takeDamageCommand);
+        playerCollision = new PlayerCollisionManager(playerSprite, playerHitbox, collisionController, linkDeathAnimationCommand, takeDamageCommand);
 
         // create itemFactory and spawn Items
-        itemManager = new ItemManager(room.GetItemSpawns(), enemies, playerCollision);
+        var levelCompleteAnimationCommand = commandManager.GetCommand(CommandType.LevelCompleteAnimationCommand);
+        itemManager = new ItemManager(levelCompleteAnimationCommand, room.GetItemSpawns(), enemies, playerCollision);
         itemFactory = new ItemFactory(collisionController, itemManager);
         SpawnItems();
 

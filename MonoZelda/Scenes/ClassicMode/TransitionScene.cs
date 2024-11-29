@@ -112,6 +112,7 @@ public class TransitionScene : Scene
             {
                 PlayerState.Position = FakeLinkPosition.ToPoint();
                 PlayerState.Direction = DirectionMap[TransitionDirection].Item2;
+                nextRoom.SpawnPoint = PlayerState.Position;
                 loadCommand.Execute(nextRoom.RoomName);
             }
         }

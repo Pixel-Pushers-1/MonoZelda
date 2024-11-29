@@ -1,17 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Dungeons.Parser.Data;
 using MonoZelda.Sprites;
+using System;
 
 namespace MonoZelda.Dungeons
 {
+    [Serializable]
     public class DoorSpawn : RoomContent<Dungeon1Sprite>
     {
         public string Destination { get; set; }
         public Rectangle Bounds { get; set; }
         public DoorDirection Direction { get; set; }
 
-        public DoorSpawn(string destination, DoorDirection direction, Point position, Dungeon1Sprite sprite, string room) 
-            : base(position, sprite,room)
+        public DoorSpawn(string destination, DoorDirection direction, Point position, Dungeon1Sprite type, string roomName) 
+            : base(position, type, roomName)
         {
             // Doors are 2x2 tiles
             var width = DungeonConstants.TileWidth * 2;

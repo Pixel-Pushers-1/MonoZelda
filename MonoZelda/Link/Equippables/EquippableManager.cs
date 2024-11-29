@@ -66,13 +66,9 @@ public class EquippableManager
 
     public void UseEquippedItem()
     {
-        if (PlayerState.EquippedItem == EquippableType.None)
+        if (PlayerState.EquippedItem != EquippableType.None)
         {
-            return;
-        }
-        else
-        {
-            equippableObjects[PlayerState.EquippedItem].Use(projectileManager,this);
+            equippableObjects[PlayerState.EquippedItem].Use(projectileManager, this);
         }
     }
 

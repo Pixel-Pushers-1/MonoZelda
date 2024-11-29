@@ -18,6 +18,9 @@ public enum CommandType
     StartGameCommand,
     LoadRoomCommand,
     RoomTransitionCommand,
+    LevelCompleteAnimationCommand,
+    LinkDeathAnimationCommand,
+    WallmasterGrabAnimationCommand,
     MuteCommand,
     PlayerItemCollisionCommand,
     PlayerEnemyCollisionCommand,
@@ -33,7 +36,9 @@ public enum CommandType
     ToggleInventoryCommand,
     PlayerProjectileDoorCollisionCommand,
     PlayerDeathCommand,
-    None
+    QuickSaveCommand,
+    QuickLoadCommand,
+    None,
 }
 
 public class CommandManager
@@ -52,6 +57,9 @@ public class CommandManager
         AddCommand(CommandType.StartGameCommand, new StartGameCommand());
         AddCommand(CommandType.LoadRoomCommand, new LoadRoomCommand());
         AddCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand());
+        AddCommand(CommandType.LevelCompleteAnimationCommand, new LevelCompleteAnimationCommand());
+        AddCommand(CommandType.LinkDeathAnimationCommand, new LinkDeathAnimationCommand());
+        AddCommand(CommandType.WallmasterGrabAnimationCommand, new WallMasterGrabAnimationCommand());
         AddCommand(CommandType.MuteCommand, new MuteCommand());
         AddCommand(CommandType.PlayerItemCollisionCommand, new PlayerItemCollisionCommand());
         AddCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand());
@@ -66,6 +74,8 @@ public class CommandManager
         AddCommand(CommandType.ToggleGizmosCommand, new ToggleGizmosCommand());
         AddCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand());
         AddCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand());
+        AddCommand(CommandType.QuickSaveCommand, new QuickSaveCommand());
+        AddCommand(CommandType.QuickLoadCommand, new QuickLoadCommand());
     }
 
     public void Execute(CommandType commandType, params object[] metadata)

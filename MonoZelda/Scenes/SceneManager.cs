@@ -9,12 +9,12 @@ using MonoZelda.Link;
 using MonoZelda.Sprites;
 using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.UI;
-using MonoZelda.Events;
+using MonoZelda.Save;
 using MonoZelda.Scenes.InfiniteMode;
 
 namespace MonoZelda.Scenes
 {
-    public class SceneManager : Scene
+    public class SceneManager : Scene, ISaveable
     {
         public static readonly string MARIO_ROOM = "Room18";
         public static readonly string MARIO_ENTRANCE_ROOM = "Room17";
@@ -25,6 +25,7 @@ namespace MonoZelda.Scenes
         private CommandManager commandManager;
         private ContentManager contentManager;
         private InventoryScene inventoryScene;
+        private SaveManager saveManager;
         private IDungeonRoomLoader roomManager;
         private IDungeonRoom currentRoom;
         private IScene activeScene;
@@ -45,14 +46,13 @@ namespace MonoZelda.Scenes
             // Start the player near the entrance
             PlayerState.Initialize();
 
-            // Regsiter events
-            EventManager.RegisterLevelCompletionAnimation(this);
-            EventManager.RegisterWallMasterGrabAnimation(this);
-            EventManager.RegisterLinkDeathAnimation(this);
-
             // create inventory scene
             inventoryScene = new InventoryScene(graphicsDevice, commandManager);
 
+            // replace required command
+            commandManager.ReplaceCommand(CommandType.LevelCompleteAnimationCommand, new LevelCompleteAnimationCommand(this));
+            commandManager.ReplaceCommand(CommandType.LinkDeathAnimationCommand, new LinkDeathAnimationCommand(this));
+            commandManager.ReplaceCommand(CommandType.WallmasterGrabAnimationCommand, new WallMasterGrabAnimationCommand(this));
             commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this));
             commandManager.ReplaceCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand(this));
             commandManager.ReplaceCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand(this));
@@ -80,12 +80,11 @@ namespace MonoZelda.Scenes
             {
                 activeScene = new TransitionScene(currentRoom, nextRoom, command, transitionDirection);
             }
-            
-            activeScene.LoadContent(contentManager);
 
             //set player map marker
             inventoryScene.SetPlayerMapMarker(DungeonConstants.GetRoomCoordinate(roomName));
-            PlayerState.ResetCandle();
+
+            activeScene.LoadContent(contentManager);
         }
 
         public void LoadRoom(string roomName)
@@ -144,7 +143,11 @@ namespace MonoZelda.Scenes
             // We begin by revealing the the first room depending on game mode selected
             currentRoom = roomManager.LoadRoom(StartRoom);
             activeScene = new StartGameScene(this, currentRoom, graphicsDevice);
+            currentRoom.SpawnPoint = DungeonConstants.DungeonEnteranceSpawnPoint;
             activeScene.LoadContent(contentManager);
+
+            //set player map marker
+            inventoryScene.SetPlayerMapMarker(DungeonConstants.GetRoomCoordinate(StartRoom));
         }
 
         public override void Draw(SpriteBatch batch)
@@ -173,6 +176,25 @@ namespace MonoZelda.Scenes
 
             // Complication due to SpriteDict getting cleared, need to re-init the UI
             inventoryScene.LoadContent(contentManager, currentRoom);
+        }
+
+        public void Save(SaveState save)
+        {
+            save.RoomName = currentRoom.RoomName;
+            PlayerState.Save(save);
+            roomManager.Save(save);
+        }
+
+        public void Load(SaveState save)
+        {
+            // Hack to prevent PlayerState from gettin changed.
+            commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());
+            commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
+
+            currentRoom = save.Rooms[save.RoomName];
+            PlayerState.Position = currentRoom.SpawnPoint;
+            roomManager.Load(save);
+            PlayerState.Load(save);
         }
     }
 }
