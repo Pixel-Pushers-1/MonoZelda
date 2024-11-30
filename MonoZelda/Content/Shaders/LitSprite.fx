@@ -168,7 +168,7 @@ float4 SpritePixelShader(PixelInput p) : SV_TARGET
             // fade it in as the player moves from the bottom edge to the top edge
             float percentY = (topRight.y - p.Position.y) / rect.w;
 
-            float val = valX * percentY; 
+            float val = valX * percentY;
 
             obstructionValue -= float4(val, val, val, 0);
             continue;

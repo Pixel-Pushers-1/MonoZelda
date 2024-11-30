@@ -14,10 +14,10 @@ namespace MonoZelda.Scenes
 {
     internal class InventoryScene : IScene
     {
-        private static readonly Point HUDBackgroundPosition = new (0, -32);
-        private static readonly Point HUDMapPosition = new (64, 80);
-        private static readonly Point LifePosition = new (720, 128);
-        private static readonly Point ItemCountPosition = new (416, 64);
+        private static readonly Point HUDBackgroundPosition = new(0, -32);
+        private static readonly Point HUDMapPosition = new(64, 80);
+        private static readonly Point LifePosition = new(720, 128);
+        private static readonly Point ItemCountPosition = new(416, 64);
         private static readonly Point LevelTextPosition = new(10, 10);
         private static readonly Point InventoryMapPosition = new(528, -288);
         private static readonly Point XpBarPosition = new(712, 44);
@@ -26,55 +26,51 @@ namespace MonoZelda.Scenes
         private const int INVENTORY_OPEN_SPEED = 16;
 
         public Screen Screen { get; set; }
-        public Dictionary<Type,IScreenWidget> Widgets { get; set; }
+        public Dictionary<Type, IScreenWidget> Widgets { get; set; }
         private SpriteFont _spriteFont;
         private GraphicsDevice graphicsDevice;
         private bool isInventoryOpen = false;
 
-        private EffectParameter _shaderParam;
+        public InventoryScene(GraphicsDevice gd, CommandManager commands)
+        {
+            // The Inventory starts mostly off-screen
+            Screen = new Screen() { Origin = new Point(0, 0) }; // Screen is helpfull for moving all the widgets at once
+            Widgets = new Dictionary<Type, IScreenWidget>();
 
-    public InventoryScene(GraphicsDevice gd, CommandManager commands)
-    {
-        // The Inventory starts mostly off-screen
-        Screen = new Screen() { Origin = new Point(0, 0) }; // Screen is helpfull for moving all the widgets at once
-        Widgets = new Dictionary<Type, IScreenWidget>();
+            graphicsDevice = gd;
+        }
 
-        graphicsDevice = gd;
-    }
+        public InventoryScene()
+        {
+        }
 
-    public InventoryScene()
-    {
-    }
+        public void LoadContent(ContentManager contentManager)
+        {
+            _spriteFont ??= contentManager.Load<SpriteFont>("Fonts/Basic");
 
-    public void LoadContent(ContentManager contentManager)
-    {
-        _spriteFont ??= contentManager.Load<SpriteFont>("Fonts/Basic");
+            Widgets.Add(typeof(HUDBackgroundWidget), new HUDBackgroundWidget(Screen, HUDBackgroundPosition));
+            Widgets.Add(typeof(HUDMapWidget), new HUDMapWidget(Screen, HUDMapPosition));
+            Widgets.Add(typeof(LifeWidget), new LifeWidget(Screen, LifePosition));
+            Widgets.Add(typeof(ItemCountWidget), new ItemCountWidget(_spriteFont, Screen, ItemCountPosition));
+            Widgets.Add(typeof(LevelTextWidget), new LevelTextWidget(_spriteFont, Screen, LevelTextPosition));
+            Widgets.Add(typeof(InventoryMapWidget), new InventoryMapWidget(Screen, InventoryMapPosition));
+            Widgets.Add(typeof(XpBarWidget), new XpBarWidget(Screen, XpBarPosition));
+        }
 
-        Widgets.Add(typeof(HUDBackgroundWidget), new HUDBackgroundWidget(Screen, HUDBackgroundPosition));
-        Widgets.Add(typeof(HUDMapWidget), new HUDMapWidget(Screen, HUDMapPosition));
-        Widgets.Add(typeof(LifeWidget), new LifeWidget(Screen, LifePosition));
-        Widgets.Add(typeof(ItemCountWidget), new ItemCountWidget(_spriteFont, Screen, ItemCountPosition));
-        Widgets.Add(typeof(LevelTextWidget), new LevelTextWidget(_spriteFont, Screen, LevelTextPosition));
-        Widgets.Add(typeof(InventoryMapWidget), new InventoryMapWidget(Screen, InventoryMapPosition));
-        Widgets.Add(typeof(XpBarWidget), new XpBarWidget(Screen, XpBarPosition));
-    }
+        public void LoadContent(ContentManager cm, IDungeonRoom room)
+        {
+            Widgets.Clear();
 
-    public void LoadContent(ContentManager cm, IDungeonRoom room)
-    {
-        Widgets.Clear();
-
-        LoadContent(cm);
-
-        _shaderParam = MonoZeldaGame.effect.Parameters["menu_position"];
-    }
+            LoadContent(cm);
+        }
 
         public void Update(GameTime gameTime)
         {
-            foreach(var widget in Widgets.Values)
+            foreach (var widget in Widgets.Values)
             {
                 widget.Update();
             }
-            
+
             if (isInventoryOpen && Screen.Origin.Y <= INVENTORY_OPEN_Y)
             {
                 Screen.Origin = new Point(0, Math.Min(Screen.Origin.Y + INVENTORY_OPEN_SPEED, INVENTORY_OPEN_Y));
@@ -85,10 +81,8 @@ namespace MonoZelda.Scenes
             }
 
             // Need to keep the shader updated on the menu position
-            if(_shaderParam != null)
-            {
-                _shaderParam.SetValue(graphicsDevice.Viewport.Height - Screen.Origin.Y - 176);
-            }
+
+            MonoZeldaGame.Shader.SetMenuPosition(Screen.Origin.Y + 176);
         }
 
         public void Draw(SpriteBatch sb)
@@ -109,9 +103,10 @@ namespace MonoZelda.Scenes
             return isInventoryOpen;
         }
 
-        public void SetPlayerMapMarker(Point? coord) {
-            ((HUDMapWidget) Widgets[typeof(HUDMapWidget)]).SetPlayerMapMarker(coord);
-            ((InventoryMapWidget) Widgets[typeof(InventoryMapWidget)]).SetPlayerMapMarker(coord);
+        public void SetPlayerMapMarker(Point? coord)
+        {
+            ((HUDMapWidget)Widgets[typeof(HUDMapWidget)]).SetPlayerMapMarker(coord);
+            ((InventoryMapWidget)Widgets[typeof(InventoryMapWidget)]).SetPlayerMapMarker(coord);
         }
     }
 }

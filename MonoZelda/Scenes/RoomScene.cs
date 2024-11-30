@@ -162,20 +162,10 @@ public class RoomScene : Scene
             // Insert top left and bottom right corners of the rectangle
             intersectors.Add(new Vector4(rect.X, height - rect.Y, rect.Width, rect.Height)); // left
         }
-        
-        var arrayIntersectors = intersectors.Take(75).ToArray();
-        var parameter = MonoZeldaGame.effect.Parameters["line_segments"];
-        if (parameter != null)
-        {
-            parameter.SetValue(arrayIntersectors);
-        }
-        var numParameter = MonoZeldaGame.effect.Parameters["num_line_segments"];
-        if (numParameter != null)
-        {
-            numParameter.SetValue(arrayIntersectors.Length);
-        }
 
-        MonoZeldaGame.effect.CurrentTechnique.Passes[0].Apply();
+        // Limited to 75 line segments
+        var arrayIntersectors = intersectors.Take(75).ToArray();
+        MonoZeldaGame.Shader.SetLineSegments(arrayIntersectors);
 
         var boundaryColliderRects = room.GetStaticBoundaryColliders();
         foreach (var rect in boundaryColliderRects)
@@ -210,11 +200,7 @@ public class RoomScene : Scene
 
     public override void UnloadContent()
     {
-        var numParameter = MonoZeldaGame.effect.Parameters["num_line_segments"];
-        if (numParameter != null)
-        {
-            numParameter.SetValue(0);
-        }
+        MonoZeldaGame.Shader.Reset();
 
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());

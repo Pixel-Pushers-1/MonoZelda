@@ -8,9 +8,8 @@ using MonoZelda.Scenes;
 using MonoZelda.Sound;
 using MonoZelda.Link;
 using MonoZelda.UI;
-using System.Diagnostics;
-using Microsoft.Xna.Framework.Content;
 using System;
+using MonoZelda.Shaders;
 
 
 namespace MonoZelda;
@@ -27,6 +26,7 @@ public enum GameState
 public class MonoZeldaGame : Game
 {
     public static GameTime GameTime { get; private set; }
+    internal static CustomShader Shader { get; private set; }
 
     private GraphicsDeviceManager graphicsDeviceManager;
     private SpriteBatch spriteBatch;
@@ -34,11 +34,8 @@ public class MonoZeldaGame : Game
     private MouseController mouseController;
     private CommandManager commandManager;
 
-    public static Effect effect;
-
     private IScene scene;
 
-    private float flickerTime;
 
     public MonoZeldaGame()
     {
@@ -78,26 +75,8 @@ public class MonoZeldaGame : Game
         spriteBatch = new SpriteBatch(GraphicsDevice);
 
         TextureData.LoadTextures(Content, GraphicsDevice);
-        effect = Content.Load<Effect>("Shaders/LitSprite");
-
-        var numLineSegmentsParameter = effect.Parameters["num_line_segments"];
-        if(numLineSegmentsParameter != null)
-        {
-            numLineSegmentsParameter.SetValue(0);
-        }
-
-        var lineSegmentsParameter = effect.Parameters["line_segments"];
-        if(lineSegmentsParameter != null)
-        {
-            var testSegments = new Vector4[0];
-            lineSegmentsParameter.SetValue(testSegments);
-        }
-
-        var menuPositionParameter = effect.Parameters["menu_position"];
-        if(menuPositionParameter != null)
-        {
-            menuPositionParameter.SetValue(GraphicsDevice.Viewport.Height - 192);
-        }
+        Shader = new CustomShader(GraphicsDevice);
+        Shader.LoadShader(Content);        
 
         // Start menu goes first
         StartMenu();
@@ -114,7 +93,7 @@ public class MonoZeldaGame : Game
         }
 
         GameTime = gameTime;
-        flickerTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
         keyboardController.Update(gameTime);
         mouseController.Update(gameTime);
         scene.Update(gameTime);
@@ -125,68 +104,12 @@ public class MonoZeldaGame : Game
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.Black);
+        Shader.SetPlayerPosition(PlayerState.Position);   
 
         SamplerState samplerState = new();
         samplerState.Filter = TextureFilter.Point;
 
-        Matrix view = Matrix.Identity;
-
-        int width = GraphicsDevice.Viewport.Width;
-        int height = GraphicsDevice.Viewport.Height;
-        Matrix projection = Matrix.CreateOrthographicOffCenter(0, width, height, 0, 0, 1);
-
-        var VP = view * projection;
-
-        effect.Parameters["view_projection"].SetValue(VP);
-        var player_position = new Vector2(PlayerState.Position.X, height - PlayerState.Position.Y);
-        var posParameter = effect.Parameters["player_position"];
-        if(posParameter != null)
-            posParameter.SetValue(player_position);    
-
-        
-        var lightPositionsParameter = effect.Parameters["light_positions"];
-        if(lightPositionsParameter != null)
-        {
-            var testLights = new Vector3[4]
-            {
-                new Vector3(256, 64, 0),
-                new Vector3(768, 64, 0),
-                new Vector3(256, 640, 0),
-                new Vector3(768, 640, 0)
-            };
-
-            lightPositionsParameter.SetValue(testLights);
-        }
-
-        var lightColorsParameter = effect.Parameters["light_colors"];
-        if(lightColorsParameter != null)
-        {
-            var testColors = new Vector3[4];
-            for (int i = 0; i < testColors.Length; i++)
-            {
-                float intensity = 0.65f + 0.15f * (float)Math.Sin(flickerTime * 4.0f + i);
-                testColors[i] = new Vector3(1, 1, intensity);
-            }
-
-            lightColorsParameter.SetValue(testColors);
-        }
-
-        var lightActiveParameter = effect.Parameters["light_active"];
-        if(lightActiveParameter != null)
-        {
-            var testActive = new float[4] { 0, 0, 0, 0 };
-            lightActiveParameter.SetValue(testActive);
-        }
-
-        var numLightsParameter = effect.Parameters["num_lights"];
-        if(numLightsParameter != null)
-        {
-            numLightsParameter.SetValue(4);
-        }
-
-        effect.Techniques[0].Passes[0].Apply();
-
-        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, samplerState, null, null, effect);
+        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, samplerState, null, null, Shader.Effect);
 
         // SpriteDrawer draws all drawables
         SpriteDrawer.Draw(spriteBatch, gameTime);
@@ -201,6 +124,7 @@ public class MonoZeldaGame : Game
     {
         // Clean state to start a new scene
         SpriteDrawer.Reset();
+        Shader.Reset();
         this.scene = scene;
         scene.LoadContent(Content);
     }

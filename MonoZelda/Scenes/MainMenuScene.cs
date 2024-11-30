@@ -27,6 +27,9 @@ public class MainMenuScene : Scene
         var dict = new SpriteDict(SpriteType.Title, 0, new Point(0,0));
         dict.SetSprite(nameof(MenuSprite.title));
 
+        // Make sure the shader isn't shadowing anything
+        MonoZeldaGame.Shader.SetNumLineSegments(0);
+
         SoundManager.PlaySound("LOZ_Intro", true);
     }
 }
