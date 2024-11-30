@@ -46,12 +46,6 @@ jobs:
           sudo apt-get install -y winetricks
           WINEPREFIX=$HOME/.wine64 winetricks -q d3dcompiler_47
 
-      - name: Install .NET 6
-        run: |
-          wget https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-6.0.0-linux-x64-binaries
-          mkdir -p $HOME/.wine64/dotnet6
-          tar zxf dotnet-runtime-6.0.0-linux-x64.tar.gz -C $HOME/.wine64/dotnet6
-
       - name: Setup MGFXC_WINE_PATH environmental variable
         run: echo "MGFXC_WINE_PATH=$HOME/.wine64" >> $GITHUB_ENV
 
