@@ -29,8 +29,14 @@ jobs:
           cabextract arial32.exe -d /usr/share/fonts/truetype/msttcorefonts
           sudo fc-cache -f -v
 
-      - name: Install MGFXC
-        run : dotnet tool install -g dotnet-mgfxc
+      - name: Wine and shader compiler things
+        run: sudo apt-get install wine64 p7zip-full
+
+      - name: Setup MonoGame Effect Compiler
+        run: |
+          wget https://raw.githubusercontent.com/MonoGame/MonoGame/refs/heads/develop/Tools/MonoGame.Effect.Compiler/mgfxc_wine_setup.sh
+          chmod +x mgfxc_wine_setup.sh
+          ./mgfxc_wine_setup.sh
 
       - name: Restore dependencies
         run: dotnet restore MonoZelda.sln
