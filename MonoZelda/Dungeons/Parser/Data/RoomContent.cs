@@ -3,6 +3,7 @@ using System;
 
 namespace MonoZelda.Dungeons
 {
+    [Serializable]
     public abstract class RoomContent<T> where T : Enum
     {
         public string RoomName { get; set; }
