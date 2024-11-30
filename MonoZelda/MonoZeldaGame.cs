@@ -8,7 +8,6 @@ using MonoZelda.Scenes;
 using MonoZelda.Sound;
 using MonoZelda.Link;
 using MonoZelda.UI;
-using System.Diagnostics;
 using MonoZelda.Save;
 
 namespace MonoZelda;
@@ -32,16 +31,22 @@ public enum GameType
 
 public class MonoZeldaGame : Game, ISaveable
 {
-    public static GameTime GameTime { get; private set; }
-
     private GraphicsDeviceManager graphicsDeviceManager;
     private SpriteBatch spriteBatch;
     private KeyboardController keyboardController;
     private MouseController mouseController;
     private CommandManager commandManager;
     private SaveManager saveManager;
-
     private IScene scene;
+    private GameType gameMode;
+
+    public GameType GameMode
+    {
+        get { return gameMode; }
+        private set { gameMode = value; }
+    }
+
+    public static GameTime GameTime { get; private set; }
 
     public MonoZeldaGame()
     {
@@ -80,8 +85,6 @@ public class MonoZeldaGame : Game, ISaveable
 
         base.Initialize();
     }
-
-    SpriteFont testFont;
 
     protected override void LoadContent()
     {
@@ -159,7 +162,7 @@ public class MonoZeldaGame : Game, ISaveable
 
     public void Save(SaveState save)
     {
-        if(scene is SceneManager sceneManager)
+        if (scene is SceneManager sceneManager)
         {
             sceneManager.Save(save);
         }
@@ -170,7 +173,7 @@ public class MonoZeldaGame : Game, ISaveable
         SoundManager.ClearSoundDictionary();
         HUDMapWidget.Reset();
 
-        var loadDungeon = new SceneManager(save.RoomName, GraphicsDevice, commandManager);
+        var loadDungeon = new SceneManager(gameMode, save.RoomName, GraphicsDevice, commandManager);
         loadDungeon.Load(save);
 
         LoadScene(loadDungeon);
