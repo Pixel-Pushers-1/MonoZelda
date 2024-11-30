@@ -1,4 +1,4 @@
-﻿#pragma optimize(off)
+﻿//#pragma optimize(off)
 
 #if OPENGL
 #define VS_SHADERMODEL vs_3_0
