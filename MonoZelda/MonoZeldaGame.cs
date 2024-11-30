@@ -93,6 +93,12 @@ public class MonoZeldaGame : Game
             lineSegmentsParameter.SetValue(testSegments);
         }
 
+        var menuPositionParameter = effect.Parameters["menu_position"];
+        if(menuPositionParameter != null)
+        {
+            menuPositionParameter.SetValue(GraphicsDevice.Viewport.Height - 192);
+        }
+
         // Start menu goes first
         StartMenu();
     }

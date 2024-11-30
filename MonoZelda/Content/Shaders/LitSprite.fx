@@ -22,6 +22,8 @@ float4x4 view_projection;
 float2 player_position;
 sampler TextureSampler : register(s0);
 
+float menu_position;
+
 static const float PI = 3.14159265359;
 static const float PI_I = 1.0 / PI;
 
@@ -135,37 +137,74 @@ float4 SpritePixelShader(PixelInput p) : SV_TARGET
 {
     float4 diffuse = tex2D(TextureSampler, p.TexCoord.xy);
 
-    if(num_line_segments <= 0)
+    if(num_line_segments <= 0 || p.Position.y > menu_position)
     {
         return diffuse * p.Color;
     }
 
     float4 obstructionValue = float4(1, 1, 1, 1);
     
+    float2 ray = player_position - p.Position.xy;
     for(int rectIndex = 0; rectIndex < num_line_segments; ++rectIndex)
     {
         float4 rect = line_segments[rectIndex];
 
+
         float2 topLeft = rect.xy;
         float2 topRight = rect.xy + float2(rect.z, 0);
+        float2 bottomLeft = rect.xy - float2(0, rect.w);
+        float2 bottomRight = rect.xy + float2(rect.z, -rect.w);
 
-        float2 ray = player_position - p.Position.xy;
-        float4 obs = testVisibility(p.Position.xy, ray, topLeft, topRight);
-
-        if(obs.y > 0 && obs.y < 1 && obs.z > 0 && obs.z < 1)
+        // if the pixel is inside the rect and the ray points up
+        if(p.Position.x >= topLeft.x && p.Position.x <= topRight.x &&
+           p.Position.y >= bottomRight.y && p.Position.y <= topRight.y)
         {
-            float val = obs.z + abs(obs.w) * 0.5;
-            float inverse = sign(ray.y) * obs.z + max(0, sign(-ray.y));
-            val = 1 - inverse;
-            obstructionValue = float4(obs.w,obs.w,obs.w, 1);
+            if(player_position.y < rect.y)
+                continue;
+
+            float percentX = (topRight.x - p.Position.x) / rect.z; 
+            float valX = -pow(2 * percentX - 1, 2) + 1;
+
+            // fade it in as the player moves from the bottom edge to the top edge
+            float percentY = (topRight.y - p.Position.y) / rect.w;
+
+            float val = valX * percentY; 
+
+            obstructionValue -= float4(val, val, val, 0);
             continue;
         }
 
-        obstructionValue = float4(1, 1, 1, 1);
+        float2 edges[4] = {
+            topLeft, bottomRight,
+            bottomLeft, topRight
+        };
+
+        for(int edgeIndex = 0; edgeIndex < 2; ++edgeIndex)
+        {
+            float2 pointA = edges[2 * edgeIndex];
+            float2 pointB = edges[2 * edgeIndex + 1];
+
+            float4 obs = testVisibility(p.Position.xy, ray, pointA, pointB);
+
+            if(obs.y > 0 && obs.y < 1 && obs.z > 0 && obs.z < 1)
+            {
+                float nAngle = obs.w;
+                float percent = obs.z;
+
+                // -\left(2x-1\right)^{2}+1
+                float obsValue = -pow(2 * percent - 1, 2) + 1;
+
+                if(edgeIndex > 0)
+                {
+                    obsValue *= abs(obs.x);
+                }
+
+                float value = obsValue;
+
+                obstructionValue -= float4(value, value, value, 0);
+            }
+        }
     }
-
-    return obstructionValue * diffuse;
-
 
     float distanceToPlayer = length(p.Position.xy - player_position) / 400;
     float3 playerInfluence = float3(1 - distanceToPlayer, 1 - distanceToPlayer, 1 - distanceToPlayer);
@@ -181,7 +220,7 @@ float4 SpritePixelShader(PixelInput p) : SV_TARGET
     value = saturate(value); // Clamp the final value between 0 and 1
     value = max(value * obstructionValue.rgb, float3(0.10, 0.10, 0.10)); // Ensure minimum value of 0.10
 
-    return obstructionValue * diffuse * p.Color;
+    return float4(value, 1) * diffuse * p.Color;
 }
 
 technique SpriteBatch

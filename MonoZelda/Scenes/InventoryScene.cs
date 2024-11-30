@@ -31,6 +31,8 @@ namespace MonoZelda.Scenes
         private GraphicsDevice graphicsDevice;
         private bool isInventoryOpen = false;
 
+        private EffectParameter _shaderParam;
+
     public InventoryScene(GraphicsDevice gd, CommandManager commands)
     {
         // The Inventory starts mostly off-screen
@@ -62,6 +64,8 @@ namespace MonoZelda.Scenes
         Widgets.Clear();
 
         LoadContent(cm);
+
+        _shaderParam = MonoZeldaGame.effect.Parameters["menu_position"];
     }
 
         public void Update(GameTime gameTime)
@@ -78,6 +82,12 @@ namespace MonoZelda.Scenes
             else if (Screen.Origin.Y > 0)
             {
                 Screen.Origin = new Point(0, Math.Max(Screen.Origin.Y - INVENTORY_OPEN_SPEED, 0));
+            }
+
+            // Need to keep the shader updated on the menu position
+            if(_shaderParam != null)
+            {
+                _shaderParam.SetValue(graphicsDevice.Viewport.Height - Screen.Origin.Y - 176);
             }
         }
 

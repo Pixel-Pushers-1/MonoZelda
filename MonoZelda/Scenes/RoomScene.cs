@@ -150,7 +150,7 @@ public class RoomScene : Scene
         var intersectors = new List<Vector4>(100);
         var roomColliderRects = room.GetStaticRoomColliders();
         var height = graphicsDevice.Viewport.Height;
-        foreach (var rect in roomColliderRects.Take(1))
+        foreach (var rect in roomColliderRects)
         {
             var collidable = new StaticRoomCollidable(rect);
             collisionController.AddCollidable(collidable);
@@ -210,6 +210,12 @@ public class RoomScene : Scene
 
     public override void UnloadContent()
     {
+        var numParameter = MonoZeldaGame.effect.Parameters["num_line_segments"];
+        if (numParameter != null)
+        {
+            numParameter.SetValue(0);
+        }
+
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());
         base.UnloadContent();
