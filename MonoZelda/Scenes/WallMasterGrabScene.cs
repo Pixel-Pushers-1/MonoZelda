@@ -22,9 +22,9 @@ public class WallMasterGrabScene : Scene
 
     // variables
     private bool reachedDoor;
-    private string currentRoomSprite;
     private int MaxIntersectionArea;
-    private ICommand loadRoomCommand;
+    private IDungeonRoom currentRoom;
+    private ICommand enterDungeonAnimationCommand;
     private Direction movementDirection;
     private IDungeonRoom startRoom;
     private Rectangle WallMasterRectangle;
@@ -32,9 +32,6 @@ public class WallMasterGrabScene : Scene
     private SpriteDict FakeWallMaster;
     private SpriteDict FakeBackground;
     private SpriteDict FakeBorder;
-    private BlankSprite LeftCurtain;
-    private BlankSprite RightCurtain;
-    private GraphicsDevice graphicsDevice;
 
     // Add a Texture2D for drawing rectangles
     private Texture2D rectangleTexture;
@@ -50,19 +47,18 @@ public class WallMasterGrabScene : Scene
         {MoveUpZone,Direction.Down},
     };
     
-    public WallMasterGrabScene(string currentRoomSprite, IDungeonRoom startRoom, ICommand loadRoomCommand, GraphicsDevice graphicsDevice)
+    public WallMasterGrabScene(IDungeonRoom currentRoom, IDungeonRoom startRoom, ICommand enterDungeonAnimationCommand)
     {
         this.startRoom = startRoom;
-        this.currentRoomSprite = currentRoomSprite;
-        this.loadRoomCommand = loadRoomCommand;
-        this.graphicsDevice = graphicsDevice;
+        this.currentRoom = currentRoom;
+        this.enterDungeonAnimationCommand = enterDungeonAnimationCommand;
     }
 
     private void CreateFakeDoors(IDungeonRoom room)
     {
         foreach (var door in room.GetDoors())
         {
-            var doorSprite = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD - 2, door.Position);
+            var doorSprite = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD - 1, door.Position);
             doorSprite.SetSprite(door.Type.ToString());
         }
     }
@@ -91,30 +87,24 @@ public class WallMasterGrabScene : Scene
 
     public override void LoadContent(ContentManager contentManager)
     {
-        // make curtains
+        // get position of link
         var position = PlayerState.Position;
-        var curtainSize = new Point(512, 704);
-        var Center = new Point(graphicsDevice.Viewport.Width / 2, 192);
-        var leftPosition = Center - new Point(graphicsDevice.Viewport.Width / 2, 0);
-        LeftCurtain = new BlankSprite(SpriteLayer.HUD + 1, leftPosition, curtainSize, Color.Black);
-        RightCurtain = new BlankSprite(SpriteLayer.HUD + 1, Center, curtainSize, Color.Black);
-        LeftCurtain.Enabled = false;
-        RightCurtain.Enabled = false;
 
-        // create fake background, link ,and wallmaster
+        // create fake link ,and wallmaster
         FakeWallMaster = new SpriteDict(SpriteType.Enemies, SpriteLayer.HUD, position);
         FakeWallMaster.SetSprite("wallmaster");
         FakeLink = new SpriteDict(SpriteType.Player, SpriteLayer.HUD - 1, position);
         FakeLink.SetSprite("standing_down");
+
+        // create fake doors, background and roomborder
         FakeBackground = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD - 2, DungeonConstants.BackgroundPosition);
-        FakeBackground.SetSprite(currentRoomSprite);
+        FakeBackground.SetSprite(currentRoom.RoomSprite.ToString());
+        FakeBorder = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD - 2, DungeonConstants.DungeonPosition);
+        FakeBorder.SetSprite("room_exterior");
+        CreateFakeDoors(currentRoom);
 
         // create FakeWallMaster rectangle
         WallMasterRectangle = new Rectangle(new Point(position.X - 32, position.Y - 32), new Point(52, 52));
-
-        // Create a 1x1 white texture for rectangle drawing
-        rectangleTexture = new Texture2D(graphicsDevice, 1, 1);
-        rectangleTexture.SetData(new[] { Color.White });
     }
 
     public override void Update(GameTime gameTime)
@@ -131,21 +121,9 @@ public class WallMasterGrabScene : Scene
         {
             FakeLink.Unregister();
             FakeWallMaster.Unregister();
-            LeftCurtain.Enabled = true;
-            RightCurtain.Enabled = true;
-            FakeBackground.SetSprite(startRoom.RoomSprite.ToString());
-            CreateFakeDoors(startRoom);
-            if (RightCurtain.Position.X != graphicsDevice.Viewport.Width)
-            {
-                LeftCurtain.Position += new Point(-4, 0);
-                RightCurtain.Position += new Point(4, 0);
-            }
-            else
-            {
-                FakeBackground.Unregister();
-                PlayerState.Position = new Point(500, 725);
-                loadRoomCommand.Execute(startRoom.RoomName);
-            }
+            FakeBackground.Unregister();
+            PlayerState.Position = new Point(515, 725);
+            enterDungeonAnimationCommand.Execute(startRoom);
         }
     }
 }

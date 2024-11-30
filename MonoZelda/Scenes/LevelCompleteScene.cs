@@ -10,27 +10,21 @@ namespace MonoZelda.Scenes;
 
 public class LevelCompleteScene : Scene
 {
+    private const float LEVEL_COMPLETION_TIME = 25f;
+    private float timer;
     private IDungeonRoom startRoom;
-    private ICommand loadRoomCommand;
+    private ICommand enterDungeonAnimationCommand;
     private BlankSprite LeftCurtain;
     private BlankSprite RightCurtain;
     private BlankSprite WhiteCurtain;
     private SpriteDict FakeLink;
     private SpriteDict FakeTriforce;
     private SpriteDict FakeBackground;
-    private const float LEVEL_COMPLETION_TIME = 25f;
-    private float timer;
 
-    private enum CurtainDirection
-    {
-        In,
-        Out
-    }
-
-    public LevelCompleteScene(IDungeonRoom startRoom, ICommand loadRoomCommand)
+    public LevelCompleteScene(IDungeonRoom startRoom, ICommand enterDungeonAnimationCommand)
     {
         this.startRoom = startRoom;
-        this.loadRoomCommand = loadRoomCommand;
+        this.enterDungeonAnimationCommand = enterDungeonAnimationCommand;
     }
 
     public override void LoadContent(ContentManager contentManager)
@@ -59,15 +53,6 @@ public class LevelCompleteScene : Scene
         SoundManager.PlaySound("LOZ_Victory", false);
     }
 
-    private void CreateFakeDoors(IDungeonRoom room)
-    {
-        foreach (var door in room.GetDoors())
-        {
-            var doorSprite = new SpriteDict(SpriteType.Blocks, SpriteLayer.Triforce - 2, door.Position);
-            doorSprite.SetSprite(door.Type.ToString());
-        }
-    }
-
     public override void Update(GameTime gameTime)
     {
         timer += (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
@@ -79,28 +64,17 @@ public class LevelCompleteScene : Scene
                 RightCurtain.Position += new Point(-4, 0);
             }
         }
-        else if((16 <= timer) && (timer <= 18))
+        else if((16 <= timer) && (timer <= 17))
         {
             FakeTriforce.Enabled = false;
             FakeLink.SetSprite("cloud");
         }
-        else if((18 <= timer) && (timer <= 19))
+        else if(timer > 18)
         {
-            CreateFakeDoors(startRoom);
-            FakeBackground.SetSprite("room_1");
-            FakeLink.Enabled = false;
-            if(LeftCurtain.Position.X != -512)
-            {
-                LeftCurtain.Position += new Point(-8, 0);
-                RightCurtain.Position += new Point(8, 0);
-            }
-        }
-        else if(timer > 19)
-        {
-            FakeBackground.Enabled = false;
-            PlayerState.Position = new Point(500, 725);
-            SoundManager.PlaySound("LOZ_Dungeon_Theme", false);
-            loadRoomCommand.Execute(startRoom.RoomName);
+            FakeBackground.Unregister();
+            PlayerState.Position = new Point(515, 725);
+            SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
+            enterDungeonAnimationCommand.Execute(startRoom);
         }
     }
 }

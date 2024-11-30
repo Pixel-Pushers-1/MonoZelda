@@ -21,6 +21,7 @@ public enum CommandType
     LevelCompleteAnimationCommand,
     LinkDeathAnimationCommand,
     WallmasterGrabAnimationCommand,
+    EnterDungeonAnimationCommand,
     MuteCommand,
     PlayerItemCollisionCommand,
     PlayerEnemyCollisionCommand,
@@ -60,6 +61,7 @@ public class CommandManager
         AddCommand(CommandType.LevelCompleteAnimationCommand, new LevelCompleteAnimationCommand());
         AddCommand(CommandType.LinkDeathAnimationCommand, new LinkDeathAnimationCommand());
         AddCommand(CommandType.WallmasterGrabAnimationCommand, new WallMasterGrabAnimationCommand());
+        AddCommand(CommandType.EnterDungeonAnimationCommand, new EnterDungeonAnimationCommand());
         AddCommand(CommandType.MuteCommand, new MuteCommand());
         AddCommand(CommandType.PlayerItemCollisionCommand, new PlayerItemCollisionCommand());
         AddCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand());
