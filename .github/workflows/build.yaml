@@ -29,25 +29,8 @@ jobs:
           cabextract arial32.exe -d /usr/share/fonts/truetype/msttcorefonts
           sudo fc-cache -f -v
 
-      - name: Install Wine
-        run: |
-          sudo dpkg --add-architecture i386
-          sudo mkdir -pm755 /etc/apt/keyrings
-          sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-          sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/$(lsb_release -cs)/winehq-$(lsb_release -cs).sources
-          sudo apt update
-          sudo apt install --install-recommends winehq-stable
-
-      - name: Create 64 bit wine prefix
-        run: WINEPREFIX=$HOME/.wine64 WINEARCH=win64 wineboot
-
-      - name: Install d3dcompiler_47 using winetricks
-        run: |
-          sudo apt-get install -y winetricks
-          WINEPREFIX=$HOME/.wine64 winetricks -q d3dcompiler_47
-
-      - name: Setup MGFXC_WINE_PATH environmental variable
-        run: echo "MGFXC_WINE_PATH=$HOME/.wine64" >> $GITHUB_ENV
+      - name: Install MGFXC
+        run : dotnet tool install -g dotnet-mgfxc
 
       - name: Restore dependencies
         run: dotnet restore MonoZelda.sln
