@@ -30,7 +30,14 @@ jobs:
           sudo fc-cache -f -v
 
       - name: Wine and shader compiler things
-        run: sudo apt-get install wine64 p7zip-full
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo mkdir -pm755 /etc/apt/keyrings
+          sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+          sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/$(lsb_release -cs)/winehq-$(lsb_release -cs).sources
+          sudo apt update
+          sudo apt install --install-recommends winehq-stable=8.0~$(lsb_release -cs)-1
+          sudo apt-get install p7zip-full
 
       - name: Setup MonoGame Effect Compiler
         run: |
