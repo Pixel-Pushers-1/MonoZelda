@@ -25,10 +25,10 @@ namespace MonoZelda.Enemies.EnemyClasses
             Alive = true;
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, EnemyFactory enemyFactory, bool hasItem)
         {
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Stalfos);
-            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasItem);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, enemyFactory, hasItem);
             StateMachine.SetSprite("stalfos");
         }
 
@@ -87,6 +87,14 @@ namespace MonoZelda.Enemies.EnemyClasses
             {
                 fireball.Key.Update(EnemyStateMachine.Direction.Left,Pos);
                 fireball.Value.Update();
+            }
+        }
+
+        public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
+        {
+            base.TakeDamage(stunTime, collisionDirection, damage);
+            if(Health <= 0){
+                fireballs.ForEach(fireball => fireball.ProjectileCollide());
             }
         }
     }

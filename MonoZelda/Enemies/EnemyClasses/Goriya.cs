@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
@@ -14,8 +15,8 @@ namespace MonoZelda.Enemies.EnemyClasses
     public class Goriya : Enemy
     {
         private EnemyStateMachine.Direction projDirection;
-        private IEnemyProjectile projectile;
-        private EnemyProjectileCollisionManager projectileCollision;
+        private List<IEnemyProjectile> boomerangs = new();
+        private Dictionary<IEnemyProjectile, EnemyProjectileCollisionManager> projectileDictionary = new();
         private bool projectileActive;
 
         public Goriya()
@@ -27,10 +28,10 @@ namespace MonoZelda.Enemies.EnemyClasses
             projectileActive = false;
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory,EnemyFactory enemyFactory, bool hasItem)
         {
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Goriya);
-            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasItem);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory,enemyFactory, hasItem);
         }
 
         public override void ChangeDirection()
@@ -42,33 +43,89 @@ namespace MonoZelda.Enemies.EnemyClasses
                 EnemyStateMachine.Direction.Right => "goriya_red_right",
                 EnemyStateMachine.Direction.Up => "goriya_red_up",
                 EnemyStateMachine.Direction.Down => "goriya_red_down",
+                _ => "goriya_red_left"
             };
             StateMachine.SetSprite(newSprite);
         }
-
-        public void Attack()
+        public override void LevelOneBehavior()
         {
             if (Health > 0)
             {
                 if (!projectileActive)
                 {
-                    projectile = new GoriyaBoomerang(Pos, CollisionController, projDirection);
-                    projectileCollision = new EnemyProjectileCollisionManager(projectile);
+                    boomerangs.Add(new GoriyaBoomerang(Pos, CollisionController, projDirection));
+                    foreach (var boomerang in boomerangs){
+                        projectileDictionary.Add(boomerang,new EnemyProjectileCollisionManager(boomerang));
+                    }
                     projectileActive = true;
                 }
-                projectile.ViewProjectile(projectileActive, true);
-                projectile.Update(projDirection, Pos);
-                projectileCollision.Update();
-                if (Math.Abs(projectile.Pos.X - Pos.X) < 16 && Math.Abs(projectile.Pos.Y - Pos.Y) < 16)
+                boomerangUpdate();
+            }
+        }
+
+        public override void LevelTwoBehavior()
+        {
+            if (Health > 0)
+            {
+                if (!projectileActive)
                 {
-                    projectileActive = false;
-                    projectile.ViewProjectile(projectileActive, false);
-                    projectile = null;
-                    projectileCollision = null;
-                    projDirection = EnemyStateMachine.Direction.None;
-                    PixelsMoved = 0;
-                    ChangeDirection();
+                    EnemyStateMachine.Direction oppositeDirection = projDirection switch{
+                        EnemyStateMachine.Direction.Up => EnemyStateMachine.Direction.Down,
+                        EnemyStateMachine.Direction.Down => EnemyStateMachine.Direction.Up,
+                        EnemyStateMachine.Direction.Left => EnemyStateMachine.Direction.Right,
+                        EnemyStateMachine.Direction.Right => EnemyStateMachine.Direction.Left,
+                        _ => EnemyStateMachine.Direction.None
+                    };
+                    boomerangs.Add(new GoriyaBoomerang(Pos, CollisionController, projDirection));
+                    boomerangs.Add(new GoriyaBoomerang(Pos, CollisionController, oppositeDirection));
+                    foreach (var boomerang in boomerangs){
+                        projectileDictionary.Add(boomerang,new EnemyProjectileCollisionManager(boomerang));
+                    }
+                    projectileActive = true;
                 }
+                boomerangUpdate();
+            }
+        }
+
+        public override void LevelThreeBehavior()
+        {
+            if (Health > 0)
+            {
+                if (!projectileActive)
+                {
+                    boomerangs.Add(new GoriyaBoomerang(Pos, CollisionController, EnemyStateMachine.Direction.Up));
+                    boomerangs.Add(new GoriyaBoomerang(Pos, CollisionController, EnemyStateMachine.Direction.Down));
+                    boomerangs.Add(new GoriyaBoomerang(Pos, CollisionController, EnemyStateMachine.Direction.Left));
+                    boomerangs.Add(new GoriyaBoomerang(Pos, CollisionController, EnemyStateMachine.Direction.Right));
+                    foreach (var boomerang in boomerangs){
+                        projectileDictionary.Add(boomerang,new EnemyProjectileCollisionManager(boomerang));
+                    }
+                    projectileActive = true;
+                }
+                boomerangUpdate();
+            }
+        }
+
+        public void boomerangUpdate(){
+            var tempActive = false;
+            foreach(var boomerang in projectileDictionary){
+                    boomerang.Key.ViewProjectile(projectileActive, true);
+                    boomerang.Key.Update(projDirection, Pos);
+                    boomerang.Value.Update();
+                    if (Math.Abs(boomerang.Key.Pos.X - Pos.X) < 16 && Math.Abs(boomerang.Key.Pos.Y - Pos.Y) < 16)
+                    {
+                        boomerang.Key.ViewProjectile(false, false);
+                        boomerangs.Remove(boomerang.Key);
+                        projectileDictionary.Remove(boomerang.Key);
+                        projDirection = EnemyStateMachine.Direction.None;
+                    }else{
+                        tempActive = true;
+                    }
+            }
+            if(!tempActive){
+                projectileActive = false;
+                PixelsMoved = 0;
+                ChangeDirection();
             }
         }
 
@@ -78,7 +135,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             {
                 projDirection = Direction;
                 StateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
-                Attack();
+                DecideBehavior();
             }
             else if (PixelsMoved >= 0)
             {
@@ -89,7 +146,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
             else if (projectileActive)
             {
-                Attack();
+                DecideBehavior();
             }
             CheckBounds();
             Pos = StateMachine.Update(this, Pos);
@@ -121,33 +178,13 @@ namespace MonoZelda.Enemies.EnemyClasses
                     StateMachine.Die(false);
                     EnemyHitbox.UnregisterHitbox();
                     CollisionController.RemoveCollidable(EnemyHitbox);
-                    if (projectile != null)
-                    {
-                        projectile.ViewProjectile(false, false);
+                    foreach(var boomerang in boomerangs){
+                        boomerang.ViewProjectile(false, false);
                     }
                 }
             }
 
         }
 
-        public override void LevelOneBehavior()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void LevelTwoBehavior()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void LevelThreeBehavior()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void DecideBehavior()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

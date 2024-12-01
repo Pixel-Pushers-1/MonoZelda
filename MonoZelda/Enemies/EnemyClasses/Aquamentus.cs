@@ -32,10 +32,10 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory,EnemyFactory enemyFactory, bool hasItem)
         {
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Aquamentus);
-            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasItem);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory,enemyFactory, hasItem);
             spawnPoint = spawnPosition;
             StateMachine.SetSprite("aquamentus_left");
             StateMachine.ChangeDirection(EnemyStateMachine.Direction.Left);
@@ -142,7 +142,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             if (stunTime == 0)
             {
                 Health -= damage;
-                if (Health == 0)
+                if (Health <= 0)
                 {
                     SoundManager.PlaySound("LOZ_Enemy_Die", false);
                     fireballs.ForEach(fireball => fireball.ProjectileCollide());

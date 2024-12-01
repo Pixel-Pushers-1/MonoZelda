@@ -34,10 +34,10 @@ namespace MonoZelda.Enemies.EnemyClasses
             Alive = true;
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory,EnemyFactory enemyFactory, bool hasItem)
         {
             EnemyHitbox = new EnemyCollidable(new Rectangle(-100, -100, Width, Height), EnemyList.Wallmaster);
-            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasItem);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory,enemyFactory, hasItem);
             spawned = true;
             timer = (float)(rnd.NextDouble()  - rnd.Next(0,2))*-1;
             Pos = new Point(-100, -100);

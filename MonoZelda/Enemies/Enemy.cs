@@ -37,8 +37,9 @@ namespace MonoZelda.Enemies
         private readonly Random rnd = new Random();
         public float Timer {get; set; }
         public int Level {get; set; }
+        public EnemyFactory EnemyFactory {get; set;}
 
-        public virtual void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
+        public virtual void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, EnemyFactory enemyFactory, bool hasItem)
         {
             collisionController.AddCollidable(EnemyHitbox);
             EnemyHitbox.setSpriteDict(enemyDict);
@@ -47,7 +48,8 @@ namespace MonoZelda.Enemies
             CollisionController = collisionController;
             EnemyCollision = new EnemyCollisionManager(this, Width, Height);
             StateMachine = new EnemyStateMachine(enemyDict, itemFactory, hasItem);
-            Level = 3;
+            EnemyFactory = enemyFactory;
+            Level = 1;
             Timer = 0;
         }
 
