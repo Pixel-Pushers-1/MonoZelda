@@ -1,25 +1,26 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MonoZelda.Commands;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Dungeons;
 using MonoZelda.Sound;
 using MonoZelda.Sprites;
+using MonoZelda.Link;
 
 namespace MonoZelda.Scenes
 {
     internal class StartGameScene : Scene
     {
         private IDungeonRoom room;
-        private SpriteFont spriteFont;
+        private ICommand loadRoomCommand;
         private GraphicsDevice gd;
-        private SceneManager scene;
         private BlankSprite leftCurtain;
         private BlankSprite rightCurtain;
         private int delay;
 
-        public StartGameScene(SceneManager scene, IDungeonRoom room, GraphicsDevice gd)
+        public EnterDungeonScene(ICommand loadRoomCommand, IDungeonRoom room, GraphicsDevice gd)
         {
-            this.scene = scene;
+            this.loadRoomCommand = loadRoomCommand;
             this.room = room;
             this.gd = gd;
         }
@@ -34,12 +35,12 @@ namespace MonoZelda.Scenes
 
             // Fake the dungeon entrance
             // Room wall border
-            var r = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, DungeonConstants.DungeonPosition);
+            var r = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD - 2, DungeonConstants.DungeonPosition);
             r.SetSprite(nameof(Dungeon1Sprite.room_exterior));
             r.Position = DungeonConstants.DungeonPosition;
 
             // Floor background
-            var f = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, DungeonConstants.BackgroundPosition);
+            var f = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD - 2, DungeonConstants.BackgroundPosition);
             f.SetSprite(room.RoomSprite.ToString());
 
             // the room texutres are 192 * 4 = 768 pixels wide
@@ -56,7 +57,7 @@ namespace MonoZelda.Scenes
         {
             foreach(var door in room.GetDoors())
             {
-                var doorSprite = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, door.Position);
+                var doorSprite = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD - 1, door.Position);
                 doorSprite.SetSprite(door.Type.ToString());
             }
         }
@@ -76,7 +77,8 @@ namespace MonoZelda.Scenes
 
             if (rightCurtain.Position.X > gd.Viewport.Width)
             {
-                scene.LoadRoom(room.RoomName);
+                PlayerState.Position = new Point(515, 725);
+                loadRoomCommand.Execute(room.RoomName);
             }
         }
     }

@@ -20,6 +20,8 @@ namespace MonoZelda.Scenes
         public static readonly string MARIO_ENTRANCE_ROOM = "Room17";
         public static readonly string INFINITE_ROOM = "RoomInfinite";
         
+        private IDungeonRoomLoader roomManager;
+        private IDungeonRoom currentRoom;
         private CollisionController collisionController;
         private GraphicsDevice graphicsDevice;
         private CommandManager commandManager;
@@ -53,6 +55,7 @@ namespace MonoZelda.Scenes
             commandManager.ReplaceCommand(CommandType.LevelCompleteAnimationCommand, new LevelCompleteAnimationCommand(this));
             commandManager.ReplaceCommand(CommandType.LinkDeathAnimationCommand, new LinkDeathAnimationCommand(this));
             commandManager.ReplaceCommand(CommandType.WallmasterGrabAnimationCommand, new WallMasterGrabAnimationCommand(this));
+            commandManager.ReplaceCommand(CommandType.EnterDungeonAnimationCommand, new EnterDungeonAnimationCommand(this));    
             commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this));
             commandManager.ReplaceCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand(this));
             commandManager.ReplaceCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand(this));
@@ -144,7 +147,7 @@ namespace MonoZelda.Scenes
             currentRoom = roomManager.LoadRoom(StartRoom);
             activeScene = new StartGameScene(this, currentRoom, graphicsDevice);
             currentRoom.SpawnPoint = DungeonConstants.DungeonEnteranceSpawnPoint;
-            activeScene.LoadContent(contentManager);
+            EnterDungeonScene(currentRoom);
 
             //set player map marker
             inventoryScene.SetPlayerMapMarker(DungeonConstants.GetRoomCoordinate(StartRoom));
@@ -176,6 +179,41 @@ namespace MonoZelda.Scenes
 
             // Complication due to SpriteDict getting cleared, need to re-init the UI
             inventoryScene.LoadContent(contentManager, currentRoom);
+        }
+
+        public void EnterDungeonScene(IDungeonRoom room)
+        {
+            var loadRoomCommand = commandManager.GetCommand(CommandType.LoadRoomCommand);
+            activeScene = new EnterDungeonScene(loadRoomCommand, room, graphicsDevice);
+            activeScene.LoadContent(contentManager);
+        }
+        public void LevelCompleteScene()
+        {
+            var startRoom = roomManager.LoadRoom(StartRoom);
+            var enterDungeonAnimationCommand = commandManager.GetCommand(CommandType.EnterDungeonAnimationCommand);
+            activeScene = new LevelCompleteScene(startRoom, enterDungeonAnimationCommand);
+            activeScene.LoadContent(contentManager);
+        }
+
+        public void WallMasterGrabScene()
+        {
+            var startRoom = roomManager.LoadRoom(StartRoom);
+            var enterDungeonAnimationCommand = commandManager.GetCommand(CommandType.EnterDungeonAnimationCommand);
+            activeScene = new WallMasterGrabScene(currentRoom, startRoom, enterDungeonAnimationCommand);
+            activeScene.LoadContent(contentManager);
+        }
+
+        public void LinkDeathScene()
+        {
+            var resetCommand = commandManager.GetCommand(CommandType.ResetCommand);
+            activeScene = new LinkDeathScene(resetCommand, graphicsDevice);
+            activeScene.LoadContent(contentManager);
+        }
+
+        public void ToggleInventory()
+        {
+            isPaused = inventoryScene.ToggleInventory();
+            (activeScene as RoomScene)?.SetPaused(isPaused);
         }
 
         public void Save(SaveState save)

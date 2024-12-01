@@ -28,8 +28,8 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public Wallmaster()
         {
-            Width = 48;
-            Height = 48;
+            Width = 52;
+            Height = 52;
             Health = 2;
             Alive = true;
         }
@@ -192,13 +192,12 @@ namespace MonoZelda.Enemies.EnemyClasses
                     if (grabbed)
                     {
                         //might need to use a different type of transition here, idk what it is in game
-                        commandManager.Execute(CommandType.RoomTransitionCommand, "Room1", Link.Direction.Down);
+                        commandManager.Execute(CommandType.WallmasterGrabAnimationCommand);
                     }
                 }
                 else if (timer >= 2.9)
                 {
                     StateMachine.ChangeDirection(returnDirection);
-                    // if link is grabbed animation should start here
                 }
                 else if (spawned)
                 {
