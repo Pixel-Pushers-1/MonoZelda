@@ -37,6 +37,13 @@ namespace MonoZelda.Dungeons.Parser
             file.EastDoor = fields[2];
             file.SouthDoor = fields[3];
             file.WestDoor = fields[4];
+
+            // field 5 may be blank
+            if (fields.Length > 5 && !string.IsNullOrEmpty(fields[5]))
+            {
+                file.IsLit = fields[5].ToUpper() == "LIT";
+            }
+
         }
 
         private static void TokenizeContent(TextFieldParser textFieldParser, RoomFile file)

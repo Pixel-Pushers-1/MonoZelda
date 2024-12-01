@@ -37,7 +37,7 @@ namespace MonoZelda.Dungeons.Parser
             if (roomFile == null) return null;
 
             var spriteType = ParseRoomBackground(roomFile.RoomSprite);
-            var room = new DungeonRoom(roomName, spriteType);
+            var room = new DungeonRoom(roomName, spriteType, roomFile.IsLit);
 
             LoadDoors(roomFile, room);
             LoadContent(roomFile, room);

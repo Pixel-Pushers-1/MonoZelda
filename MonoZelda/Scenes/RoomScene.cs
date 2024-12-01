@@ -19,6 +19,7 @@ using MonoZelda.Sound;
 using MonoZelda.Tiles.Doors;
 using MonoZelda.Dungeons.Dungeon1;
 using MonoZelda.Shaders;
+using System.Runtime.CompilerServices;
 
 namespace MonoZelda.Scenes;
 
@@ -39,6 +40,8 @@ public class RoomScene : Scene
     private Dictionary<Enemy, EnemySpawn> enemySpawnPoints = new();
     private IDungeonRoom room;
     private string roomName;
+    private List<ILight> lights = new();
+    private ILight playerLight;
     
     private List<IGameUpdate> updateables = new();
     private List<IDisposable> disposables = new();
@@ -110,9 +113,47 @@ public class RoomScene : Scene
     {
         transitionCommand = commandManager.GetCommand(CommandType.RoomTransitionCommand);
         
+        SetupShader();
         LoadRoomTextures(contentManager);
         CreateStaticColliders();
         CreateTriggers(contentManager);
+    }
+
+    private void SetupShader()
+    {
+        if(room.IsLit)
+        {
+            playerLight = new PlayerLight();
+            lights.Add(playerLight);
+
+            // Demo lights
+            // TODO: Light emmitting items
+            lights.Add(new Light() {
+                Position = new Point(250, 256),
+                Color = Color.Orange,
+                Radius = 400,
+                Intensity = 0.75f
+            });
+
+            lights.Add(new Light() {
+                Position = new Point(774, 256),
+                Color = Color.Orange,
+                Radius = 400,
+                Intensity = 0.75f
+            });
+
+            var intersectors = new List<Vector4>(256);
+            var roomColliderRects = room.GetStaticRoomColliders();
+            var height = graphicsDevice.Viewport.Height;
+            foreach (var rect in roomColliderRects)
+            {
+                intersectors.Add(new Vector4(rect.X, height - rect.Y, rect.Width, rect.Height)); // left
+            }
+
+            // Limited to 75 line segments
+            var arrayIntersectors = intersectors.Take(CustomShader.MAX_LIGHT_COLLIDERS).ToArray();
+            MonoZeldaGame.Shader.SetLineSegments(arrayIntersectors);
+        }
     }
 
     private void CreateTriggers(ContentManager contentManager)
@@ -148,21 +189,12 @@ public class RoomScene : Scene
 
     protected void CreateStaticColliders()
     {
-        var intersectors = new List<Vector4>(256);
         var roomColliderRects = room.GetStaticRoomColliders();
-        var height = graphicsDevice.Viewport.Height;
         foreach (var rect in roomColliderRects)
         {
             var collidable = new StaticRoomCollidable(rect);
             collisionController.AddCollidable(collidable);
-
-            // Goes to shader
-            intersectors.Add(new Vector4(rect.X, height - rect.Y, rect.Width, rect.Height)); // left
         }
-
-        // Limited to 75 line segments
-        var arrayIntersectors = intersectors.Take(CustomShader.MAX_LIGHT_COLLIDERS).ToArray();
-        MonoZeldaGame.Shader.SetLineSegments(arrayIntersectors);
 
         var boundaryColliderRects = room.GetStaticBoundaryColliders();
         foreach (var rect in boundaryColliderRects)
@@ -260,19 +292,25 @@ public class RoomScene : Scene
     }
 
 
-    private float animatedLightDistance = 0;
+    private float animatedLightDistance = 0; // Zero gives a nice intro effect
     private void UpdateDynamicLights()
     {
-        // Just the player as a light for now
-        // x, y, radius, intensity
+        if(!room.IsLit)
+            return;
 
-        // Light distance depends on the candle item
-        var lightDistance = PlayerState.EquippedProjectile == ProjectileType.CandleBlue ? 400 : 200;
-        animatedLightDistance = MathHelper.Lerp(animatedLightDistance, lightDistance, 0.1f);
+        if(playerLight != null)
+        {
+            playerLight.Position = PlayerState.Position;
+            // Light distance depends on the candle item
+            var lightDistance = PlayerState.EquippedProjectile == ProjectileType.CandleBlue 
+                ? PlayerLight.MAX_RADIUS : PlayerLight.MIN_RADIUS;
 
-        var lights = new Vector4[] { new(PlayerState.Position.X, PlayerState.Position.Y, animatedLightDistance, 1) };
-        var colors = new Vector4[] { new(1, 1, 1, 1) };
+            // Animate distance changes
+            animatedLightDistance = MathHelper.Lerp(animatedLightDistance, lightDistance, 0.1f);
+            playerLight.Radius = animatedLightDistance;
+        }
 
-        MonoZeldaGame.Shader.SetDynamicLights(lights, colors);
+
+        MonoZeldaGame.Shader.SetDynamicLights(lights);
     }
 }

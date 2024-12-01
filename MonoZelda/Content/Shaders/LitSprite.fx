@@ -77,15 +77,25 @@ float4 SpritePixelShader(PixelInput p) : SV_TARGET
         return diffuse * p.Color;
     }
 
-    float4 obstructionValue = float4(1, 1, 1, 1);
+    // Always shadow the top of the room border
+    if(p.Position.x < 28 || p.Position.x > 994 || p.Position.y < 28 || p.Position.y > 676)
+    {
+        return float4(0.1, 0.1, 0.1, 1) * diffuse * p.Color;
+    }
+
+    float3 accumulatedLight = float3(0, 0, 0);  // Start with zero light contribution
 
     // Ray test all lights
     for (int pointIndex = 0; pointIndex < num_lights; ++pointIndex)
     {
         float2 ray = lights[pointIndex].xy - p.Position.xy;
+        
+        // Assume initial light visibility to be 1 for this particular light
+        float lightContribution = 1.0;
         for(int rectIndex = 0; rectIndex < num_line_segments; ++rectIndex)
         {
             float4 rect = line_segments[rectIndex];
+
 
             float2 topLeft = rect.xy;
             float2 topRight = rect.xy + float2(rect.z, 0);
@@ -104,8 +114,10 @@ float4 SpritePixelShader(PixelInput p) : SV_TARGET
                 float percentY = (topRight.y - p.Position.y) / rect.w;
                 float val = valX * percentY;
 
-                obstructionValue -= float4(val, val, val, 0);
-                continue;
+                lightContribution -= float4(val, val, val, 0);
+                // Clamp light contribution to ensure it stays within valid bounds
+                lightContribution = saturate(lightContribution);
+                //continue;
             }
 
             // Checked edges are an X and the bottom of the rect collider
@@ -133,26 +145,27 @@ float4 SpritePixelShader(PixelInput p) : SV_TARGET
                         obsValue *= abs(obs.x);
                     }
 
-                    float value = obsValue;
+                    lightContribution -= obsValue;
 
-                    obstructionValue -= float4(value, value, value, 0);
+                    lightContribution = saturate(lightContribution);
                 }
             }
         }
-    }
 
-    float3 value = float3(0, 0, 0);
-    for (int lightIndex = 0; lightIndex < num_lights; ++lightIndex)
-    {
-        float distanceToPoint = length(p.Position.xy - lights[lightIndex].xy) / lights[lightIndex].z;
+        float distanceToPoint = length(p.Position.xy - lights[pointIndex].xy) / lights[pointIndex].z;
         float3 pointInfluence = float3(1 - distanceToPoint, 1 - distanceToPoint, 1 - distanceToPoint);
-        value += saturate(pointInfluence) * lights_colors[lightIndex].rgb * lights[lightIndex].w;
+        
+        float3 lightColor = lights_colors[pointIndex].rgb;
+        float lightActive = lights[pointIndex].w;
+
+        accumulatedLight += saturate(pointInfluence) * lightColor * lightContribution * lightActive;
     }
 
-    value = saturate(value);
-    value = max(value * obstructionValue.rgb, float3(0.10, 0.10, 0.10));
+    accumulatedLight = saturate(accumulatedLight);
 
-    return float4(value, 1) * diffuse * p.Color;
+    float3 finalValue = max(accumulatedLight, float3(0.10, 0.10, 0.10)); // Ensure a minimum ambient light level
+
+    return float4(finalValue, 1) * diffuse * p.Color;
 }
 
 technique SpriteBatch

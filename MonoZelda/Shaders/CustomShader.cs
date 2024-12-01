@@ -1,6 +1,7 @@
 ﻿
 
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -64,7 +65,21 @@ namespace MonoZelda.Shaders
             Initialize();
         }
 
-        public void SetDynamicLights(Vector4[] lights, Vector4[] colors)
+        public void SetDynamicLights(List<ILight> lights)
+        {
+            Vector4[] lightPositions = new Vector4[lights.Count];
+            Vector4[] lightColors = new Vector4[lights.Count];
+
+            for (int i = 0; i < lights.Count; i++)
+            {
+                lightPositions[i] = new Vector4(lights[i].Position.X, lights[i].Position.Y, lights[i].Radius, lights[i].Intensity);
+                lightColors[i] = new Vector4(lights[i].Color.R / 255f, lights[i].Color.G / 255f, lights[i].Color.B / 255f, 1);
+            }
+
+            SetDynamicLights(lightPositions, lightColors);
+        }
+
+        private void SetDynamicLights(Vector4[] lights, Vector4[] colors)
         {
             if (lightsParameter != null)
             {
