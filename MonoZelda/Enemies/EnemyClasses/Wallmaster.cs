@@ -238,10 +238,5 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
             throw new NotImplementedException();
         }
-
-        public override void DecideBehavior()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

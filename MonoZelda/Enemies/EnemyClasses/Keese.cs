@@ -12,7 +12,8 @@ namespace MonoZelda.Enemies.EnemyClasses
     {
         private readonly Random rnd = new();
         private double speedUpTimer;
-        private double dt;
+
+        private double timeToSpeedUp;
         private float speed;
 
         public Keese()
@@ -30,6 +31,9 @@ namespace MonoZelda.Enemies.EnemyClasses
             speed = 0;
             speedUpTimer = 0;
             StateMachine.SetSprite("keese_blue");
+            if(Level > 1){
+                StateMachine.SetSprite("keese_red");
+            }
         }
 
         public override void ChangeDirection()
@@ -63,11 +67,25 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
             StateMachine.ChangeDirection(Direction);
         }
+        public override void LevelOneBehavior()
+        {
+            timeToSpeedUp = 2;
+        }
+
+        public override void LevelTwoBehavior()
+        {
+            timeToSpeedUp = 3;
+        }
+
+        public override void LevelThreeBehavior()
+        {
+            timeToSpeedUp = 4;
+        }
 
         public override void Update()
         {
             base.Update();
-            if (speedUpTimer < 2)
+            if (speedUpTimer < timeToSpeedUp)
             {
                 speedUpTimer += MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
                 speed++;
@@ -78,26 +96,6 @@ namespace MonoZelda.Enemies.EnemyClasses
         public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
         {
             base.TakeDamage(0, collisionDirection, 1);
-        }
-
-        public override void LevelOneBehavior()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void LevelTwoBehavior()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void LevelThreeBehavior()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void DecideBehavior()
-        {
-            throw new NotImplementedException();
         }
     }
 }

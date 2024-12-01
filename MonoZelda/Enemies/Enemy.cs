@@ -49,7 +49,7 @@ namespace MonoZelda.Enemies
             EnemyCollision = new EnemyCollisionManager(this, Width, Height);
             StateMachine = new EnemyStateMachine(enemyDict, itemFactory, hasItem);
             EnemyFactory = enemyFactory;
-            Level = 1;
+            Level = MonoZeldaGame.EnemyLevel;
             Timer = 0;
         }
 

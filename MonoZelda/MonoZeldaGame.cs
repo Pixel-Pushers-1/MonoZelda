@@ -36,8 +36,12 @@ public class MonoZeldaGame : Game, ISaveable
 
     private IScene scene;
 
+    public static int EnemyLevel {get; set;}
+
     public MonoZeldaGame()
     {
+        EnemyLevel = 3;
+
         graphicsDeviceManager = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;

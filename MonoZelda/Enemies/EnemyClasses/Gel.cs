@@ -28,7 +28,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Height = 32;
             Health = 1;
             Alive = true;
-            Level = 3;
+            Level = MonoZeldaGame.EnemyLevel;
         }
 
         public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory,EnemyFactory enemyFactory, bool hasItem)
@@ -36,6 +36,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             if(Level == 1){
                 EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Gel);
                 base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory,enemyFactory, hasItem);
+                Level = 1;
                 spawnTimer = 0;
                 readyToJump = false;
                 StateMachine.SetSprite("gel_turquoise");

@@ -31,7 +31,17 @@ namespace MonoZelda.Enemies.EnemyClasses
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Zol);
             base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory,enemyFactory, hasItem);
             readyToJump = false;
-            StateMachine.SetSprite("zol_brown");
+            switch (MonoZeldaGame.EnemyLevel){
+                    case 1:
+                        StateMachine.SetSprite("zol_turquoise");
+                        break;
+                    case 2:
+                        StateMachine.SetSprite("zol_turquoise");
+                        break;
+                    case 3:
+                        StateMachine.SetSprite("zol_black");
+                        break;
+                }
         }
 
         public override void LevelOneBehavior()
