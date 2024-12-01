@@ -29,6 +29,7 @@ namespace MonoZelda.Dungeons
             doors = new List<DoorSpawn>();
             roomColliders = new List<Rectangle>();
             boundaryColliders = new List<Rectangle>();
+            nonColliderSpawns = new List<NonColliderSpawn>();
             itemSpawns = new List<ItemSpawn>();
             enemySpawns = new List<EnemySpawn>();
             triggers = new List<TriggerSpawn>();

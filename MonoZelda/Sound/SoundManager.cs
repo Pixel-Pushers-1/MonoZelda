@@ -54,8 +54,11 @@ public static class SoundManager
 
     public static void Pause(string soundName)
     {
-        SoundEffectInstance soundEffect = gameSoundEffects[soundName];
-        soundEffect.Pause();
+        if (gameSoundEffects.ContainsKey(soundName))
+        {
+            SoundEffectInstance soundEffect = gameSoundEffects[soundName];
+            soundEffect.Pause();
+        }
     }
 
     public static void ChangeMuteState()

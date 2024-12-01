@@ -15,14 +15,21 @@ public class ItemManager
     private List<Enemy> roomEnemyList;
     private PlayerCollisionManager playerCollision;
     private ICommand levelCompleteAnimationCommand;
+    private GameType gameMode;
 
-    public ItemManager(ICommand levelCompleteAnimationCommand, List<ItemSpawn> roomSpawnList, List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision)
+    public ItemManager(GameType gameMode, ICommand levelCompleteAnimationCommand, List<ItemSpawn> roomSpawnList, List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision)
     {
+        this.gameMode = gameMode;
         this.roomSpawnList = roomSpawnList;
         this.roomEnemyList = roomEnemyList;
         this.playerCollision = playerCollision;
         this.levelCompleteAnimationCommand = levelCompleteAnimationCommand;
         itemUpdateList = new List<Item>();
+    }
+
+    public GameType GameMode
+    {
+        get { return gameMode; }
     }
 
     public List<ItemSpawn> RoomSpawnList

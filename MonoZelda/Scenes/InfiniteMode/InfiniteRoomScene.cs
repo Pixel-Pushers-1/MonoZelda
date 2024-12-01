@@ -39,7 +39,7 @@ public class InfiniteRoomScene : Scene
     private IDungeonRoom room;
 
     // start here
-    private RandomRoomGenerator randomRoomGenerator;
+    private RoomGenerator randomRoomGenerator;
 
     public InfiniteRoomScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room)
     {
@@ -50,7 +50,7 @@ public class InfiniteRoomScene : Scene
 
         // start here
        
-        randomRoomGenerator = new RandomRoomGenerator();
+        randomRoomGenerator = new RoomGenerator();
     }
 
     public override void LoadContent(ContentManager contentManager)
@@ -68,7 +68,6 @@ public class InfiniteRoomScene : Scene
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(equippableManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerCycleEquippableCommand, new PlayerCycleEquippableCommand(equippableManager));
-        //commandManager.ReplaceCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand(projectileManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand(equippableManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerSprite));
@@ -90,7 +89,7 @@ public class InfiniteRoomScene : Scene
 
         // create itemFactory and spawn Items
         var levelCompleteAnimationCommand = commandManager.GetCommand(CommandType.LevelCompleteAnimationCommand);
-        itemManager = new ItemManager(levelCompleteAnimationCommand, room.GetItemSpawns(), enemies, playerCollision);
+        itemManager = new ItemManager(GameType.infiniteEasy, levelCompleteAnimationCommand, room.GetItemSpawns(), enemies, playerCollision);
         itemFactory = new ItemFactory(collisionController, itemManager);
         SpawnItems();
 
@@ -176,7 +175,7 @@ public class InfiniteRoomScene : Scene
         base.UnloadContent();
     }
 
-    public void SetPaused(bool paused)
+    public override void SetPaused(bool paused)
     {
         if (paused)
         {

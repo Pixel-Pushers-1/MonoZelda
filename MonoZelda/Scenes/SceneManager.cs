@@ -18,7 +18,7 @@ namespace MonoZelda.Scenes
     {
         public static readonly string MARIO_ROOM = "Room18";
         public static readonly string MARIO_ENTRANCE_ROOM = "Room17";
-        public static readonly string INFINITE_ROOM = "RoomInfinite";
+        public static readonly string ROOM_INFINITE = "RoomInfinite";
         
         private IDungeonRoomLoader roomManager;
         private IDungeonRoom currentRoom;
@@ -28,8 +28,6 @@ namespace MonoZelda.Scenes
         private ContentManager contentManager;
         private InventoryScene inventoryScene;
         private SaveManager saveManager;
-        private IDungeonRoomLoader roomManager;
-        private IDungeonRoom currentRoom;
         private IScene activeScene;
         
         public GameType gameMode { get; }
@@ -55,17 +53,11 @@ namespace MonoZelda.Scenes
             commandManager.ReplaceCommand(CommandType.LevelCompleteAnimationCommand, new LevelCompleteAnimationCommand(this));
             commandManager.ReplaceCommand(CommandType.LinkDeathAnimationCommand, new LinkDeathAnimationCommand(this));
             commandManager.ReplaceCommand(CommandType.WallmasterGrabAnimationCommand, new WallMasterGrabAnimationCommand(this));
-            commandManager.ReplaceCommand(CommandType.EnterDungeonAnimationCommand, new EnterDungeonAnimationCommand(this));    
+            commandManager.ReplaceCommand(CommandType.EnterDungeonAnimationCommand, new EnterDungeonAnimationCommand(this));
             commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this));
             commandManager.ReplaceCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand(this));
             commandManager.ReplaceCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand(this));
             commandManager.ReplaceCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand(commandManager));
-        }
-
-        public void ToggleInventory()
-        {
-            isPaused = inventoryScene.ToggleInventory();
-            (activeScene as RoomScene)?.SetPaused(isPaused);
         }
 
         public void TransitionRoom(string roomName, Direction transitionDirection)
@@ -99,7 +91,7 @@ namespace MonoZelda.Scenes
             // Debugging purposes
             LevelTextWidget.LevelName = roomName;
 
-            if (roomName == INFINITE_ROOM)
+            if (StartRoom == ROOM_INFINITE)
             {
                 activeScene = new InfiniteRoomScene(graphicsDevice, commandManager, collisionController, currentRoom);
             }
@@ -115,29 +107,6 @@ namespace MonoZelda.Scenes
             activeScene.LoadContent(contentManager);
         }
 
-        public void LevelCompleteScene()
-        {
-            var startRoom = roomManager.LoadRoom(StartRoom);
-            var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
-            activeScene = new LevelCompleteScene(startRoom, command);
-            activeScene.LoadContent(contentManager);
-        }
-
-        public void WallMasterGrabScene()
-        {
-            var startRoom = roomManager.LoadRoom(StartRoom);
-            var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
-            activeScene = new WallMasterGrabScene(currentRoom.RoomSprite.ToString(), startRoom, command, graphicsDevice);
-            activeScene.LoadContent(contentManager);
-        }
-
-        public void LinkDeathScene()
-        {
-            var command = commandManager.GetCommand(CommandType.ResetCommand);
-            activeScene = new LinkDeathScene(command, graphicsDevice);
-            activeScene.LoadContent(contentManager);
-        }
-
         public override void LoadContent(ContentManager contentManager)
         {
             this.contentManager = contentManager;
@@ -145,9 +114,15 @@ namespace MonoZelda.Scenes
 
             // We begin by revealing the the first room depending on game mode selected
             currentRoom = roomManager.LoadRoom(StartRoom);
-            activeScene = new StartGameScene(this, currentRoom, graphicsDevice);
-            currentRoom.SpawnPoint = DungeonConstants.DungeonEnteranceSpawnPoint;
-            EnterDungeonScene(currentRoom);
+            if(gameMode == GameType.classic)
+            {
+                EnterDungeonScene(currentRoom);
+
+            }
+            else
+            {
+                EnterInfiniteModeScene(currentRoom);
+            }
 
             //set player map marker
             inventoryScene.SetPlayerMapMarker(DungeonConstants.GetRoomCoordinate(StartRoom));
@@ -181,12 +156,20 @@ namespace MonoZelda.Scenes
             inventoryScene.LoadContent(contentManager, currentRoom);
         }
 
+        public void EnterInfiniteModeScene(IDungeonRoom room)
+        {
+            var loadRoomCommand = commandManager.GetCommand(CommandType.LoadRoomCommand);
+            activeScene = new EnterInfiniteModeScene(graphicsDevice, commandManager, collisionController, room);
+            activeScene.LoadContent(contentManager);
+        }
+
         public void EnterDungeonScene(IDungeonRoom room)
         {
             var loadRoomCommand = commandManager.GetCommand(CommandType.LoadRoomCommand);
             activeScene = new EnterDungeonScene(loadRoomCommand, room, graphicsDevice);
             activeScene.LoadContent(contentManager);
         }
+
         public void LevelCompleteScene()
         {
             var startRoom = roomManager.LoadRoom(StartRoom);
@@ -213,7 +196,7 @@ namespace MonoZelda.Scenes
         public void ToggleInventory()
         {
             isPaused = inventoryScene.ToggleInventory();
-            (activeScene as RoomScene)?.SetPaused(isPaused);
+            activeScene?.SetPaused(isPaused);
         }
 
         public void Save(SaveState save)

@@ -87,7 +87,7 @@ public class RoomScene : Scene
 
         // create itemFactory and spawn Items
         var levelCompleteAnimationCommand = commandManager.GetCommand(CommandType.LevelCompleteAnimationCommand);
-        itemManager = new ItemManager(levelCompleteAnimationCommand, room.GetItemSpawns(), enemies, playerCollision);
+        itemManager = new ItemManager(GameType.infiniteEasy, levelCompleteAnimationCommand, room.GetItemSpawns(), enemies, playerCollision);
         itemFactory = new ItemFactory(collisionController, itemManager);
         SpawnItems();
 
@@ -184,7 +184,8 @@ public class RoomScene : Scene
         base.UnloadContent();
     }
 
-    public void SetPaused(bool paused) {
+    public override void SetPaused(bool paused) 
+    {
         if (paused) {
             commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new EmptyCommand());
             commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new EmptyCommand());

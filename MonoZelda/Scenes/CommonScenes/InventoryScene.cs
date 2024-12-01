@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace MonoZelda.Scenes
 {
-    internal class InventoryScene : IScene
+    internal class InventoryScene : Scene
     {
         private static readonly Point HUDBackgroundPosition = new (0, -32);
         private static readonly Point HUDMapPosition = new (64, 80);

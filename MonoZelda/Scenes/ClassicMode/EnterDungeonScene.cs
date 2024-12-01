@@ -9,7 +9,7 @@ using MonoZelda.Link;
 
 namespace MonoZelda.Scenes
 {
-    internal class StartGameScene : Scene
+    internal class EnterDungeonScene : Scene
     {
         private IDungeonRoom room;
         private ICommand loadRoomCommand;
