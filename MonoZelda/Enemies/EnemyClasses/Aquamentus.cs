@@ -82,7 +82,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
         }
 
-        public void CreateFireballs()
+        public override void LevelOneBehavior()
         {
             var move = PlayerState.Position.ToVector2() - Pos.ToVector2();
             move = Vector2.Divide(move, (float)Math.Sqrt(move.X * move.X + move.Y * move.Y)) * 6;
@@ -92,6 +92,42 @@ namespace MonoZelda.Enemies.EnemyClasses
                 fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X,move.Y - 2)));
                 fireballs.Add(new Fireball(Pos, CollisionController, move));
                 fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X, move.Y + 2)));
+                foreach (var projectile in fireballs)
+                {
+                    projectileDictionary.Add(projectile, new EnemyProjectileCollisionManager(projectile));
+                }
+            }
+        }
+
+        public override void LevelTwoBehavior()
+        {
+            var move = PlayerState.Position.ToVector2() - Pos.ToVector2();
+            move = Vector2.Divide(move, (float)Math.Sqrt(move.X * move.X + move.Y * move.Y)) * 6;
+            if (!projectileActive)
+            {
+                projectileActive = true;
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X - 1,move.Y - 1)));
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X - 1,move.Y)));
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X - 1, move.Y + 1)));
+                foreach (var projectile in fireballs)
+                {
+                    projectileDictionary.Add(projectile, new EnemyProjectileCollisionManager(projectile));
+                }
+            }
+        }
+
+        public override void LevelThreeBehavior()
+        {
+            var move = PlayerState.Position.ToVector2() - Pos.ToVector2();
+            move = Vector2.Divide(move, (float)Math.Sqrt(move.X * move.X + move.Y * move.Y)) * 6;
+            if (!projectileActive)
+            {
+                projectileActive = true;
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X - 1,move.Y - 2)));
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X - 1,move.Y - 1)));
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X - 1,move.Y)));
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X - 1,move.Y + 1)));
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X - 1,move.Y + 2)));
                 foreach (var projectile in fireballs)
                 {
                     projectileDictionary.Add(projectile, new EnemyProjectileCollisionManager(projectile));
@@ -121,7 +157,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             if (fireballs.Count == 0 && Health > 0)
             {
                 SoundManager.PlaySound("LOZ_Boss_Scream1", false);
-                CreateFireballs();
+                DecideBehavior();
                 StateMachine.SetSprite("aquamentus_left_mouthopen");
             }
             else
@@ -158,24 +194,5 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
         }
 
-        public override void LevelOneBehavior()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void LevelTwoBehavior()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void LevelThreeBehavior()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void DecideBehavior()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

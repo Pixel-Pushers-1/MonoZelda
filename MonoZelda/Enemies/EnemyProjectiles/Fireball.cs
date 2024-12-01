@@ -10,7 +10,6 @@ namespace MonoZelda.Enemies.EnemyProjectiles
     {
         public EnemyProjectileCollidable ProjectileHitbox { get; set; }
         public Point Pos { get; set; }
-        private Point originalPos;
 
         private CollisionController collisionController;
         public SpriteDict FireballSpriteDict { get; private set; }
@@ -21,7 +20,6 @@ namespace MonoZelda.Enemies.EnemyProjectiles
         public Fireball(Point pos, CollisionController collisionController, Vector2 C)
         {
             Pos = pos;
-            originalPos = pos;
             FireballSpriteDict = new(SpriteType.Enemies, 0, new Point(100, 100));
             FireballSpriteDict.SetSprite("fireball");
             ProjectileHitbox = new EnemyProjectileCollidable(new Rectangle(pos.X, pos.Y, 30, 30));
