@@ -292,24 +292,11 @@ public class RoomScene : Scene
     }
 
 
-    private float animatedLightDistance = 0; // Zero gives a nice intro effect
+    
     private void UpdateDynamicLights()
     {
         if(!room.IsLit)
             return;
-
-        if(playerLight != null)
-        {
-            playerLight.Position = PlayerState.Position;
-            // Light distance depends on the candle item
-            var lightDistance = PlayerState.EquippedProjectile == ProjectileType.CandleBlue 
-                ? PlayerLight.MAX_RADIUS : PlayerLight.MIN_RADIUS;
-
-            // Animate distance changes
-            animatedLightDistance = MathHelper.Lerp(animatedLightDistance, lightDistance, 0.1f);
-            playerLight.Radius = animatedLightDistance;
-        }
-
 
         MonoZeldaGame.Shader.SetDynamicLights(lights);
     }
