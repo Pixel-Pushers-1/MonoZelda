@@ -112,7 +112,6 @@ public class MonoZeldaGame : Game, ISaveable
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.Black);
-        Shader.SetPlayerPosition(PlayerState.Position);   
 
         SamplerState samplerState = new();
         samplerState.Filter = TextureFilter.Point;

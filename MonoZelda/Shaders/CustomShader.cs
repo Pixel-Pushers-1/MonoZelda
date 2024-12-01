@@ -1,5 +1,6 @@
 ﻿
 
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,14 +9,25 @@ namespace MonoZelda.Shaders
 {
     internal class CustomShader
     {
+        public const int MAX_LIGHT_COLLIDERS = 75;
+        public const int MAX_LIGHTS = 6;
+
         private Effect effect;
         public Effect Effect => effect;
 
-        private EffectParameter numLineSegmentsParameter;
-        private EffectParameter lineSegmentsParameter;
         private EffectParameter menuPositionParameter;
         private EffectParameter viewProjectionParameter;
-        private EffectParameter playerPositionParameter;
+
+        // Collider parameters
+        private EffectParameter numLineSegmentsParameter;
+        private EffectParameter lineSegmentsParameter;
+
+        // Light parameters
+        // x, y, z, w = x, y, radius, intensity
+        private EffectParameter lightsParameter;
+        private EffectParameter colorsParameter;
+        private EffectParameter numLightsParameter;
+
 
         private GraphicsDevice graphicsDevice;
 
@@ -32,7 +44,9 @@ namespace MonoZelda.Shaders
             lineSegmentsParameter = effect.Parameters["line_segments"];
             menuPositionParameter = effect.Parameters["menu_position"];
             viewProjectionParameter = effect.Parameters["view_projection"];
-            playerPositionParameter = effect.Parameters["player_position"];
+            lightsParameter = effect.Parameters["lights"];
+            colorsParameter = effect.Parameters["lights_colors"];
+            numLightsParameter = effect.Parameters["num_lights"];            
 
             Initialize();
         }
@@ -42,6 +56,7 @@ namespace MonoZelda.Shaders
             SetLineSegments(new Vector4[0]);
             SetMenuPosition(192);
             SetViewProjection();
+            SetDynamicLights(Array.Empty<Vector4>(), Array.Empty<Vector4>());
         }
 
         public void Reset()
@@ -49,12 +64,27 @@ namespace MonoZelda.Shaders
             Initialize();
         }
 
-        public void SetPlayerPosition(Point playerPosition)
+        public void SetDynamicLights(Vector4[] lights, Vector4[] colors)
         {
-            if (playerPositionParameter != null)
+            if (lightsParameter != null)
             {
-                var vector2 = new Vector2(playerPosition.X, graphicsDevice.Viewport.Height - playerPosition.Y);
-                playerPositionParameter.SetValue(vector2);
+                // Invert all the y values
+                for (int i = 0; i < lights.Length; i++)
+                {
+                    lights[i].Y = graphicsDevice.Viewport.Height - lights[i].Y;
+                }
+
+                lightsParameter.SetValue(lights);
+            }
+
+            if (colorsParameter != null)
+            {
+                colorsParameter.SetValue(colors);
+            }
+
+            if (numLightsParameter != null)
+            {
+                numLightsParameter.SetValue(lights.Length);
             }
         }
 

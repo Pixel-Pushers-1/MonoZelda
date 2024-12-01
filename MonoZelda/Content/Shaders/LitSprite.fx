@@ -8,10 +8,9 @@
 #define PS_SHADERMODEL ps_4_0
 #endif
 
-#define MAX_LIGHTS 10
-float3 light_positions[MAX_LIGHTS];
-float4 light_colors[MAX_LIGHTS];
-float light_active[MAX_LIGHTS]; // Use float instead of bool for multiplier
+#define MAX_LIGHTS 6
+float4 lights[MAX_LIGHTS]; // x, y, radius, intensity
+float4 lights_colors[MAX_LIGHTS]; // r, g, b, a
 int num_lights;
 
 #define MAX_SEGMENTS 80
@@ -50,6 +49,7 @@ PixelInput SpriteVertexShader(VertexInput v)
     return output;
 }
 
+// https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
 float4 testVisibility(float2 rayOrigin, float2 ray, float2 pointA, float2 pointB)
 {
     float2 v1 = rayOrigin - pointA;
@@ -68,71 +68,6 @@ float4 testVisibility(float2 rayOrigin, float2 ray, float2 pointA, float2 pointB
     return float4(normalDot, t1, t2, angle);
 }
 
-// t1, t2, inside, angle
-// int getObstrutors(float2 pixelPosition, float2 lightPos, out float4 obstructors[4])
-// {
-//     // init the obstructors
-//     for (int t = 0; t < 4; ++t)
-//     {
-//         obstructors[t] = float4(1, 1, 1, 1);
-//     }
-
-//     // TODO: Opporunity to create a quadtree to optimize this
-//     int numObstructors = 0;
-
-//     float2 ray = lightPos - pixelPosition;
-//     float2 rayNormal = normalize(ray);
-
-//     for (int i = 0; i < num_line_segments && numObstructors < 4; ++i)
-//     {
-//         float2 topLeft = line_segments[i].xy;
-//         float2 bottomRight = line_segments[i].zw;
-
-//         float width = bottomRight.x - topLeft.x;
-//         float height = bottomRight.y - topLeft.y;
-
-//         float2 topRight = topLeft + float2(width, 0);
-//         float2 bottomLeft = topLeft + float2(0, height);
-
-//         float2 edgeNormals[4] = {
-//             float2(0, 1),
-//             float2(1, 0),
-//             float2(0, -1),
-//             float2(-1, 0)
-//         };
-
-//         float4 edges[4] = {
-//             float4(topLeft.x, topLeft.y, topRight.x, topRight.y),
-//             float4(topRight.x, topRight.y, bottomRight.x, bottomRight.y),
-//             float4(bottomLeft.x, bottomLeft.y, bottomRight.x, bottomRight.y),
-//             float4(topLeft.x, topLeft.y, bottomLeft.x, bottomLeft.y)
-//         };
-
-//         for (int edgeIndex = 0; edgeIndex < 4; ++edgeIndex)
-//         {
-//             float4 edge = edges[edgeIndex];
-//             float2 normal = edgeNormals[edgeIndex];
-
-//             float2 pointA = float2(edge.x, edge.y);
-//             float2 pointB = float2(edge.z, edge.w);
-
-//             // 0/1, t1, t2, dotProduct
-//             float4 test = testVisibility(pixelPosition, ray, pointA, pointB, normal);
-
-//             // t1[0] = 1 if the ray intersects the edge
-//             if(test[0] > 0 && test[1] >= 0 && test[1] <= 1)
-//             {
-//                 float4 obstructor = obstructors[numObstructors];
-//                 obstructor = test.yzww;
-
-//                 numObstructors++;
-//             }
-//         }
-//     }
-
-//     return numObstructors;
-// }
-
 float4 SpritePixelShader(PixelInput p) : SV_TARGET
 {
     float4 diffuse = tex2D(TextureSampler, p.TexCoord.xy);
@@ -143,82 +78,79 @@ float4 SpritePixelShader(PixelInput p) : SV_TARGET
     }
 
     float4 obstructionValue = float4(1, 1, 1, 1);
-    
-    float2 ray = player_position - p.Position.xy;
-    for(int rectIndex = 0; rectIndex < num_line_segments; ++rectIndex)
+
+    // Ray test all lights
+    for (int pointIndex = 0; pointIndex < num_lights; ++pointIndex)
     {
-        float4 rect = line_segments[rectIndex];
-
-
-        float2 topLeft = rect.xy;
-        float2 topRight = rect.xy + float2(rect.z, 0);
-        float2 bottomLeft = rect.xy - float2(0, rect.w);
-        float2 bottomRight = rect.xy + float2(rect.z, -rect.w);
-
-        // if the pixel is inside the rect and the ray points up
-        if(p.Position.x >= topLeft.x && p.Position.x <= topRight.x &&
-           p.Position.y >= bottomRight.y && p.Position.y <= topRight.y)
+        float2 ray = lights[pointIndex].xy - p.Position.xy;
+        for(int rectIndex = 0; rectIndex < num_line_segments; ++rectIndex)
         {
-            if(player_position.y < rect.y)
-                continue;
+            float4 rect = line_segments[rectIndex];
 
-            float percentX = (topRight.x - p.Position.x) / rect.z; 
-            float valX = -pow(2 * percentX - 1, 2) + 1;
+            float2 topLeft = rect.xy;
+            float2 topRight = rect.xy + float2(rect.z, 0);
+            float2 bottomLeft = rect.xy - float2(0, rect.w);
+            float2 bottomRight = rect.xy + float2(rect.z, -rect.w);
 
-            // fade it in as the player moves from the bottom edge to the top edge
-            float percentY = (topRight.y - p.Position.y) / rect.w;
-
-            float val = valX * percentY;
-
-            obstructionValue -= float4(val, val, val, 0);
-            continue;
-        }
-
-        float2 edges[4] = {
-            topLeft, bottomRight,
-            bottomLeft, topRight
-        };
-
-        for(int edgeIndex = 0; edgeIndex < 2; ++edgeIndex)
-        {
-            float2 pointA = edges[2 * edgeIndex];
-            float2 pointB = edges[2 * edgeIndex + 1];
-
-            float4 obs = testVisibility(p.Position.xy, ray, pointA, pointB);
-
-            if(obs.y > 0 && obs.y < 1 && obs.z > 0 && obs.z < 1)
+            if(p.Position.x >= topLeft.x && p.Position.x <= topRight.x &&
+               p.Position.y >= bottomRight.y && p.Position.y <= topRight.y)
             {
-                float nAngle = obs.w;
-                float percent = obs.z;
+                if(lights[pointIndex].y < rect.y)
+                    continue;
 
-                // -\left(2x-1\right)^{2}+1
-                float obsValue = -pow(2 * percent - 1, 2) + 1;
+                float percentX = (topRight.x - p.Position.x) / rect.z; 
+                float valX = -pow(2 * percentX - 1, 2) + 1;
 
-                if(edgeIndex > 0)
+                float percentY = (topRight.y - p.Position.y) / rect.w;
+                float val = valX * percentY;
+
+                obstructionValue -= float4(val, val, val, 0);
+                continue;
+            }
+
+            // Checked edges are an X and the bottom of the rect collider
+            float2 edges[4] = {
+                topLeft, bottomRight,
+                bottomLeft, topRight,
+            };
+
+            for(int edgeIndex = 0; edgeIndex < 2; ++edgeIndex)
+            {
+                float2 pointA = edges[2 * edgeIndex];
+                float2 pointB = edges[2 * edgeIndex + 1];
+
+                float4 obs = testVisibility(p.Position.xy, ray, pointA, pointB);
+
+                if(obs.y > 0 && obs.y < 1 && obs.z > 0 && obs.z < 1)
                 {
-                    obsValue *= abs(obs.x);
+                    float nAngle = obs.w;
+                    float percent = obs.z;
+
+                    float obsValue = -pow(2 * percent - 1, 2) + 1;
+
+                    if(edgeIndex > 0)
+                    {
+                        obsValue *= abs(obs.x);
+                    }
+
+                    float value = obsValue;
+
+                    obstructionValue -= float4(value, value, value, 0);
                 }
-
-                float value = obsValue;
-
-                obstructionValue -= float4(value, value, value, 0);
             }
         }
     }
 
-    float distanceToPlayer = length(p.Position.xy - player_position) / 400;
-    float3 playerInfluence = float3(1 - distanceToPlayer, 1 - distanceToPlayer, 1 - distanceToPlayer);
-    float3 value = saturate(playerInfluence);
-
-    for (int light = 0; light < num_lights; ++light)
+    float3 value = float3(0, 0, 0);
+    for (int lightIndex = 0; lightIndex < num_lights; ++lightIndex)
     {
-        float distanceToLight = length(p.Position.xy - light_positions[light].xy) / 200;
-        float3 lightInfluence = float3(1 - distanceToLight, 1 - distanceToLight, 1 - distanceToLight);
-        value += saturate(lightInfluence) * light_colors[light].rgb * light_active[light];
+        float distanceToPoint = length(p.Position.xy - lights[lightIndex].xy) / lights[lightIndex].z;
+        float3 pointInfluence = float3(1 - distanceToPoint, 1 - distanceToPoint, 1 - distanceToPoint);
+        value += saturate(pointInfluence) * lights_colors[lightIndex].rgb * lights[lightIndex].w;
     }
 
-    value = saturate(value); // Clamp the final value between 0 and 1
-    value = max(value * obstructionValue.rgb, float3(0.10, 0.10, 0.10)); // Ensure minimum value of 0.10
+    value = saturate(value);
+    value = max(value * obstructionValue.rgb, float3(0.10, 0.10, 0.10));
 
     return float4(value, 1) * diffuse * p.Color;
 }
