@@ -107,5 +107,25 @@ namespace MonoZelda.Enemies.EnemyClasses
                 }
             }
         }
+
+        public override void LevelOneBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void LevelTwoBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void LevelThreeBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DecideBehavior()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

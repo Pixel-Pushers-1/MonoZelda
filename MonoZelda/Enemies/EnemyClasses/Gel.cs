@@ -71,6 +71,26 @@ namespace MonoZelda.Enemies.EnemyClasses
         {
             base.TakeDamage(0, collisionDirection, 1);
         }
+
+        public override void LevelOneBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void LevelTwoBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void LevelThreeBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DecideBehavior()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

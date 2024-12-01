@@ -89,9 +89,9 @@ namespace MonoZelda.Enemies.EnemyClasses
             if (!projectileActive)
             {
                 projectileActive = true;
-                fireballs.Add(new AquamentusFireball(Pos, CollisionController, new Vector2(move.X,move.Y - 2)));
-                fireballs.Add(new AquamentusFireball(Pos, CollisionController, move));
-                fireballs.Add(new AquamentusFireball(Pos, CollisionController, new Vector2(move.X, move.Y + 2)));
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X,move.Y - 2)));
+                fireballs.Add(new Fireball(Pos, CollisionController, move));
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X, move.Y + 2)));
                 foreach (var projectile in fireballs)
                 {
                     projectileDictionary.Add(projectile, new EnemyProjectileCollisionManager(projectile));
@@ -156,6 +156,26 @@ namespace MonoZelda.Enemies.EnemyClasses
                     StateMachine.DamageFlash();
                 }
             }
+        }
+
+        public override void LevelOneBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void LevelTwoBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void LevelThreeBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DecideBehavior()
+        {
+            throw new NotImplementedException();
         }
     }
 }

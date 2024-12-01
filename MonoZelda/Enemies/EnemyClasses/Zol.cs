@@ -21,12 +21,32 @@ namespace MonoZelda.Enemies.EnemyClasses
             Alive = true;
         }
 
+        public override void DecideBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
         public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
         {
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Zol);
             base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasItem);
             readyToJump = false;
             StateMachine.SetSprite("zol_brown");
+        }
+
+        public override void LevelOneBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void LevelThreeBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void LevelTwoBehavior()
+        {
+            throw new NotImplementedException();
         }
 
         public override void Update()
