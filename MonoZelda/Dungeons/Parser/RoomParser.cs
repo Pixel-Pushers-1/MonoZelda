@@ -3,9 +3,6 @@ using MonoZelda.Dungeons.Loader;
 using MonoZelda.Dungeons.Parser.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MonoZelda.Dungeons.Parser
 {
@@ -21,7 +18,7 @@ namespace MonoZelda.Dungeons.Parser
             _roomLoader = loader;
             _roomTokenizer = tokenizer;
 
-
+            _cellParsers.Add("", new NonColliderCellParser());
             _cellParsers.Add("item", new ItemCellParser());
             _cellParsers.Add("enemy", new EnemyCellParser());
             _cellParsers.Add("roomCollision", new RoomCollisionCellParser());
@@ -42,7 +39,6 @@ namespace MonoZelda.Dungeons.Parser
             LoadDoors(roomFile, room);
             LoadContent(roomFile, room);
             
-
             return room;
         }
 
@@ -56,8 +52,6 @@ namespace MonoZelda.Dungeons.Parser
                     position += DungeonConstants.DungeonPosition + DungeonConstants.Margin;
 
                     var cell = roomFile.Content[y][x];
-
-                    if (string.IsNullOrEmpty(cell)) continue;
 
                     InvokeParser(cell, position, room);
                 }
