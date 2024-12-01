@@ -8,7 +8,7 @@
 #define PS_SHADERMODEL ps_4_0
 #endif
 
-#define MAX_LIGHTS 6
+#define MAX_LIGHTS 16
 float4 lights[MAX_LIGHTS]; // x, y, radius, intensity
 float4 lights_colors[MAX_LIGHTS]; // r, g, b, a
 int num_lights;

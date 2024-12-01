@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,7 +12,7 @@ namespace MonoZelda.Shaders
     internal class CustomShader
     {
         public const int MAX_LIGHT_COLLIDERS = 75;
-        public const int MAX_LIGHTS = 6;
+        public const int MAX_LIGHTS = 12;
 
         private Effect effect;
         public Effect Effect => effect;
@@ -67,6 +68,9 @@ namespace MonoZelda.Shaders
 
         public void SetDynamicLights(List<ILight> lights)
         {
+            // limit lights to MAX_LIGHTS
+            lights = lights.Take(MAX_LIGHTS).ToList();
+
             Vector4[] lightPositions = new Vector4[lights.Count];
             Vector4[] lightColors = new Vector4[lights.Count];
 
