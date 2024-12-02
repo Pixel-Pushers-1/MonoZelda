@@ -1,4 +1,7 @@
-﻿using MonoZelda.Items;
+﻿using MonoZelda.Enemies;
+using MonoZelda.Items;
+using System.Collections.Generic;
+using System;
 
 namespace MonoZelda.Dungeons.InfiniteMode;
 
@@ -9,9 +12,18 @@ public class RoomItemGenerator
     private static readonly ItemList[] UtilityItemPool = { ItemList.Bomb, ItemList.Rupee };
     private static readonly ItemList[] HealthItemPool= { ItemList.BluePotion, ItemList.RedPotion, ItemList.HeartContainer, ItemList.Fairy, ItemList.Heart };
 
+
     public RoomItemGenerator()
     {
 
+    }
+
+    public List<ItemList> GenerateItemsForRooms(int roomNumber, int playerLevel, int playerHealth)
+    {
+        List<ItemList> items = new List<ItemList>();
+        Random random = new Random();
+
+        return items;
     }
 
 }
