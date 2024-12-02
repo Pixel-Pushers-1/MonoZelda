@@ -8,6 +8,7 @@ namespace MonoZelda.Dungeons.Parser
 {
     internal class RoomParser
     {
+        private const string EMPTY_STRING = "";
         private IRoomLoader _roomLoader;
         private IRoomTokenizer _roomTokenizer;
 
@@ -74,7 +75,11 @@ namespace MonoZelda.Dungeons.Parser
         private void InvokeParser(string cell, Point position, DungeonRoom room)
         {
             // cell format is category_enum
-            if(!cell.Contains('_')) return;
+            if (!cell.Contains('_'))
+            {
+                _cellParsers[EMPTY_STRING].Parse(EMPTY_STRING, position, room);
+                return;
+            };
             
             // First part defines the Enum Type
             var enumType = cell[..cell.IndexOf('_')];

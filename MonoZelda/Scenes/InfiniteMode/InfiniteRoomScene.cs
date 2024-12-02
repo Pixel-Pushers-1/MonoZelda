@@ -40,11 +40,12 @@ public class InfiniteRoomScene : Scene
     private IDungeonRoom room;
 
     // start here
-    private RoomGenerator roomGenerator;
+    private int roomNumber;
+    private Random rnd;
     private RoomEnemyGenerator roomEnemyGenerator;
     private RoomItemGenerator roomItemGenerator;
 
-    public InfiniteRoomScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room)
+    public InfiniteRoomScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room, int roomNumber)
     {
         this.graphicsDevice = graphicsDevice;
         this.commandManager = commandManager;
@@ -52,6 +53,8 @@ public class InfiniteRoomScene : Scene
         this.room = room;
 
         // start here
+        this.roomNumber = roomNumber;   
+        rnd = new Random();
         roomEnemyGenerator = new RoomEnemyGenerator();
         roomItemGenerator = new RoomItemGenerator();
     }
@@ -100,6 +103,9 @@ public class InfiniteRoomScene : Scene
         itemManager = new ItemManager(GameType.infiniteEasy, levelCompleteAnimationCommand, room.GetItemSpawns(), enemies, playerCollision);
         itemFactory = new ItemFactory(collisionController, itemManager);
 
+        // spawn Enemies
+        SpawnEnemies();
+        
         // create equippableManager
         equippableManager = new EquippableManager(collisionController);
     }
@@ -112,15 +118,29 @@ public class InfiniteRoomScene : Scene
         CreateStaticColliders();
     }
 
-    // Entities refer to enemies and items
-    private void LoadEntities()
+    private void SpawnEnemies()
+    {
+        // get nonStaticColliderSpawns
+        var nonStaticColliderSpawns = room.GetNonColliderSpawns();
+
+        // get list of enemies
+        List<EnemyList> roomEnemies = roomEnemyGenerator.GenerateEnemiesForRoom(roomNumber, 1, PlayerState.Health);
+
+        // spawn enemies
+        enemyFactory = new EnemyFactory(collisionController);
+        for (int i = 0; i < roomEnemies.Count; i++)
+        {
+            int randomNum = rnd.Next(nonStaticColliderSpawns.Count - 1);
+            var enemy = enemyFactory.CreateEnemy(roomEnemies[i], nonStaticColliderSpawns[randomNum].Position,itemFactory,false);
+            enemies.Add(enemy);
+            room.Remove(nonStaticColliderSpawns[randomNum]);
+        }
+
+    }
+
+    private void LoadItems()
     {
         var nonColliderSpawns = room.GetNonColliderSpawns();
-
-        // create items
-
-
-        // create enemies
     }
 
 
@@ -201,7 +221,14 @@ public class InfiniteRoomScene : Scene
         // update enemies
         foreach (var enemy in enemies.ToList())
         {
-            enemy.Update();
+            if (enemy.Alive == false)
+            {
+                enemies.Remove(enemy);
+            }
+            else
+            {
+                enemy.Update();
+            }
         }
 
         // update all updateables like doors

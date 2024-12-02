@@ -19,7 +19,7 @@ namespace MonoZelda.Scenes
         public static readonly string MARIO_ROOM = "Room18";
         public static readonly string MARIO_ENTRANCE_ROOM = "Room17";
         public static readonly string ROOM_INFINITE = "RoomInfinite";
-        
+
         private IDungeonRoomLoader roomManager;
         private IDungeonRoom currentRoom;
         private IDungeonRoom randomRoom;
@@ -32,12 +32,14 @@ namespace MonoZelda.Scenes
         private SaveManager saveManager;
         private RoomGenerator roomGenerator;
         
+        public int RoomNumber { get; private set; }
         public GameType gameMode { get; }
         public bool isPaused { get; private set; }
         public string StartRoom { get; private set; }
 
         public SceneManager(GameType gameMode, string startRoom, GraphicsDevice graphicsDevice, CommandManager commandManager)
         {
+            RoomNumber = 0;
             StartRoom = startRoom;
             this.gameMode = gameMode;
             this.graphicsDevice = graphicsDevice;
@@ -102,7 +104,8 @@ namespace MonoZelda.Scenes
 
             if (StartRoom == ROOM_INFINITE)
             {
-                activeScene = new InfiniteRoomScene(graphicsDevice, commandManager, collisionController, randomRoom);
+                RoomNumber = RoomNumber + 1;
+                activeScene = new InfiniteRoomScene(graphicsDevice, commandManager, collisionController, randomRoom, RoomNumber);
             }
             else if (roomName == MARIO_ROOM)
             {
