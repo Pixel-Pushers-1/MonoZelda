@@ -1,8 +1,7 @@
 using Microsoft.Xna.Framework;
-using MonoZelda.Commands.GameCommands;
 using MonoZelda.Dungeons.Parser.Data;
-using MonoZelda.Link.Projectiles;
 using MonoZelda.Save;
+using MonoZelda.Link.Equippables;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -12,18 +11,15 @@ public static class PlayerState
 {
     private static readonly int INITIAL_HP = 6;
     private static readonly int INITIAL_RUPEES = 3;
-    private static readonly int INITIAL_BOMBS = 1;
+    private static readonly int INITIAL_BOMBS = 0;
     private static readonly int INITIAL_KEYS = 0;
-
     private static int _health = INITIAL_HP;
-    
+
+    public static List<EquippableType> EquippableInventory;
 
     // (RoomName, Direction)
     public static HashSet<(string, DoorDirection)> Keyring { get; set; } = new ();
-
     public static HashSet<Point> DiscoveredRooms { get; set; } = new();
-
-
 
     public static void Initialize()
     {
@@ -37,11 +33,12 @@ public static class PlayerState
         Rupees = INITIAL_RUPEES;
         Bombs = INITIAL_BOMBS;
         Keys = INITIAL_KEYS;
-        EquippedProjectile = ProjectileType.None;
         HasMap = false;
         HasCompass = false;
         Keyring = new();
         DiscoveredRooms = new();
+        EquippedItem = EquippableType.None;
+        EquippableInventory = new List<EquippableType>();
     }
 
     public static void ResetCandle()
@@ -78,8 +75,6 @@ public static class PlayerState
         Health = MathHelper.Clamp(Health + 2, 0, INITIAL_HP);
     }
 
-
-
     public static int Rupees { get; set; }
     public static int Bombs { get; set; }
     public static int Keys { get; set; }
@@ -89,7 +84,7 @@ public static class PlayerState
     public static int MaxHealth { get; set; }
     public static Point Position { get; set; }
     public static Direction Direction { get; set; }
-    public static ProjectileType EquippedProjectile { get; set; }
+    public static EquippableType EquippedItem { get; set; }
     public static bool HasBoomerang { get; set; }
     public static bool ObtainedTriforce { get; set; }
     public static bool HasCompass;
@@ -102,7 +97,7 @@ public static class PlayerState
     public static void Save(SaveState save)
     {
         save.MaxHealth = MaxHealth;
-        save.EquipedProjectile = EquippedProjectile;
+        save.EquippableInventory = EquippableInventory;
         save.HasBoomerang = HasBoomerang;
         save.ObtainedTriforce = ObtainedTriforce;
         save.Health = Health;
@@ -118,7 +113,7 @@ public static class PlayerState
     public static void Load(SaveState save)
     {
         MaxHealth = save.MaxHealth;
-        EquippedProjectile = save.EquipedProjectile;
+        EquippableInventory = save.EquippableInventory;
         HasBoomerang = save.HasBoomerang;
         ObtainedTriforce = save.ObtainedTriforce;
         Health = save.Health;

@@ -5,25 +5,24 @@ namespace MonoZelda.Link.Projectiles;
 
 public class TrackReturn
 {
-    private PlayerSpriteManager player;
     private Vector2 returnPosition;
     private Vector2 Origin;
     private float boomerangSpeed;
+
     // Private constructor to prevent instantiation from outside
-    private TrackReturn(PlayerSpriteManager player, float boomerangSpeed)
+    private TrackReturn(float boomerangSpeed)
     {
-        this.player = player;
         this.boomerangSpeed = boomerangSpeed;
         returnPosition = new Vector2();
     }
 
     // Static method to allow only specific classes to instantiate TrackReturn
-    public static TrackReturn CreateInstance(object caller, PlayerSpriteManager player, float boomerangSpeed)
+    public static TrackReturn CreateInstance(object caller, float boomerangSpeed)
     {
         // Check if the caller is BoomerangBlue or BoomerangGreen
         if (caller is BoomerangBlue || caller is Boomerang)
         {
-            return new TrackReturn(player, boomerangSpeed);
+            return new TrackReturn(boomerangSpeed);
         }
         throw new UnauthorizedAccessException("Access denied.");
     }
@@ -31,9 +30,9 @@ public class TrackReturn
     private bool updatedReturnPosition()
     {
         bool playerPositionUpdated = false;
-        if (returnPosition != player.GetPlayerPosition())
+        if (returnPosition != PlayerState.Position.ToVector2())
         {
-            returnPosition = player.GetPlayerPosition();
+            returnPosition = PlayerState.Position.ToVector2();
             playerPositionUpdated = true;
         }
         return playerPositionUpdated;
@@ -41,7 +40,7 @@ public class TrackReturn
 
     private Vector2 playerPositionUnitVector()
     {
-        Vector2 playerPosition = player.GetPlayerPosition();
+        Vector2 playerPosition = PlayerState.Position.ToVector2();
         Vector2 playerPathVector = new Vector2(playerPosition.X - Origin.X, playerPosition.Y - Origin.Y);
 
         float magnitudePath = playerPathVector.Length();
@@ -67,7 +66,7 @@ public class TrackReturn
     public bool Returned(Vector2 ProjectilePosition)
     {
         bool returned = false;
-        Vector2 playerPos = player.GetPlayerPosition();
+        Vector2 playerPos = PlayerState.Position.ToVector2();
         Vector2 distanceBoomerangPlayer = new Vector2(playerPos.X - ProjectilePosition.X, playerPos.Y - ProjectilePosition.Y);
 
         if (distanceBoomerangPlayer.Length() < 48f)

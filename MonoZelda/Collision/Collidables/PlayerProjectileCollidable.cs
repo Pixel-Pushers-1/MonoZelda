@@ -1,7 +1,8 @@
-using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Link.Projectiles;
 using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Media;
+using MonoZelda.Controllers;
 
 namespace MonoZelda.Collision;
 
@@ -11,7 +12,7 @@ public class PlayerProjectileCollidable : ICollidable
     public ProjectileType projectileType { get; set; }
     public Rectangle Bounds { get; set; }
     public SpriteDict CollidableDict { get; set; }
-    public ProjectileManager ProjectileManager { get; private set; }
+    public IProjectile Projectile { get; private set; }
 
     private readonly CollisionHitboxDraw hitbox;
 
@@ -21,6 +22,11 @@ public class PlayerProjectileCollidable : ICollidable
         hitbox = new CollisionHitboxDraw(this);
         type = CollidableType.PlayerProjectile;
         this.projectileType = projectileType;
+    }
+
+    public void HandleCollision()
+    {
+        Projectile.FinishProjectile();
     }
 
     public void UnregisterHitbox()
@@ -48,8 +54,8 @@ public class PlayerProjectileCollidable : ICollidable
         CollidableDict = collidableDict;
     }
 
-    public void setProjectileManager(ProjectileManager projectileManager)
+    public void setProjectile(IProjectile projectile)
     {
-        ProjectileManager = projectileManager;
+        Projectile = projectile;
     }
 }

@@ -1,11 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
-using MonoZelda.Commands.GameCommands;
+using MonoZelda.Commands;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Sound;
 using MonoZelda.Sprites;
-using System.Diagnostics;
 
 namespace MonoZelda.Link;
 
@@ -18,15 +17,17 @@ public class PlayerCollisionManager
     private readonly int width;
     private readonly int height;
     private PlayerSpriteManager player;
-    private PlayerTakeDamageCommand damageCommand;
+    private ICommand damageCommand;
+    private ICommand linkDeathAnimationCommand;
     private PlayerCollidable playerHitbox;
     private Vector2 knockbackVelocity;
     private float knockbackTimer = 0;
     private float invulnerabilityTimer = 0;
 
-    public PlayerCollisionManager(PlayerSpriteManager player, PlayerCollidable playerHitbox, CollisionController collisionController, PlayerTakeDamageCommand damageCommand) {
+    public PlayerCollisionManager(PlayerSpriteManager player, PlayerCollidable playerHitbox, CollisionController collisionController, ICommand linkDeathAnimationCommand, ICommand damageCommand) {
         this.player = player;
         this.damageCommand = damageCommand;
+        this.linkDeathAnimationCommand = linkDeathAnimationCommand;
         this.playerHitbox = playerHitbox;
         this.width = 52;
         this.height = 52;
@@ -45,6 +46,12 @@ public class PlayerCollisionManager
     public void Update()
     {
         UpdateBoundingBox();
+
+        if(PlayerState.Health <= 0)
+        {
+            player.DisablePlayerSprite();
+            linkDeathAnimationCommand.Execute();
+        }
 
         if (knockbackTimer > 0)
         {
@@ -93,7 +100,7 @@ public class PlayerCollisionManager
         if (invulnerabilityTimer > 0)
             return;
 
-        if (player.PlayerDirection  != collisionDirection)
+        if ((int)PlayerState.Direction + (int)collisionDirection != 0)
         {
             damageCommand.Execute();
             invulnerabilityTimer = INVULNERABILITY_TIME;
@@ -150,6 +157,6 @@ public class PlayerCollisionManager
 
     private Vector2 GetKnockbackDirection(Direction collisionDirection)
     {
-        return DungeonConstants.DirectionVector[collisionDirection];
+        return DungeonConstants.DirectionVector[collisionDirection] * -1;
     }
 }

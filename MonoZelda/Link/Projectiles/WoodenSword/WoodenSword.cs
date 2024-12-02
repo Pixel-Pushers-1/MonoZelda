@@ -1,40 +1,46 @@
 using Microsoft.Xna.Framework;
+using MonoZelda.Collision;
+using MonoZelda.Controllers;
+using MonoZelda.Sound;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Link.Projectiles;
 
-public class WoodenSword : ProjectileFactory,IProjectile
+public class WoodenSword : IProjectile
 {
-    private bool Finished;
+    private bool finished;
     private int timer;
     private const int HITBOX_TIMER = 4;
     private bool rotate;
-    private Vector2 InitialPosition;
-    private Vector2 Dimension = new Vector2(8, 16);
+    private Vector2 initialPosition;
+    private Direction projectileDirection;
+    private Vector2 projectilePosition;
+    private CollisionController collisionController;
+    private PlayerProjectileCollidable projectileCollidable;
     private SpriteDict projectileDict;
-    private PlayerSpriteManager player;
 
-    public WoodenSword(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection)
-    : base(projectileDict, playerPosition, playerDirection)
+    public WoodenSword(Vector2 spawnPosition, CollisionController collisionController)
     {
-        this.projectileDict = projectileDict;
-        Finished = false;
+        finished = false;
         rotate = false;
         timer = 0;
-        InitialPosition = SetInitialPosition(Dimension);
+        projectileDirection = PlayerState.Direction;
+        initialPosition = spawnPosition;
+        this.collisionController = collisionController;
     }
 
     private void updateRotate()
     {
-        if (playerDirection == Direction.Right || playerDirection == Direction.Left)
+        if (projectileDirection == Direction.Right || projectileDirection == Direction.Left)
         {
             rotate = true;
         }
+        projectileCollidable.Bounds = getCollisionRectangle();
     }
 
     public bool hasFinished()
 {
-        return Finished;
+        return finished;
     }
 
     public void FinishProjectile()
@@ -51,9 +57,17 @@ public class WoodenSword : ProjectileFactory,IProjectile
         return new Rectangle(spawnPosition.X - width / 2, spawnPosition.Y - height / 2, width, height);
     }
 
-    public void UpdateProjectile()
+    public void Setup()
     {
-        projectileDict.Enabled = false;
+        projectilePosition = initialPosition;
+        SoundManager.PlaySound("LOZ_Sword_Slash", false);
+        projectileCollidable = new PlayerProjectileCollidable(getCollisionRectangle(), ProjectileType.WoodenSword);
+        projectileCollidable.setProjectile(this);
+        collisionController.AddCollidable(projectileCollidable);
+    }
+
+    public void Update()
+    {
         if (timer < HITBOX_TIMER)
         {
             timer++;
@@ -61,7 +75,9 @@ public class WoodenSword : ProjectileFactory,IProjectile
         }
         else
         {
-            Finished = true;
+            finished = true;
+            projectileCollidable.UnregisterHitbox();
+            collisionController.RemoveCollidable(projectileCollidable);
         }
     }
 }

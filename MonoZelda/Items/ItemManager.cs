@@ -1,8 +1,9 @@
-﻿using MonoZelda.Dungeons;
+﻿using MonoZelda.Commands;
+using MonoZelda.Commands.GameCommands;
+using MonoZelda.Dungeons;
 using MonoZelda.Enemies;
 using MonoZelda.Items.ItemClasses;
 using MonoZelda.Link;
-using System;
 using System.Collections.Generic;
 
 namespace MonoZelda.Items;
@@ -13,12 +14,14 @@ public class ItemManager
     private List<Item> itemUpdateList;
     private List<Enemy> roomEnemyList;
     private PlayerCollisionManager playerCollision;
+    private ICommand levelCompleteAnimationCommand;
 
-    public ItemManager(List<ItemSpawn> roomSpawnList, List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision)
+    public ItemManager(ICommand levelCompleteAnimationCommand, List<ItemSpawn> roomSpawnList, List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision)
     {
         this.roomSpawnList = roomSpawnList;
         this.roomEnemyList = roomEnemyList;
-        this.playerCollision = playerCollision;   
+        this.playerCollision = playerCollision;
+        this.levelCompleteAnimationCommand = levelCompleteAnimationCommand;
         itemUpdateList = new List<Item>();
     }
 
@@ -35,6 +38,11 @@ public class ItemManager
     public PlayerCollisionManager PlayerCollision
     {
         get { return playerCollision; }
+    }
+
+    public void TriggerLevelCompleteAnimation()
+    {
+        levelCompleteAnimationCommand.Execute();    
     }
 
     public void AddRoomSpawnItem(ItemSpawn itemSpawn)
