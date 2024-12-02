@@ -1,7 +1,7 @@
 
 using Microsoft.Xna.Framework;
 using MonoZelda.Link;
-using MonoZelda.Link.Projectiles;
+using MonoZelda.Link.Equippables;
 
 namespace MonoZelda.Shaders
 {
@@ -18,7 +18,7 @@ namespace MonoZelda.Shaders
 
         private float GetRadius()
         {
-            var lightDistance = PlayerState.EquippedProjectile == ProjectileType.CandleBlue 
+            var lightDistance = PlayerState.EquippedItem == EquippableType.CandleBlue
                 ? MAX_RADIUS : MIN_RADIUS;
 
             // Animate distance changes
