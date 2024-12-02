@@ -19,7 +19,7 @@ namespace MonoZelda.Scenes;
 public class EnterInfiniteModeScene : Scene
 {
     // string constants
-    private const float INVENTORY_TOGGLE_TIME = 1f;
+    private const float INVENTORY_TOGGLE_TIME = 0.5f;
     private const string ENTRANCE_MESSAGE = "ENTER DOOR TO START";
     private const string UTILITY_MESSAGE = "STARTING ITEMS";
     private static readonly Vector2 ENTRANCE_MESSAGE_POINT = new Vector2(260,412);

@@ -7,11 +7,11 @@ namespace MonoZelda.Dungeons;
 
 public class RoomGenerator
 {
-    private const int POOL_SIZE = 11;
+    private const int POOL_SIZE = 15;
     private const string ROOM_NAME = "RandomRoom";
     private const string BOUNDARY_COLLIDERS_ROOM_NAME = "RandomRoomBoundaryColliders";
     private static readonly string[] RoomPool = {"Room1","Room2","Room3","Room4","Room5","Room8",
-                               "Room11","Room12","Room13","Room14","Room16"};
+                               "Room11","Room12","Room13","Room14","Room16","Room19","Room20","Room21","Room22"};
 
     private int randomRoomNum;
     private Random rnd;

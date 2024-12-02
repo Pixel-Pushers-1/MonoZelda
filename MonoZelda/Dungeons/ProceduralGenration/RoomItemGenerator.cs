@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MonoZelda.Items;
 
-namespace MonoZelda.Dungeons.InfiniteMode
+namespace MonoZelda.Dungeons.InfiniteMode;
+
+public class RoomItemGenerator
 {
-    internal class RoomItemGenerator
-    {
-    }
+    private const int DAMAGE_ITEM_POOL_LENGTH = 2;
+    private const int HEALTH_ITEM_POOL_LENGTH = 5;
+    private static readonly ItemList[] DamageItemPool = { ItemList.Bomb, ItemList.Rupee };
+    private static readonly ItemList[] HealthItemPool= { ItemList.BluePotion, ItemList.RedPotion, ItemList.HeartContainer, ItemList.Fairy, ItemList.Heart };
+
 }

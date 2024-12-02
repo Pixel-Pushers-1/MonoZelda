@@ -16,6 +16,7 @@ using System.Linq;
 using MonoZelda.Dungeons.InfiniteMode;
 using MonoZelda.Dungeons.Parser.Data;
 using MonoZelda.Tiles.Doors;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Scenes.InfiniteMode;
 
@@ -60,6 +61,11 @@ public class InfiniteRoomScene : Scene
         // Need to wait for LoadContent because MonoZeldaGame is going to clear everything before calling this.
         LoadRoom(contentManager);
 
+        // Play dungeon theme
+        SoundManager.StopSound("LOZ_Campfire");
+        SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
+
+        // load player and commands
         LoadPlayer();
         LoadCommands();
     }
