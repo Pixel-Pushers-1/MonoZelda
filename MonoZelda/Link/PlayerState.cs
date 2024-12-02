@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Link.Projectiles;
+using MonoZelda.Sound;
 using System;
 using System.Diagnostics;
 
@@ -106,9 +107,8 @@ public static class PlayerState
             XP -= GetXPToLevelUp(); 
             Level++;
             Health = MathHelper.Clamp(Health + 1, 0, MaxHealth);
-            Debug.WriteLine($"Level Up! New Level: {Level}");
+            SoundManager.PlaySound("LOZ_LevelUp", false);
         }
-        Debug.WriteLine($"XP: {XP}");
     }
     public static float GetXPProgress()
     {

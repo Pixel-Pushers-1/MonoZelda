@@ -69,7 +69,10 @@ public class PlayerCollisionManager
         );
         playerHitbox.Bounds = newBounds;
     }
-
+    public void HandleLevelUp()
+    {
+        player.LevelUp();
+    }
     public void HandleClockCollision()
     {
         player.ClockFlash();

@@ -12,6 +12,8 @@ namespace MonoZelda.Items.ItemClasses;
 
 public class XPOrb : Item
 {
+    private PlayerCollisionManager playerCollision;
+
     public XPOrb(ItemManager itemManager) : base(itemManager)
     {
         itemType = ItemList.XPOrb;
@@ -19,6 +21,7 @@ public class XPOrb : Item
 
     public override void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
+        playerCollision = itemManager.PlayerCollision;
         Random random = new Random();
         int offsetX = random.Next(-50, 51);
         int offsetY = random.Next(-50, 51); 
@@ -30,7 +33,7 @@ public class XPOrb : Item
         base.ItemSpawn(itemSpawn, collisionController);
         itemDict.SetSprite("xp_orb");
         itemDict.Position = randomizedPosition;
-
+        
 
     }
 
@@ -38,8 +41,7 @@ public class XPOrb : Item
     {
         PlayerState.AddXP(20);
         SoundManager.PlaySound("LOZ_orb", false);
-
-
+        playerCollision.HandleLevelUp();
         //SoundManager.PlaySound("XP_Collect_Sound", false); // Replace with actual XP collect sound
         base.HandleCollision(collisionController);
     }
