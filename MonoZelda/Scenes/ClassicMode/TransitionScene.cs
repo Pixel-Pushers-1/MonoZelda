@@ -5,7 +5,6 @@ using MonoZelda.Dungeons;
 using MonoZelda.Dungeons.Dungeon1;
 using MonoZelda.Link;
 using MonoZelda.Sprites;
-using MonoZelda.Tiles;
 using System.Collections.Generic;
 
 namespace MonoZelda.Scenes;

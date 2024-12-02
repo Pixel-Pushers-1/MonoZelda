@@ -11,6 +11,7 @@ public class RoomGenerator
     private const string ROOM_NAME = "RandomRoom";
     private static readonly string[] RoomPool = {"Room1","Room2","Room3","Room4","Room5","Room8",
                                "Room11","Room12","Room13","Room14","Room16"};
+    private static readonly Point eastDoorStaticCollider = new Point(960, 576);
 
     private int randomRoomNum;
     private Random rnd;

@@ -22,6 +22,7 @@ namespace MonoZelda.Scenes
         
         private IDungeonRoomLoader roomManager;
         private IDungeonRoom currentRoom;
+        private IDungeonRoom randomRoom;
         private IScene activeScene;
         private CollisionController collisionController;
         private GraphicsDevice graphicsDevice;
@@ -68,8 +69,13 @@ namespace MonoZelda.Scenes
 
             var nextRoom = roomManager.LoadRoom(roomName);
             var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
-            
-            if (roomName == MARIO_ROOM || (roomName == MARIO_ENTRANCE_ROOM && currentRoom.RoomName == MARIO_ROOM))
+
+            if(StartRoom == ROOM_INFINITE)
+            {
+               randomRoom = roomGenerator.GetRandomRoom(roomManager);
+               activeScene = new TransitionScene(currentRoom, randomRoom, command, transitionDirection);
+            }
+            else if (roomName == MARIO_ROOM || (roomName == MARIO_ENTRANCE_ROOM && currentRoom.RoomName == MARIO_ROOM))
             {
                 activeScene = new MarioLevelTransitionScene(this, nextRoom, command, graphicsDevice);
             }
@@ -96,7 +102,6 @@ namespace MonoZelda.Scenes
 
             if (StartRoom == ROOM_INFINITE)
             {
-                IDungeonRoom randomRoom = roomGenerator.GetRandomRoom(roomManager);
                 activeScene = new InfiniteRoomScene(graphicsDevice, commandManager, collisionController, randomRoom);
             }
             else if (roomName == MARIO_ROOM)
