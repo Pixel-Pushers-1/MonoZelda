@@ -6,12 +6,21 @@ namespace MonoZelda.Dungeons.InfiniteMode;
 
 public class RoomEnemyGenerator
 {
+    // constants
+    private const int EASY_ENEMY_WEIGHT = 40;
+    private const int MEDIUM_ENEMY_WEIGHT = 30;
+    private const int HARD_ENEMY_WEIGHT = 20;
     private const int EASY_ENEMY_POOL_LENGTH = 2;
     private const int MEDIUM_ENEMY_POOL_LENGTH = 1;
     private const int HARD_ENEMY_POOL_LENGTH = 1;
+    private const int BOSS_ENEMY_POOL_LENGTH = 1;
     private static readonly EnemyList[] EasyEnemyList = { EnemyList.Keese, EnemyList.Gel };
     private static readonly EnemyList[] MediumEnemyList = { EnemyList.Stalfos};
     private static readonly EnemyList[] HardEnemyList = { EnemyList.Goriya };
+    private static readonly EnemyList[] BossEnemyList = { EnemyList.Aquamentus };
+
+    // variables
+    
 
     public RoomEnemyGenerator()
     {
@@ -23,7 +32,7 @@ public class RoomEnemyGenerator
         List<EnemyList> enemies = new List<EnemyList>();
         Random random = new Random();
 
-        // 1. Calculate the total number of enemies
+        // Calculate the total number of enemies
         int baseEnemyCount = 3;
         int totalEnemies = baseEnemyCount + (roomNumber / 2) + (playerLevel / 3);
 
@@ -33,7 +42,7 @@ public class RoomEnemyGenerator
             totalEnemies = Math.Max(2, totalEnemies - 1); // Reduce enemies slightly
         }
 
-        // 2. Calculate weights for each difficulty level
+        // Calculate weights for each difficulty level
         int easyWeight = 40;
         int mediumWeight = 40;
         int hardWeight = 20;
@@ -41,19 +50,19 @@ public class RoomEnemyGenerator
         // Adjust weights based on health
         if (playerHealth <= 2)
         {
-            easyWeight += 20; // Favor easy enemies
+            easyWeight += 20; 
             mediumWeight -= 10;
-            hardWeight = 0;   // No hard enemies
+            hardWeight = 0;   
         }
         else if (playerHealth >= 5)
         {
-            mediumWeight += 10; // Favor medium enemies
-            hardWeight += 10;   // Introduce more hard enemies
+            mediumWeight += 10; 
+            hardWeight += 10;
         }
 
         int totalWeight = easyWeight + mediumWeight + hardWeight;
 
-        // 3. Generate enemies
+        // Generate enemies
         for (int i = 0; i < totalEnemies; i++)
         {
             int roll = random.Next(totalWeight);
