@@ -4,6 +4,7 @@ using MonoZelda.Link.Projectiles;
 using MonoZelda.Sound;
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace MonoZelda.Link;
 
@@ -14,15 +15,13 @@ public static class PlayerState
     private static readonly int INITIAL_BOMBS = 1;
     private static readonly int INITIAL_KEYS = 0;
 
-    private static int _health = INITIAL_HP;
-
+    private static float _health = INITIAL_HP;
 
     //RPG
-
-    // RPG
     private static readonly int INITIAL_LEVEL = 1;
     private static readonly int XP_BASE = 100; 
-    private static readonly float XP_SCALING = 1.5f; 
+    private static readonly float XP_SCALING = 1.5f;
+    private static readonly float INITIAL_DEFENSE = 0f;
 
 
     public static void Initialize()
@@ -39,6 +38,7 @@ public static class PlayerState
         Keys = INITIAL_KEYS;
         EquippedProjectile = ProjectileType.None;
         Level = INITIAL_LEVEL;
+        Defense = INITIAL_DEFENSE;
         XP = 0;
     }
 
@@ -47,7 +47,7 @@ public static class PlayerState
         IsCandleUsed = false;
     }
 
-    public static int Health
+    public static float Health
     {
         get => _health;
         set
@@ -67,9 +67,13 @@ public static class PlayerState
     {
         if (!IsDead)
         {
-            Health = Health - 1;
+            float effectiveDamage = 1 / (1 + (float)Math.Log(1 + Defense));
+            Health -= effectiveDamage;
+            Debug.WriteLine($"Effective Damage Taken: {effectiveDamage}, Defense: {Defense}");
         }
         Debug.WriteLine($"Player Health: {Health}");
+
+
     }
 
     public static void GetHealth() {
@@ -92,6 +96,7 @@ public static class PlayerState
     // RPG 
     public static int Level { get; private set; }
     public static int XP { get; private set; }
+    public static float Defense { get; private set; }
 
     public static int GetXPToLevelUp()
     {
@@ -110,6 +115,7 @@ public static class PlayerState
             leveledUp |= true;
             Health = MathHelper.Clamp(Health + 1, 0, MaxHealth);
             SoundManager.PlaySound("LOZ_LevelUp", false);
+            Defense += .25f;
 
         }
         return leveledUp;
