@@ -5,7 +5,6 @@ using MonoZelda.Dungeons;
 using MonoZelda.Link;
 using MonoZelda.Sprites;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace MonoZelda.UI;
 

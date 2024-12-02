@@ -80,6 +80,12 @@
 /processorParam:Quality=Best
 /build:Sound/LOZ_Door_Unlock.wav
 
+#begin Sound/LOZ_Drink_Potion.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/LOZ_Drink_Potion.wav
+
 #begin Sound/LOZ_Dungeon_Theme.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

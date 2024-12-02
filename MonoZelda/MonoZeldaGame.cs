@@ -11,7 +11,6 @@ using MonoZelda.UI;
 using System.Diagnostics;
 using MonoZelda.Save;
 
-
 namespace MonoZelda;
 
 public enum GameState
@@ -92,14 +91,6 @@ public class MonoZeldaGame : Game, ISaveable
 
     protected override void Update(GameTime gameTime)
     {
-        if (PlayerState.IsDead)
-        {
-            commandManager.Execute(CommandType.PlayerDeathCommand);
-            PlayerState.IsDead = false;
-            PlayerState.Initialize();
-
-        }
-
         GameTime = gameTime;
         keyboardController.Update(gameTime);
         mouseController.Update(gameTime);
@@ -150,7 +141,7 @@ public class MonoZeldaGame : Game, ISaveable
 
     public void LoadDungeon(string roomName)
     {
-        LoadScene(new DungeonScene(roomName, GraphicsDevice, commandManager));
+        LoadScene(new SceneManager(roomName, GraphicsDevice, commandManager));
     }
 
     public void ResetGame()
@@ -164,9 +155,9 @@ public class MonoZeldaGame : Game, ISaveable
 
     public void Save(SaveState save)
     {
-        if(scene is DungeonScene dungeonScene)
+        if(scene is SceneManager sceneManager)
         {
-            dungeonScene.Save(save);
+            sceneManager.Save(save);
         }
     }
 
@@ -175,7 +166,7 @@ public class MonoZeldaGame : Game, ISaveable
         SoundManager.ClearSoundDictionary();
         HUDMapWidget.Reset();
 
-        var loadDungeon = new DungeonScene(save.RoomName, GraphicsDevice, commandManager);
+        var loadDungeon = new SceneManager(save.RoomName, GraphicsDevice, commandManager);
         loadDungeon.Load(save);
 
         LoadScene(loadDungeon);

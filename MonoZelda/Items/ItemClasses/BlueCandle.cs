@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
+using MonoZelda.Link;
+using MonoZelda.Link.Equippables;
 using MonoZelda.Sound;
 
 namespace MonoZelda.Items.ItemClasses;
@@ -21,6 +23,7 @@ public class BlueCandle : Item
 
     public override void HandleCollision(CollisionController collisionController)
     {
+        PlayerState.EquippableInventory.Add(EquippableType.CandleBlue);
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(collisionController);
     }

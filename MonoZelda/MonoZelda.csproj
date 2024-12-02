@@ -11,14 +11,31 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Collision\Collidables\PlayerProjectileCollidable.cs~RFf93dd20.TMP" />
+    <None Remove="Commands\GameCommands\LinkDeathAnimationCommand.cs~RF33a921e9.TMP" />
+    <None Remove="Commands\GameCommands\PlayerCycleEquippableCommand.cs~RF1a972e8c.TMP" />
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
+    <None Remove="Items\ItemClasses\Bow.cs~RF1cd52d4c.TMP" />
     <None Remove="Items\ItemClasses\Bow.cs~RF4b90b32.TMP" />
     <None Remove="Items\ItemClasses\Item.cs~RF40601b3.TMP" />
+    <None Remove="Items\ItemClasses\RedPotion.cs~RF1cd1bfeb.TMP" />
     <None Remove="Items\ItemClasses\Triforce.cs~RF4aa442d.TMP" />
+    <None Remove="Link\Equippables\dskjwysc.i4t~" />
+    <None Remove="Link\Projectiles\Arrow\Arrow.cs~RFe100894.TMP" />
+    <None Remove="Link\Projectiles\Arrow\Arrow.cs~RFf99f83c.TMP" />
+    <None Remove="Link\Projectiles\ProjectileManager.cs~RF194c239a.TMP" />
+    <None Remove="Link\Projectiles\ProjectileManager.cs~RFea24d48.TMP" />
     <None Remove="Link\Projectiles\WoodenSword\WoodenSword.cs~RF169f651b.TMP" />
+    <None Remove="Scenes\151dofzs.dpj~" />
     <None Remove="Scenes\DungeonScene.cs~RFc12fbde.TMP" />
+    <None Remove="Scenes\InventoryScene.cs~RF1de48663.TMP" />
+    <None Remove="Scenes\LinkDeathScene.cs~RF2a3a4bf9.TMP" />
     <None Remove="Scenes\TransitionScene.cs~RF12d33335.TMP" />
+    <None Remove="Scenes\WallMasterGrabScene.cs~RF2c4975f4.TMP" />
+    <None Remove="UI\InventoryItemWidget.cs~RF1fce9354.TMP" />
+    <None Remove="UI\ItemCountWidget.cs~RF1a90b5fe.TMP" />
+    <None Remove="UI\tpwsfh4j.xs0~" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />

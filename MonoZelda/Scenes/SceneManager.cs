@@ -9,12 +9,11 @@ using MonoZelda.Link;
 using MonoZelda.Sprites;
 using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.UI;
-using MonoZelda.Events;
 using MonoZelda.Save;
 
 namespace MonoZelda.Scenes
 {
-    public class DungeonScene : Scene, ISaveable
+    public class SceneManager : Scene, ISaveable
     {
         public static readonly string MARIO_ROOM = "Room18";
         public static readonly string MARIO_ENTRANCE_ROOM = "Room17";
@@ -25,6 +24,7 @@ namespace MonoZelda.Scenes
         private CommandManager commandManager;
         private ContentManager contentManager;
         private InventoryScene inventoryScene;
+        private EquippableManager equippableManager;
         private SaveManager saveManager;
         private IDungeonRoom currentRoom;
         
@@ -32,7 +32,7 @@ namespace MonoZelda.Scenes
         public string StartRoom { get; private set; }
         private IScene activeScene;
 
-        public DungeonScene(string startRoom, GraphicsDevice graphicsDevice, CommandManager commandManager)
+        public SceneManager(string startRoom, GraphicsDevice graphicsDevice, CommandManager commandManager)
         {
             this.graphicsDevice = graphicsDevice;
             roomManager = new DungeonManager();
@@ -43,19 +43,18 @@ namespace MonoZelda.Scenes
             // Start the player near the entrance
             PlayerState.Initialize();
 
-            // Subscribe to special in-game events
-            EventManager.LevelComplete += LevelCompleteScene;
-            EventManager.WallmasterGrab += WallMasterGrabScene;
-            EventManager.LinkDeath += LinkDeathScene;
-
             // create inventory scene
+            equippableManager = new EquippableManager(collisionController);
             inventoryScene = new InventoryScene(graphicsDevice, commandManager);
 
+            // replace required command
+            commandManager.ReplaceCommand(CommandType.LevelCompleteAnimationCommand, new LevelCompleteAnimationCommand(this));
+            commandManager.ReplaceCommand(CommandType.LinkDeathAnimationCommand, new LinkDeathAnimationCommand(this));
+            commandManager.ReplaceCommand(CommandType.WallmasterGrabAnimationCommand, new WallMasterGrabAnimationCommand(this));
             commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this));
             commandManager.ReplaceCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand(this));
             commandManager.ReplaceCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand(this));
-            commandManager.ReplaceCommand(CommandType.PlayerEnemyCollisionCommand,
-                new PlayerEnemyCollisionCommand(commandManager));           
+            commandManager.ReplaceCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand(commandManager));
         }
 
         public void TransitionRoom(string roomName, Direction transitionDirection)
@@ -91,11 +90,11 @@ namespace MonoZelda.Scenes
 
             if (roomName == MARIO_ROOM)
             {
-                activeScene = new MarioLevelScene(graphicsDevice, commandManager, collisionController, currentRoom);
+                activeScene = new MarioLevelScene(graphicsDevice, commandManager, equippableManager, collisionController, currentRoom);
             }
             else
             {
-                activeScene = new RoomScene(graphicsDevice, commandManager, collisionController, currentRoom);
+                activeScene = new RoomScene(graphicsDevice, commandManager, equippableManager, collisionController, currentRoom);
             }
 
             activeScene.LoadContent(contentManager);
@@ -104,6 +103,7 @@ namespace MonoZelda.Scenes
         public override void Draw(SpriteBatch batch)
         {
             inventoryScene.Draw(batch);
+            activeScene.Draw(batch);
         }
 
         public override void LoadContent(ContentManager contentManager)
@@ -132,18 +132,18 @@ namespace MonoZelda.Scenes
 
         private void ResetScene()
         {
+            // clear collidables and reset spriteDrawer
             collisionController.Clear();
             SpriteDrawer.Reset();
-            //reset playerStateParams
-            PlayerState.ResetCandle();
-           
+            
+            // unload active scene content
             activeScene.UnloadContent();
             
             // Complication due to SpriteDict getting cleared, need to re-init the UI
             inventoryScene.LoadContent(contentManager, currentRoom);
         }
 
-        private void LevelCompleteScene()
+        public void LevelCompleteScene()
         {
             var startRoom = roomManager.LoadRoom(StartRoom);
             var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
@@ -151,14 +151,19 @@ namespace MonoZelda.Scenes
             activeScene.LoadContent(contentManager);
         }
 
-        private void WallMasterGrabScene()
+        public void WallMasterGrabScene()
         {
-
+            var startRoom = roomManager.LoadRoom(StartRoom);
+            var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
+            activeScene = new WallMasterGrabScene(currentRoom.RoomSprite.ToString(), startRoom, command, graphicsDevice);
+            activeScene.LoadContent(contentManager);
         }
 
-        private void LinkDeathScene()
+        public void LinkDeathScene()
         {
-
+            var command = commandManager.GetCommand(CommandType.ResetCommand);
+            activeScene = new LinkDeathScene(command, graphicsDevice);
+            activeScene.LoadContent(contentManager);
         }
 
         public void ToggleInventory()
