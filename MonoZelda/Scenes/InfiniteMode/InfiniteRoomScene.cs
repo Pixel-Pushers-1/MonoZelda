@@ -126,6 +126,7 @@ public class InfiniteRoomScene : Scene
             var collidable = new StaticRoomCollidable(rect);
             collisionController.AddCollidable(collidable);
         }
+
         var boundaryColliderRects = room.GetStaticBoundaryColliders();
         foreach (var rect in boundaryColliderRects)
         {

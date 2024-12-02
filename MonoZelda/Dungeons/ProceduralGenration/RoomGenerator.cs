@@ -43,6 +43,7 @@ public class RoomGenerator
         AddBoundaryColliders(randomRoom, roomManager);
         
         // add room Colliders
+        AddRoomColliders(randomRoom, dungeonRoomData);
 
         // add non collider spawns
         AddNonColliderSpawns(randomRoom, dungeonRoomData);
