@@ -22,13 +22,14 @@ namespace MonoZelda.Scenes
         
         private IDungeonRoomLoader roomManager;
         private IDungeonRoom currentRoom;
+        private IScene activeScene;
         private CollisionController collisionController;
         private GraphicsDevice graphicsDevice;
         private CommandManager commandManager;
         private ContentManager contentManager;
         private InventoryScene inventoryScene;
         private SaveManager saveManager;
-        private IScene activeScene;
+        private RoomGenerator roomGenerator;
         
         public GameType gameMode { get; }
         public bool isPaused { get; private set; }
@@ -41,6 +42,7 @@ namespace MonoZelda.Scenes
             this.graphicsDevice = graphicsDevice;
             this.commandManager = commandManager;
             roomManager = new DungeonManager();
+            roomGenerator = new RoomGenerator(roomManager);
             collisionController = new CollisionController(commandManager);
 
             // Start the player near the entrance
@@ -86,6 +88,7 @@ namespace MonoZelda.Scenes
         {
             ResetScene();
 
+            // load currentRoom
             currentRoom = roomManager.LoadRoom(roomName);
 
             // Debugging purposes
@@ -93,7 +96,8 @@ namespace MonoZelda.Scenes
 
             if (StartRoom == ROOM_INFINITE)
             {
-                activeScene = new InfiniteRoomScene(graphicsDevice, commandManager, collisionController, currentRoom);
+                IDungeonRoom randomRoom = roomGenerator.GetRandomRoom(roomManager);
+                activeScene = new InfiniteRoomScene(graphicsDevice, commandManager, collisionController, randomRoom);
             }
             else if (roomName == MARIO_ROOM)
             {

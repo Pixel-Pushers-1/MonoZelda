@@ -12,6 +12,7 @@ using MonoZelda.Items;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Sound;
 using MonoZelda.Tiles.Doors;
+using System.Collections.Generic;
 
 namespace MonoZelda.Scenes;
 
@@ -40,18 +41,19 @@ public class EnterInfiniteModeScene : Scene
     private ItemFactory itemFactory;
     private ICommand transitionCommand;
     private IDungeonRoom room;
-    
+    private List<IGameUpdate> updateables;
+
     public EnterInfiniteModeScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room)
     {
         this.graphicsDevice = graphicsDevice;
         this.commandManager = commandManager;
         this.collisionController = collisionController;
         this.room = room;
+        updateables = new List<IGameUpdate>();
 
         // start here
         inventoryToggleTimer = INVENTORY_TOGGLE_TIME;
         pauseState = false;
-        roomGenerator = new RoomGenerator();
     }
 
     public override void LoadContent(ContentManager contentManager)
@@ -70,7 +72,7 @@ public class EnterInfiniteModeScene : Scene
         SoundManager.PlaySound("LOZ_Campfire", true);
     }
 
-    protected void LoadCommands()
+    private void LoadCommands()
     {
         // replace required commands
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
@@ -81,7 +83,7 @@ public class EnterInfiniteModeScene : Scene
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerSprite));
     }
 
-    protected void LoadPlayer()
+    private void LoadPlayer()
     {
         // create player sprite classes
         playerSprite = new PlayerSpriteManager();
@@ -110,12 +112,12 @@ public class EnterInfiniteModeScene : Scene
         CreateStaticColliders();
     }
 
-    protected void SpawnItems()
+    private void SpawnItems()
     {
         itemFactory.CreateRoomItems();
     }
 
-    protected void CreateStaticColliders()
+    private void CreateStaticColliders()
     {
         var roomColliderRects = room.GetStaticRoomColliders();
         foreach (var rect in roomColliderRects)
@@ -146,10 +148,6 @@ public class EnterInfiniteModeScene : Scene
         var doors = room.GetDoors();
         foreach (var door in doors)
         {
-            if (door.Destination != null)
-            {
-                door.Destination = roomGenerator.GetRoom();
-            }
             var gameDoor = DoorFactory.CreateDoor(door, transitionCommand, collisionController, null);
         }
     }
@@ -196,7 +194,12 @@ public class EnterInfiniteModeScene : Scene
     }
 
     public override void Update(GameTime gameTime)
-    {   
+    {
+        foreach (var updateable in updateables)
+        {
+            updateable.Update(gameTime);
+        }
+
         equippableManager.Update();
         itemManager.Update();
         playerCollision.Update();

@@ -9,13 +9,13 @@ using MonoZelda.Dungeons;
 using MonoZelda.Enemies;
 using MonoZelda.Items;
 using MonoZelda.Link;
-using MonoZelda.Sound;
 using MonoZelda.Sprites;
-using MonoZelda.Tiles.Doors;
-using MonoZelda.Trigger;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MonoZelda.Dungeons.InfiniteMode;
+using MonoZelda.Dungeons.Parser.Data;
+using MonoZelda.Tiles.Doors;
 
 namespace MonoZelda.Scenes.InfiniteMode;
 
@@ -39,7 +39,9 @@ public class InfiniteRoomScene : Scene
     private IDungeonRoom room;
 
     // start here
-    private RoomGenerator randomRoomGenerator;
+    private RoomGenerator roomGenerator;
+    private RoomEnemyGenerator roomEnemyGenerator;
+    private RoomItemGenerator roomItemGenerator;
 
     public InfiniteRoomScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room)
     {
@@ -49,8 +51,8 @@ public class InfiniteRoomScene : Scene
         this.room = room;
 
         // start here
-       
-        randomRoomGenerator = new RoomGenerator();
+        roomEnemyGenerator = new RoomEnemyGenerator();
+        roomItemGenerator = new RoomItemGenerator();
     }
 
     public override void LoadContent(ContentManager contentManager)
@@ -62,7 +64,7 @@ public class InfiniteRoomScene : Scene
         LoadCommands();
     }
 
-    protected void LoadCommands()
+    private void LoadCommands()
     {
         // replace required commands
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
@@ -73,7 +75,7 @@ public class InfiniteRoomScene : Scene
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerSprite));
     }
 
-    protected void LoadPlayer()
+    private void LoadPlayer()
     {
         // create player sprite classes
         playerSprite = new PlayerSpriteManager();
@@ -91,10 +93,6 @@ public class InfiniteRoomScene : Scene
         var levelCompleteAnimationCommand = commandManager.GetCommand(CommandType.LevelCompleteAnimationCommand);
         itemManager = new ItemManager(GameType.infiniteEasy, levelCompleteAnimationCommand, room.GetItemSpawns(), enemies, playerCollision);
         itemFactory = new ItemFactory(collisionController, itemManager);
-        SpawnItems();
-
-        // spawnEnemies
-        SpawnEnemies();
 
         // create equippableManager
         equippableManager = new EquippableManager(collisionController);
@@ -108,22 +106,17 @@ public class InfiniteRoomScene : Scene
         CreateStaticColliders();
     }
 
-    protected void SpawnItems()
+    // Entities refer to enemies and items
+    private void LoadEntities()
     {
-        //itemFactory.CreateRoomItems();
+        var nonColliderSpawns = room.GetNonColliderSpawns();
+
+        // create items
+
+
+        // create enemies
     }
 
-    protected void SpawnEnemies()
-    {
-        //enemyFactory = new EnemyFactory(collisionController);
-        //foreach (var enemySpawn in room.GetEnemySpawns())
-        //{
-        //    var enemy = enemyFactory.CreateEnemy(enemySpawn.EnemyType,
-        //        new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32), itemFactory, enemySpawn.HasKey);
-        //    enemies.Add(enemy);
-        //    enemySpawnPoints.Add(enemy, enemySpawn);
-        //}
-    }
 
     protected void CreateStaticColliders()
     {
@@ -152,14 +145,10 @@ public class InfiniteRoomScene : Scene
         var f = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, DungeonConstants.BackgroundPosition);
         f.SetSprite(room.RoomSprite.ToString());
 
-        // Create the single room door
+        // Doors
         var doors = room.GetDoors();
-        foreach(var door in doors)
+        foreach (var door in doors)
         {
-            if(door.Destination != null)
-            {
-                door.Destination = randomRoomGenerator.GetRoom();
-            }
             var gameDoor = DoorFactory.CreateDoor(door, transitionCommand, collisionController, enemies);
             if (gameDoor is IGameUpdate updateable)
             {
@@ -196,34 +185,19 @@ public class InfiniteRoomScene : Scene
 
     public override void Update(GameTime gameTime)
     {
+        // update enemies
         foreach (var enemy in enemies.ToList())
         {
-            if (!enemy.Alive)
-            {
-                room.Remove(enemySpawnPoints[enemy]);
-                var itemRooms = new List<string> { "Room16", "Room12", "Room2", "Room5" };
-                enemies.Remove(enemy);
-                if (enemies.Count == 0 && itemRooms.Contains(room.RoomName))
-                {
-                    if (room.RoomName == "Room12")
-                    {
-                        itemFactory.CreateItem(new ItemSpawn(new Point(500, 400), ItemList.Boomerang), true);
-                    }
-                    else
-                    {
-                        itemFactory.CreateItem(new ItemSpawn(new Point(500, 400), ItemList.Key), true);
-                    }
-                    SoundManager.PlaySound("LOZ_Key_Appear", false);
-                }
-            }
             enemy.Update();
         }
 
+        // update all updateables like doors
         foreach (var updateable in updateables)
         {
             updateable.Update(gameTime);
         }
 
+        // update player state and items
         equippableManager.Update();
         itemManager.Update();
         playerCollision.Update();

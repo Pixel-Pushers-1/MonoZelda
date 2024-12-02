@@ -16,7 +16,6 @@ namespace MonoZelda.Dungeons
         public List<ItemSpawn> itemSpawns { get; set; }
         public List<EnemySpawn> enemySpawns { get; set; }
         public List<TriggerSpawn> triggers { get; set; }
-
         public string RoomName { get; private set; }
         public Dungeon1Sprite RoomSprite { get; private set; }
         public Point SpawnPoint { get; set; }
@@ -103,6 +102,11 @@ namespace MonoZelda.Dungeons
         public List<NonColliderSpawn> GetNonColliderSpawns()
         {
             return nonColliderSpawns;
+        }
+
+        public void Remove(NonColliderSpawn nonColliderSpawn)
+        {
+            nonColliderSpawns.Remove(nonColliderSpawn);
         }
 
         public List<TriggerSpawn> GetTriggers()

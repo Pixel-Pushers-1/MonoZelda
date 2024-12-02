@@ -35,6 +35,18 @@ public class DungeonManager : IDungeonRoomLoader
         return room;
     }
 
+    public void AddRandomRoom(string roomName, DungeonRoom room)
+    {
+        if (_rooms.ContainsKey(roomName))
+        {
+            _rooms[roomName] = room;
+        }
+        else 
+        {
+            _rooms.Add(roomName, room);
+        }
+    }
+
     public void Save(SaveState save)
     {
         save.Rooms = _rooms;
