@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using System;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Commands;
@@ -15,10 +14,11 @@ namespace MonoZelda.Scenes
     {
         private readonly CommandManager commandManager;
         private readonly CollisionController collisionController;
+
         private TriggerCollidable exit;
         
-        public MarioLevelScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room) 
-            : base(graphicsDevice, commandManager, collisionController, room)
+        public MarioLevelScene(GraphicsDevice graphicsDevice, CommandManager commandManager, EquippableManager equippableManager, CollisionController collisionController, IDungeonRoom room) 
+            : base(graphicsDevice, commandManager, equippableManager, collisionController, room)
         {
             this.commandManager = commandManager;
             this.collisionController = collisionController;
@@ -50,7 +50,7 @@ namespace MonoZelda.Scenes
         {
             exit.OnTrigger -= Exit;
             commandManager.Execute(CommandType.RoomTransitionCommand, 
-                new object[] { DungeonScene.MARIO_ENTRANCE_ROOM, direction });
+                new object[] { SceneManager.MARIO_ENTRANCE_ROOM, direction });
         }
 
         public override void Update(GameTime gameTime)

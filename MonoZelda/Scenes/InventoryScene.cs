@@ -3,12 +3,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Commands;
 using MonoZelda.Dungeons;
-using MonoZelda.Link;
 using MonoZelda.UI;
 using System;
 using System.Collections.Generic;
-using MonoZelda.Commands.GameCommands;
-using System.Diagnostics;
 
 namespace MonoZelda.Scenes
 {
@@ -20,6 +17,7 @@ namespace MonoZelda.Scenes
         private static readonly Point ItemCountPosition = new(416, 64);
         private static readonly Point LevelTextPosition = new(10, 10);
         private static readonly Point InventoryMapPosition = new(528, -288);
+        private static readonly Point InventoryPosition = new(516, -514);
         private static readonly Point XpBarPosition = new(712, 44);
 
         private const int INVENTORY_OPEN_Y = 704;
@@ -54,6 +52,7 @@ namespace MonoZelda.Scenes
             Widgets.Add(typeof(ItemCountWidget), new ItemCountWidget(_spriteFont, Screen, ItemCountPosition));
             Widgets.Add(typeof(LevelTextWidget), new LevelTextWidget(_spriteFont, Screen, LevelTextPosition));
             Widgets.Add(typeof(InventoryMapWidget), new InventoryMapWidget(Screen, InventoryMapPosition));
+            Widgets.Add(typeof(InventoryItemWidget), new InventoryItemWidget(Screen, InventoryPosition));
             Widgets.Add(typeof(XpBarWidget), new XpBarWidget(Screen, XpBarPosition));
         }
 

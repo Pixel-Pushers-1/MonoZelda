@@ -1,50 +1,42 @@
 ﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
-using System;
+using MonoZelda.Dungeons;
+using MonoZelda.Collision;
+using MonoZelda.Controllers;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Link.Projectiles;
 
-public class Boomerang : ProjectileFactory, IProjectile
+public class Boomerang : IProjectile
 {
-    private bool Finished;
+    private bool finished;
     private const float PROJECTILE_SPEED = 8f;
     private const int TILES_TO_TRAVEL = 3;
     private int tilesTraveled;
     private Vector2 initialPosition;
-    private Vector2 Dimension = new Vector2(8, 8);
-    private PlayerSpriteManager player;
+    private Vector2 projectilePosition;
+    private Direction projectileDirection;
+    private CollisionController collisionController;
+    private PlayerProjectileCollidable projectileCollidable;
     private SpriteDict projectileDict;
     private TrackReturn tracker;
 
-    public Boomerang(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection, PlayerSpriteManager player)
-    : base(projectileDict, playerPosition, playerDirection)
+    public Boomerang(Vector2 spawnPosition, CollisionController collisionController)
     {
-        this.projectileDict = projectileDict;
-        this.player = player;
-        Finished = false;
+        finished = false;
         tilesTraveled = 0;
-        initialPosition = SetInitialPosition(Dimension);
-        SetProjectileSprite("boomerang");
-        UseTrackReturn();
-    }
-
-    private void UseTrackReturn()
-    {
-        tracker = TrackReturn.CreateInstance(this, player, PROJECTILE_SPEED);
+        initialPosition = spawnPosition;
+        projectileDirection = PlayerState.Direction;
+        tracker = TrackReturn.CreateInstance(this,PROJECTILE_SPEED);
+        this.collisionController = collisionController;
     }
 
     private void Forward()
     {
-        Vector2 directionVector = playerDirection switch
-        {
-            Direction.Up => new Vector2(0, -1),
-            Direction.Down => new Vector2(0, 1),
-            Direction.Left => new Vector2(-1, 0),
-            Direction.Right => new Vector2(1, 0),
-            _ => Vector2.Zero
-        };
+        Vector2 directionVector = DungeonConstants.DirectionVector[projectileDirection];
 
         projectilePosition += PROJECTILE_SPEED * directionVector;
+        projectileCollidable.Bounds = getCollisionRectangle();
         updateTilesTraveled();
     }
 
@@ -52,6 +44,7 @@ public class Boomerang : ProjectileFactory, IProjectile
     {
         tracker.CheckResetOrigin(projectilePosition);
         projectilePosition += tracker.getProjectileNextPosition();
+        projectileCollidable.Bounds = getCollisionRectangle();
     }
 
     private void updateTilesTraveled()
@@ -68,7 +61,7 @@ public class Boomerang : ProjectileFactory, IProjectile
 
     public bool hasFinished()
     {
-        return Finished;
+        return finished;
     }
 
     public void FinishProjectile()
@@ -82,7 +75,18 @@ public class Boomerang : ProjectileFactory, IProjectile
         return new Rectangle(spawnPosition.X - 32 / 2, spawnPosition.Y - 32 / 2, 32, 32);
     }
 
-    public void UpdateProjectile()
+    public void Setup()
+    {
+        projectilePosition = initialPosition;
+        SoundManager.PlaySound("LOZ_Arrow_Boomerang", false);
+        projectileDict = new SpriteDict(SpriteType.Projectiles, SpriteLayer.Projectiles, initialPosition.ToPoint());
+        projectileDict.SetSprite("boomerang");
+        projectileCollidable = new PlayerProjectileCollidable(getCollisionRectangle(), ProjectileType.Boomerang);
+        projectileCollidable.setProjectile(this);
+        collisionController.AddCollidable(projectileCollidable);
+    }
+
+    public void Update()
     {
         if (tilesTraveled < TILES_TO_TRAVEL)
         {
@@ -94,9 +98,10 @@ public class Boomerang : ProjectileFactory, IProjectile
         }
         else
         {
-            Finished = true;
-            projectileDict.SetSprite("");
-            projectileDict.Enabled = false;
+            finished = true;
+            projectileDict.Unregister();
+            projectileCollidable.UnregisterHitbox();
+            collisionController.RemoveCollidable(projectileCollidable);
         }
         projectileDict.Position = projectilePosition.ToPoint();
     }

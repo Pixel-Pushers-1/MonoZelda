@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Link;
 using MonoZelda.Commands;
 using MonoZelda.Sprites;
-using MonoZelda.Link.Projectiles;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
@@ -28,8 +27,8 @@ public class RoomScene : Scene
     private GraphicsDevice graphicsDevice;
     private CommandManager commandManager;
     private PlayerSpriteManager playerSprite;
-    private ProjectileManager projectileManager;
     private PlayerCollisionManager playerCollision;
+    private EquippableManager equippableManager;
     private ItemManager itemManager;
     private ICommand transitionCommand;
     private CollisionController collisionController;
@@ -46,11 +45,12 @@ public class RoomScene : Scene
     private List<IGameUpdate> updateables = new();
     private List<IDisposable> disposables = new();
 
-    public RoomScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room) 
+    public RoomScene(GraphicsDevice graphicsDevice, CommandManager commandManager, EquippableManager equippableManager, CollisionController collisionController, IDungeonRoom room) 
     {
         this.graphicsDevice = graphicsDevice;
         this.commandManager = commandManager;
         this.collisionController = collisionController;
+        this.equippableManager = equippableManager;
         this.room = room;
         triggers = new List<ITrigger>();
 
@@ -72,11 +72,10 @@ public class RoomScene : Scene
     {
         // replace required commands
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
+        commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(equippableManager, playerSprite));
+        commandManager.ReplaceCommand(CommandType.PlayerCycleEquippableCommand, new PlayerCycleEquippableCommand(equippableManager));   
+        commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand(equippableManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(projectileManager, playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerEquipProjectileCommand, new PlayerEquipProjectileCommand(projectileManager));   
-        //commandManager.ReplaceCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand(projectileManager, playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerSprite));
     }
 
@@ -88,13 +87,15 @@ public class RoomScene : Scene
         playerSprite.SetPlayerSpriteDict(playerSpriteDict);
 
         //create player and player collision manager
+        var linkDeathAnimationCommand = commandManager.GetCommand(CommandType.LinkDeathAnimationCommand);
         var takeDamageCommand = new PlayerTakeDamageCommand(playerSprite);
         PlayerCollidable playerHitbox = new PlayerCollidable(new Rectangle(100, 100, 50, 50));
         collisionController.AddCollidable(playerHitbox);
-        playerCollision = new PlayerCollisionManager(playerSprite, playerHitbox, collisionController, takeDamageCommand);
+        playerCollision = new PlayerCollisionManager(playerSprite, playerHitbox, collisionController, linkDeathAnimationCommand, takeDamageCommand);
 
         // create itemFactory and spawn Items
-        itemManager = new ItemManager(room.GetItemSpawns(), enemies, playerCollision);
+        var levelCompleteAnimationCommand = commandManager.GetCommand(CommandType.LevelCompleteAnimationCommand);
+        itemManager = new ItemManager(levelCompleteAnimationCommand, room.GetItemSpawns(), enemies, playerCollision);
         itemFactory = new ItemFactory(collisionController, itemManager);
         SpawnItems();
 
@@ -103,10 +104,6 @@ public class RoomScene : Scene
 
         // Play Dungeon Theme
         SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
-
-        // create projectile object and spriteDict
-        var projectileDict = new SpriteDict(SpriteType.Projectiles, 0, new Point(0, 0));
-        projectileManager = new ProjectileManager(collisionController, projectileDict);
     }
 
     private void LoadRoom(ContentManager contentManager)
@@ -240,23 +237,20 @@ public class RoomScene : Scene
         if (paused) {
             commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new EmptyCommand());
             commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new EmptyCommand());
-            commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new EmptyCommand());
+            commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new EmptyCommand());
         }
         else {
             commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
-            commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(projectileManager, playerSprite));
-            commandManager.ReplaceCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand(projectileManager, playerSprite));
+            commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(equippableManager, playerSprite));
+            commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand(equippableManager, playerSprite));
         }
 
+        // allow cycling of items since game is paused
+        equippableManager.IsPaused = paused;
     }
 
     public override void Update(GameTime gameTime)
     {
-        if (projectileManager.ProjectileFired == true)
-        {
-            projectileManager.UpdatedProjectileState();
-        }
-
         foreach (var enemy in enemies.ToList())
         {
             if (!enemy.Alive)
@@ -285,6 +279,7 @@ public class RoomScene : Scene
             updateable.Update(gameTime);
         }
 
+        equippableManager.Update();
         UpdateDynamicLights();
 
         itemManager.Update();

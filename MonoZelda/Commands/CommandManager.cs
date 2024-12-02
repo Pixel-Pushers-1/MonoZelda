@@ -11,13 +11,16 @@ public enum CommandType
     PlayerAttackCommand,
     PlayerMoveCommand,
     PlayerTakeDamageCommand,
-    PlayerEquipProjectileCommand,
-    PlayerFireProjectileCommand,
+    PlayerCycleEquippableCommand,
+    PlayerUseEquippableCommand,
     ResetCommand,
     PlayerStandingCommand,
     StartGameCommand,
     LoadRoomCommand,
     RoomTransitionCommand,
+    LevelCompleteAnimationCommand,
+    LinkDeathAnimationCommand,
+    WallmasterGrabAnimationCommand,
     MuteCommand,
     PlayerItemCollisionCommand,
     PlayerEnemyCollisionCommand,
@@ -47,13 +50,16 @@ public class CommandManager
         AddCommand(CommandType.ExitCommand, new ExitCommand());
         AddCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand());
         AddCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());
-        AddCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand());
-        AddCommand(CommandType.PlayerEquipProjectileCommand, new PlayerEquipProjectileCommand());
+        AddCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand());
+        AddCommand(CommandType.PlayerCycleEquippableCommand, new PlayerCycleEquippableCommand());
         AddCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
         AddCommand(CommandType.ResetCommand, new ResetCommand());
         AddCommand(CommandType.StartGameCommand, new StartGameCommand());
         AddCommand(CommandType.LoadRoomCommand, new LoadRoomCommand());
         AddCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand());
+        AddCommand(CommandType.LevelCompleteAnimationCommand, new LevelCompleteAnimationCommand());
+        AddCommand(CommandType.LinkDeathAnimationCommand, new LinkDeathAnimationCommand());
+        AddCommand(CommandType.WallmasterGrabAnimationCommand, new WallMasterGrabAnimationCommand());
         AddCommand(CommandType.MuteCommand, new MuteCommand());
         AddCommand(CommandType.PlayerItemCollisionCommand, new PlayerItemCollisionCommand());
         AddCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand());

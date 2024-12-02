@@ -1,10 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoZelda.Controllers;
 
 namespace MonoZelda.Link.Projectiles;
 
 public interface IProjectile
 {
-	void UpdateProjectile();
+	void Setup();
+
+	void Update();
 
 	void FinishProjectile();
 
