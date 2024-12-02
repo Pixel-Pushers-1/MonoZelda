@@ -9,9 +9,9 @@ public class RoomGenerator
 {
     private const int POOL_SIZE = 11;
     private const string ROOM_NAME = "RandomRoom";
+    private const string BOUNDARY_COLLIDERS_ROOM_NAME = "RandomRoomBoundaryColliders";
     private static readonly string[] RoomPool = {"Room1","Room2","Room3","Room4","Room5","Room8",
                                "Room11","Room12","Room13","Room14","Room16"};
-    private static readonly Point eastDoorStaticCollider = new Point(960, 576);
 
     private int randomRoomNum;
     private Random rnd;
@@ -40,7 +40,9 @@ public class RoomGenerator
         AddDoors(randomRoom);
 
         // add static colliders
-        AddStaticColliders(randomRoom, dungeonRoomData);
+        AddBoundaryColliders(randomRoom, roomManager);
+        
+        // add room Colliders
 
         // add non collider spawns
         AddNonColliderSpawns(randomRoom, dungeonRoomData);
@@ -68,18 +70,24 @@ public class RoomGenerator
 
         // west door is a wall
         Point WestDoorPosition = DungeonConstants.DoorPositions[3];
-        var westDoorSpawn = new DoorSpawn(null, DoorDirection.West, WestDoorPosition, Dungeon1Sprite.wall_west, randomRoom.RoomSprite.ToString());
+        var westDoorSpawn = new DoorSpawn(null, DoorDirection.West, WestDoorPosition, Dungeon1Sprite.door_open_west, randomRoom.RoomSprite.ToString());
         randomRoom.AddDoor(westDoorSpawn);
     }
 
-    private void AddStaticColliders(DungeonRoom randomRoom, IDungeonRoom dungeonRoomData)
+    private void AddBoundaryColliders(DungeonRoom randomRoom, IDungeonRoomLoader roomManager)
     {
-        // Add static boundary colliders
-        foreach (var staticCollider in dungeonRoomData.GetStaticBoundaryColliders())
-        {
-            randomRoom.AddStaticBoundaryCollider(staticCollider);
-        }
+        // Get boundary collider data
+        IDungeonRoom boundaryColliderData = roomManager.LoadRoom(BOUNDARY_COLLIDERS_ROOM_NAME);
 
+        // Add static room colliders
+        foreach (var roomCollider in boundaryColliderData.GetStaticBoundaryColliders())
+        {
+            randomRoom.AddStaticRoomCollider(roomCollider);
+        }
+    }
+
+    private void AddRoomColliders(DungeonRoom randomRoom, IDungeonRoom dungeonRoomData)
+    {
         // Add static room colliders
         foreach (var roomCollider in dungeonRoomData.GetStaticRoomColliders())
         {

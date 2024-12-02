@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using MonoZelda.Commands;
 using MonoZelda.Dungeons;
 using MonoZelda.Dungeons.Dungeon1;
+using MonoZelda.Dungeons.Parser.Data;
 using MonoZelda.Link;
 using MonoZelda.Sprites;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace MonoZelda.Scenes;
 
 public class TransitionScene : Scene
 {
+    private const string RANDOM_ROOM = "RandomRoom";
     private ICommand loadCommand;
     private IDungeonRoom currentRoom;
     private IDungeonRoom nextRoom;
@@ -68,7 +70,14 @@ public class TransitionScene : Scene
         // create Door spriteDicts
         foreach (var currentDoorSpawn in currentRoom.GetDoors())
         {
-            CreateSpriteDict(currentDoorSpawn.Type.ToString(), currentDoorSpawn.Position, SpriteLayer.DoorLayer);
+            if (currentRoom.RoomName == RANDOM_ROOM && currentDoorSpawn.Direction == DoorDirection.West)
+            {
+                CreateSpriteDict(Dungeon1Sprite.door_closed_west.ToString(), currentDoorSpawn.Position, SpriteLayer.DoorLayer);
+            }
+            else
+            {
+                CreateSpriteDict(currentDoorSpawn.Type.ToString(), currentDoorSpawn.Position, SpriteLayer.DoorLayer);
+            }
         }
 
         foreach (var nextDoorSpawn in nextRoom.GetDoors())

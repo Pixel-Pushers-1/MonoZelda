@@ -155,6 +155,12 @@ public class InfiniteRoomScene : Scene
                 updateables.Add(updateable);
             }
         }
+
+        // close west door
+        Point westDoorPosition = DungeonConstants.DoorPositions[3];
+        var westDoorSpriteDict = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background + 1, westDoorPosition);
+        westDoorSpriteDict.SetSprite(Dungeon1Sprite.door_closed_west.ToString());
+
     }
 
     public override void UnloadContent()
