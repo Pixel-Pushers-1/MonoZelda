@@ -98,17 +98,21 @@ public static class PlayerState
         return (int)(XP_BASE * Math.Pow(XP_SCALING, Level - 1));
     }
 
-    public static void AddXP(int amount)
+    public static bool AddXP(int amount)
     {
+        bool leveledUp = false;
         XP += amount;
         // does player have enough xp to level up?
         while (XP >= GetXPToLevelUp()) 
         {
             XP -= GetXPToLevelUp(); 
             Level++;
+            leveledUp |= true;
             Health = MathHelper.Clamp(Health + 1, 0, MaxHealth);
             SoundManager.PlaySound("LOZ_LevelUp", false);
+
         }
+        return leveledUp;
     }
     public static float GetXPProgress()
     {
