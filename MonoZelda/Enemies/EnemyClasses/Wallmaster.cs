@@ -183,25 +183,32 @@ namespace MonoZelda.Enemies.EnemyClasses
 
             if (timer >= 1.30)
             {
+                if (grabbed)
+                {
+                    //might need to use a different type of transition here, idk what it is in game
+                    commandManager.Execute(CommandType.WallmasterGrabAnimationCommand);
+                }
                 if (timer >= 4.2)
                 {
                     StateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
                     adjacentWall = PlayerAdjacentWall.None;
                     StateMachine.Die(true);
                     spawned = false;
-                    if (grabbed)
-                    {
-                        //might need to use a different type of transition here, idk what it is in game
-                        commandManager.Execute(CommandType.WallmasterGrabAnimationCommand);
-                    }
+                   
                 }
                 else if (timer >= 2.9)
                 {
-                    StateMachine.ChangeDirection(returnDirection);
+                    if (!grabbed)
+                    {
+                        StateMachine.ChangeDirection(returnDirection);
+                    }
                 }
                 else if (spawned)
                 {
-                    StateMachine.ChangeDirection(nextDirection);
+                    if (!grabbed)
+                    {
+                        StateMachine.ChangeDirection(nextDirection);
+                    }
                 }
             }
             Spawn();
