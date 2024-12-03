@@ -6,17 +6,17 @@ using System.Diagnostics;
 
 namespace MonoZelda.UI.NavigableMenus;
 
-public class NavigableGrid
+public class UIGrid : INavigableGrid
 {
-    private NavigableGridItem[,] grid;
+    private UIGridItem[,] grid;
     private Point selectedItem;
 
-    public NavigableGrid(NavigableGridItem[,] grid) {
+    public UIGrid(UIGridItem[,] grid) {
         this.grid = grid;
         grid[selectedItem.X, selectedItem.Y].Select();
     }
 
-    public NavigableGrid(NavigableGridItem[,] grid, Point startingPoint) {
+    public UIGrid(UIGridItem[,] grid, Point startingPoint) {
         this.grid = grid;
         selectedItem = startingPoint;
         grid[selectedItem.X, selectedItem.Y].Select();

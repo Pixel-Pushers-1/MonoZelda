@@ -2,18 +2,19 @@
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using MonoZelda.UI.NavigableMenus;
+using System.Diagnostics;
 
 namespace MonoZelda.Commands.GameCommands;
 
 public class NavigableGridMoveCommand : ICommand
 {
-    private NavigableGrid grid;
+    private INavigableGrid grid;
 
     public NavigableGridMoveCommand() {
         //empty
     }
 
-    public NavigableGridMoveCommand(NavigableGrid grid) {
+    public NavigableGridMoveCommand(INavigableGrid grid) {
         this.grid = grid;
     }
 

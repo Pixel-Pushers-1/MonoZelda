@@ -13,7 +13,10 @@ namespace MonoZelda.Scenes;
 public class MainMenuScene : Scene
 {
     private CommandManager commandManager;
-    private NavigableGrid uiGrid;
+    private UIGrid uiGrid;
+    private SpriteDict background;
+    private SpriteDict classicButton;
+    private SpriteDict infiniteButton;
 
     public MainMenuScene(CommandManager commandManager)
     {
@@ -31,14 +34,15 @@ public class MainMenuScene : Scene
         dict.SetSprite("title");
 
         //set up ui grid
-        NavigableGridItem[,] tempGrid = new NavigableGridItem[3, 2];
-        tempGrid[0, 0] = new NavigableGridItem(commandManager, CommandType.StartGameCommand, GameType.classic);
-        tempGrid[1, 0] = tempGrid[0, 0];
-        tempGrid[2, 0] = tempGrid[0, 0];
-        tempGrid[0, 1] = new NavigableGridItem(commandManager, CommandType.StartGameCommand, GameType.infiniteEasy);
-        tempGrid[1, 1] = new NavigableGridItem(commandManager, CommandType.StartGameCommand, GameType.infiniteMedium);
-        tempGrid[2, 1] = new NavigableGridItem(commandManager, CommandType.StartGameCommand, GameType.infiniteHard);
-        uiGrid = new NavigableGrid(tempGrid);
+        SpriteDict classicSelectedButton = new SpriteDict(SpriteType.Title, 2, classicButtonPosition);
+        classicSelectedButton.SetSprite("button_classic_selected");
+        SpriteDict infiniteSelectedButton = new SpriteDict(SpriteType.Title, 2, infiniteButtonPosition);
+        infiniteSelectedButton.SetSprite("button_infinite_selected");
+
+        UIGridItem[,] tempGrid = new UIGridItem[1, 2];
+        tempGrid[0, 0] = new UIGridItem(classicSelectedButton, commandManager, CommandType.StartGameCommand, GameType.Classic);
+        tempGrid[0, 1] = new UIGridItem(infiniteSelectedButton, commandManager, CommandType.StartGameCommand, GameType.Infinite);
+        uiGrid = new UIGrid(tempGrid);
 
         //replace commands
         commandManager.ReplaceCommand(CommandType.NavigableGridMoveCommand, new NavigableGridMoveCommand(uiGrid));

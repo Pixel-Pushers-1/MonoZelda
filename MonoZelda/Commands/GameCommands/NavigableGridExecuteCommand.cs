@@ -7,13 +7,13 @@ namespace MonoZelda.Commands.GameCommands;
 
 public class NavigableGridExecuteCommand : ICommand
 {
-    private NavigableGrid grid;
+    private INavigableGrid grid;
 
     public NavigableGridExecuteCommand() {
         //empty
     }
 
-    public NavigableGridExecuteCommand(NavigableGrid grid) {
+    public NavigableGridExecuteCommand(INavigableGrid grid) {
         this.grid = grid;
     }
 
