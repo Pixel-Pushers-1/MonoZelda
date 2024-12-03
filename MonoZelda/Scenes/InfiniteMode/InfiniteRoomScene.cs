@@ -84,6 +84,7 @@ public class InfiniteRoomScene : Scene
         playerSprite = new PlayerSpriteManager();
         var playerSpriteDict = new SpriteDict(SpriteType.Player, SpriteLayer.Player, PlayerState.Position);
         playerSprite.SetPlayerSpriteDict(playerSpriteDict);
+        PlayerState.ResetCandle();
 
         //create player and player collision manager
         var linkDeathAnimationCommand = commandManager.GetCommand(CommandType.LinkDeathAnimationCommand);
