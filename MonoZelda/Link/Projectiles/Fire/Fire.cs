@@ -1,11 +1,11 @@
 ﻿using MonoZelda.Sprites;
 using Microsoft.Xna.Framework;
-using System;
 using MonoZelda.Collision;
 using MonoZelda.Dungeons;
 using MonoZelda.Controllers;
 using MonoZelda.Sound;
 using MonoZelda.Shaders;
+using System.Collections.Generic;
 
 namespace MonoZelda.Link.Projectiles;
 
@@ -17,7 +17,9 @@ public class Fire : IProjectile
     private int tilesTraveled;
     private Vector2 initialPosition;
     private Vector2 projectilePosition;
+    private ILight fireLight;
     private Direction projectileDirection;
+    private List<ILight> lights;
     private CollisionController collisionController;
     private PlayerProjectileCollidable projectileCollidable;
     private SpriteDict projectileDict;
@@ -76,7 +78,8 @@ public class Fire : IProjectile
     public void Setup(params object[] args)
     {
         projectilePosition = initialPosition;
-        ProjectileLight fireLight = (ProjectileLight)args[0];
+        fireLight = (ILight)args[0];
+        lights = (List<ILight>)args[1];
         fireLight.Position = projectilePosition.ToPoint();
         SoundManager.PlaySound("LOZ_Candle", false);
         projectileDict = new SpriteDict(SpriteType.Projectiles, SpriteLayer.Projectiles, initialPosition.ToPoint());
@@ -95,6 +98,7 @@ public class Fire : IProjectile
         else
         {
             finished = true;
+            lights.Remove(fireLight);
             projectileCollidable.UnregisterHitbox();
             projectileDict.Unregister();
             collisionController.RemoveCollidable(projectileCollidable);

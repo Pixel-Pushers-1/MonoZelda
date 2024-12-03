@@ -20,6 +20,6 @@ public class CandleBlueEquippable : IEquippable
         ILight fireLight = new ProjectileLight();
         lights.Add(fireLight);
 
-        projectileManager.FireProjectile(ProjectileType.Fire, fireLight);
+        projectileManager.FireProjectile(ProjectileType.Fire, fireLight, lights);
     }
 }
