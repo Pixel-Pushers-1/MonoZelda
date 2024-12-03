@@ -140,6 +140,12 @@
 /processorParam:Quality=Best
 /build:Sound/LOZ_Key_Appear.wav
 
+#begin Sound/LOZ_LevelUp.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/LOZ_LevelUp.wav
+
 #begin Sound/LOZ_Link_Die.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -169,6 +175,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sound/LOZ_New_Weapon_Recieved.wav
+
+#begin Sound/LOZ_orb.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/LOZ_orb.wav
 
 #begin Sound/LOZ_Recorder.wav
 /importer:WavImporter

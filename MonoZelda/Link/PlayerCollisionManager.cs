@@ -1,11 +1,11 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Sound;
 using MonoZelda.Sprites;
+using System.Diagnostics;
 
 namespace MonoZelda.Link;
 
@@ -69,10 +69,14 @@ public class PlayerCollisionManager
         );
         playerHitbox.Bounds = newBounds;
     }
-
+    public void HandleLevelUp()
+    {
+        player.LevelUp();
+    }
     public void HandleClockCollision()
     {
         player.ClockFlash();
+        invulnerabilityTimer = INVULNERABILITY_TIME*4f;
     }
 
     public void HandleBowCollision(SpriteDict bowDict)
@@ -126,11 +130,12 @@ public class PlayerCollisionManager
 
     public void HandleEnemyCollision(Direction collisionDirection)
     {
+
         if (invulnerabilityTimer > 0f)
             return;
         if (knockbackTimer <= 0)
         {
-            Vector2 knockbackDirection = GetKnockbackDirection(collisionDirection);
+            Vector2 knockbackDirection = GetKnockbackDirection(collisionDirection)*-1;
             knockbackVelocity = knockbackDirection * KNOCKBACK_FORCE;
             knockbackTimer = KNOCKBACK_TIME;
             invulnerabilityTimer = INVULNERABILITY_TIME;

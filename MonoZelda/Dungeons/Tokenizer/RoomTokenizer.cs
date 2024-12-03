@@ -13,6 +13,8 @@ namespace MonoZelda.Dungeons.Parser
     {
         public RoomFile Tokenize(Stream stream)
         {
+            
+            
             using var streamReader = new StreamReader(stream);
             using TextFieldParser textFieldParser = new TextFieldParser(streamReader);
             textFieldParser.TextFieldType = FieldType.Delimited;

@@ -18,6 +18,16 @@ public class EnemyPlayerProjectileCollisionCommand : ICommand
     }
     public void Execute(params object[] metadata)
     {
+        int damage = 1;
+
+        if (PlayerState.Level >= 10)
+        {
+            damage = 3;
+        }
+        else if (PlayerState.Level >= 5)
+        {
+            damage = 2;
+        }
         ICollidable collidableA = (ICollidable)metadata[0];
         ICollidable collidableB = (ICollidable)metadata[1];
         CollisionController collisionController = (CollisionController)metadata[2];
@@ -26,8 +36,6 @@ public class EnemyPlayerProjectileCollisionCommand : ICommand
         PlayerProjectileCollidable projectileCollidable;
         EnemyCollidable enemyCollidable;
         float stunTime = 0;
-        int damage = 1;
-
         if (collidableA.type == CollidableType.PlayerProjectile)
         {
             projectileCollidable = (PlayerProjectileCollidable)collidableA;

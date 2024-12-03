@@ -14,7 +14,7 @@ namespace MonoZelda.UI
 
         private List<SpriteDict> _hearts = new();
 
-        public LifeWidget(Screen screen, Point position, ContentManager cm) : base(screen, position)
+        public LifeWidget(Screen screen, Point position) : base(screen, position)
         {
 
             //create heart sprites
@@ -25,7 +25,7 @@ namespace MonoZelda.UI
                 SpriteDict heart = new SpriteDict(SpriteType.HUD, SpriteLayer.HUD, heartPosition);
                 _hearts.Add(heart);
             }
-            SetHearts(PlayerState.Health);
+            SetHearts((int)PlayerState.Health);
         }
 
         public override void Draw(SpriteBatch sb)
@@ -39,7 +39,7 @@ namespace MonoZelda.UI
 
         public override void Update()
         {
-            SetHearts(PlayerState.Health);
+            SetHearts((int)PlayerState.Health);
         }
 
         private void SetHearts(int health)

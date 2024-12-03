@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Input;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Sprites;
-using System;
 using System.Collections.Generic;
 
 namespace MonoZelda.Link.Projectiles;
@@ -136,7 +135,7 @@ public class ProjectileManager
 
     public void fireEquippedProjectile(PlayerSpriteManager player)
     {
-        if (!hasRequiredResources(EquippedProjectile))
+        if (!hasRequiredResources(EquippedProjectile) || EquippedProjectile == ProjectileType.None)
         {
             return;
         }

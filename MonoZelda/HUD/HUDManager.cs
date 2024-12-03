@@ -34,7 +34,7 @@ namespace MonoZelda.HUD
         private void Initialize()
         {
             //sets hearts
-            int numberOfHearts = PlayerState.Health;
+            int numberOfHearts = (int)PlayerState.Health;
             for (int i = 0; i < numberOfHearts; i++)
             {
                 Point heartPosition = new Point(700 + (i * 32),125);

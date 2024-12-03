@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Items;
-using MonoZelda.Sound;
 using MonoZelda.Sprites;
-
+using MonoZelda.Dungeons;
+using MonoZelda.Link;
+using System.Diagnostics;
+using MonoZelda.Sound;
 namespace MonoZelda.Enemies
 {
     public class EnemyStateMachine
@@ -128,13 +129,13 @@ namespace MonoZelda.Enemies
             {
                 if (enemy.GetType() == typeof(Aquamentus))
                 {
-                    itemFactory.CreateItem(ItemList.HeartContainer, new Point(764,516));
+                    itemFactory.CreateItem(new ItemSpawn(pos,ItemList.HeartContainer), true);
                 }
-                itemFactory.CreateItem(item, new Point(pos.X - 16, pos.Y - 32));
+                itemFactory.CreateItem(new ItemSpawn(new Point(pos.X - 16, pos.Y - 32),item),true);
                 itemSpawned = true;
             }
         }
-
+        
         public Point Update(Enemy enemy, Point position)
         {
             dt = (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
@@ -162,6 +163,7 @@ namespace MonoZelda.Enemies
             {
                 animationTimer += dt;
                 keyDict.Enabled = false;
+                var xp = ItemList.XPOrb;
                 if (animationTimer >= 0.5)
                 {
                     enemySpriteDict.Enabled = false;
@@ -170,6 +172,8 @@ namespace MonoZelda.Enemies
                     {
                         DropItem(position, enemy);
                     }
+                    itemFactory.CreateItem(new ItemSpawn(new Point(position.X, position.Y), xp), true);
+
                 }
             }
             else

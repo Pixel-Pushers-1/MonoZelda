@@ -1,7 +1,10 @@
 using Microsoft.Xna.Framework;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Link.Projectiles;
+using MonoZelda.Sound;
+using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace MonoZelda.Link;
 
@@ -12,7 +15,14 @@ public static class PlayerState
     private static readonly int INITIAL_BOMBS = 1;
     private static readonly int INITIAL_KEYS = 0;
 
-    private static int _health = INITIAL_HP;
+    private static float _health = INITIAL_HP;
+
+    //RPG
+    private static readonly int INITIAL_LEVEL = 1;
+    private static readonly int XP_BASE = 100; 
+    private static readonly float XP_SCALING = 1.3f;
+    private static readonly float INITIAL_DEFENSE = 0f;
+
 
     public static void Initialize()
     {
@@ -27,7 +37,9 @@ public static class PlayerState
         Bombs = INITIAL_BOMBS;
         Keys = INITIAL_KEYS;
         EquippedProjectile = ProjectileType.None;
-
+        Level = INITIAL_LEVEL;
+        Defense = INITIAL_DEFENSE;
+        XP = 0;
     }
 
     public static void ResetCandle()
@@ -35,7 +47,7 @@ public static class PlayerState
         IsCandleUsed = false;
     }
 
-    public static int Health
+    public static float Health
     {
         get => _health;
         set
@@ -55,9 +67,13 @@ public static class PlayerState
     {
         if (!IsDead)
         {
-            Health = Health - 1;
+            float effectiveDamage = 1 / (1 + (float)Math.Log(1 + Defense));
+            Health -= effectiveDamage;
+            Debug.WriteLine($"Effective Damage Taken: {effectiveDamage}, Defense: {Defense}");
         }
         Debug.WriteLine($"Player Health: {Health}");
+
+
     }
 
     public static void GetHealth() {
@@ -77,6 +93,38 @@ public static class PlayerState
     public static bool HasBoomerang { get; set; }
     public static bool ObtainedTriforce { get; set; }
 
+    // RPG 
+    public static int Level { get; private set; }
+    public static int XP { get; private set; }
+    public static float Defense { get; private set; }
+
+    public static int GetXPToLevelUp()
+    {
+        return (int)(XP_BASE * Math.Pow(XP_SCALING, Level - 1));
+    }
+
+    public static bool AddXP(int amount)
+    {
+        bool leveledUp = false;
+        XP += amount;
+        // does player have enough xp to level up?
+        while (XP >= GetXPToLevelUp()) 
+        {
+            XP -= GetXPToLevelUp(); 
+            Level++;
+            leveledUp |= true;
+            Health = MathHelper.Clamp(Health + 1, 0, MaxHealth);
+            SoundManager.PlaySound("LOZ_LevelUp", false);
+            Defense += .50f;
+
+        }
+        return leveledUp;
+    }
+    public static float GetXPProgress()
+    {
+        int xpToLevelUp = GetXPToLevelUp();
+        return (float)XP / xpToLevelUp;
+    }
     public static void AddRupees(int amount) => Rupees += amount;
     public static void AddBombs(int amount) => Bombs += amount;
     public static void AddKeys(int amount) => Keys += amount;

@@ -1,73 +1,45 @@
-﻿using Microsoft.Xna.Framework;
-using MonoZelda.Controllers;
-using MonoZelda.Sprites;
+﻿using MonoZelda.Controllers;
 using MonoZelda.Items.ItemClasses;
 using System;
 using System.Collections.Generic;
 using MonoZelda.Dungeons;
-using MonoZelda.Link;
-using MonoZelda.Enemies;
 
 namespace MonoZelda.Items;
 
 public class ItemFactory
 {
-    private const float FLASHING_TIME = .75f;
-
     private CollisionController collisionController;
-    private List<ItemSpawn> itemSpawnList;
-    private List<Enemy> roomEnemyList;
-    private PlayerCollisionManager playerCollision;
-    private List<Item> updateList;
-    private List<Item> items;
+    private ItemManager itemManager;
 
-    public ItemFactory(CollisionController collisionController, List<ItemSpawn> itemSpawnList, List<Enemy> roomEnemyList, PlayerCollisionManager playerCollision)
+    public ItemFactory(CollisionController collisionController, ItemManager itemManager)
     {
         this.collisionController = collisionController;
-        this.itemSpawnList = itemSpawnList; 
-        this.roomEnemyList = roomEnemyList;
-        this.playerCollision = playerCollision;
-        updateList = new List<Item>();
-        items = new List<Item>();
+        this.itemManager = itemManager; 
     }
 
     public void CreateRoomItems()
     {
+        List<ItemSpawn> itemSpawnList = itemManager.RoomSpawnList;
         foreach (var itemSpawn in itemSpawnList)
         {
-            CreateItem(itemSpawn.ItemType,itemSpawn.Position);
+            CreateItem(itemSpawn, false);
         }
     }
 
-    public void CreateItem(ItemList itemName, Point spawnPosition)
+    public void CreateItem(ItemSpawn itemSpawn, Boolean dropItem)
     {
-        var itemDict = new SpriteDict(SpriteType.Items, 0, new Point(0, 0));
-        itemDict.SetFlashing(SpriteDict.FlashingType.OnOff, FLASHING_TIME);
-        var itemType = Type.GetType($"MonoZelda.Items.ItemClasses.{itemName}");
-        Item item = (Item)Activator.CreateInstance(itemType,roomEnemyList,playerCollision,updateList);
-        items.Add(item);
-        item.ItemSpawn(itemDict, spawnPosition, collisionController);
-    }
+        // Get itemClass
+        var itemType = Type.GetType($"MonoZelda.Items.ItemClasses.{itemSpawn.ItemType}");
+        Item item = (Item)Activator.CreateInstance(itemType,itemManager);
 
-    public void Update()
-    {
-        for(int i = 0; i < updateList.Count; i++)
+        // Check if item is in spawnList
+        if (dropItem == true && itemSpawn.ItemType == ItemList.Key)
         {
-            updateList[i].Update();
+            itemManager.AddRoomSpawnItem(itemSpawn);
         }
 
-        for(int i = 0; i < items.Count; i++)
-        {
-            Item item = items[i];
-            for(int j = 0; j < itemSpawnList.Count; j++)
-            {
-                ItemSpawn itemSpawn = itemSpawnList[j];
-                if(itemSpawn.ItemType == item.ItemType && item.ItemPickedUp)
-                {
-                    itemSpawnList.Remove(itemSpawn);
-                }
-            }
-        }
+        // Spawn Item
+        item.ItemSpawn(itemSpawn, collisionController);
     }
 }
 

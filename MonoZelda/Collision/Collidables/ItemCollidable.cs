@@ -30,7 +30,7 @@ public class ItemCollidable : ICollidable
     }
     public void HandleCollision(CollisionController collisionController)
     {
-        item.HandleCollision(CollidableDict,collisionController);
+        item.HandleCollision(collisionController);
     }
 
     public void UnregisterHitbox()
