@@ -6,7 +6,6 @@ using MonoZelda.Sprites;
 using MonoZelda.Dungeons;
 using System.Collections.Generic;
 using MonoZelda.Commands;
-using MonoZelda.Sound;
 
 namespace MonoZelda.Scenes;
 
@@ -16,8 +15,8 @@ public class WallMasterGrabScene : Scene
     private static readonly Point KEY_POSITION = new Point(640, 704);
     private static readonly (Rectangle, int) MoveUpZone = (new Rectangle(new Point(832, 384), new Point(64, 160)), 1);
     private static readonly (Rectangle, int) MoveDownZone = (new Rectangle(new Point(832, 544), new Point(64, 160)), 1);
-    private static readonly (Rectangle,int) MoveLeftZoneTop = (new Rectangle(new Point(192, 320), new Point(704, 64)),2);
-    private static readonly (Rectangle,int) MoveLeftZoneBottom = (new Rectangle(new Point(192, 704), new Point(704, 64)), 2);
+    private static readonly (Rectangle, int) MoveLeftZoneTop = (new Rectangle(new Point(192, 320), new Point(704, 64)), 2);
+    private static readonly (Rectangle, int) MoveLeftZoneBottom = (new Rectangle(new Point(192, 704), new Point(704, 64)), 2);
     private static readonly (Rectangle, int) MoveDownDoorZone = (new Rectangle(new Point(128, 320), new Point(64, 192)), 3);
     private static readonly (Rectangle, int) MoveUpDoorZone = (new Rectangle(new Point(128, 576), new Point(64, 192)), 3);
     private static readonly (Rectangle, int) StopZone = (new Rectangle(new Point(128, 512), new Point(64, 64)), 4);
@@ -41,7 +40,7 @@ public class WallMasterGrabScene : Scene
     private Texture2D rectangleTexture;
 
     // Direction Map
-    private static readonly Dictionary<(Rectangle,int), Direction> DirectionMap = new()
+    private static readonly Dictionary<(Rectangle, int), Direction> DirectionMap = new()
     {
         {MoveDownDoorZone,Direction.Up},
         {MoveUpDoorZone,Direction.Down},
@@ -50,7 +49,7 @@ public class WallMasterGrabScene : Scene
         {MoveDownZone,Direction.Up},
         {MoveUpZone,Direction.Down},
     };
-    
+
     public WallMasterGrabScene(IDungeonRoom currentRoom, IDungeonRoom startRoom, ICommand enterDungeonAnimationCommand)
     {
         stopZoneTimer = 0.5f;
@@ -94,12 +93,6 @@ public class WallMasterGrabScene : Scene
     {
         // get position of link
         var position = PlayerState.Position;
-        var curtainSize = new Point(512, 704);
-        var Center = new Point(graphicsDevice.Viewport.Width / 2, 192);
-        LeftCurtain = new BlankSprite(SpriteLayer.HUD + 1, Center, curtainSize, Color.Black);
-        RightCurtain = new BlankSprite(SpriteLayer.HUD + 1, Center, curtainSize, Color.Black);
-        LeftCurtain.Enabled = true;
-        RightCurtain.Enabled = true;
 
         // create fake link ,and wallmaster
         FakeWallMaster = new SpriteDict(SpriteType.Enemies, SpriteLayer.HUD, position);
@@ -122,30 +115,19 @@ public class WallMasterGrabScene : Scene
 
     public override void Update(GameTime gameTime)
     {
-        if(StopZone.Item1.Contains(WallMasterRectangle) == false)
+        if (StopZone.Item1.Contains(WallMasterRectangle) == false)
         {
             UpdateDirection();
             Vector2 subtractionVector = 4 * DungeonConstants.DirectionVector[movementDirection];
             FakeLink.Position -= subtractionVector.ToPoint();
-            FakeWallMaster.Position -= subtractionVector.ToPoint(); 
+            FakeWallMaster.Position -= subtractionVector.ToPoint();
             WallMasterRectangle.Location -= subtractionVector.ToPoint();
         }
         else
         {
-            LeftCurtain.Enabled = true;
-            RightCurtain.Enabled = true;
-            FakeBackground.SetSprite(startRoom.RoomSprite.ToString());
-            CreateFakeDoors(startRoom);
-            if (LeftCurtain.Position.X != 0)
-            {
-                LeftCurtain.Position += new Point(4, 0);
-                RightCurtain.Position += new Point(-4, 0);
-            }
-            else
-            {
-                FakeBackground.Unregister();
-                FakeLink.Unregister();
-                FakeWallMaster.Unregister();
+            FakeBackground.Unregister();
+            FakeLink.Unregister();
+            FakeWallMaster.Unregister();
             FakeKey.Unregister();
             FakeBackground.Unregister();
             PlayerState.Position = new Point(515, 725);

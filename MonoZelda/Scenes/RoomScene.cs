@@ -24,7 +24,6 @@ public class RoomScene : Scene
     private GraphicsDevice graphicsDevice;
     private CommandManager commandManager;
     private PlayerSpriteManager playerSprite;
-    private EquippableManager equippableManager;
     private PlayerCollisionManager playerCollision;
     private EquippableManager equippableManager;
     private ItemManager itemManager;
