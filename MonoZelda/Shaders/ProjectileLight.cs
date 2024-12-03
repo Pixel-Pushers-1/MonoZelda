@@ -12,10 +12,14 @@ namespace MonoZelda.Shaders
 
         private float animatedLightDistance = 0; // Zero gives a nice intro effect
 
-        public override Point Position
+        private IProjectile projectile;
+
+        public ProjectileLight(IProjectile projectile)
         {
-            set { Position = value; }
+            this.projectile = projectile;
         }
+
+        public override Point Position => projectile.ProjectilePosition.ToPoint();
 
         public override float Radius => GetRadius();
 

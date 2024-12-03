@@ -16,10 +16,6 @@ public class CandleBlueEquippable : IEquippable
         ProjectileManager projectileManager = (ProjectileManager)args[0];
         List<ILight> lights = (List<ILight>)args[2];
 
-        // create projectile light for fire
-        ILight fireLight = new ProjectileLight();
-        lights.Add(fireLight);
-
-        projectileManager.FireProjectile(ProjectileType.Fire, fireLight, lights);
+        projectileManager.FireProjectile(ProjectileType.Fire, lights);
     }
 }

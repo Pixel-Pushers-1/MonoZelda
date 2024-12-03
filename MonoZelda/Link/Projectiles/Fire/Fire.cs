@@ -77,9 +77,13 @@ public class Fire : IProjectile
 
     public void Setup(params object[] args)
     {
+        // add light for fire
+        lights = (List<ILight>)args[0];
+        fireLight = new ProjectileLight(this);
+        lights.Add(fireLight);
+
+        // other collision, sprite dict setup
         projectilePosition = initialPosition;
-        fireLight = (ILight)args[0];
-        lights = (List<ILight>)args[1];
         fireLight.Position = projectilePosition.ToPoint();
         SoundManager.PlaySound("LOZ_Candle", false);
         projectileDict = new SpriteDict(SpriteType.Projectiles, SpriteLayer.Projectiles, initialPosition.ToPoint());
