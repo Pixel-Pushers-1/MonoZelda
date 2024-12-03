@@ -28,6 +28,11 @@ namespace MonoZelda.Save
         public HashSet<(string, DoorDirection)> Keyring { get; set; }
         public HashSet<Point> DiscoveredRooms = new();
 
+        // Equipment
+        public EquippableType[] EquippablesGridRowOne;
+        public EquippableType[] EquippablesGridRowTwo;
+        public Point SelectedEquippable;
+
         // Dungeon state
 
         public string RoomName { get; set; }

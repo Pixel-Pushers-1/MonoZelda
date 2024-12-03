@@ -153,7 +153,8 @@ public static class PlayerState
         save.HasMap = HasMap;
         save.Keyring = Keyring;
         save.DiscoveredRooms = DiscoveredRooms;
-        save.EquippableManager = EquippableManager;
+
+        EquippableManager.Save(save);
     }
 
     public static void Load(SaveState save)
@@ -169,6 +170,7 @@ public static class PlayerState
         HasMap = save.HasMap;
         Keyring = save.Keyring;
         DiscoveredRooms = save.DiscoveredRooms;
-        EquippableManager = save.EquippableManager;
+
+        EquippableManager.Load(save);
     }
 }

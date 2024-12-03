@@ -2,13 +2,14 @@
 using MonoZelda.Controllers;
 using MonoZelda.Link.Equippables;
 using MonoZelda.Link.Projectiles;
+using MonoZelda.Save;
 using MonoZelda.Sprites;
 using MonoZelda.UI.NavigableMenus;
 using System.Collections.Generic;
 
 namespace MonoZelda.Link;
 
-public class EquippableManager : INavigableGrid
+public class EquippableManager : INavigableGrid, ISaveable
 {
     private ProjectileManager projectileManager;
     private readonly SwordEquippable swordEquippable;
@@ -120,5 +121,36 @@ public class EquippableManager : INavigableGrid
     public void Update()
     {
         projectileManager.Update();
+    }
+
+    public void Save(SaveState save)
+    {
+        save.EquippablesGridRowOne = new EquippableType[5];
+        for(int i = 0; i < 5; i++) {
+            save.EquippablesGridRowOne[i] = equippablesGrid[i, 0];
+        }
+
+        save.EquippablesGridRowTwo = new EquippableType[5];
+        for (int i = 0; i < 5; i++)
+        {
+            save.EquippablesGridRowTwo[i] = equippablesGrid[i, 1];
+        }
+
+        save.SelectedEquippable = this.selectedEquippable;
+    }
+
+    public void Load(SaveState save)
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            equippablesGrid[i, 0] = save.EquippablesGridRowOne[i];
+        }
+
+        for (int i = 0; i < 5; i++)
+        {
+            equippablesGrid[i, 1] = save.EquippablesGridRowTwo[i];
+        }
+
+        this.selectedEquippable = save.SelectedEquippable;
     }
 }
