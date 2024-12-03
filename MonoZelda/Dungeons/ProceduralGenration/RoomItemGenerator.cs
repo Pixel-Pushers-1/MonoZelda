@@ -25,9 +25,9 @@ public class RoomItemGenerator
 
     public RoomItemGenerator()
     {
-        bluePotionRate = 0.20f;
-        redPotionRate = 0.10f;
-        fairyRate = 0.15f;
+        bluePotionRate = 0.05f;
+        redPotionRate = 0.02f;
+        fairyRate = 0.10f;
         random = new Random();
     }
 
@@ -84,7 +84,7 @@ public class RoomItemGenerator
 
     private void AddUtilityItems(List<ItemList> items)
     {
-        double rate = 0.1;
+        double rate = 0.05;
         double roll = random.NextDouble();
         if(roll <= rate)
         {
