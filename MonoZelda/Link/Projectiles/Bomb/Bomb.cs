@@ -30,6 +30,12 @@ public class Bomb : IProjectile
     private CollisionController collisionController;
     private bool exploded;
 
+    public Vector2 ProjectilePosition
+    {
+        get { return projectilePosition; }
+        set { projectilePosition = value; }
+    }
+
     public bool Exploded
     {
         get => exploded;

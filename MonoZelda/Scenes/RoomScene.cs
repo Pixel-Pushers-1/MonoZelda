@@ -53,7 +53,6 @@ public class RoomScene : Scene
         this.equippableManager = equippableManager;
         this.room = room;
         triggers = new List<ITrigger>();
-
     }
 
     public override void LoadContent(ContentManager contentManager)
@@ -286,8 +285,6 @@ public class RoomScene : Scene
         playerCollision.Update();
     }
 
-
-    
     private void UpdateDynamicLights()
     {
         if(!room.IsLit)

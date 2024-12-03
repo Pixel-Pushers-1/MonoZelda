@@ -21,6 +21,12 @@ public class WoodenSwordBeam : IProjectile
     private PlayerProjectileCollidable projectileCollidable;
     private SpriteDict projectileDict;
 
+    public Vector2 ProjectilePosition
+    {
+        get { return projectilePosition; }
+        set { projectilePosition = value; }
+    }
+
     public WoodenSwordBeam(Vector2 spawnPosition, CollisionController collisionController)
     {
         finished = false;

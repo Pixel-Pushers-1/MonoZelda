@@ -21,6 +21,12 @@ public class Boomerang : IProjectile
     private SpriteDict projectileDict;
     private TrackReturn tracker;
 
+    public Vector2 ProjectilePosition
+    {
+        get { return projectilePosition; }
+        set { projectilePosition = value; }
+    }
+
     public Boomerang(Vector2 spawnPosition, CollisionController collisionController)
     {
         finished = false;

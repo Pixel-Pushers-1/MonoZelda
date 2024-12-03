@@ -1,10 +1,10 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using MonoZelda.Link;
 using MonoZelda.Link.Equippables;
 
 namespace MonoZelda.Shaders
 {
-    internal class PlayerLight : Light
+    internal class ProjectileLight : Light
     {
         public const int MIN_RADIUS = 150;
         public const int MAX_RADIUS = 300;

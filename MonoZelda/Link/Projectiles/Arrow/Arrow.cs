@@ -21,6 +21,12 @@ public class Arrow : IProjectile
     private Vector2 projectilePosition;
     private Vector2 initialPosition;
 
+    public Vector2 ProjectilePosition
+    {
+        get { return projectilePosition; }
+        set { projectilePosition = value; }
+    }
+
     public Arrow(Vector2 spawnPos, CollisionController collisionController)
     {
         finished = false;
