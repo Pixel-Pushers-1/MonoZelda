@@ -8,8 +8,9 @@ using MonoZelda.Scenes;
 using MonoZelda.Sound;
 using MonoZelda.Link;
 using MonoZelda.UI;
-using System.Diagnostics;
 using MonoZelda.Save;
+using Microsoft.Xna.Framework.Input;
+
 
 namespace MonoZelda;
 
@@ -33,8 +34,7 @@ public class MonoZeldaGame : Game, ISaveable
 
     private GraphicsDeviceManager graphicsDeviceManager;
     private SpriteBatch spriteBatch;
-    private KeyboardController keyboardController;
-    private MouseController mouseController;
+    private IController controller;
     private CommandManager commandManager;
     private SaveManager saveManager;
 
@@ -63,13 +63,7 @@ public class MonoZeldaGame : Game, ISaveable
         commandManager.ReplaceCommand(CommandType.ExitCommand, new ExitCommand(this));
         commandManager.ReplaceCommand(CommandType.StartGameCommand, new StartGameCommand(this));
         commandManager.ReplaceCommand(CommandType.ResetCommand, new ResetCommand(this));
-        commandManager.ReplaceCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand(this));
-        commandManager.ReplaceCommand(CommandType.QuickLoadCommand, new QuickLoadCommand(saveManager));
-        commandManager.ReplaceCommand(CommandType.QuickSaveCommand, new QuickSaveCommand(saveManager));
-
-        // create controller objects
-        keyboardController = new KeyboardController(commandManager);
-        mouseController = new MouseController(commandManager);
+        commandManager.ReplaceCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand(this));    
     }
 
     protected override void Initialize()
@@ -94,11 +88,29 @@ public class MonoZeldaGame : Game, ISaveable
 
     protected override void Update(GameTime gameTime)
     {
-        GameTime = gameTime;
-        keyboardController.Update(gameTime);
-        mouseController.Update(gameTime);
-        scene.Update(gameTime);
+        if (controller is null) {
+            // create controller objects
+            if (GamePad.GetState(PlayerIndex.One).IsConnected) 
+            {
+                controller = new GamepadController(commandManager, PlayerIndex.One);
 
+            }
+            else 
+            {
+                controller = new KeyboardController(commandManager);
+            }
+        }
+        if (PlayerState.IsDead)
+        {
+            commandManager.Execute(CommandType.PlayerDeathCommand);
+            PlayerState.IsDead = false;
+            PlayerState.Initialize();
+
+        }
+
+        GameTime = gameTime;
+        controller.Update(gameTime);
+        scene.Update(gameTime);
         base.Update(gameTime);
     }
 
