@@ -49,9 +49,7 @@ public class WoodenSwordBeam : IProjectile
         {
             swordType = "whitesword";
         }
-        string spriteName = $"{swordType}_item_{playerDirection.ToString().ToLower()}";
-        SetProjectileSprite(spriteName);
-        string spriteName = $"woodensword_item_{projectileDirection.ToString().ToLower()}";
+        string spriteName = $"{swordType}_item_{projectileDirection.ToString().ToLower()}";
         projectileDict.SetSprite(spriteName);
 
         updateTilesTraveled();

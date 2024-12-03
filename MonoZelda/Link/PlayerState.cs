@@ -51,7 +51,6 @@ public static class PlayerState
         DiscoveredRooms = new();
         EquippedItem = EquippableType.None;
         EquippableInventory = new List<EquippableType>();
-        EquippedProjectile = ProjectileType.None;
         Level = INITIAL_LEVEL;
         Defense = INITIAL_DEFENSE;
         XP = 0;
@@ -67,7 +66,7 @@ public static class PlayerState
         get => _health;
         set
         {
-            _health = value;
+            _health = (int)value;
             if (_health <= 0)
                 IsDead = true;
         }
@@ -152,7 +151,7 @@ public static class PlayerState
         save.EquippableInventory = EquippableInventory;
         save.HasBoomerang = HasBoomerang;
         save.ObtainedTriforce = ObtainedTriforce;
-        save.Health = Health;
+        save.Health = (int)Health;
         save.BombCount = Bombs;
         save.RupeeCount = Rupees;
         save.KeyCount = Keys;

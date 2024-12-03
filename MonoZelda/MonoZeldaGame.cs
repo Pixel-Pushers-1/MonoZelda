@@ -39,7 +39,7 @@ public class MonoZeldaGame : Game, ISaveable
 
     public MonoZeldaGame()
     {
-        EnemyLevel = 3;
+        EnemyLevel = 1;
 
         graphicsDeviceManager = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
@@ -135,7 +135,7 @@ public class MonoZeldaGame : Game, ISaveable
         if (scene is MainMenuScene)
         {
             SoundManager.StopSound("LOZ_Intro");
-            LoadDungeon("RoomTest");
+            LoadDungeon("Room1");
         }
     }
 
