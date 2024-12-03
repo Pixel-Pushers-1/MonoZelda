@@ -23,10 +23,8 @@ public enum GameState
 }
 
 public enum GameType {
-    classic,
-    infiniteEasy,
-    infiniteMedium,
-    infiniteHard,
+    Classic,
+    Infinite,
 }
 
 public class MonoZeldaGame : Game, ISaveable

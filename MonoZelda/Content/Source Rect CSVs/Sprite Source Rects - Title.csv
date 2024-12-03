@@ -5,3 +5,7 @@ spray2,879,11,32,16,1,top left,10
 foam1,776,28,32,16,1,top left,10
 foam2,809,28,32,16,1,top left,10
 foam3,842,28,32,16,1,top left,10
+button_classic_unselected,800,192,69,21,1,bottom right,10
+button_classic_selected,800,224,69,21,1,bottom right,10
+button_infinite_unselected,880,192,77,21,1,bottom right,10
+button_infinite_selected,880,224,77,21,1,bottom right,10
