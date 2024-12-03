@@ -26,9 +26,13 @@ namespace MonoZelda.Controllers
                 {new (Buttons.B, true), CommandType.PlayerCycleEquippableCommand},
                 {new (Buttons.Y, true), CommandType.ToggleInventoryCommand},
                 {new (Buttons.X, true), CommandType.PlayerUseEquippableCommand},
-                {new (Buttons.LeftShoulder, true), CommandType.ResetCommand},
-                {new (Buttons.RightShoulder, true), CommandType.MuteCommand},
-                {new (Buttons.None, false), CommandType.PlayerStandingCommand}
+                {new (Buttons.None, false), CommandType.PlayerStandingCommand},
+                {new (Buttons.LeftShoulder, true), CommandType.QuickSaveCommand},
+                {new (Buttons.RightShoulder, true), CommandType.QuickLoadCommand},
+                {new (Buttons.DPadRight, true), CommandType.MuteCommand},
+                {new (Buttons.DPadLeft, true), CommandType.ToggleGizmosCommand},
+                {new (Buttons.DPadDown, false), CommandType.ExitCommand},
+                {new (Buttons.DPadUp, true), CommandType.ResetCommand},
             };
 
             _currentState = GamePad.GetState(PlayerIndex);
