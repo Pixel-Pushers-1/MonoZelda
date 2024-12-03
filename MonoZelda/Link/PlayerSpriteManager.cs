@@ -26,6 +26,7 @@ public class PlayerSpriteManager
     private const float CLOCK_FLASH_TIME = 3f;
     private const float DAMAGE_IMMOBILITY_TIME = .2f;
     private const float PICKUP_TIME = 3f;
+    private const float LEVELUP_FLASH_TIME = 3f;
 
     private Direction playerDirection;
     private SpriteDict playerSpriteDict;
@@ -72,6 +73,11 @@ public class PlayerSpriteManager
     public void DisablePlayerSprite()
     {
         playerSpriteDict.Enabled = false;   
+    }
+
+    public void LevelUp()
+    {
+        playerSpriteDict.SetFlashing(SpriteDict.FlashingType.LevelUp, LEVELUP_FLASH_TIME);
     }
 
     public void ClockFlash()
@@ -139,10 +145,20 @@ public class PlayerSpriteManager
     {
         if (immobilityTimer <= 0)
         {
+            string swordType = "woodensword"; // Default sword
+
+            if (PlayerState.Level >= 10)
+            {
+                swordType = "magicalsword";
+            }
+            else if (PlayerState.Level >= 5)
+            {
+                swordType = "whitesword";
+            }
             // Get direction string from the dictionary
             if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
             {
-                string spriteName = $"woodensword_{directionString}";
+                string spriteName = $"{swordType}_{directionString}";
                 immobilityTimer = playerSpriteDict.SetSpriteOneshot(spriteName);
             }
         }

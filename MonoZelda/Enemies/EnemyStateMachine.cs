@@ -4,7 +4,9 @@ using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Items;
 using MonoZelda.Sprites;
 using MonoZelda.Dungeons;
-
+using MonoZelda.Link;
+using System.Diagnostics;
+using MonoZelda.Sound;
 namespace MonoZelda.Enemies
 {
     public class EnemyStateMachine
@@ -133,7 +135,7 @@ namespace MonoZelda.Enemies
                 itemSpawned = true;
             }
         }
-
+        
         public Point Update(Enemy enemy, Point position)
         {
             dt = (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
@@ -161,6 +163,7 @@ namespace MonoZelda.Enemies
             {
                 animationTimer += dt;
                 keyDict.Enabled = false;
+                var xp = ItemList.XPOrb;
                 if (animationTimer >= 0.5)
                 {
                     enemySpriteDict.Enabled = false;
@@ -169,6 +172,8 @@ namespace MonoZelda.Enemies
                     {
                         DropItem(position, enemy);
                     }
+                    itemFactory.CreateItem(new ItemSpawn(new Point(position.X, position.Y), xp), true);
+
                 }
             }
             else

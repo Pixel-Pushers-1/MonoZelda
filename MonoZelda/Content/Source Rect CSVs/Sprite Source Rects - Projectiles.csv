@@ -22,3 +22,11 @@ woodensword_effect_NW,32,224,8,10,1,bottom right,10
 woodensword_effect_NE,40,224,8,10,1,bottom left,10
 woodensword_effect_SW,32,234,8,10,1,top right,10
 woodensword_effect_SE,40,234,8,10,1,top left,10
+whitesword_item_up,48,224,8,16,1,center,10
+whitesword_item_down,56,224,8,16,1,center,10
+whitesword_item_right,64,224,16,8,1,center,10
+whitesword_item_left,64,232,16,8,1,center,10
+magicsword_item_up,96,224,8,16,1,center,10
+magicsword_item_down,104,224,8,16,1,center,10
+magicsword_item_right,112,224,16,8,1,center,10
+magicsword_item_left,112,232,16,8,1,center,10

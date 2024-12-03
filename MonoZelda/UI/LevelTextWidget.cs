@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MonoZelda.Link;
 using System;
 
 namespace MonoZelda.UI
@@ -22,7 +23,7 @@ namespace MonoZelda.UI
             if(string.IsNullOrEmpty(LevelName)) return;
             
             // Are text origins in the upper left?
-            sb.DrawString(font, LevelName, (WidgetLocation + margin).ToVector2(), Color.White);
+            sb.DrawString(font, "Level:" + PlayerState.Level.ToString(), (WidgetLocation + margin).ToVector2(), Color.White);
         }
 
         public override void Load(ContentManager content)

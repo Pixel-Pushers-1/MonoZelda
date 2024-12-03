@@ -16,7 +16,7 @@ public abstract class Item
     protected ItemList itemType;
     protected Rectangle itemBounds;
     protected bool itemPickedUp;
-
+    SpriteType spriteType;
     public bool ItemPickedUp
     {
         get { return itemPickedUp; }
@@ -31,7 +31,16 @@ public abstract class Item
     public virtual void ItemSpawn(ItemSpawn itemSpawn, CollisionController collisionController)
     {
         // create item SpriteDict
-        itemDict = new SpriteDict(SpriteType.Items, SpriteLayer.Items, itemSpawn.Position);
+        if (itemSpawn.ItemType.Equals(ItemList.XPOrb))
+        {
+            spriteType = SpriteType.Enemies;
+        }
+        else
+        {
+            spriteType = SpriteType.Items;
+        }
+       
+        itemDict = new SpriteDict(spriteType, SpriteLayer.Items, itemSpawn.Position);
         itemDict.SetFlashing(SpriteDict.FlashingType.OnOff, FLASHING_TIME);
 
         // create item Collidable 
