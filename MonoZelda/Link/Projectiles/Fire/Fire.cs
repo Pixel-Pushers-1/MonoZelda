@@ -72,7 +72,7 @@ public class Fire : IProjectile
         return new Rectangle(spawnPosition.X - 64 / 2, spawnPosition.Y - 64 / 2, 64, 64);
     }
 
-    public void Setup()
+    public void Setup(params object[] args)
     {
         projectilePosition = initialPosition;
         SoundManager.PlaySound("LOZ_Candle", false);

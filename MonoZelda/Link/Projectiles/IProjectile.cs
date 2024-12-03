@@ -7,7 +7,7 @@ public interface IProjectile
 {
 	public Vector2 ProjectilePosition { get; set; }
 
-	void Setup();
+	void Setup(params object[] args);
 
 	void Update();
 

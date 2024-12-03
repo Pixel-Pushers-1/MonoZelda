@@ -117,6 +117,9 @@ public class RoomScene : Scene
 
     private void SetupShader()
     {
+        // set list of lights in equippableManager
+        equippableManager.Lights = lights;
+
         if(room.IsLit)
         {
             playerLight = new PlayerLight();

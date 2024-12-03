@@ -83,7 +83,7 @@ public class Arrow : IProjectile
         return new Rectangle(rectPosition.X - width / 2, rectPosition.Y - height / 2, width, height);
     }
 
-    public void Setup()
+    public void Setup(params object[] args)
     {
         projectilePosition = initialPosition;
         SoundManager.PlaySound("LOZ_Arrow_Boomerang", false);

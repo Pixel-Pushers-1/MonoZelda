@@ -1,6 +1,7 @@
 ﻿using MonoZelda.Controllers;
 using MonoZelda.Link.Equippables;
 using MonoZelda.Link.Projectiles;
+using MonoZelda.Shaders;
 using System.Collections.Generic;
 
 namespace MonoZelda.Link;
@@ -11,6 +12,7 @@ public class EquippableManager
     private ProjectileManager projectileManager;
     private int cyclingIndex;
     private bool isPaused;
+    private List<ILight> lights;
     private readonly SwordEquippable swordEquippable;
 
     private readonly Dictionary<EquippableType, IEquippable> equippableObjects = new()
@@ -37,6 +39,12 @@ public class EquippableManager
     public bool IsPaused
     {
         set { isPaused = value; }
+    }
+
+    public List<ILight> Lights
+    {
+        get { return lights; }
+        set { lights = value; }
     }
 
     public EquippableManager(CollisionController collisionController)
@@ -68,7 +76,7 @@ public class EquippableManager
     {
         if (PlayerState.EquippedItem != EquippableType.None)
         {
-            equippableObjects[PlayerState.EquippedItem].Use(projectileManager, this);
+            equippableObjects[PlayerState.EquippedItem].Use(projectileManager, this, Lights);
         }
     }
 

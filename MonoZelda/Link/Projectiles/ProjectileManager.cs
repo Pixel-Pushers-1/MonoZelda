@@ -1,5 +1,6 @@
 ﻿using MonoZelda.Controllers;
 using System.Collections.Generic;
+using System.Dynamic;
 
 namespace MonoZelda.Link.Projectiles;
 
@@ -69,7 +70,7 @@ public class ProjectileManager
         sword.Setup();
     }
 
-    public void FireProjectile(ProjectileType projectileType)
+    public void FireProjectile(ProjectileType projectileType, params object[] args)
     {
         if (SingleInstanceProjectiles.Contains(projectileType))
         {
@@ -78,7 +79,7 @@ public class ProjectileManager
                 IProjectile projectile = projectileFactory.GetProjectileObject(projectileType, collisionController);
                 ActiveProjectiles.Add(projectileType, projectile);
                 DeductPlayerResources(projectileType);
-                projectile.Setup();
+                projectile.Setup(args);
             }
         }
         else
@@ -88,7 +89,7 @@ public class ProjectileManager
                 IProjectile projectile = projectileFactory.GetProjectileObject(projectileType, collisionController);
                 ActiveProjectiles.Add(projectileType, projectile);
                 DeductPlayerResources(projectileType);
-                projectile.Setup();
+                projectile.Setup(args);
             }
         }
     }

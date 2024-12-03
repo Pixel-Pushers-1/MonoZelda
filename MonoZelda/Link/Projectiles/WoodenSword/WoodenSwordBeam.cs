@@ -83,7 +83,7 @@ public class WoodenSwordBeam : IProjectile
         return new Rectangle(spawnPosition.X - width / 2, spawnPosition.Y - height / 2, width, height);
     }
 
-    public void Setup()
+    public void Setup(params object[] args)
     {
         projectilePosition = initialPosition;
         SoundManager.PlaySound("LOZ_Sword_Shoot", false);
