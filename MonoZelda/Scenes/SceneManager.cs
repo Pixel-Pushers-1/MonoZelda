@@ -27,7 +27,6 @@ namespace MonoZelda.Scenes
         private InventoryScene inventoryScene;
         private EquippableManager equippableManager;
         private SaveManager saveManager;
-        private IDungeonRoom currentRoom;
         private Effect effect;
         
         private IScene activeScene;

@@ -109,8 +109,6 @@ public class MonoZeldaGame : Game, ISaveable
         }
 
         GameTime = gameTime;
-
-        keyboardController.Update(gameTime);
         controller.Update(gameTime);
         scene.Update(gameTime);
         base.Update(gameTime);
