@@ -13,12 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin ../../../../../../Downloads/LOZ_orb.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:../../../../../../Downloads/LOZ_orb.wav;Sound/LOZ_orb.wav
-
 #begin Fonts/Basic.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -181,6 +175,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sound/LOZ_New_Weapon_Recieved.wav
+
+#begin Sound/LOZ_orb.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/LOZ_orb.wav
 
 #begin Sound/LOZ_Recorder.wav
 /importer:WavImporter
