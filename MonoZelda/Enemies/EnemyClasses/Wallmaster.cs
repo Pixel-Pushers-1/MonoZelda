@@ -28,7 +28,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public Wallmaster()
         {
-            Width = 52;
+            Width = 16;
             Height = 52;
             Health = 2;
             Alive = true;

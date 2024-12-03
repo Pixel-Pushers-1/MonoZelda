@@ -12,6 +12,7 @@ namespace MonoZelda.Scenes;
 public class WallMasterGrabScene : Scene
 {
     // movement zones; Integer represent priority of zones in case player is in two movement zones
+    private static readonly Point KEY_POSITION = new Point(640, 704);
     private static readonly (Rectangle, int) MoveUpZone = (new Rectangle(new Point(832, 384), new Point(64, 160)), 1);
     private static readonly (Rectangle, int) MoveDownZone = (new Rectangle(new Point(832, 544), new Point(64, 160)), 1);
     private static readonly (Rectangle,int) MoveLeftZoneTop = (new Rectangle(new Point(192, 320), new Point(704, 64)),2);
@@ -22,12 +23,14 @@ public class WallMasterGrabScene : Scene
 
     // variables
     private bool reachedDoor;
+    private float stopZoneTimer;
     private int MaxIntersectionArea;
     private IDungeonRoom currentRoom;
     private ICommand enterDungeonAnimationCommand;
     private Direction movementDirection;
     private IDungeonRoom startRoom;
     private Rectangle WallMasterRectangle;
+    private SpriteDict FakeKey;
     private SpriteDict FakeLink;
     private SpriteDict FakeWallMaster;
     private SpriteDict FakeBackground;
@@ -49,6 +52,7 @@ public class WallMasterGrabScene : Scene
     
     public WallMasterGrabScene(IDungeonRoom currentRoom, IDungeonRoom startRoom, ICommand enterDungeonAnimationCommand)
     {
+        stopZoneTimer = 0.5f;
         this.startRoom = startRoom;
         this.currentRoom = currentRoom;
         this.enterDungeonAnimationCommand = enterDungeonAnimationCommand;
@@ -95,6 +99,8 @@ public class WallMasterGrabScene : Scene
         FakeWallMaster.SetSprite("wallmaster");
         FakeLink = new SpriteDict(SpriteType.Player, SpriteLayer.HUD - 1, position);
         FakeLink.SetSprite("standing_down");
+        FakeKey = new SpriteDict(SpriteType.Items, SpriteLayer.HUD - 1, KEY_POSITION);
+        FakeKey.SetSprite("key_0");
 
         // create fake doors, background and roomborder
         FakeBackground = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD - 2, DungeonConstants.BackgroundPosition);
@@ -121,6 +127,7 @@ public class WallMasterGrabScene : Scene
         {
             FakeLink.Unregister();
             FakeWallMaster.Unregister();
+            FakeKey.Unregister();
             FakeBackground.Unregister();
             PlayerState.Position = new Point(515, 725);
             enterDungeonAnimationCommand.Execute(startRoom);
