@@ -12,6 +12,9 @@ namespace MonoZelda.Scenes;
 
 public class MainMenuScene : Scene
 {
+    private static readonly Point classicButtonPosition = new Point(1024 - 16, 896 - 16 - 21 * 4 - 16);
+    private static readonly Point infiniteButtonPosition = new Point(1024 - 16, 896 - 16);
+
     private CommandManager commandManager;
     private UIGrid uiGrid;
     private SpriteDict background;
@@ -30,8 +33,12 @@ public class MainMenuScene : Scene
 
     public override void LoadContent(ContentManager contentManager)
     {
-        var dict = new SpriteDict(SpriteType.Title, 0, new Point(0,0));
-        dict.SetSprite("title");
+        background = new SpriteDict(SpriteType.Title, 0, new Point(0,0));
+        background.SetSprite("title");
+        classicButton = new SpriteDict(SpriteType.Title, 1, classicButtonPosition);
+        classicButton.SetSprite("button_classic_unselected");
+        infiniteButton = new SpriteDict(SpriteType.Title, 1, infiniteButtonPosition);
+        infiniteButton.SetSprite("button_infinite_unselected");
 
         //set up ui grid
         SpriteDict classicSelectedButton = new SpriteDict(SpriteType.Title, 2, classicButtonPosition);

@@ -45,6 +45,8 @@ public class KeyboardController : IController
             {new (Keys.Down, true), CommandType.NavigableGridMoveCommand},
             {new (Keys.Right, true), CommandType.NavigableGridMoveCommand},
             {new (Keys.Enter, true), CommandType.NavigableGridExecuteCommand},
+            {new (Keys.F5, true), CommandType.QuickSaveCommand},
+            {new (Keys.F9, true), CommandType.QuickLoadCommand},
         };
     }
 

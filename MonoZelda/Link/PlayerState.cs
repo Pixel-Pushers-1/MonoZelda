@@ -108,6 +108,7 @@ public static class PlayerState
     public static bool HasCompass;
     public static bool HasMap;
     public static EquippableManager EquippableManager { get; set; }
+    public static EquippableManager EquippableManager { get; set; }
 
     // RPG 
     public static int Level { get; private set; }
