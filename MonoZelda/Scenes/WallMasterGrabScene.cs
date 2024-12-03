@@ -30,7 +30,6 @@ public class WallMasterGrabScene : Scene
     private Direction movementDirection;
     private IDungeonRoom startRoom;
     private Rectangle WallMasterRectangle;
-    private SpriteDict FakeKey;
     private SpriteDict FakeLink;
     private SpriteDict FakeWallMaster;
     private SpriteDict FakeBackground;
@@ -94,15 +93,13 @@ public class WallMasterGrabScene : Scene
         // create fake link ,and wallmaster
         FakeWallMaster = new SpriteDict(SpriteType.Enemies, SpriteLayer.HUD - 3, position);
         FakeWallMaster.SetSprite("wallmaster");
-        FakeLink = new SpriteDict(SpriteType.Player, SpriteLayer.HUD - 3, position);
+        FakeLink = new SpriteDict(SpriteType.Player, SpriteLayer.HUD - 4, position);
         FakeLink.SetSprite("standing_down");
-        FakeKey = new SpriteDict(SpriteType.Items, SpriteLayer.HUD - 3, KEY_POSITION);
-        FakeKey.SetSprite("key_0");
 
         // create fake doors, background and roomborder
-        FakeBackground = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD - 4, DungeonConstants.BackgroundPosition);
+        FakeBackground = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD - 5, DungeonConstants.BackgroundPosition);
         FakeBackground.SetSprite(currentRoom.RoomSprite.ToString());
-        FakeBorder = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD - 4, DungeonConstants.DungeonPosition);
+        FakeBorder = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD - 5, DungeonConstants.DungeonPosition);
         FakeBorder.SetSprite("room_exterior");
         CreateFakeDoors(currentRoom);
 
@@ -125,7 +122,6 @@ public class WallMasterGrabScene : Scene
             FakeBackground.Unregister();
             FakeLink.Unregister();
             FakeWallMaster.Unregister();
-            FakeKey.Unregister();
             FakeBackground.Unregister();
             PlayerState.Position = new Point(515, 725);
             enterDungeonAnimationCommand.Execute(startRoom);

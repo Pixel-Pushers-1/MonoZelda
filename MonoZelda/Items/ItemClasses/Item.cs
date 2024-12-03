@@ -8,7 +8,7 @@ namespace MonoZelda.Items.ItemClasses;
 
 public abstract class Item
 {
-    private const float FLASHING_TIME = 0.75f;
+    protected const float FLASHING_TIME = 0.75f;
     protected ItemManager itemManager;
     protected SpriteDict itemDict;
     protected ItemCollidable itemCollidable;
