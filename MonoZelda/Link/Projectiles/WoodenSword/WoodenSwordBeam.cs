@@ -45,8 +45,17 @@ public class WoodenSwordBeam : IProjectile
 
         projectilePosition += PROJECTILE_SPEED * directionVector;
         projectileCollidable.Bounds = getCollisionRectangle();
+        string swordType = "woodensword"; // Default sword
 
-        string spriteName = $"woodensword_item_{projectileDirection.ToString().ToLower()}";
+        if (PlayerState.Level >= 10)
+        {
+            swordType = "magicsword";
+        }
+        else if (PlayerState.Level >= 5)
+        {
+            swordType = "whitesword";
+        }
+        string spriteName = $"{swordType}_item_{projectileDirection.ToString().ToLower()}";
         projectileDict.SetSprite(spriteName);
 
         updateTilesTraveled();

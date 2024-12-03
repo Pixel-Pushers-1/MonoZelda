@@ -6,18 +6,18 @@ namespace MonoZelda.Commands.GameCommands
 {
     internal class LoadRoomCommand : ICommand
     {
-        private SceneManager dungeonScene;
+        private SceneManager sceneManager;
 
         public LoadRoomCommand() { }
 
-        public LoadRoomCommand(SceneManager dungeonScene)
+        public LoadRoomCommand(SceneManager sceneManager)
         {
-            this.dungeonScene = dungeonScene;
+            this.sceneManager = sceneManager;
         }
 
         public void Execute(params object[] metadata)
         {
-            if (dungeonScene == null)
+            if (sceneManager == null)
             {
                 return;
             }
@@ -25,7 +25,7 @@ namespace MonoZelda.Commands.GameCommands
             var destination = metadata[0];
             if (destination is string dest && !string.IsNullOrEmpty(dest))
             {
-                dungeonScene.LoadRoom(dest);
+                sceneManager.LoadRoom(dest);
             }
         }
 

@@ -28,16 +28,16 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         public Wallmaster()
         {
-            Width = 48;
-            Height = 48;
+            Width = 16;
+            Height = 52;
             Health = 2;
             Alive = true;
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory,EnemyFactory enemyFactory, bool hasItem)
         {
             EnemyHitbox = new EnemyCollidable(new Rectangle(-100, -100, Width, Height), EnemyList.Wallmaster);
-            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasItem);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory,enemyFactory, hasItem);
             spawned = true;
             timer = (float)(rnd.NextDouble()  - rnd.Next(0,2))*-1;
             Pos = new Point(-100, -100);
@@ -183,26 +183,32 @@ namespace MonoZelda.Enemies.EnemyClasses
 
             if (timer >= 1.30)
             {
+                if (grabbed)
+                {
+                    //might need to use a different type of transition here, idk what it is in game
+                    commandManager.Execute(CommandType.WallmasterGrabAnimationCommand);
+                }
                 if (timer >= 4.2)
                 {
                     StateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
                     adjacentWall = PlayerAdjacentWall.None;
                     StateMachine.Die(true);
                     spawned = false;
-                    if (grabbed)
-                    {
-                        //might need to use a different type of transition here, idk what it is in game
-                        commandManager.Execute(CommandType.RoomTransitionCommand, "Room1", Link.Direction.Down);
-                    }
+                   
                 }
                 else if (timer >= 2.9)
                 {
-                    StateMachine.ChangeDirection(returnDirection);
-                    // if link is grabbed animation should start here
+                    if (!grabbed)
+                    {
+                        StateMachine.ChangeDirection(returnDirection);
+                    }
                 }
                 else if (spawned)
                 {
-                    StateMachine.ChangeDirection(nextDirection);
+                    if (!grabbed)
+                    {
+                        StateMachine.ChangeDirection(nextDirection);
+                    }
                 }
             }
             Spawn();
@@ -222,6 +228,21 @@ namespace MonoZelda.Enemies.EnemyClasses
                 spawned = false;
                 Health = 2;
             }
+        }
+
+        public override void LevelOneBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void LevelTwoBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void LevelThreeBehavior()
+        {
+            throw new NotImplementedException();
         }
     }
 }

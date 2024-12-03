@@ -19,4 +19,5 @@ public enum ItemList
     BluePotion,
     RedPotion,
     Fire,
+    XPOrb,
 }

@@ -180,7 +180,7 @@ public class RoomScene : Scene
         foreach(var enemySpawn in room.GetEnemySpawns())
         {
             var enemy = enemyFactory.CreateEnemy(enemySpawn.EnemyType,
-                new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32), itemFactory, enemySpawn.HasKey);
+                new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32), itemFactory,enemyFactory, enemySpawn.HasKey);
             enemies.Add(enemy);
             enemySpawnPoints.Add(enemy,enemySpawn);
         }

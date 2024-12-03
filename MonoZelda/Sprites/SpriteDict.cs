@@ -13,12 +13,14 @@ public class SpriteDict : IDrawable
         OnOff,
         Red,
         Colorful,
+        LevelUp,
     }
 
     private static Dictionary<FlashingType, List<Color>> flashingColors = new() {
         { FlashingType.OnOff, new List<Color> { ColorData.White, ColorData.Transparent } },
         { FlashingType.Red, new List<Color> { ColorData.White, ColorData.Red } },
         { FlashingType.Colorful, new List<Color> { ColorData.Blue, ColorData.Red, ColorData.Green, ColorData.White } },
+        { FlashingType.LevelUp, new List<Color> { ColorData.Yellow, ColorData.Green, ColorData.White } }
     };
 
     /// <summary>
