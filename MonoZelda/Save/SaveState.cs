@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Dungeons;
 using MonoZelda.Dungeons.Parser.Data;
+using MonoZelda.Link;
 using MonoZelda.Link.Equippables;
 using MonoZelda.Link.Projectiles;
 using System;
@@ -22,7 +23,7 @@ namespace MonoZelda.Save
         public bool HasCompass { get; set; }
         public bool HasMap { get; set; }
         public bool ObtainedTriforce { get; set; }
-        public List<EquippableType> EquippableInventory { get; set; }
+        public EquippableManager EquippableManager { get; set; }
 
         public HashSet<(string, DoorDirection)> Keyring { get; set; }
         public HashSet<Point> DiscoveredRooms = new();

@@ -26,9 +26,6 @@ public static class PlayerState
     private static readonly float XP_SCALING = 1.3f;
     private static readonly float INITIAL_DEFENSE = 0f;
 
-
-    public static List<EquippableType> EquippableInventory;
-
     // (RoomName, Direction)
     public static HashSet<(string, DoorDirection)> Keyring { get; set; } = new ();
     public static HashSet<Point> DiscoveredRooms { get; set; } = new();
@@ -49,8 +46,6 @@ public static class PlayerState
         HasCompass = false;
         Keyring = new();
         DiscoveredRooms = new();
-        EquippedItem = EquippableType.None;
-        EquippableInventory = new List<EquippableType>();
         Level = INITIAL_LEVEL;
         Defense = INITIAL_DEFENSE;
         XP = 0;
@@ -108,7 +103,6 @@ public static class PlayerState
     public static bool HasCompass;
     public static bool HasMap;
     public static EquippableManager EquippableManager { get; set; }
-    public static EquippableManager EquippableManager { get; set; }
 
     // RPG 
     public static int Level { get; private set; }
@@ -159,6 +153,7 @@ public static class PlayerState
         save.HasMap = HasMap;
         save.Keyring = Keyring;
         save.DiscoveredRooms = DiscoveredRooms;
+        save.EquippableManager = EquippableManager;
     }
 
     public static void Load(SaveState save)
@@ -174,5 +169,6 @@ public static class PlayerState
         HasMap = save.HasMap;
         Keyring = save.Keyring;
         DiscoveredRooms = save.DiscoveredRooms;
+        EquippableManager = save.EquippableManager;
     }
 }
