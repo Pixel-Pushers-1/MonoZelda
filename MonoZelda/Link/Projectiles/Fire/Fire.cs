@@ -5,6 +5,7 @@ using MonoZelda.Collision;
 using MonoZelda.Dungeons;
 using MonoZelda.Controllers;
 using MonoZelda.Sound;
+using MonoZelda.Shaders;
 
 namespace MonoZelda.Link.Projectiles;
 
@@ -75,6 +76,8 @@ public class Fire : IProjectile
     public void Setup(params object[] args)
     {
         projectilePosition = initialPosition;
+        ProjectileLight fireLight = (ProjectileLight)args[0];
+        fireLight.Position = projectilePosition.ToPoint();
         SoundManager.PlaySound("LOZ_Candle", false);
         projectileDict = new SpriteDict(SpriteType.Projectiles, SpriteLayer.Projectiles, initialPosition.ToPoint());
         projectileDict.SetSprite("fire");

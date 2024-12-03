@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoZelda.Link;
 using MonoZelda.Link.Equippables;
+using MonoZelda.Link.Projectiles;
 
 namespace MonoZelda.Shaders
 {
@@ -11,7 +12,10 @@ namespace MonoZelda.Shaders
 
         private float animatedLightDistance = 0; // Zero gives a nice intro effect
 
-        public override Point Position => PlayerState.Position;
+        public override Point Position
+        {
+            set { Position = value; }
+        }
 
         public override float Radius => GetRadius();
 
