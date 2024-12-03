@@ -34,7 +34,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             Alive = true;
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory,EnemyFactory enemyFactory, bool hasItem)
         {
             this.collisionController = collisionController;
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Rope);
@@ -109,6 +109,26 @@ namespace MonoZelda.Enemies.EnemyClasses
                     collisionController.RemoveCollidable(EnemyHitbox);
                 }
             }
+        }
+
+        public override void LevelOneBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void LevelTwoBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void LevelThreeBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DecideBehavior()
+        {
+            throw new NotImplementedException();
         }
     }
 }

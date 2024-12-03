@@ -32,10 +32,10 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory,EnemyFactory enemyFactory, bool hasItem)
         {
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Aquamentus);
-            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasItem);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory,enemyFactory, hasItem);
             spawnPoint = spawnPosition;
             StateMachine.SetSprite("aquamentus_left");
             StateMachine.ChangeDirection(EnemyStateMachine.Direction.Left);
@@ -82,16 +82,52 @@ namespace MonoZelda.Enemies.EnemyClasses
             }
         }
 
-        public void CreateFireballs()
+        public override void LevelOneBehavior()
         {
             var move = PlayerState.Position.ToVector2() - Pos.ToVector2();
             move = Vector2.Divide(move, (float)Math.Sqrt(move.X * move.X + move.Y * move.Y)) * 6;
             if (!projectileActive)
             {
                 projectileActive = true;
-                fireballs.Add(new AquamentusFireball(Pos, CollisionController, new Vector2(move.X,move.Y - 2)));
-                fireballs.Add(new AquamentusFireball(Pos, CollisionController, move));
-                fireballs.Add(new AquamentusFireball(Pos, CollisionController, new Vector2(move.X, move.Y + 2)));
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X,move.Y - 2)));
+                fireballs.Add(new Fireball(Pos, CollisionController, move));
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X, move.Y + 2)));
+                foreach (var projectile in fireballs)
+                {
+                    projectileDictionary.Add(projectile, new EnemyProjectileCollisionManager(projectile));
+                }
+            }
+        }
+
+        public override void LevelTwoBehavior()
+        {
+            var move = PlayerState.Position.ToVector2() - Pos.ToVector2();
+            move = Vector2.Divide(move, (float)Math.Sqrt(move.X * move.X + move.Y * move.Y)) * 6;
+            if (!projectileActive)
+            {
+                projectileActive = true;
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X - 1,move.Y - 1)));
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X - 1,move.Y)));
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X - 1, move.Y + 1)));
+                foreach (var projectile in fireballs)
+                {
+                    projectileDictionary.Add(projectile, new EnemyProjectileCollisionManager(projectile));
+                }
+            }
+        }
+
+        public override void LevelThreeBehavior()
+        {
+            var move = PlayerState.Position.ToVector2() - Pos.ToVector2();
+            move = Vector2.Divide(move, (float)Math.Sqrt(move.X * move.X + move.Y * move.Y)) * 6;
+            if (!projectileActive)
+            {
+                projectileActive = true;
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X - 1,move.Y - 2)));
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X - 1,move.Y - 1)));
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X - 1,move.Y)));
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X - 1,move.Y + 1)));
+                fireballs.Add(new Fireball(Pos, CollisionController, new Vector2(move.X - 1,move.Y + 2)));
                 foreach (var projectile in fireballs)
                 {
                     projectileDictionary.Add(projectile, new EnemyProjectileCollisionManager(projectile));
@@ -121,7 +157,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             if (fireballs.Count == 0 && Health > 0)
             {
                 SoundManager.PlaySound("LOZ_Boss_Scream1", false);
-                CreateFireballs();
+                DecideBehavior();
                 StateMachine.SetSprite("aquamentus_left_mouthopen");
             }
             else
@@ -142,7 +178,7 @@ namespace MonoZelda.Enemies.EnemyClasses
             if (stunTime == 0)
             {
                 Health -= damage;
-                if (Health == 0)
+                if (Health <= 0)
                 {
                     SoundManager.PlaySound("LOZ_Enemy_Die", false);
                     fireballs.ForEach(fireball => fireball.ProjectileCollide());
@@ -157,5 +193,6 @@ namespace MonoZelda.Enemies.EnemyClasses
                 }
             }
         }
+
     }
 }

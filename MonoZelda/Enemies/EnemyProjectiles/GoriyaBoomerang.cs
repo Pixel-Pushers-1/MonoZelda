@@ -13,7 +13,6 @@ namespace MonoZelda.Enemies.GoriyaFolder
         public SpriteDict BoomerangSpriteDict { get; private set; }
         public bool Active { get; set; }
         public EnemyProjectileCollidable ProjectileHitbox { get; set; }
-        private EnemyStateMachine.Direction attackDirection;
         private float velocity = 400;
         private float attackTimer;
         private float dt;
@@ -62,7 +61,6 @@ namespace MonoZelda.Enemies.GoriyaFolder
 
         public void Update (EnemyStateMachine.Direction direction, Point enemyPos)
         {
-            attackDirection = direction;
             dt = (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
             attackTimer += dt;
             var pos = new Vector2();
