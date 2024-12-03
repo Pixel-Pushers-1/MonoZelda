@@ -19,6 +19,7 @@ namespace MonoZelda.Scenes
         public static readonly string MARIO_ENTRANCE_ROOM = "Room17";
         
         private IDungeonRoomLoader roomManager;
+        private IDungeonRoom currentRoom;
         private CollisionController collisionController;
         private GraphicsDevice graphicsDevice;
         private CommandManager commandManager;
@@ -26,11 +27,10 @@ namespace MonoZelda.Scenes
         private InventoryScene inventoryScene;
         private EquippableManager equippableManager;
         private SaveManager saveManager;
-        private IDungeonRoom currentRoom;
-        
+        private IScene activeScene;
+
         public bool isPaused { get; private set; }
         public string StartRoom { get; private set; }
-        private IScene activeScene;
 
         public SceneManager(string startRoom, GraphicsDevice graphicsDevice, CommandManager commandManager)
         {
@@ -51,6 +51,7 @@ namespace MonoZelda.Scenes
             commandManager.ReplaceCommand(CommandType.LevelCompleteAnimationCommand, new LevelCompleteAnimationCommand(this));
             commandManager.ReplaceCommand(CommandType.LinkDeathAnimationCommand, new LinkDeathAnimationCommand(this));
             commandManager.ReplaceCommand(CommandType.WallmasterGrabAnimationCommand, new WallMasterGrabAnimationCommand(this));
+            commandManager.ReplaceCommand(CommandType.EnterDungeonAnimationCommand, new EnterDungeonAnimationCommand(this));    
             commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this));
             commandManager.ReplaceCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand(this));
             commandManager.ReplaceCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand(this));
@@ -114,8 +115,7 @@ namespace MonoZelda.Scenes
             // We begin by revealing the the first room
             currentRoom = roomManager.LoadRoom(StartRoom);
             currentRoom.SpawnPoint = DungeonConstants.DungeonEnteranceSpawnPoint;
-            activeScene = new EnterDungeonScene(this, currentRoom, graphicsDevice);
-            activeScene.LoadContent(contentManager);
+            EnterDungeonScene(currentRoom);
 
             //set player map marker
             inventoryScene.SetPlayerMapMarker(DungeonConstants.GetRoomCoordinate(StartRoom));
@@ -143,26 +143,33 @@ namespace MonoZelda.Scenes
             inventoryScene.LoadContent(contentManager, currentRoom);
         }
 
+        public void EnterDungeonScene(IDungeonRoom room)
+        {
+            var loadRoomCommand = commandManager.GetCommand(CommandType.LoadRoomCommand);
+            activeScene = new EnterDungeonScene(loadRoomCommand, room, graphicsDevice);
+            activeScene.LoadContent(contentManager);
+        }
+
         public void LevelCompleteScene()
         {
             var startRoom = roomManager.LoadRoom(StartRoom);
-            var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
-            activeScene = new LevelCompleteScene(startRoom, command);
+            var enterDungeonAnimationCommand = commandManager.GetCommand(CommandType.EnterDungeonAnimationCommand);
+            activeScene = new LevelCompleteScene(startRoom, enterDungeonAnimationCommand);
             activeScene.LoadContent(contentManager);
         }
 
         public void WallMasterGrabScene()
         {
             var startRoom = roomManager.LoadRoom(StartRoom);
-            var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
-            activeScene = new WallMasterGrabScene(currentRoom.RoomSprite.ToString(), startRoom, command, graphicsDevice);
+            var enterDungeonAnimationCommand = commandManager.GetCommand(CommandType.EnterDungeonAnimationCommand);
+            activeScene = new WallMasterGrabScene(currentRoom, startRoom, enterDungeonAnimationCommand);
             activeScene.LoadContent(contentManager);
         }
 
         public void LinkDeathScene()
         {
-            var command = commandManager.GetCommand(CommandType.ResetCommand);
-            activeScene = new LinkDeathScene(command, graphicsDevice);
+            var resetCommand = commandManager.GetCommand(CommandType.ResetCommand);
+            activeScene = new LinkDeathScene(resetCommand, graphicsDevice);
             activeScene.LoadContent(contentManager);
         }
 
