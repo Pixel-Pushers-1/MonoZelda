@@ -10,26 +10,24 @@ namespace MonoZelda.Controllers
     {
         private readonly CommandManager _commandManager;
         private readonly Dictionary<(Buttons button, bool oneShot), CommandType> _buttonCommandDictionary;
-        private readonly List<Buttons> _pressedDirectionalButtons;
         private GamePadState _currentState;
         private GamePadState _previousState;
-
         public PlayerIndex PlayerIndex { get; }
 
         public GamepadController(CommandManager commandManager, PlayerIndex playerIndex)
         {
             _commandManager = commandManager;
             PlayerIndex = playerIndex;
-            _pressedDirectionalButtons = new List<Buttons>();
             _buttonCommandDictionary = new Dictionary<(Buttons button, bool oneShot), CommandType>
             {
                 {new (Buttons.Start, true), CommandType.StartGameCommand},
                 {new (Buttons.Back, true), CommandType.ExitCommand},
                 {new (Buttons.A, true), CommandType.PlayerAttackCommand},
-                {new (Buttons.B, true), CommandType.PlayerFireProjectileCommand},
+                {new (Buttons.B, true), CommandType.PlayerCycleEquippableCommand},
                 {new (Buttons.Y, true), CommandType.ToggleInventoryCommand},
-                {new (Buttons.LeftShoulder, true), CommandType.PlayerCycleProjectileCommand},
-                {new (Buttons.RightShoulder, true), CommandType.PlayerCycleProjectileCommand},
+                {new (Buttons.X, true), CommandType.PlayerUseEquippableCommand},
+                {new (Buttons.LeftShoulder, true), CommandType.ResetCommand},
+                {new (Buttons.RightShoulder, true), CommandType.MuteCommand},
                 {new (Buttons.None, false), CommandType.PlayerStandingCommand}
             };
 
@@ -67,20 +65,8 @@ namespace MonoZelda.Controllers
                 }
                 else if (oneShot && OneShotPressed(button))
                 {
-                    if (buttonCommandPair.Value != CommandType.PlayerCycleProjectileCommand)
-                    {
-                        _commandManager.Execute(buttonCommandPair.Value, button);
-                        break;
-                    }
-                    else if (button == Buttons.LeftShoulder)
-                    {
-                        _commandManager.Execute(buttonCommandPair.Value, -1);
-                    }
-                    else
-                    {
                         _commandManager.Execute(buttonCommandPair.Value, 1);
-                    }
-                    
+                        break;
                 }
             }
         }
