@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MonoZelda.Dungeons.InfiniteMode;
-using MonoZelda.Dungeons.Parser.Data;
 using MonoZelda.Tiles.Doors;
 using MonoZelda.Sound;
 
@@ -23,6 +22,8 @@ namespace MonoZelda.Scenes.InfiniteMode;
 public class InfiniteRoomScene : Scene
 {
     private string roomName;
+    private int roomNumber;
+    private Random rnd;
     private GraphicsDevice graphicsDevice;
     private CommandManager commandManager;
     private PlayerSpriteManager playerSprite;
@@ -32,27 +33,20 @@ public class InfiniteRoomScene : Scene
     private CollisionController collisionController;
     private ItemFactory itemFactory;
     private EnemyFactory enemyFactory;
+    private RoomEnemyGenerator roomEnemyGenerator;
+    private RoomItemGenerator roomItemGenerator;
     private List<Enemy> enemies = new();
     private Dictionary<Enemy, EnemySpawn> enemySpawnPoints = new();
     private List<IGameUpdate> updateables = new();
     private List<IDisposable> disposables = new();
     private ICommand transitionCommand;
     private IDungeonRoom room;
-
-    // start here
-    private int roomNumber;
-    private Random rnd;
-    private RoomEnemyGenerator roomEnemyGenerator;
-    private RoomItemGenerator roomItemGenerator;
-
     public InfiniteRoomScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room, int roomNumber)
     {
         this.graphicsDevice = graphicsDevice;
         this.commandManager = commandManager;
         this.collisionController = collisionController;
         this.room = room;
-
-        // start here
         this.roomNumber = roomNumber;   
         rnd = new Random();
         roomEnemyGenerator = new RoomEnemyGenerator();
@@ -101,7 +95,9 @@ public class InfiniteRoomScene : Scene
         // create itemFactory and spawn Items
         var levelCompleteAnimationCommand = commandManager.GetCommand(CommandType.LevelCompleteAnimationCommand);
         itemManager = new ItemManager(GameType.infiniteEasy, levelCompleteAnimationCommand, room.GetItemSpawns(), enemies, playerCollision);
-        itemFactory = new ItemFactory(collisionController, itemManager);
+
+        // spawn Items
+        SpawnItems();
 
         // spawn Enemies
         SpawnEnemies();
@@ -121,7 +117,7 @@ public class InfiniteRoomScene : Scene
     private void SpawnEnemies()
     {
         // get nonStaticColliderSpawns
-        var nonStaticColliderSpawns = room.GetNonColliderSpawns();
+        var nonColliderSpawns = room.GetNonColliderSpawns();
 
         // get list of enemies
         List<EnemyList> roomEnemies = roomEnemyGenerator.GenerateEnemiesForRoom(roomNumber, 1, PlayerState.Health);
@@ -130,17 +126,31 @@ public class InfiniteRoomScene : Scene
         enemyFactory = new EnemyFactory(collisionController);
         for (int i = 0; i < roomEnemies.Count; i++)
         {
-            int randomNum = rnd.Next(nonStaticColliderSpawns.Count - 1);
-            var enemy = enemyFactory.CreateEnemy(roomEnemies[i], nonStaticColliderSpawns[randomNum].Position,itemFactory,false);
+            int randomNum = rnd.Next(nonColliderSpawns.Count - 1);
+            var enemy = enemyFactory.CreateEnemy(roomEnemies[i], nonColliderSpawns[randomNum].Position,itemFactory,false);
             enemies.Add(enemy);
-            room.Remove(nonStaticColliderSpawns[randomNum]);
+            room.Remove(nonColliderSpawns[randomNum]);
         }
 
     }
 
-    private void LoadItems()
+    private void SpawnItems()
     {
+        // get nonColliderSpawns
         var nonColliderSpawns = room.GetNonColliderSpawns();
+
+        // get list of items
+        List<ItemList> roomItems = roomItemGenerator.GenerateItemsForRoom(roomNumber, 1, PlayerState.Health);
+
+        // spawn items
+        itemFactory = new ItemFactory(collisionController, itemManager);
+        for (int i = 0; i < roomItems.Count; i++)
+        {
+            int randomNum = rnd.Next(nonColliderSpawns.Count - 1);
+            ItemSpawn itemSpawn = new ItemSpawn(nonColliderSpawns[i].Position, roomItems[i]);
+            itemFactory.CreateItem(itemSpawn, false);
+            room.Remove(nonColliderSpawns[randomNum]);
+        }
     }
 
 

@@ -201,7 +201,7 @@ namespace MonoZelda.Scenes
         public void LinkDeathScene()
         {
             var resetCommand = commandManager.GetCommand(CommandType.ResetCommand);
-            activeScene = new LinkDeathScene(resetCommand, graphicsDevice);
+            activeScene = new LinkDeathScene(gameMode, RoomNumber, resetCommand, graphicsDevice);
             activeScene.LoadContent(contentManager);
         }
 

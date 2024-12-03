@@ -1,65 +1,44 @@
 ﻿using MonoZelda.Enemies;
 using System.Collections.Generic;
 using System;
+using MonoZelda.Link;
 
 namespace MonoZelda.Dungeons.InfiniteMode;
 
 public class RoomEnemyGenerator
 {
     // constants
-    private const int EASY_ENEMY_WEIGHT = 40;
-    private const int MEDIUM_ENEMY_WEIGHT = 30;
-    private const int HARD_ENEMY_WEIGHT = 20;
     private const int EASY_ENEMY_POOL_LENGTH = 2;
     private const int MEDIUM_ENEMY_POOL_LENGTH = 1;
     private const int HARD_ENEMY_POOL_LENGTH = 1;
-    private const int BOSS_ENEMY_POOL_LENGTH = 1;
+    private const int ROOM_LEVEL_UP_COUNT = 5;
     private static readonly EnemyList[] EasyEnemyList = { EnemyList.Keese, EnemyList.Gel };
     private static readonly EnemyList[] MediumEnemyList = { EnemyList.Stalfos};
     private static readonly EnemyList[] HardEnemyList = { EnemyList.Goriya };
-    private static readonly EnemyList[] BossEnemyList = { EnemyList.Aquamentus };
 
     // variables
-    
+    private int easyWeight;
+    private int mediumWeight;
+    private int hardWeight;
+    private Random random;
 
     public RoomEnemyGenerator()
     {
-        // empty
+        easyWeight = 40;
+        mediumWeight = 30;
+        hardWeight = 20;
+        random = new Random();
     }
 
     public List<EnemyList> GenerateEnemiesForRoom(int roomNumber, int playerLevel, int playerHealth)
     {
         List<EnemyList> enemies = new List<EnemyList>();
-        Random random = new Random();
 
-        // Calculate the total number of enemies
-        int baseEnemyCount = 3;
-        int totalEnemies = baseEnemyCount + (roomNumber / 2) + (playerLevel / 3);
+        // get initial room enemy count
+        int totalEnemies = GetRoomEnemyCount(roomNumber, playerLevel, playerHealth);
 
-        // Adjust for low health (fewer enemies for health <= 2)
-        if (playerHealth <= 2)
-        {
-            totalEnemies = Math.Max(2, totalEnemies - 1); // Reduce enemies slightly
-        }
-
-        // Calculate weights for each difficulty level
-        int easyWeight = 40;
-        int mediumWeight = 40;
-        int hardWeight = 20;
-
-        // Adjust weights based on health
-        if (playerHealth <= 2)
-        {
-            easyWeight += 20; 
-            mediumWeight -= 10;
-            hardWeight = 0;   
-        }
-        else if (playerHealth >= 5)
-        {
-            mediumWeight += 10; 
-            hardWeight += 10;
-        }
-
+        // Adjust weights based on health and calculate total enemy weight
+        AdjustEnemyWeights(playerHealth, playerLevel);
         int totalWeight = easyWeight + mediumWeight + hardWeight;
 
         // Generate enemies
@@ -85,5 +64,47 @@ public class RoomEnemyGenerator
         }
 
         return enemies;
+    }
+
+    private int GetRoomEnemyCount(int roomNumber, int playerLevel, int playerHealth)
+    {
+        // initial count for each is three
+        int baseEnemyCount = 3;
+        int totalEnemies = baseEnemyCount + (roomNumber / 2) + (playerLevel / 3);
+
+        // adjust based on player health
+        if(playerHealth > (PlayerState.MaxHealth / 2))
+        {
+            totalEnemies += random.Next(3);
+        }
+        else
+        {
+            totalEnemies -= random.Next(3);
+        }
+
+        return totalEnemies;
+    }
+
+    private void AdjustEnemyWeights(int playerHealth, int playerLevel)
+    {
+        if (playerHealth <= 2)
+        {
+            easyWeight += 20;
+            mediumWeight -= 10;
+            hardWeight = 0;
+        }
+        else if (playerHealth >= 5)
+        {
+            mediumWeight += 10;
+            hardWeight += 10;
+        }
+    }
+
+    private void LevelUpEnemies(int roomNumber)
+    {
+        if(roomNumber % ROOM_LEVEL_UP_COUNT == 0)
+        {
+            // Level Up enemies
+        }
     }
 }

@@ -14,7 +14,8 @@ public class LinkDeathScene : Scene
 {
     // constants
     private static readonly Point RED_BACKGROUND_SIZE = new Point(192*4 + 8, 112*4 + 8);
-    private const string GameOverString = "Game Over";
+    private const string GAME_OVER_STRING = "Game Over";
+    private const string ROOMS_CLEARED_STRING = "Rooms Cleared:";
     private const float DIRECTION_CHANGE_TIME = 0.1f;
     private const float ROTATING_TIME = 3f;
     private const float KILL_LINK_TIME = ROTATING_TIME + 1;
@@ -24,7 +25,9 @@ public class LinkDeathScene : Scene
     private float directionChangeTimer;
     private float sceneTimer;
     private bool displayString;
+    private int roomNumber;
     private Point Center;
+    private GameType gameMode;
     private Direction FakeLinkDirection;
     private ICommand resetGameCommand;
     private SpriteFont spriteFont;
@@ -50,10 +53,12 @@ public class LinkDeathScene : Scene
         {Direction.Right,Direction.Down},
     };
 
-    public LinkDeathScene(ICommand resetGameCommand, GraphicsDevice graphicsDevice)
+    public LinkDeathScene(GameType gameMode, int roomNumber, ICommand resetGameCommand, GraphicsDevice graphicsDevice)
     {
         displayString = false;
         directionChangeTimer = 0;
+        this.gameMode = gameMode;
+        this.roomNumber = roomNumber;
         FakeLinkDirection = Direction.Down;
         this.graphicsDevice = graphicsDevice;
         this.resetGameCommand = resetGameCommand;
@@ -83,7 +88,12 @@ public class LinkDeathScene : Scene
     {
         if (displayString == true)
         {
-            batch.DrawString(spriteFont, GameOverString, Center.ToVector2(), Color.White);
+            batch.DrawString(spriteFont, GAME_OVER_STRING, Center.ToVector2(), Color.White);
+            if (gameMode == GameType.infiniteEasy)
+            {
+                Vector2 roomCleared = Center.ToVector2() + new Vector2(-56, 32);
+                batch.DrawString(spriteFont, ROOMS_CLEARED_STRING + (roomNumber - 1), roomCleared, Color.White);
+            }
         }
     }
 
