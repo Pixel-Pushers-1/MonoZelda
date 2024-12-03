@@ -19,7 +19,7 @@ public class WallMasterGrabScene : Scene
     private static readonly (Rectangle, int) MoveLeftZoneBottom = (new Rectangle(new Point(192, 704), new Point(704, 64)), 2);
     private static readonly (Rectangle, int) MoveDownDoorZone = (new Rectangle(new Point(128, 320), new Point(64, 192)), 3);
     private static readonly (Rectangle, int) MoveUpDoorZone = (new Rectangle(new Point(128, 576), new Point(64, 192)), 3);
-    private static readonly (Rectangle, int) StopZone = (new Rectangle(new Point(128, 512), new Point(64, 64)), 4);
+    private static readonly (Rectangle, int) StopZone = (new Rectangle(new Point(64, 512), new Point(128, 64)), 4);
 
     // variables
     private bool reachedDoor;
@@ -35,9 +35,6 @@ public class WallMasterGrabScene : Scene
     private SpriteDict FakeWallMaster;
     private SpriteDict FakeBackground;
     private SpriteDict FakeBorder;
-
-    // Add a Texture2D for drawing rectangles
-    private Texture2D rectangleTexture;
 
     // Direction Map
     private static readonly Dictionary<(Rectangle, int), Direction> DirectionMap = new()
