@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using MonoZelda.Items;
 using MonoZelda.Link;
 using MonoZelda.Sprites;
+using MonoZelda.Enemies.EnemyClasses;
 
 namespace MonoZelda.Enemies
 {
@@ -16,12 +17,15 @@ namespace MonoZelda.Enemies
             this.collisionController = collisionController;
         }
 
-        public Enemy CreateEnemy(EnemyList enemyName, Point spawnPosition, ItemFactory itemFactory, bool hasKey)
+        public Enemy CreateEnemy(EnemyList enemyName, Point spawnPosition, ItemFactory itemFactory, EnemyFactory enemyFactory,bool hasKey)
         {
             var enemyDict = new SpriteDict(SpriteType.Enemies, 0, new Point(0, 0));
             var enemyType = Type.GetType($"MonoZelda.Enemies.EnemyClasses.{enemyName}");
             Enemy enemy = (Enemy)Activator.CreateInstance(enemyType);
-            enemy.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasKey);
+            if(enemyType == typeof(Gel) && hasKey){
+                enemy.Level = 1;
+            }
+            enemy.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, enemyFactory, hasKey);
 
             return enemy;
         }

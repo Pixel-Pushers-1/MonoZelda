@@ -6,11 +6,10 @@ using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace MonoZelda.Enemies.EnemyProjectiles
 {
-    public class AquamentusFireball : IEnemyProjectile
+    public class Fireball : IEnemyProjectile
     {
         public EnemyProjectileCollidable ProjectileHitbox { get; set; }
         public Point Pos { get; set; }
-        private Point originalPos;
 
         private CollisionController collisionController;
         public SpriteDict FireballSpriteDict { get; private set; }
@@ -18,10 +17,9 @@ namespace MonoZelda.Enemies.EnemyProjectiles
         public bool Active { get; set; }
         private Vector2 move;
 
-        public AquamentusFireball(Point pos, CollisionController collisionController, Vector2 C)
+        public Fireball(Point pos, CollisionController collisionController, Vector2 C)
         {
             Pos = pos;
-            originalPos = pos;
             FireballSpriteDict = new(SpriteType.Enemies, 0, new Point(100, 100));
             FireballSpriteDict.SetSprite("fireball");
             ProjectileHitbox = new EnemyProjectileCollidable(new Rectangle(pos.X, pos.Y, 30, 30));
