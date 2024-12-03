@@ -6,6 +6,7 @@ using MonoZelda.Sprites;
 using MonoZelda.Dungeons;
 using System.Collections.Generic;
 using MonoZelda.Commands;
+using MonoZelda.Sound;
 
 namespace MonoZelda.Scenes;
 
@@ -93,6 +94,12 @@ public class WallMasterGrabScene : Scene
     {
         // get position of link
         var position = PlayerState.Position;
+        var curtainSize = new Point(512, 704);
+        var Center = new Point(graphicsDevice.Viewport.Width / 2, 192);
+        LeftCurtain = new BlankSprite(SpriteLayer.HUD + 1, Center, curtainSize, Color.Black);
+        RightCurtain = new BlankSprite(SpriteLayer.HUD + 1, Center, curtainSize, Color.Black);
+        LeftCurtain.Enabled = true;
+        RightCurtain.Enabled = true;
 
         // create fake link ,and wallmaster
         FakeWallMaster = new SpriteDict(SpriteType.Enemies, SpriteLayer.HUD, position);
@@ -125,8 +132,20 @@ public class WallMasterGrabScene : Scene
         }
         else
         {
-            FakeLink.Unregister();
-            FakeWallMaster.Unregister();
+            LeftCurtain.Enabled = true;
+            RightCurtain.Enabled = true;
+            FakeBackground.SetSprite(startRoom.RoomSprite.ToString());
+            CreateFakeDoors(startRoom);
+            if (LeftCurtain.Position.X != 0)
+            {
+                LeftCurtain.Position += new Point(4, 0);
+                RightCurtain.Position += new Point(-4, 0);
+            }
+            else
+            {
+                FakeBackground.Unregister();
+                FakeLink.Unregister();
+                FakeWallMaster.Unregister();
             FakeKey.Unregister();
             FakeBackground.Unregister();
             PlayerState.Position = new Point(515, 725);

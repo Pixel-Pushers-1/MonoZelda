@@ -25,6 +25,7 @@ namespace MonoZelda.Scenes
         private CommandManager commandManager;
         private ContentManager contentManager;
         private InventoryScene inventoryScene;
+        private EquippableManager equippableManager;
         private SaveManager saveManager;
         private IScene activeScene;
 
@@ -43,6 +44,7 @@ namespace MonoZelda.Scenes
             PlayerState.Initialize();
 
             // create inventory scene
+            equippableManager = new EquippableManager(collisionController);
             inventoryScene = new InventoryScene(graphicsDevice, commandManager);
 
             // replace required command
@@ -89,11 +91,11 @@ namespace MonoZelda.Scenes
 
             if (roomName == MARIO_ROOM)
             {
-                activeScene = new MarioLevelScene(graphicsDevice, commandManager, collisionController, currentRoom);
+                activeScene = new MarioLevelScene(graphicsDevice, commandManager, equippableManager, collisionController, currentRoom);
             }
             else
             {
-                activeScene = new RoomScene(graphicsDevice, commandManager, collisionController, currentRoom);
+                activeScene = new RoomScene(graphicsDevice, commandManager, equippableManager, collisionController, currentRoom);
             }
 
             activeScene.LoadContent(contentManager);
@@ -147,6 +149,7 @@ namespace MonoZelda.Scenes
             activeScene = new EnterDungeonScene(loadRoomCommand, room, graphicsDevice);
             activeScene.LoadContent(contentManager);
         }
+
         public void LevelCompleteScene()
         {
             var startRoom = roomManager.LoadRoom(StartRoom);
