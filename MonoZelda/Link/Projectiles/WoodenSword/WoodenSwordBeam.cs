@@ -42,8 +42,17 @@ public class WoodenSwordBeam : ProjectileFactory, IProjectile
         };
 
         projectilePosition += PROJECTILE_SPEED * directionVector;
+        string swordType = "woodensword"; // Default sword
 
-        string spriteName = $"woodensword_item_{playerDirection.ToString().ToLower()}";
+        if (PlayerState.Level >= 10)
+        {
+            swordType = "magicsword";
+        }
+        else if (PlayerState.Level >= 5)
+        {
+            swordType = "whitesword";
+        }
+        string spriteName = $"{swordType}_item_{playerDirection.ToString().ToLower()}";
         SetProjectileSprite(spriteName);
 
         rotate = (playerDirection == Direction.Left || playerDirection == Direction.Right);

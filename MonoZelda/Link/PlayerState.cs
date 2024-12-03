@@ -20,7 +20,7 @@ public static class PlayerState
     //RPG
     private static readonly int INITIAL_LEVEL = 1;
     private static readonly int XP_BASE = 100; 
-    private static readonly float XP_SCALING = 1.5f;
+    private static readonly float XP_SCALING = 1.3f;
     private static readonly float INITIAL_DEFENSE = 0f;
 
 
@@ -115,7 +115,7 @@ public static class PlayerState
             leveledUp |= true;
             Health = MathHelper.Clamp(Health + 1, 0, MaxHealth);
             SoundManager.PlaySound("LOZ_LevelUp", false);
-            Defense += .25f;
+            Defense += .50f;
 
         }
         return leveledUp;
