@@ -2,6 +2,7 @@
 using MonoZelda.Controllers;
 using Microsoft.Xna.Framework;
 using MonoZelda.Link;
+using System.Diagnostics;
 
 namespace MonoZelda.Enemies
 {
@@ -28,7 +29,7 @@ namespace MonoZelda.Enemies
                 width,
                 height
             );
-
+            Debug.WriteLine($"{enemy} : {enemyHitbox}");
             enemyHitbox.Bounds = bounds;
             enemyHitbox.setCollisionManager(this);
         }

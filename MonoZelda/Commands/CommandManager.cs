@@ -53,7 +53,6 @@ public class CommandManager
         AddCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand());
         AddCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());
         AddCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand());
-        AddCommand(CommandType.PlayerCycleEquippableCommand, new PlayerCycleEquippableCommand());
         AddCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
         AddCommand(CommandType.ResetCommand, new ResetCommand());
         AddCommand(CommandType.StartGameCommand, new StartGameCommand());

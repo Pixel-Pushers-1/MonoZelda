@@ -23,10 +23,7 @@ public class BluePotion : Item
 
     public override void HandleCollision(CollisionController collisionController)
     {
-        if (!PlayerState.EquippableInventory.Contains(EquippableType.RedPotion))
-        {
-            PlayerState.EquippableInventory.Add(EquippableType.BluePotion);
-        }
+        PlayerState.EquippableManager.AddEquippable(EquippableType.BluePotion, true);
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(collisionController);
     }

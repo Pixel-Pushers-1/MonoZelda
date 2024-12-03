@@ -16,7 +16,7 @@ public class MainMenuScene : Scene
     private static readonly Point infiniteButtonPosition = new Point(1024 - 16, 896 - 16);
 
     private CommandManager commandManager;
-    private NavigableGrid uiGrid;
+    private UIGrid uiGrid;
     private SpriteDict background;
     private SpriteDict classicButton;
     private SpriteDict infiniteButton;
@@ -46,10 +46,10 @@ public class MainMenuScene : Scene
         SpriteDict infiniteSelectedButton = new SpriteDict(SpriteType.Title, 2, infiniteButtonPosition);
         infiniteSelectedButton.SetSprite("button_infinite_selected");
 
-        NavigableGridItem[,] tempGrid = new NavigableGridItem[1, 2];
-        tempGrid[0, 0] = new NavigableGridItem(classicSelectedButton, commandManager, CommandType.StartGameCommand, GameType.Classic);
-        tempGrid[0, 1] = new NavigableGridItem(infiniteSelectedButton, commandManager, CommandType.StartGameCommand, GameType.Infinite);
-        uiGrid = new NavigableGrid(tempGrid);
+        UIGridItem[,] tempGrid = new UIGridItem[1, 2];
+        tempGrid[0, 0] = new UIGridItem(classicSelectedButton, commandManager, CommandType.StartGameCommand, GameType.Classic);
+        tempGrid[0, 1] = new UIGridItem(infiniteSelectedButton, commandManager, CommandType.StartGameCommand, GameType.Infinite);
+        uiGrid = new UIGrid(tempGrid);
 
         //replace commands
         commandManager.ReplaceCommand(CommandType.NavigableGridMoveCommand, new NavigableGridMoveCommand(uiGrid));

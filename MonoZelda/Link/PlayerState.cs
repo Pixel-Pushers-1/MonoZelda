@@ -15,8 +15,6 @@ public static class PlayerState
     private static readonly int INITIAL_KEYS = 0;
     private static int _health = INITIAL_HP;
 
-    public static List<EquippableType> EquippableInventory;
-
     // (RoomName, Direction)
     public static HashSet<(string, DoorDirection)> Keyring { get; set; } = new ();
     public static HashSet<Point> DiscoveredRooms { get; set; } = new();
@@ -37,8 +35,6 @@ public static class PlayerState
         HasCompass = false;
         Keyring = new();
         DiscoveredRooms = new();
-        EquippedItem = EquippableType.None;
-        EquippableInventory = new List<EquippableType>();
     }
 
     public static void ResetCandle()
@@ -84,11 +80,11 @@ public static class PlayerState
     public static int MaxHealth { get; set; }
     public static Point Position { get; set; }
     public static Direction Direction { get; set; }
-    public static EquippableType EquippedItem { get; set; }
     public static bool HasBoomerang { get; set; }
     public static bool ObtainedTriforce { get; set; }
     public static bool HasCompass;
     public static bool HasMap;
+    public static EquippableManager EquippableManager { get; set; }
 
     public static void AddRupees(int amount) => Rupees += amount;
     public static void AddBombs(int amount) => Bombs += amount;
@@ -97,7 +93,6 @@ public static class PlayerState
     public static void Save(SaveState save)
     {
         save.MaxHealth = MaxHealth;
-        save.EquippableInventory = EquippableInventory;
         save.HasBoomerang = HasBoomerang;
         save.ObtainedTriforce = ObtainedTriforce;
         save.Health = Health;
@@ -113,7 +108,6 @@ public static class PlayerState
     public static void Load(SaveState save)
     {
         MaxHealth = save.MaxHealth;
-        EquippableInventory = save.EquippableInventory;
         HasBoomerang = save.HasBoomerang;
         ObtainedTriforce = save.ObtainedTriforce;
         Health = save.Health;

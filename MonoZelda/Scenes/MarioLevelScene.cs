@@ -17,8 +17,8 @@ namespace MonoZelda.Scenes
 
         private TriggerCollidable exit;
         
-        public MarioLevelScene(GraphicsDevice graphicsDevice, CommandManager commandManager, EquippableManager equippableManager, CollisionController collisionController, IDungeonRoom room) 
-            : base(graphicsDevice, commandManager, equippableManager, collisionController, room)
+        public MarioLevelScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room) 
+            : base(graphicsDevice, commandManager, collisionController, room)
         {
             this.commandManager = commandManager;
             this.collisionController = collisionController;
