@@ -53,7 +53,6 @@ public class RoomScene : Scene
         this.equippableManager = equippableManager;
         this.room = room;
         triggers = new List<ITrigger>();
-
     }
 
     public override void LoadContent(ContentManager contentManager)
@@ -118,6 +117,9 @@ public class RoomScene : Scene
 
     private void SetupShader()
     {
+        // set list of lights in equippableManager
+        equippableManager.Lights = lights;
+
         if(room.IsLit)
         {
             playerLight = new PlayerLight();
@@ -286,8 +288,6 @@ public class RoomScene : Scene
         playerCollision.Update();
     }
 
-
-    
     private void UpdateDynamicLights()
     {
         if(!room.IsLit)

@@ -1,4 +1,3 @@
-
 using Microsoft.Xna.Framework;
 using MonoZelda.Link;
 using MonoZelda.Link.Equippables;

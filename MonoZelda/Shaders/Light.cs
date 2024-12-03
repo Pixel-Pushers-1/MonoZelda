@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace MonoZelda.Shaders
 {
-    internal class Light : ILight
+    public class Light : ILight
     {
         public virtual Point Position { get; set; }
         public virtual float Radius { get; set; } = 300f;
