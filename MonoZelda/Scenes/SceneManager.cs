@@ -29,6 +29,7 @@ namespace MonoZelda.Scenes
         private CommandManager commandManager;
         private ContentManager contentManager;
         private InventoryScene inventoryScene;
+        private EquippableManager equippableManager;
         private SaveManager saveManager;
         private RoomGenerator roomGenerator;
         
@@ -52,6 +53,7 @@ namespace MonoZelda.Scenes
             PlayerState.Initialize();
 
             // create inventory scene
+            equippableManager = new EquippableManager(collisionController);
             inventoryScene = new InventoryScene(graphicsDevice, commandManager);
 
             // replace required command
@@ -113,10 +115,15 @@ namespace MonoZelda.Scenes
             }
             else
             {
-                activeScene = new RoomScene(graphicsDevice, commandManager, collisionController, currentRoom);
+                activeScene = new RoomScene(graphicsDevice, commandManager, equippableManager, collisionController, currentRoom);
             }
 
             activeScene.LoadContent(contentManager);
+        }
+
+        public override void Draw(SpriteBatch batch)
+        {
+            inventoryScene.Draw(batch);
         }
 
         public override void LoadContent(ContentManager contentManager)

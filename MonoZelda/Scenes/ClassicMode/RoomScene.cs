@@ -24,8 +24,9 @@ public class RoomScene : Scene
     private GraphicsDevice graphicsDevice;
     private CommandManager commandManager;
     private PlayerSpriteManager playerSprite;
-    private EquippableManager equippableManager;
+    private ProjectileManager projectileManager;
     private PlayerCollisionManager playerCollision;
+    private EquippableManager equippableManager;
     private ItemManager itemManager;
     private ICommand transitionCommand;
     private CollisionController collisionController;
@@ -40,11 +41,12 @@ public class RoomScene : Scene
     private List<IGameUpdate> updateables = new();
     private List<IDisposable> disposables = new();
 
-    public RoomScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room) 
+    public RoomScene(GraphicsDevice graphicsDevice, CommandManager commandManager, EquippableManager equippableManager, CollisionController collisionController, IDungeonRoom room) 
     {
         this.graphicsDevice = graphicsDevice;
         this.commandManager = commandManager;
         this.collisionController = collisionController;
+        this.equippableManager = equippableManager;
         this.room = room;
         triggers = new List<ITrigger>();
     }
@@ -65,7 +67,6 @@ public class RoomScene : Scene
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(equippableManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerCycleEquippableCommand, new PlayerCycleEquippableCommand(equippableManager));   
-        //commandManager.ReplaceCommand(CommandType.PlayerFireSwordBeamCommand, new PlayerFireSwordBeamCommand(projectileManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand(equippableManager, playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerSprite));
@@ -95,8 +96,8 @@ public class RoomScene : Scene
         // spawnEnemies
         SpawnEnemies();
 
-        // create equippableManager
-        equippableManager = new EquippableManager(collisionController);
+        // Play Dungeon Theme
+        SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
     }
 
     private void LoadRoom(ContentManager contentManager)
@@ -133,7 +134,7 @@ public class RoomScene : Scene
         foreach(var enemySpawn in room.GetEnemySpawns())
         {
             var enemy = enemyFactory.CreateEnemy(enemySpawn.EnemyType,
-                new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32), itemFactory, enemySpawn.HasKey);
+                new Point(enemySpawn.Position.X + 32, enemySpawn.Position.Y + 32), itemFactory,enemyFactory, enemySpawn.HasKey);
             enemies.Add(enemy);
             enemySpawnPoints.Add(enemy,enemySpawn);
         }

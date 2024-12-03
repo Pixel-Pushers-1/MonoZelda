@@ -85,3 +85,4 @@ dodongo_right_hurt,368,144,32,16,1,center,10
 dodongo_left,304,160,32,16,2,center,10
 dodongo_left_hurt,368,160,32,16,1,center,10
 oldman,336,192,16,16,1,center,10
+xp_orb,224,64,8,10,1,top left,10

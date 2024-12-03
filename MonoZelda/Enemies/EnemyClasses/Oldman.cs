@@ -17,7 +17,7 @@ namespace MonoZelda.Enemies.EnemyClasses
 
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory,EnemyFactory enemyFactory, bool hasItem)
         {
             Pos = new Point(spawnPosition.X - 32, spawnPosition.Y + 64);
             StateMachine = new EnemyStateMachine(enemyDict, itemFactory, hasItem);
@@ -33,6 +33,26 @@ namespace MonoZelda.Enemies.EnemyClasses
         public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
         {
             // oldman is immortal
+        }
+
+        public override void LevelOneBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void LevelTwoBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void LevelThreeBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DecideBehavior()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -60,13 +60,14 @@ public class ProjectileManager
         {
             sword = projectileFactory.GetProjectileObject(ProjectileType.WoodenSwordBeam,collisionController);
             ActiveProjectiles.Add(ProjectileType.WoodenSwordBeam, sword);
+            sword.Setup();
         }
-        else
+        else if(ActiveProjectiles.ContainsKey(ProjectileType.WoodenSword) == false)
         {
             sword = projectileFactory.GetProjectileObject(ProjectileType.WoodenSword,collisionController);
             ActiveProjectiles.Add(ProjectileType.WoodenSword, sword);
+            sword.Setup();
         }
-        sword.Setup();
     }
 
     public void FireProjectile(ProjectileType projectileType)
