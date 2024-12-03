@@ -13,7 +13,7 @@ public class Fire : IProjectile
 {
     private bool finished;
     private const float PROJECTILE_SPEED = 4f;
-    private const int TILES_TO_TRAVEL = 2;
+    private const int TILES_TO_TRAVEL = 5;
     private int tilesTraveled;
     private Vector2 initialPosition;
     private Vector2 projectilePosition;
