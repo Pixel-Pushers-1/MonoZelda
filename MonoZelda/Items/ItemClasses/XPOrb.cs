@@ -39,7 +39,7 @@ public class XPOrb : Item
 
     public override void HandleCollision(CollisionController collisionController)
     {
-        bool leveledUp = PlayerState.AddXP(20);
+        bool leveledUp = PlayerState.AddXP(40);
         SoundManager.PlaySound("LOZ_orb", false);
         if (leveledUp)
         {
