@@ -69,7 +69,7 @@ namespace MonoZelda.UI
 
         private void UpdateEquippableSprite()
         {
-            EquippableType currentEquippable = PlayerState.EquippedItem;
+            EquippableType currentEquippable = PlayerState.EquippableManager.GetEquippedItem();
             equippedWeaponSprite.Position = WidgetLocation + margin + new Point(88, 12);
 
             if (equippableSpriteMap.TryGetValue(currentEquippable, out string spriteName))

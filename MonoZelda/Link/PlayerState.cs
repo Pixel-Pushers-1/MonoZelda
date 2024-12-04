@@ -26,9 +26,6 @@ public static class PlayerState
     private static readonly float XP_SCALING = 1.3f;
     private static readonly float INITIAL_DEFENSE = 0f;
 
-
-    public static List<EquippableType> EquippableInventory;
-
     // (RoomName, Direction)
     public static HashSet<(string, DoorDirection)> Keyring { get; set; } = new ();
     public static HashSet<Point> DiscoveredRooms { get; set; } = new();
@@ -49,8 +46,6 @@ public static class PlayerState
         HasCompass = false;
         Keyring = new();
         DiscoveredRooms = new();
-        EquippedItem = EquippableType.None;
-        EquippableInventory = new List<EquippableType>();
         Level = INITIAL_LEVEL;
         Defense = INITIAL_DEFENSE;
         XP = 0;
@@ -103,11 +98,11 @@ public static class PlayerState
     public static int MaxHealth { get; set; }
     public static Point Position { get; set; }
     public static Direction Direction { get; set; }
-    public static EquippableType EquippedItem { get; set; }
     public static bool HasBoomerang { get; set; }
     public static bool ObtainedTriforce { get; set; }
     public static bool HasCompass;
     public static bool HasMap;
+    public static EquippableManager EquippableManager { get; set; }
 
     // RPG 
     public static int Level { get; private set; }
@@ -148,7 +143,6 @@ public static class PlayerState
     public static void Save(SaveState save)
     {
         save.MaxHealth = MaxHealth;
-        save.EquippableInventory = EquippableInventory;
         save.HasBoomerang = HasBoomerang;
         save.ObtainedTriforce = ObtainedTriforce;
         save.Health = (int)Health;
@@ -159,12 +153,13 @@ public static class PlayerState
         save.HasMap = HasMap;
         save.Keyring = Keyring;
         save.DiscoveredRooms = DiscoveredRooms;
+
+        EquippableManager.Save(save);
     }
 
     public static void Load(SaveState save)
     {
         MaxHealth = save.MaxHealth;
-        EquippableInventory = save.EquippableInventory;
         HasBoomerang = save.HasBoomerang;
         ObtainedTriforce = save.ObtainedTriforce;
         Health = save.Health;
@@ -175,5 +170,7 @@ public static class PlayerState
         HasMap = save.HasMap;
         Keyring = save.Keyring;
         DiscoveredRooms = save.DiscoveredRooms;
+
+        EquippableManager.Load(save);
     }
 }
