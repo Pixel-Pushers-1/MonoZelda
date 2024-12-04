@@ -127,19 +127,29 @@ public class RoomScene : Scene
 
             // Demo lights
             // TODO: Light emmitting items
-            lights.Add(new Light() {
-                Position = new Point(250, 256),
-                Color = Color.Orange,
-                Radius = 400,
-                Intensity = 0.75f
-            });
+            // Randomly load left or right light based on roomname for determinizim
 
-            lights.Add(new Light() {
-                Position = new Point(774, 256),
-                Color = Color.Orange,
-                Radius = 400,
-                Intensity = 0.75f
-            });
+            var random = new Random(room.RoomName.GetHashCode());
+            var lightIndex = random.Next(0, 3);
+
+            if (lightIndex == 0)
+            {
+                lights.Add(new Light() {
+                    Position = new Point(250, 256),
+                    Color = Color.Orange,
+                    Radius = 400,
+                    Intensity = 0.75f
+                });
+            }
+            if(lightIndex == 1)
+            {
+                lights.Add(new Light() {
+                    Position = new Point(774, 256),
+                    Color = Color.Orange,
+                    Radius = 400,
+                    Intensity = 0.75f
+                });
+            }    
 
             var intersectors = new List<Vector4>(256);
             var roomColliderRects = room.GetStaticRoomColliders();
