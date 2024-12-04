@@ -114,7 +114,7 @@ float4 SpritePixelShader(PixelInput p) : SV_TARGET
                 float percentY = (topRight.y - p.Position.y) / rect.w;
                 float val = valX * percentY;
 
-                lightContribution -= float4(val, val, val, 0);
+                lightContribution -= val;
                 // Clamp light contribution to ensure it stays within valid bounds
                 lightContribution = saturate(lightContribution);
                 //continue;

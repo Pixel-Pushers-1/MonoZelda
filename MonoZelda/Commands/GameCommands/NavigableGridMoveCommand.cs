@@ -1,8 +1,6 @@
-﻿using MonoZelda.Link;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using MonoZelda.UI.NavigableMenus;
-using System.Diagnostics;
 
 namespace MonoZelda.Commands.GameCommands;
 
@@ -19,9 +17,15 @@ public class NavigableGridMoveCommand : ICommand
     }
 
     public void Execute(params object[] metadata) {
-        Keys pressedKey = (Keys) metadata[0];
-        Point movement = GetMovement(pressedKey);
-        grid?.MoveSelection(movement);
+        if (metadata[0] is Keys) {
+            Keys pressedKey = (Keys) metadata[0];
+            Point movement = GetMovement(pressedKey);
+            grid?.MoveSelection(movement);
+        } else {
+            Buttons pressedButton = (Buttons) metadata[0];
+            Point movement = GetMovementButton(pressedButton);
+            grid?.MoveSelection(movement);
+        }
     }
 
     public void UnExecute() {
@@ -39,6 +43,16 @@ public class NavigableGridMoveCommand : ICommand
             Keys.Down => new Point(0, 1),
             Keys.Right => new Point(1, 0),
             _ => Point.Zero,
+        };
+    }
+
+    private static Point GetMovementButton(Buttons pressedButton) {
+        return pressedButton switch {
+            Buttons.DPadUp => new Point(0, -1),
+            Buttons.DPadLeft => new Point(-1, 0),
+            Buttons.DPadDown => new Point(0, 1),
+            Buttons.DPadRight => new Point(1,0),
+            _ => Point.Zero
         };
     }
 }
