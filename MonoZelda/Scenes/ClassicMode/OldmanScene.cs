@@ -5,6 +5,8 @@ using MonoZelda.Commands;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Scenes;
+using Microsoft.Xna.Framework.Input;
+using MonoZelda;
 
 public class OldmanScene : RoomScene
 {
@@ -16,7 +18,10 @@ public class OldmanScene : RoomScene
     private int firstRowRevealedChars = 0;
     private int secondRowRevealedChars = 0;
     private float elapsedTime = 0f;
-    private const float REVEAL_SPEED = 0.1f; // Adjust for desired speed (in seconds per character)
+    private const float REVEAL_SPEED = 0.1f;
+    private const float INVENTORY_TOGGLE_TIME = 0.5f;
+    private float inventoryToggleTimer;
+    private bool pauseState;
 
     private readonly CommandManager commandManager;
     private readonly CollisionController collisionController;
@@ -37,9 +42,21 @@ public class OldmanScene : RoomScene
 
     public override void Draw(SpriteBatch batch)
     {
-        // Draw revealed portion of the text
-        batch.DrawString(spriteFont, FIRST_ROW.Substring(0, firstRowRevealedChars), FIRST_ROW_POINT.ToVector2(), Color.White);
-        batch.DrawString(spriteFont, SECOND_ROW.Substring(0, secondRowRevealedChars), SECOND_ROW_POINT.ToVector2(), Color.White);
+        inventoryToggleTimer -= (float)MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+
+        if (pauseState == false && inventoryToggleTimer < 0)
+        {
+            batch.DrawString(spriteFont, FIRST_ROW.Substring(0, firstRowRevealedChars), FIRST_ROW_POINT.ToVector2(), Color.White);
+            batch.DrawString(spriteFont, SECOND_ROW.Substring(0, secondRowRevealedChars), SECOND_ROW_POINT.ToVector2(), Color.White);
+        }
+    }
+
+    public override void SetPaused(bool paused)
+    {
+        base.SetPaused(paused);
+
+        inventoryToggleTimer = INVENTORY_TOGGLE_TIME;
+        pauseState = paused;
     }
 
     public override void Update(GameTime gameTime)
