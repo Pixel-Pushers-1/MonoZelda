@@ -5,7 +5,9 @@ namespace MonoZelda.Link.Projectiles;
 
 public interface IProjectile
 {
-	void Setup();
+	public Vector2 ProjectilePosition { get; set; }
+
+	void Setup(params object[] args);
 
 	void Update();
 

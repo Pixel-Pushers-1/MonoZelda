@@ -6,6 +6,7 @@ namespace MonoZelda.Collision
 {
     public class CollisionHitboxDraw : IDrawable
     {
+        public bool Enabled { get; set; }
         public Color GizmoColor { get; set; } = Color.White;
         public int Thickness { get; set; } = 1;
 

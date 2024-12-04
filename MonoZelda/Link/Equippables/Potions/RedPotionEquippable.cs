@@ -19,9 +19,7 @@ public class RedPotionEquippable : IEquippable
         PlayerState.Health = PlayerState.MaxHealth;
 
         // Update PlayerState and CyclingIndex
-        PlayerState.EquippableInventory.Remove(EquippableType.RedPotion);
-        PlayerState.EquippableInventory.Add(EquippableType.BluePotion);
-        PlayerState.EquippedItem = EquippableType.None;
-        equippableManager.CyclingIndex = 0;
+        equippableManager.RemoveEquippable(EquippableType.RedPotion);
+        equippableManager.AddEquippable(EquippableType.BluePotion, true);
     }
 }

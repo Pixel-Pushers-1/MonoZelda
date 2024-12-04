@@ -8,6 +8,7 @@ namespace MonoZelda.Dungeons
     {
         string RoomName { get; }
         public Point SpawnPoint { get; set; }
+        public bool IsLit { get; set; }
         Dungeon1Sprite RoomSprite { get; }
         List<DoorSpawn> GetDoors();
         List<Rectangle> GetStaticRoomColliders();

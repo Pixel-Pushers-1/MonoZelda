@@ -17,9 +17,7 @@ public class BombEquippable : IEquippable
         projectileManager.FireProjectile(ProjectileType.Bomb);
         if(PlayerState.Bombs == 0)
         {
-            PlayerState.EquippableInventory.Remove(EquippableType.Bomb);
-            PlayerState.EquippedItem = 0;
-            equippableManager.CyclingIndex = 0;
+            equippableManager.RemoveEquippable(EquippableType.Bomb);
         }
     }
 }

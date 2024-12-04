@@ -35,6 +35,17 @@ A weekly collection of code metrics and analysis can be found in `CodeMetrics.xl
 # Sprint Reflections
 All Sprint review write ups can be found in `SprintReflections.md`.
 
+# Sprint 5
+
+## New Features
+The following features have been implemented this sprint.
+
+### Quick Save / Quick Load
+You can save at any time in the normal game mode using `F5`. You can load at any time in the normal game mode using `F9`.
+
+### Lighting
+Many room feature dynamic light sources that can cast shadows. Link always illuminates the area around him. The Link light extends further when the blue candle item is equiped.
+
 # Sprint 4
 
 ## Sprint 4 Pull Requests

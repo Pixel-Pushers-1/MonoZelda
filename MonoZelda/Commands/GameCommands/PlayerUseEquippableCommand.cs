@@ -7,23 +7,21 @@ namespace MonoZelda.Commands.GameCommands;
 public class PlayerUseEquippableCommand : ICommand
 {
     private PlayerSpriteManager player;
-    private EquippableManager equippableManager;
 
     public PlayerUseEquippableCommand()
     {
         //empty
     }
 
-    public PlayerUseEquippableCommand(EquippableManager equippableManager, PlayerSpriteManager player)
+    public PlayerUseEquippableCommand(PlayerSpriteManager player)
     {
         this.player = player;
-        this.equippableManager = equippableManager;
     }
 
     public void Execute(params object[] metadata)
     {
         player?.UseItem();
-        equippableManager?.UseEquippedItem();
+        PlayerState.EquippableManager?.UseEquippedItem();
     }
 
     public void UnExecute()

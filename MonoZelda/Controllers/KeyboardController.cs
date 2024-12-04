@@ -25,9 +25,7 @@ public class KeyboardController : IController
         _pressedDirectionalKeys = new List<Keys>();
         _keyCommandDictionary = new Dictionary<(Keys key, bool oneShot), CommandType>
         {
-            {new (Keys.Enter, true), CommandType.StartGameCommand},
             {new (Keys.G, true), CommandType.ToggleGizmosCommand},
-            {new (Keys.B, true), CommandType.PlayerCycleEquippableCommand},
             {new (Keys.F, true), CommandType.PlayerUseEquippableCommand},
             {new (Keys.Z, true), CommandType.PlayerAttackCommand},
             {new (Keys.N, true), CommandType.PlayerAttackCommand},
@@ -37,6 +35,15 @@ public class KeyboardController : IController
             {new (Keys.None, false), CommandType.PlayerStandingCommand},
             {new (Keys.I, true), CommandType.ToggleInventoryCommand},
             {new (Keys.Escape, true), CommandType.ToggleInventoryCommand},
+            {new (Keys.W, true), CommandType.NavigableGridMoveCommand},
+            {new (Keys.A, true), CommandType.NavigableGridMoveCommand},
+            {new (Keys.S, true), CommandType.NavigableGridMoveCommand},
+            {new (Keys.D, true), CommandType.NavigableGridMoveCommand},
+            {new (Keys.Up, true), CommandType.NavigableGridMoveCommand},
+            {new (Keys.Left, true), CommandType.NavigableGridMoveCommand},
+            {new (Keys.Down, true), CommandType.NavigableGridMoveCommand},
+            {new (Keys.Right, true), CommandType.NavigableGridMoveCommand},
+            {new (Keys.Enter, true), CommandType.NavigableGridExecuteCommand},
             {new (Keys.F5, true), CommandType.QuickSaveCommand},
             {new (Keys.F9, true), CommandType.QuickLoadCommand},
         };

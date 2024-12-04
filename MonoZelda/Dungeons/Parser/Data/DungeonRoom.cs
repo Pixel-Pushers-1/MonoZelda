@@ -14,15 +14,17 @@ namespace MonoZelda.Dungeons
         public List<ItemSpawn> itemSpawns { get; set; }
         public List<EnemySpawn> enemySpawns { get; set; }
         public List<TriggerSpawn> triggers { get; set; }
+        public bool IsLit { get; set; }
 
         public string RoomName { get; private set; }
         public Dungeon1Sprite RoomSprite { get; private set; }
         public Point SpawnPoint { get; set; }
 
-        public DungeonRoom(string roomName, Dungeon1Sprite roomSprite)
+        public DungeonRoom(string roomName, Dungeon1Sprite roomSprite, bool isLit)
         {
             RoomName = roomName;
             RoomSprite = roomSprite;
+            IsLit = isLit;
 
             doors = new List<DoorSpawn>();
             roomColliders = new List<Rectangle>();
