@@ -26,7 +26,6 @@ public class KeyboardController : IController
         _keyCommandDictionary = new Dictionary<(Keys key, bool oneShot), CommandType>
         {
             {new (Keys.G, true), CommandType.ToggleGizmosCommand},
-            {new (Keys.B, true), CommandType.PlayerCycleEquippableCommand},
             {new (Keys.F, true), CommandType.PlayerUseEquippableCommand},
             {new (Keys.Z, true), CommandType.PlayerAttackCommand},
             {new (Keys.N, true), CommandType.PlayerAttackCommand},
