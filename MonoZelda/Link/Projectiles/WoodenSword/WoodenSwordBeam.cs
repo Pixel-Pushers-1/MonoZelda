@@ -21,6 +21,12 @@ public class WoodenSwordBeam : IProjectile
     private PlayerProjectileCollidable projectileCollidable;
     private SpriteDict projectileDict;
 
+    public Vector2 ProjectilePosition
+    {
+        get { return projectilePosition; }
+        set { projectilePosition = value; }
+    }
+
     public WoodenSwordBeam(Vector2 spawnPosition, CollisionController collisionController)
     {
         finished = false;
@@ -86,7 +92,7 @@ public class WoodenSwordBeam : IProjectile
         return new Rectangle(spawnPosition.X - width / 2, spawnPosition.Y - height / 2, width, height);
     }
 
-    public void Setup()
+    public void Setup(params object[] args)
     {
         projectilePosition = initialPosition;
         SoundManager.PlaySound("LOZ_Sword_Shoot", false);

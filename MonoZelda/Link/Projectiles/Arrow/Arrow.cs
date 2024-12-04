@@ -21,6 +21,12 @@ public class Arrow : IProjectile
     private Vector2 projectilePosition;
     private Vector2 initialPosition;
 
+    public Vector2 ProjectilePosition
+    {
+        get { return projectilePosition; }
+        set { projectilePosition = value; }
+    }
+
     public Arrow(Vector2 spawnPos, CollisionController collisionController)
     {
         finished = false;
@@ -77,7 +83,7 @@ public class Arrow : IProjectile
         return new Rectangle(rectPosition.X - width / 2, rectPosition.Y - height / 2, width, height);
     }
 
-    public void Setup()
+    public void Setup(params object[] args)
     {
         projectilePosition = initialPosition;
         SoundManager.PlaySound("LOZ_Arrow_Boomerang", false);

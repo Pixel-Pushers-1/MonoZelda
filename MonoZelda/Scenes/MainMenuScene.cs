@@ -55,6 +55,9 @@ public class MainMenuScene : Scene
         commandManager.ReplaceCommand(CommandType.NavigableGridMoveCommand, new NavigableGridMoveCommand(uiGrid));
         commandManager.ReplaceCommand(CommandType.NavigableGridExecuteCommand, new NavigableGridExecuteCommand(uiGrid));
 
+        // Make sure the shader isn't shadowing anything
+        MonoZeldaGame.Shader.SetNumLineSegments(0);
+
         SoundManager.PlaySound("LOZ_Intro", true);
     }
 }

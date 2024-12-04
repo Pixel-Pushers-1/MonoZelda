@@ -5,6 +5,7 @@ using MonoZelda.Link.Projectiles;
 using MonoZelda.Save;
 using MonoZelda.Sprites;
 using MonoZelda.UI.NavigableMenus;
+using MonoZelda.Shaders;
 using System.Collections.Generic;
 
 namespace MonoZelda.Link;
@@ -12,6 +13,9 @@ namespace MonoZelda.Link;
 public class EquippableManager : INavigableGrid, ISaveable
 {
     private ProjectileManager projectileManager;
+    private int cyclingIndex;
+    private bool isPaused;
+    private List<ILight> lights;
     private readonly SwordEquippable swordEquippable;
 
     private EquippableType[,] equippablesGrid;
@@ -41,6 +45,7 @@ public class EquippableManager : INavigableGrid, ISaveable
         }
     }
 
+
     public void MoveSelection(Point movement)
     {
         //set current selection and clamp to stay inside of grid
@@ -52,6 +57,12 @@ public class EquippableManager : INavigableGrid, ISaveable
     public void ExecuteSelection()
     {
         //empty (nothing happens when you press enter on a selected item)
+    }
+
+    public List<ILight> Lights
+    {
+        get { return lights; }
+        set { lights = value; }
     }
 
     public void AddEquippable(EquippableType type, bool allowDuplicates)
@@ -70,6 +81,7 @@ public class EquippableManager : INavigableGrid, ISaveable
             for (int x = 0; x < equippablesGrid.GetLength(0); x++) {
                 if (equippablesGrid[x, y] == EquippableType.None) {
                     equippablesGrid[x, y] = type;
+                    selectedEquippable = new Point(x, y);
                     return;
                 }
             }
@@ -94,7 +106,7 @@ public class EquippableManager : INavigableGrid, ISaveable
         EquippableType selection = equippablesGrid[selectedEquippable.X, selectedEquippable.Y];
         if (selection != EquippableType.None)
         {
-            equippableObjects[selection].Use(projectileManager, this);
+            equippableObjects[selection].Use(projectileManager, this, Lights);
         }
     }
 

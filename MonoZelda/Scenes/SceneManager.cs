@@ -26,6 +26,9 @@ namespace MonoZelda.Scenes
         private ContentManager contentManager;
         private InventoryScene inventoryScene;
         private EquippableManager equippableManager;
+        private SaveManager saveManager;
+        private Effect effect;
+        
         private IScene activeScene;
 
         public bool isPaused { get; private set; }

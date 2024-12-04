@@ -10,6 +10,8 @@ using MonoZelda.Link;
 using MonoZelda.UI;
 using MonoZelda.Save;
 using Microsoft.Xna.Framework.Input;
+using System;
+using MonoZelda.Shaders;
 
 
 namespace MonoZelda;
@@ -31,6 +33,7 @@ public enum GameType {
 public class MonoZeldaGame : Game, ISaveable
 {
     public static GameTime GameTime { get; private set; }
+    internal static CustomShader Shader { get; private set; }
 
     private GraphicsDeviceManager graphicsDeviceManager;
     private SpriteBatch spriteBatch;
@@ -85,6 +88,8 @@ public class MonoZeldaGame : Game, ISaveable
         spriteBatch = new SpriteBatch(GraphicsDevice);
 
         TextureData.LoadTextures(Content, GraphicsDevice);
+        Shader = new CustomShader(GraphicsDevice);
+        Shader.LoadShader(Content);        
 
         // Start menu goes first
         StartMenu();
@@ -124,7 +129,8 @@ public class MonoZeldaGame : Game, ISaveable
 
         SamplerState samplerState = new();
         samplerState.Filter = TextureFilter.Point;
-        spriteBatch.Begin(SpriteSortMode.Deferred, null, samplerState);
+
+        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, samplerState, null, null, Shader.Effect);
 
         // SpriteDrawer draws all drawables
         SpriteDrawer.Draw(spriteBatch, gameTime);
@@ -139,6 +145,7 @@ public class MonoZeldaGame : Game, ISaveable
     {
         // Clean state to start a new scene
         SpriteDrawer.Reset();
+        Shader.Reset();
         this.scene = scene;
         scene.LoadContent(Content);
     }

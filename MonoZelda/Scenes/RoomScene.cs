@@ -16,6 +16,9 @@ using System.Linq;
 using MonoZelda.Trigger;
 using MonoZelda.Sound;
 using MonoZelda.Tiles.Doors;
+using MonoZelda.Dungeons.Dungeon1;
+using MonoZelda.Shaders;
+using System.Runtime.CompilerServices;
 
 namespace MonoZelda.Scenes;
 
@@ -35,6 +38,8 @@ public class RoomScene : Scene
     private Dictionary<Enemy, EnemySpawn> enemySpawnPoints = new();
     private IDungeonRoom room;
     private string roomName;
+    private List<ILight> lights = new();
+    private ILight playerLight;
     
     private List<IGameUpdate> updateables = new();
     private List<IDisposable> disposables = new();
@@ -101,9 +106,60 @@ public class RoomScene : Scene
     {
         transitionCommand = commandManager.GetCommand(CommandType.RoomTransitionCommand);
         
+        SetupShader();
         LoadRoomTextures(contentManager);
         CreateStaticColliders();
         CreateTriggers(contentManager);
+    }
+
+    private void SetupShader()
+    {
+        // set list of lights in equippableManager
+        PlayerState.EquippableManager.Lights = lights;
+
+        if(room.IsLit)
+        {
+            playerLight = new PlayerLight();
+            lights.Add(playerLight);
+
+            // Demo lights
+            // TODO: Light emmitting items
+            // Randomly load left or right light based on roomname for determinizim
+
+            var random = new Random(room.RoomName.GetHashCode());
+            var lightIndex = random.Next(0, 3);
+
+            if (lightIndex == 0)
+            {
+                lights.Add(new Light() {
+                    Position = new Point(250, 256),
+                    Color = Color.Orange,
+                    Radius = 400,
+                    Intensity = 0.75f
+                });
+            }
+            if(lightIndex == 1)
+            {
+                lights.Add(new Light() {
+                    Position = new Point(774, 256),
+                    Color = Color.Orange,
+                    Radius = 400,
+                    Intensity = 0.75f
+                });
+            }    
+
+            var intersectors = new List<Vector4>(256);
+            var roomColliderRects = room.GetStaticRoomColliders();
+            var height = graphicsDevice.Viewport.Height;
+            foreach (var rect in roomColliderRects)
+            {
+                intersectors.Add(new Vector4(rect.X, height - rect.Y, rect.Width, rect.Height)); // left
+            }
+
+            // Limited to 75 line segments
+            var arrayIntersectors = intersectors.Take(CustomShader.MAX_LIGHT_COLLIDERS).ToArray();
+            MonoZeldaGame.Shader.SetLineSegments(arrayIntersectors);
+        }
     }
 
     private void CreateTriggers(ContentManager contentManager)
@@ -145,6 +201,7 @@ public class RoomScene : Scene
             var collidable = new StaticRoomCollidable(rect);
             collisionController.AddCollidable(collidable);
         }
+
         var boundaryColliderRects = room.GetStaticBoundaryColliders();
         foreach (var rect in boundaryColliderRects)
         {
@@ -178,6 +235,8 @@ public class RoomScene : Scene
 
     public override void UnloadContent()
     {
+        MonoZeldaGame.Shader.Reset();
+
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());
         base.UnloadContent();
@@ -228,8 +287,18 @@ public class RoomScene : Scene
             updateable.Update(gameTime);
         }
 
+        UpdateDynamicLights();
+
         PlayerState.EquippableManager.Update();
         itemManager.Update();
         playerCollision.Update();
+    }
+
+    private void UpdateDynamicLights()
+    {
+        if(!room.IsLit)
+            return;
+
+        MonoZeldaGame.Shader.SetDynamicLights(lights);
     }
 }

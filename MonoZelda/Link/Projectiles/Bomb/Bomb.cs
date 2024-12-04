@@ -30,6 +30,12 @@ public class Bomb : IProjectile
     private CollisionController collisionController;
     private bool exploded;
 
+    public Vector2 ProjectilePosition
+    {
+        get { return projectilePosition; }
+        set { projectilePosition = value; }
+    }
+
     public bool Exploded
     {
         get => exploded;
@@ -60,7 +66,7 @@ public class Bomb : IProjectile
         return new Rectangle(spawnPosition.X - 192 / 2, spawnPosition.Y - 192 / 2, 192, 192);
     }
 
-    public void Setup()
+    public void Setup(params object[] args)
     {
         projectilePosition = initialPosition;
         SoundManager.PlaySound("LOZ_Bomb_Drop", false);
