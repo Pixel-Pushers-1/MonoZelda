@@ -17,7 +17,7 @@ namespace MonoZelda.Shaders
 
         private float GetRadius()
         {
-            var lightDistance = PlayerState.EquippedItem == EquippableType.CandleBlue
+            var lightDistance = PlayerState.EquippableManager.GetEquippedItem() == EquippableType.CandleBlue
                 ? MAX_RADIUS : MIN_RADIUS;
 
             // Animate distance changes

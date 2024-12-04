@@ -45,6 +45,7 @@ public class EquippableManager : INavigableGrid, ISaveable
         }
     }
 
+
     public void MoveSelection(Point movement)
     {
         //set current selection and clamp to stay inside of grid
@@ -64,7 +65,7 @@ public class EquippableManager : INavigableGrid, ISaveable
         set { lights = value; }
     }
 
-    public EquippableManager(CollisionController collisionController)
+    public void AddEquippable(EquippableType type, bool allowDuplicates)
     {
         //check that item isn't already in inventory
         if (!allowDuplicates) {
@@ -80,6 +81,7 @@ public class EquippableManager : INavigableGrid, ISaveable
             for (int x = 0; x < equippablesGrid.GetLength(0); x++) {
                 if (equippablesGrid[x, y] == EquippableType.None) {
                     equippablesGrid[x, y] = type;
+                    selectedEquippable = new Point(x, y);
                     return;
                 }
             }
@@ -104,7 +106,7 @@ public class EquippableManager : INavigableGrid, ISaveable
         EquippableType selection = equippablesGrid[selectedEquippable.X, selectedEquippable.Y];
         if (selection != EquippableType.None)
         {
-            equippableObjects[PlayerState.EquippedItem].Use(projectileManager, this, Lights);
+            equippableObjects[selection].Use(projectileManager, this, Lights);
         }
     }
 
