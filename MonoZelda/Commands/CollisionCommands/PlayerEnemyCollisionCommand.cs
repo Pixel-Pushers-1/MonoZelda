@@ -48,7 +48,7 @@ public class PlayerEnemyCollisionCommand : ICommand
             Wallmaster enemy = (Wallmaster)enemyCollidable.getEnemy();
             enemy.GrabPlayer(commandManager);
         }
-        else
+        else if(enemyCollidable.enemyType != EnemyList.DodongoMouth)
         {
             playerCollidable.HandleEnemyCollision(collisionDirection);
         }

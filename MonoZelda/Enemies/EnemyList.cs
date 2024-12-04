@@ -4,6 +4,7 @@
     {
         Aquamentus,
         Dodongo,
+        DodongoMouth,
         Gel,
         Goriya,
         Keese,

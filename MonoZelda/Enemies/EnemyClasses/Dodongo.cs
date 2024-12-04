@@ -11,100 +11,121 @@ namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Dodongo : Enemy
     {
-        public Point Pos { get; set; }
-        private readonly Random rnd = new();
-        public EnemyCollidable EnemyHitbox { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public bool Alive { get; set; }
-        private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
-        private EnemyStateMachine stateMachine;
-        private CollisionController collisionController;
-        private EnemyCollisionManager enemyCollision;
+        private readonly Random rnd = new Random();
 
-        private int pixelsMoved;
-        private int health = 6;
-        private int tileSize = 64;
+        private DodongoMouth dodongoMouth;
+        private bool ateBomb;
+        private double timer;
 
         public Dodongo()
         {
             Width = 64;
             Height = 64;
+            Health = 4;
             Alive = true;
         }
 
-        public void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory,EnemyFactory enemyFactory, bool hasItem)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory,EnemyFactory enemyFactory, bool hasItem)
         {
-            this.collisionController = collisionController;
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Dodongo);
-            collisionController.AddCollidable(EnemyHitbox);
-            EnemyHitbox.setSpriteDict(enemyDict);
-            enemyDict.Position = spawnPosition;
-            Pos = spawnPosition;
-            enemyCollision = new EnemyCollisionManager(this, Width, Height);
-            pixelsMoved = 0;
-            stateMachine = new EnemyStateMachine(enemyDict, itemFactory, hasItem);
+            dodongoMouth = new DodongoMouth(this);
+            dodongoMouth.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory,enemyFactory, hasItem);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory,enemyFactory, hasItem);
         }
 
-        public void ChangeDirection()
+        public override void ChangeDirection()
         {
             switch (rnd.Next(1, 5))
             {
                 case 1:
-                    direction = EnemyStateMachine.Direction.Left;
-                    stateMachine.SetSprite("dodongo_left");
+                    Direction = EnemyStateMachine.Direction.Left;
+                    StateMachine.SetSprite("dodongo_left");
                     Width = 96;
                     break;
                 case 2:
-                    direction = EnemyStateMachine.Direction.Right;
-                    stateMachine.SetSprite("dodongo_right");
+                    Direction = EnemyStateMachine.Direction.Right;
+                    StateMachine.SetSprite("dodongo_right");
                     Width = 96;
                     break;
                 case 3:
-                    direction = EnemyStateMachine.Direction.Up;
-                    stateMachine.SetSprite("dodongo_up");
+                    Direction = EnemyStateMachine.Direction.Up;
+                    StateMachine.SetSprite("dodongo_up");
                     Width = 64;
                     break;
                 case 4:
-                    direction = EnemyStateMachine.Direction.Down;
-                    stateMachine.SetSprite("dodongo_down");
+                    Direction = EnemyStateMachine.Direction.Down;
+                    StateMachine.SetSprite("dodongo_down");
                     Width = 64;
                     break;
             }
-            stateMachine.ChangeDirection(direction);
+            StateMachine.ChangeDirection(Direction);
         }
 
-        public void Update()
+        public override void Update()
         {
-            if (pixelsMoved >= tileSize)
-            {
-                pixelsMoved = 0;
-                ChangeDirection();
-            }
-            else
-            {
-                pixelsMoved++;
-                Pos = stateMachine.Update(this, Pos);
-            }
-            enemyCollision.Update(Width, Height, Pos);
-        }
-
-        public void TakeDamage(Boolean stun, Direction collisionDirection)
-        {
-            if (!stun)
-            {
-                health--;
-                if (health == 0)
+            if(!ateBomb && Health > 0){
+                if (PixelsMoved >= TileSize * 3)
                 {
-                    SoundManager.PlaySound("LOZ_Enemy_Hit", false);
-                    stateMachine.Die(false);
-                    EnemyHitbox.UnregisterHitbox();
-                    collisionController.RemoveCollidable(EnemyHitbox);
+                    PixelsMoved = 0;
+                    ChangeDirection();
                 }
                 else
                 {
-                    SoundManager.PlaySound("LOZ_Enemy_Die", false);
+                    PixelsMoved++;
                 }
+                CheckBounds();
+                EnemyCollision.Update(Width,Height,Pos);
+                dodongoMouth.Update();
+            }else if (ateBomb){
+                timer += MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+                if(timer > 2){
+                    string newSprite = Direction switch
+                    {
+                        EnemyStateMachine.Direction.Left => "dodongo_left",
+                        EnemyStateMachine.Direction.Right => "dodongo_right",
+                        EnemyStateMachine.Direction.Up => "dodongo_up",
+                        EnemyStateMachine.Direction.Down => "dodongo_down",
+                        _ => "dodongo_left"
+                    };
+                    StateMachine.SetSprite(newSprite);
+                    StateMachine.ChangeDirection(Direction);
+                    SoundManager.PlaySound("LOZ_Boss_Hit", false);
+                    Health -= 2;
+                    timer = 0;
+                    ateBomb = false;
+                }else if(timer > 0.5){
+                    string newSprite = Direction switch
+                    {
+                        EnemyStateMachine.Direction.Left => "dodongo_left_hurt",
+                        EnemyStateMachine.Direction.Right => "dodongo_right_hurt",
+                        EnemyStateMachine.Direction.Up => "dodongo_up_hurt",
+                        EnemyStateMachine.Direction.Down => "dodongo_down_hurt",
+                        _ => "dodongo_left_hurt"
+                    };
+                    StateMachine.SetSprite(newSprite);
+                }
+            }
+            if(Health == 0){
+                timer += MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
+                StateMachine.DamageFlash();
+                StateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
+                if(timer > 0.5){
+                    dodongoMouth.TakeDamage(0, Link.Direction.None, 22);
+                    Health--;
+                    SoundManager.PlaySound("LOZ_Enemy_Die", false);
+                    StateMachine.Die(false);
+                    EnemyHitbox.UnregisterHitbox();
+                    CollisionController.RemoveCollidable(EnemyHitbox);
+                }
+            }
+            Pos = StateMachine.Update(this, Pos);
+        }
+
+        public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
+        {
+            if(stunTime == 2 && damage == 2 && Health > 0){
+                ateBomb = true;
+                StateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
             }
         }
 
@@ -119,11 +140,6 @@ namespace MonoZelda.Enemies.EnemyClasses
         }
 
         public override void LevelThreeBehavior()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void DecideBehavior()
         {
             throw new NotImplementedException();
         }

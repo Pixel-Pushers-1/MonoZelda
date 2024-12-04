@@ -73,8 +73,9 @@ namespace MonoZelda.Enemies
             StateMachine.ChangeDirection(Direction);
         }
 
-        public virtual void CheckBounds()
+        public virtual int CheckBounds()
         {
+            var boundHit = 0;
             if (Pos.X <= LeftBound || Pos.X >= RightBound || Pos.Y <= TopBound || Pos.Y >= BottomBound)
             {
                 if (Pos.Y <= TopBound)
@@ -82,26 +83,31 @@ namespace MonoZelda.Enemies
                     var pos = Pos;
                     pos.Y++;
                     Pos = pos;
+                    boundHit = TopBound;
                 } else if (Pos.Y >= BottomBound)
                 {
                     var pos = Pos;
                     pos.Y--;
                     Pos = pos;
+                    boundHit = BottomBound;
                 }else if (Pos.X <= LeftBound)
                 {
                     var pos = Pos;
                     pos.X++;
                     Pos = pos;
+                    boundHit = LeftBound;
                 }else if (Pos.X >= RightBound)
                 {
                     var pos = Pos;
                     pos.X--;
                     Pos = pos;
+                    boundHit = RightBound;
                 }
 
                 StateMachine.TakingKnockback = false;
                 ChangeDirection();
             }
+            return boundHit;
         }
 
         public abstract void LevelOneBehavior();
