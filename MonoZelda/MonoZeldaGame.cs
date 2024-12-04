@@ -153,6 +153,7 @@ public class MonoZeldaGame : Game, ISaveable
     public void StartDungeon(GameType gameType)
     {
         // Preventing the StartCommand from activating when it shouldn't. -js
+        GameMode = gameType;
         if (scene is MainMenuScene)
         {
             SoundManager.StopSound("LOZ_Intro");
