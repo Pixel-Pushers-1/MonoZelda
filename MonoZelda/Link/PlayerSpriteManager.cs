@@ -22,13 +22,14 @@ public enum PickUpType
 
 public class PlayerSpriteManager
 {
+    public const int BLUE_LEVEL_REQUIREMENT = 5;
+    public const int RED_LEVEL_REQUIREMENT = 10;
+
     private const float DAMAGE_FLASH_TIME = .5f;
     private const float CLOCK_FLASH_TIME = 3f;
     private const float DAMAGE_IMMOBILITY_TIME = .2f;
     private const float PICKUP_TIME = 3f;
     private const float LEVELUP_FLASH_TIME = 3f;
-    private const int BLUE_LEVEL_REQUIREMENT = 2;
-    private const int RED_LEVEL_REQUIREMENT = 4;
 
     private Direction playerDirection;
     private SpriteDict playerSpriteDict;

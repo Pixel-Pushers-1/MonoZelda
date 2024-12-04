@@ -20,11 +20,11 @@ public class EnemyPlayerProjectileCollisionCommand : ICommand
     {
         int damage = 1;
 
-        if (PlayerState.Level >= 10)
+        if (PlayerState.Level >= PlayerSpriteManager.RED_LEVEL_REQUIREMENT)
         {
             damage = 3;
         }
-        else if (PlayerState.Level >= 5)
+        else if (PlayerState.Level >= PlayerSpriteManager.BLUE_LEVEL_REQUIREMENT)
         {
             damage = 2;
         }

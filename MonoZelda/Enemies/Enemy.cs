@@ -165,9 +165,9 @@ namespace MonoZelda.Enemies
                 else
                 {
                     SoundManager.PlaySound("LOZ_Enemy_Die", false);
-                    StateMachine.Die(false);
-                    EnemyHitbox.UnregisterHitbox();
-                    CollisionController.RemoveCollidable(EnemyHitbox);
+                    StateMachine?.Die(false);
+                    EnemyHitbox?.UnregisterHitbox();
+                    CollisionController?.RemoveCollidable(EnemyHitbox);
                 }
             }
         }
