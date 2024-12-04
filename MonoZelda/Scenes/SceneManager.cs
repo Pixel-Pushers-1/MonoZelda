@@ -26,7 +26,6 @@ namespace MonoZelda.Scenes
         private ContentManager contentManager;
         private InventoryScene inventoryScene;
         private EquippableManager equippableManager;
-        private SaveManager saveManager;
         private IScene activeScene;
 
         public bool isPaused { get; private set; }
@@ -39,7 +38,6 @@ namespace MonoZelda.Scenes
             collisionController = new CollisionController(commandManager);
             StartRoom = startRoom;
             this.commandManager = commandManager;
-            this.saveManager = new SaveManager(this);
 
             // Start the player near the entrance
             PlayerState.Initialize();
@@ -58,9 +56,6 @@ namespace MonoZelda.Scenes
             commandManager.ReplaceCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand(this));
             commandManager.ReplaceCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand(this));
             commandManager.ReplaceCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand(commandManager));
-
-            commandManager.ReplaceCommand(CommandType.QuickSaveCommand, new QuickSaveCommand(saveManager));
-            commandManager.ReplaceCommand(CommandType.QuickLoadCommand, new QuickLoadCommand(saveManager));
         }
 
         public void TransitionRoom(string roomName, Direction transitionDirection)
