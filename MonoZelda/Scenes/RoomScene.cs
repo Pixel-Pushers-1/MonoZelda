@@ -25,7 +25,6 @@ public class RoomScene : Scene
     private CommandManager commandManager;
     private PlayerSpriteManager playerSprite;
     private PlayerCollisionManager playerCollision;
-    private EquippableManager equippableManager;
     private ItemManager itemManager;
     private ICommand transitionCommand;
     private CollisionController collisionController;
@@ -40,12 +39,11 @@ public class RoomScene : Scene
     private List<IGameUpdate> updateables = new();
     private List<IDisposable> disposables = new();
 
-    public RoomScene(GraphicsDevice graphicsDevice, CommandManager commandManager, EquippableManager equippableManager, CollisionController collisionController, IDungeonRoom room) 
+    public RoomScene(GraphicsDevice graphicsDevice, CommandManager commandManager, CollisionController collisionController, IDungeonRoom room) 
     {
         this.graphicsDevice = graphicsDevice;
         this.commandManager = commandManager;
         this.collisionController = collisionController;
-        this.equippableManager = equippableManager;
         this.room = room;
         triggers = new List<ITrigger>();
     }
@@ -66,9 +64,8 @@ public class RoomScene : Scene
     {
         // replace required commands
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(equippableManager, playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerCycleEquippableCommand, new PlayerCycleEquippableCommand(equippableManager));   
-        commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand(equippableManager, playerSprite));
+        commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(playerSprite));
+        commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerSprite));
     }
@@ -191,15 +188,14 @@ public class RoomScene : Scene
             commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new EmptyCommand());
             commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new EmptyCommand());
             commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new EmptyCommand());
+            commandManager.ReplaceCommand(CommandType.NavigableGridMoveCommand, new NavigableGridMoveCommand(PlayerState.EquippableManager));
         }
         else {
             commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
-            commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(equippableManager, playerSprite));
-            commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand(equippableManager, playerSprite));
+            commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(playerSprite));
+            commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand(playerSprite));
+            commandManager.ReplaceCommand(CommandType.NavigableGridMoveCommand, new EmptyCommand());
         }
-
-        // allow cycling of items since game is paused
-        equippableManager.IsPaused = paused;
     }
 
     public override void Update(GameTime gameTime)
@@ -232,7 +228,7 @@ public class RoomScene : Scene
             updateable.Update(gameTime);
         }
 
-        equippableManager.Update();
+        PlayerState.EquippableManager.Update();
         itemManager.Update();
         playerCollision.Update();
     }

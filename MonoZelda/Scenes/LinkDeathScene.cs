@@ -13,7 +13,6 @@ namespace MonoZelda.Scenes;
 public class LinkDeathScene : Scene
 {
     // constants
-    private static readonly Point RED_BACKGROUND_SIZE = new Point(192*4 + 8, 112*4 + 8);
     private const string GameOverString = "Game Over";
     private const float DIRECTION_CHANGE_TIME = 0.1f;
     private const float ROTATING_TIME = 3f;
@@ -70,7 +69,7 @@ public class LinkDeathScene : Scene
         FakeLink.SetSprite($"standing_{DirectionStringMap[FakeLinkDirection]}");
 
         // create black and red backgrounds
-        RedBackground = new BlankSprite(SpriteLayer.HUD - 1, DungeonConstants.BackgroundPosition - new Point(8,8), RED_BACKGROUND_SIZE, Color.Red);
+        RedBackground = new BlankSprite(SpriteLayer.HUD - 1, DungeonConstants.DungeonPosition, new Point(graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), new Color(Color.Red, 0.6f));
         BlackBackground = new BlankSprite(SpriteLayer.HUD + 1, DungeonConstants.DungeonPosition, new Point(graphicsDevice.Viewport.Width,graphicsDevice.Viewport.Height), Color.Black);
         BlackBackground.Enabled = false;
 

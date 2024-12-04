@@ -1,17 +1,21 @@
-﻿using MonoZelda.Controllers;
+﻿using Microsoft.Xna.Framework;
+using MonoZelda.Controllers;
 using MonoZelda.Link.Equippables;
 using MonoZelda.Link.Projectiles;
+using MonoZelda.Save;
+using MonoZelda.Sprites;
+using MonoZelda.UI.NavigableMenus;
 using System.Collections.Generic;
 
 namespace MonoZelda.Link;
 
-public class EquippableManager
+public class EquippableManager : INavigableGrid, ISaveable
 {
-    private CollisionController collisionController;
     private ProjectileManager projectileManager;
-    private int cyclingIndex;
-    private bool isPaused;
     private readonly SwordEquippable swordEquippable;
+
+    private EquippableType[,] equippablesGrid;
+    private Point selectedEquippable;
 
     private readonly Dictionary<EquippableType, IEquippable> equippableObjects = new()
     {
@@ -23,52 +27,74 @@ public class EquippableManager
         { EquippableType.RedPotion, new RedPotionEquippable() },
     };
 
-    public EquippableType EquippedItem
-    {
-        get => PlayerState.EquippedItem;
-        private set => PlayerState.EquippedItem = value;
-    }
-
-    public int CyclingIndex
-    {
-        set { cyclingIndex = value; }
-    }
-
-    public bool IsPaused
-    {
-        set { isPaused = value; }
-    }
-
     public EquippableManager(CollisionController collisionController)
     {
-        cyclingIndex = 0;
-        this.collisionController = collisionController;
         projectileManager = new ProjectileManager(collisionController);
         swordEquippable = new SwordEquippable();
+
+        //set up grid of items
+        equippablesGrid = new EquippableType[5, 2];
+        for (int y = 0; y < equippablesGrid.GetLength(1); y++) {
+            for (int x = 0; x < equippablesGrid.GetLength(0); x++) {
+                equippablesGrid[x, y] = EquippableType.None;
+            }
+        }
     }
 
-    public void CycleEquippedUtility()
+    public void MoveSelection(Point movement)
     {
-        List<EquippableType> equippables = PlayerState.EquippableInventory;
-        if ((isPaused) && (cyclingIndex <= equippables.Count))
-        {
-            if (cyclingIndex != (equippables.Count))
-            {
-                EquippedItem = PlayerState.EquippableInventory[cyclingIndex++];
+        //set current selection and clamp to stay inside of grid
+        selectedEquippable += movement;
+        selectedEquippable.X = MathHelper.Clamp(selectedEquippable.X, 0, equippablesGrid.GetLength(0) - 1);
+        selectedEquippable.Y = MathHelper.Clamp(selectedEquippable.Y, 0, equippablesGrid.GetLength(1) - 1);
+    }
+
+    public void ExecuteSelection()
+    {
+        //empty (nothing happens when you press enter on a selected item)
+    }
+
+    public void AddEquippable(EquippableType type, bool allowDuplicates)
+    {
+        //check that item isn't already in inventory
+        if (!allowDuplicates) {
+            foreach (EquippableType equippable in equippablesGrid) {
+                if (equippable == type) {
+                    return;
+                }
             }
-            else
-            {
-                EquippedItem = EquippableType.None;
-                cyclingIndex = 0;
-            }    
+        }
+
+        //navigate grid row-wise until empty slot is found
+        for (int y = 0; y < equippablesGrid.GetLength(1); y++) {
+            for (int x = 0; x < equippablesGrid.GetLength(0); x++) {
+                if (equippablesGrid[x, y] == EquippableType.None) {
+                    equippablesGrid[x, y] = type;
+                    return;
+                }
+            }
+        }
+    }
+
+    public void RemoveEquippable(EquippableType type)
+    {
+        //navigate grid row-wise and remove the first instance of type
+        for (int y = 0; y < equippablesGrid.GetLength(1); y++) {
+            for (int x = 0; x < equippablesGrid.GetLength(0); x++) {
+                if (equippablesGrid[x, y] == type) {
+                    equippablesGrid[x, y] = EquippableType.None;
+                    return;
+                }
+            }
         }
     }
 
     public void UseEquippedItem()
     {
-        if (PlayerState.EquippedItem != EquippableType.None)
+        EquippableType selection = equippablesGrid[selectedEquippable.X, selectedEquippable.Y];
+        if (selection != EquippableType.None)
         {
-            equippableObjects[PlayerState.EquippedItem].Use(projectileManager, this);
+            equippableObjects[selection].Use(projectileManager, this);
         }
     }
 
@@ -77,8 +103,54 @@ public class EquippableManager
         swordEquippable.Use(projectileManager);
     }
 
+    public EquippableType GetEquippedItem()
+    {
+        return equippablesGrid[selectedEquippable.X, selectedEquippable.Y];
+    }
+
+    public EquippableType[,] GetGrid()
+    {
+        return equippablesGrid;
+    }
+
+    public Point GetSelection()
+    {
+        return selectedEquippable;
+    }
+
     public void Update()
     {
         projectileManager.Update();
+    }
+
+    public void Save(SaveState save)
+    {
+        save.EquippablesGridRowOne = new EquippableType[5];
+        for(int i = 0; i < 5; i++) {
+            save.EquippablesGridRowOne[i] = equippablesGrid[i, 0];
+        }
+
+        save.EquippablesGridRowTwo = new EquippableType[5];
+        for (int i = 0; i < 5; i++)
+        {
+            save.EquippablesGridRowTwo[i] = equippablesGrid[i, 1];
+        }
+
+        save.SelectedEquippable = this.selectedEquippable;
+    }
+
+    public void Load(SaveState save)
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            equippablesGrid[i, 0] = save.EquippablesGridRowOne[i];
+        }
+
+        for (int i = 0; i < 5; i++)
+        {
+            equippablesGrid[i, 1] = save.EquippablesGridRowTwo[i];
+        }
+
+        this.selectedEquippable = save.SelectedEquippable;
     }
 }

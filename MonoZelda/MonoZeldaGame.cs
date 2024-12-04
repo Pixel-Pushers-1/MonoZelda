@@ -23,6 +23,11 @@ public enum GameState
     None
 }
 
+public enum GameType {
+    Classic,
+    Infinite,
+}
+
 public class MonoZeldaGame : Game, ISaveable
 {
     public static GameTime GameTime { get; private set; }
@@ -58,7 +63,11 @@ public class MonoZeldaGame : Game, ISaveable
         commandManager.ReplaceCommand(CommandType.ExitCommand, new ExitCommand(this));
         commandManager.ReplaceCommand(CommandType.StartGameCommand, new StartGameCommand(this));
         commandManager.ReplaceCommand(CommandType.ResetCommand, new ResetCommand(this));
-        commandManager.ReplaceCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand(this));    
+        commandManager.ReplaceCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand(this));
+
+
+        commandManager.ReplaceCommand(CommandType.QuickSaveCommand, new QuickSaveCommand(saveManager));
+        commandManager.ReplaceCommand(CommandType.QuickLoadCommand, new QuickLoadCommand(saveManager));
     }
 
     protected override void Initialize()
@@ -70,8 +79,6 @@ public class MonoZeldaGame : Game, ISaveable
 
         base.Initialize();
     }
-
-    SpriteFont testFont;
 
     protected override void LoadContent()
     {
@@ -138,7 +145,7 @@ public class MonoZeldaGame : Game, ISaveable
 
     public void StartMenu()
     {
-        LoadScene(new MainMenuScene(GraphicsDevice));
+        LoadScene(new MainMenuScene(commandManager));
     }
 
     public void StartDungeon()
@@ -161,8 +168,9 @@ public class MonoZeldaGame : Game, ISaveable
         SoundManager.ClearSoundDictionary();
         HUDMapWidget.Reset();
         InventoryMapWidget.Reset();
+        LoadScene(new MainMenuScene(commandManager));
         PlayerState.Initialize();
-        LoadScene(new MainMenuScene(GraphicsDevice));
+        LoadScene(new MainMenuScene(commandManager));
     }
 
     public void Save(SaveState save)

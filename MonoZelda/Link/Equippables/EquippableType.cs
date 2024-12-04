@@ -1,5 +1,8 @@
-﻿namespace MonoZelda.Link.Equippables;
+﻿using System;
 
+namespace MonoZelda.Link.Equippables;
+
+[Serializable]
 public enum EquippableType
 {
     None,
