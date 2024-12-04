@@ -73,25 +73,12 @@ public class ProjectileManager
 
     public void FireProjectile(ProjectileType projectileType, params object[] args)
     {
-        if (SingleInstanceProjectiles.Contains(projectileType))
+        if (HasRequiredResources(projectileType) && ActiveProjectiles.ContainsKey(projectileType) == false)
         {
-            if (HasRequiredResources(projectileType) && ActiveProjectiles.ContainsKey(projectileType) == false)
-            {
-                IProjectile projectile = projectileFactory.GetProjectileObject(projectileType, collisionController);
-                ActiveProjectiles.Add(projectileType, projectile);
-                DeductPlayerResources(projectileType);
-                projectile.Setup(args);
-            }
-        }
-        else
-        {
-            if (HasRequiredResources(projectileType))
-            {
-                IProjectile projectile = projectileFactory.GetProjectileObject(projectileType, collisionController);
-                ActiveProjectiles.Add(projectileType, projectile);
-                DeductPlayerResources(projectileType);
-                projectile.Setup(args);
-            }
+            IProjectile projectile = projectileFactory.GetProjectileObject(projectileType, collisionController);
+            ActiveProjectiles.Add(projectileType, projectile);
+            DeductPlayerResources(projectileType);
+            projectile.Setup(args);
         }
     }
 
