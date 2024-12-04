@@ -93,7 +93,7 @@ public class TransitionScene : Scene
 
         //Initialize Fake Link
         FakeLink = new SpriteDict(SpriteType.Player, SpriteLayer.HUD, DungeonConstants.TransitionLinkSpawnPoints[TransitionDirection]);
-        FakeLink.SetSprite($"walk_{DirectionMap[TransitionDirection].Item1}");
+        FakeLink.SetSprite($"walk_{DirectionMap[TransitionDirection].Item1}_{PlayerSpriteManager.GetLinkColor()}");
         FakeLinkPosition = DungeonConstants.TransitionLinkSpawnPoints[TransitionDirection].ToVector2();
         FakeLink.Enabled = false;
     }

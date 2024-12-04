@@ -94,7 +94,7 @@ public class WallMasterGrabScene : Scene
         FakeWallMaster = new SpriteDict(SpriteType.Enemies, SpriteLayer.HUD - 1, position);
         FakeWallMaster.SetSprite("wallmaster");
         FakeLink = new SpriteDict(SpriteType.Player, SpriteLayer.HUD - 2, position);
-        FakeLink.SetSprite("standing_down");
+        FakeLink.SetSprite($"standing_down_{PlayerSpriteManager.GetLinkColor()}");
 
         // create fake doors, background and roomborder
         FakeBackground = new SpriteDict(SpriteType.Blocks, SpriteLayer.HUD - 3, DungeonConstants.BackgroundPosition);
