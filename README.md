@@ -5,37 +5,37 @@ Monogame implementation of OG Zelda by team Pixel Pushers
 Players can use a compatible gamepad or a keyboard to play. The keybindings are below.
 
 ### Keyboard
-W or UP -> Move up in game / Up in menus
-A or LEFT -> Move left in game / Left in menus
-S or DOWN -> Move down in game / Down in menus
-D or RIGHT -> Move right in game / Right in menus
-F -> Use equipped item
-G -> Toggle hitbox gizmos (for development purposes)
-Z or N -> Main attack
-M -> Mute game sound
-Q -> Exit game
-ENTER -> Start / execute menu selection
-R -> Reset game to start menu
-I or ESCAPE -> Toggle inventory
-F5 -> Quick Save in regular mode
-F9 -> Quick load in regular mode
+W or UP -> Move up in game / Up in menus  
+A or LEFT -> Move left in game / Left in menus  
+S or DOWN -> Move down in game / Down in menus  
+D or RIGHT -> Move right in game / Right in menus  
+F -> Use equipped item  
+G -> Toggle hitbox gizmos (for development purposes)  
+Z or N -> Main attack  
+M -> Mute game sound  
+Q -> Exit game  
+ENTER -> Start / execute menu selection  
+R -> Reset game to start menu  
+I or ESCAPE -> Toggle inventory  
+F5 -> Quick Save in regular mode  
+F9 -> Quick load in regular mode  
 
 ### Gamepad
-DPAD UP -> Up in menus
-DPAD LEFT -> Left in menus
-DPAD DOWN -> Down in menus
-DPAD RIGHT -> Right in menus
-LEFT ANALOG -> Move Link in all directions
-RIGHT TRIGGER -> Toggle hitbox gizmos (for development purposes)
-LEFT TRIGGER -> Mute game sound
-X -> Use equipped item
-A -> Main attack
-LEFT STICK DOWN -> Exit game
-START -> Start / execute menu selection
-RIGHT STICK DOWN -> Reset game to start menu
-Y -> Toggle inventory
-LEFT BUMPER -> Quick Save in regular mode
-RIGHT BUMPER -> Quick load in regular mode
+DPAD UP -> Up in menus  
+DPAD LEFT -> Left in menus  
+DPAD DOWN -> Down in menus  
+DPAD RIGHT -> Right in menus  
+LEFT ANALOG -> Move Link in all directions  
+RIGHT TRIGGER -> Toggle hitbox gizmos (for development purposes)  
+LEFT TRIGGER -> Mute game sound  
+X -> Use equipped item  
+A -> Main attack  
+LEFT STICK DOWN -> Exit game  
+START -> Start / execute menu selection  
+RIGHT STICK DOWN -> Reset game to start menu  
+Y -> Toggle inventory  
+LEFT BUMPER -> Quick Save in regular mode  
+RIGHT BUMPER -> Quick load in regular mode  
 
 
 # Special Notes
