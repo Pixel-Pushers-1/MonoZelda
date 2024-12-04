@@ -10,6 +10,7 @@ using MonoZelda.Sprites;
 using MonoZelda.Commands.CollisionCommands;
 using MonoZelda.UI;
 using MonoZelda.Save;
+using MonoZelda.Scenes.InfiniteMode;
 
 namespace MonoZelda.Scenes
 {
@@ -17,9 +18,12 @@ namespace MonoZelda.Scenes
     {
         public static readonly string MARIO_ROOM = "Room18";
         public static readonly string MARIO_ENTRANCE_ROOM = "Room17";
-        
+        public static readonly string ROOM_INFINITE = "RoomInfinite";
+
         private IDungeonRoomLoader roomManager;
         private IDungeonRoom currentRoom;
+        private IDungeonRoom randomRoom;
+        private IScene activeScene;
         private CollisionController collisionController;
         private GraphicsDevice graphicsDevice;
         private CommandManager commandManager;
@@ -28,19 +32,24 @@ namespace MonoZelda.Scenes
         private EquippableManager equippableManager;
         private SaveManager saveManager;
         private Effect effect;
-        
-        private IScene activeScene;
 
+        private RoomGenerator roomGenerator;
+        
+        public int RoomNumber { get; private set; }
+        public GameType gameMode { get; }
         public bool isPaused { get; private set; }
         public string StartRoom { get; private set; }
 
-        public SceneManager(string startRoom, GraphicsDevice graphicsDevice, CommandManager commandManager)
+        public SceneManager(GameType gameMode, string startRoom, GraphicsDevice graphicsDevice, CommandManager commandManager)
         {
-            this.graphicsDevice = graphicsDevice;
-            roomManager = new DungeonManager();
-            collisionController = new CollisionController(commandManager);
+            RoomNumber = 0;
             StartRoom = startRoom;
+            this.gameMode = gameMode;
+            this.graphicsDevice = graphicsDevice;
             this.commandManager = commandManager;
+            roomManager = new DungeonManager();
+            roomGenerator = new RoomGenerator(roomManager);
+            collisionController = new CollisionController(commandManager);
 
             // Start the player near the entrance
             PlayerState.Initialize();
@@ -54,7 +63,7 @@ namespace MonoZelda.Scenes
             commandManager.ReplaceCommand(CommandType.LevelCompleteAnimationCommand, new LevelCompleteAnimationCommand(this));
             commandManager.ReplaceCommand(CommandType.LinkDeathAnimationCommand, new LinkDeathAnimationCommand(this));
             commandManager.ReplaceCommand(CommandType.WallmasterGrabAnimationCommand, new WallMasterGrabAnimationCommand(this));
-            commandManager.ReplaceCommand(CommandType.EnterDungeonAnimationCommand, new EnterDungeonAnimationCommand(this));    
+            commandManager.ReplaceCommand(CommandType.EnterDungeonAnimationCommand, new EnterDungeonAnimationCommand(this));
             commandManager.ReplaceCommand(CommandType.LoadRoomCommand, new LoadRoomCommand(this));
             commandManager.ReplaceCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand(this));
             commandManager.ReplaceCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand(this));
@@ -67,8 +76,13 @@ namespace MonoZelda.Scenes
 
             var nextRoom = roomManager.LoadRoom(roomName);
             var command = commandManager.GetCommand(CommandType.LoadRoomCommand);
-            
-            if (roomName == MARIO_ROOM || (roomName == MARIO_ENTRANCE_ROOM && currentRoom.RoomName == MARIO_ROOM))
+
+            if(StartRoom == ROOM_INFINITE)
+            {
+               randomRoom = roomGenerator.GetRandomRoom(roomManager);
+               activeScene = new TransitionScene(currentRoom, randomRoom, command, transitionDirection);
+            }
+            else if (roomName == MARIO_ROOM || (roomName == MARIO_ENTRANCE_ROOM && currentRoom.RoomName == MARIO_ROOM))
             {
                 activeScene = new MarioLevelTransitionScene(this, nextRoom, command, graphicsDevice);
             }
@@ -87,12 +101,18 @@ namespace MonoZelda.Scenes
         {
             ResetScene();
 
+            // load currentRoom
             currentRoom = roomManager.LoadRoom(roomName);
-            
+
             // Debugging purposes
             LevelTextWidget.LevelName = roomName;
 
-            if (roomName == MARIO_ROOM)
+            if (StartRoom == ROOM_INFINITE)
+            {
+                RoomNumber = RoomNumber + 1;
+                activeScene = new InfiniteRoomScene(graphicsDevice, commandManager, collisionController, randomRoom, RoomNumber);
+            }
+            else if (roomName == MARIO_ROOM)
             {
                 activeScene = new MarioLevelScene(graphicsDevice, commandManager, collisionController, currentRoom);
             }
@@ -104,24 +124,31 @@ namespace MonoZelda.Scenes
             activeScene.LoadContent(contentManager);
         }
 
-        public override void Draw(SpriteBatch batch)
-        {
-            inventoryScene.Draw(batch);
-            activeScene.Draw(batch);
-        }
-
         public override void LoadContent(ContentManager contentManager)
         {
             this.contentManager = contentManager;
             inventoryScene.LoadContent(contentManager);
 
-            // We begin by revealing the the first room
+            // We begin by revealing the the first room depending on game mode selected
             currentRoom = roomManager.LoadRoom(StartRoom);
-            currentRoom.SpawnPoint = DungeonConstants.DungeonEnteranceSpawnPoint;
-            EnterDungeonScene(currentRoom);
+            if(gameMode == GameType.Classic)
+            {
+                EnterDungeonScene(currentRoom);
+
+            }
+            else
+            {
+                EnterInfiniteModeScene(currentRoom);
+            }
 
             //set player map marker
             inventoryScene.SetPlayerMapMarker(DungeonConstants.GetRoomCoordinate(StartRoom));
+        }
+
+        public override void Draw(SpriteBatch batch)
+        {
+            inventoryScene.Draw(batch);
+            activeScene.Draw(batch);
         }
 
         public override void Update(GameTime gameTime)
@@ -138,12 +165,19 @@ namespace MonoZelda.Scenes
             // clear collidables and reset spriteDrawer
             collisionController.Clear();
             SpriteDrawer.Reset();
-            
+
             // unload active scene content
             activeScene.UnloadContent();
-            
+
             // Complication due to SpriteDict getting cleared, need to re-init the UI
             inventoryScene.LoadContent(contentManager, currentRoom);
+        }
+
+        public void EnterInfiniteModeScene(IDungeonRoom room)
+        {
+            var loadRoomCommand = commandManager.GetCommand(CommandType.LoadRoomCommand);
+            activeScene = new EnterInfiniteModeScene(graphicsDevice, commandManager, collisionController, room);
+            activeScene.LoadContent(contentManager);
         }
 
         public void EnterDungeonScene(IDungeonRoom room)
@@ -172,14 +206,14 @@ namespace MonoZelda.Scenes
         public void LinkDeathScene()
         {
             var resetCommand = commandManager.GetCommand(CommandType.ResetCommand);
-            activeScene = new LinkDeathScene(resetCommand, graphicsDevice);
+            activeScene = new LinkDeathScene(gameMode, RoomNumber, resetCommand, graphicsDevice);
             activeScene.LoadContent(contentManager);
         }
 
         public void ToggleInventory()
         {
             isPaused = inventoryScene.ToggleInventory();
-            (activeScene as RoomScene)?.SetPaused(isPaused);
+            activeScene?.SetPaused(isPaused);
         }
 
         public void Save(SaveState save)

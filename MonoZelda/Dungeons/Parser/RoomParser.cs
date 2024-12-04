@@ -3,14 +3,12 @@ using MonoZelda.Dungeons.Loader;
 using MonoZelda.Dungeons.Parser.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MonoZelda.Dungeons.Parser
 {
     internal class RoomParser
     {
+        private const string EMPTY_STRING = "";
         private IRoomLoader _roomLoader;
         private IRoomTokenizer _roomTokenizer;
 
@@ -21,7 +19,7 @@ namespace MonoZelda.Dungeons.Parser
             _roomLoader = loader;
             _roomTokenizer = tokenizer;
 
-
+            _cellParsers.Add("", new NonColliderCellParser());
             _cellParsers.Add("item", new ItemCellParser());
             _cellParsers.Add("enemy", new EnemyCellParser());
             _cellParsers.Add("roomCollision", new RoomCollisionCellParser());
@@ -42,7 +40,6 @@ namespace MonoZelda.Dungeons.Parser
             LoadDoors(roomFile, room);
             LoadContent(roomFile, room);
             
-
             return room;
         }
 
@@ -56,8 +53,6 @@ namespace MonoZelda.Dungeons.Parser
                     position += DungeonConstants.DungeonPosition + DungeonConstants.Margin;
 
                     var cell = roomFile.Content[y][x];
-
-                    if (string.IsNullOrEmpty(cell)) continue;
 
                     InvokeParser(cell, position, room);
                 }
@@ -80,7 +75,11 @@ namespace MonoZelda.Dungeons.Parser
         private void InvokeParser(string cell, Point position, DungeonRoom room)
         {
             // cell format is category_enum
-            if(!cell.Contains('_')) return;
+            if (!cell.Contains('_'))
+            {
+                _cellParsers[EMPTY_STRING].Parse(EMPTY_STRING, position, room);
+                return;
+            };
             
             // First part defines the Enum Type
             var enumType = cell[..cell.IndexOf('_')];

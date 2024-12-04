@@ -13,7 +13,6 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using MonoZelda.Shaders;
 
-
 namespace MonoZelda;
 
 public enum GameState
@@ -32,18 +31,25 @@ public enum GameType {
 
 public class MonoZeldaGame : Game, ISaveable
 {
-    public static GameTime GameTime { get; private set; }
-    internal static CustomShader Shader { get; private set; }
-
     private GraphicsDeviceManager graphicsDeviceManager;
     private SpriteBatch spriteBatch;
     private IController controller;
     private CommandManager commandManager;
     private SaveManager saveManager;
-
     private IScene scene;
+    private static GameType gameMode;
 
-    public static int EnemyLevel {get; set;}
+    public static GameType GameMode
+    {
+        get { return gameMode; }
+        private set { gameMode = value; }
+    }
+
+    public static GameTime GameTime { get; private set; }
+
+    internal static CustomShader Shader { get; private set; }
+
+    public static int EnemyLevel { get; set; }
 
     public MonoZeldaGame()
     {
@@ -67,10 +73,6 @@ public class MonoZeldaGame : Game, ISaveable
         commandManager.ReplaceCommand(CommandType.StartGameCommand, new StartGameCommand(this));
         commandManager.ReplaceCommand(CommandType.ResetCommand, new ResetCommand(this));
         commandManager.ReplaceCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand(this));
-
-
-        commandManager.ReplaceCommand(CommandType.QuickSaveCommand, new QuickSaveCommand(saveManager));
-        commandManager.ReplaceCommand(CommandType.QuickLoadCommand, new QuickLoadCommand(saveManager));
     }
 
     protected override void Initialize()
@@ -108,13 +110,6 @@ public class MonoZeldaGame : Game, ISaveable
             {
                 controller = new KeyboardController(commandManager);
             }
-        }
-        if (PlayerState.IsDead)
-        {
-            commandManager.Execute(CommandType.PlayerDeathCommand);
-            PlayerState.IsDead = false;
-            PlayerState.Initialize();
-
         }
 
         GameTime = gameTime;
@@ -155,19 +150,28 @@ public class MonoZeldaGame : Game, ISaveable
         LoadScene(new MainMenuScene(commandManager));
     }
 
-    public void StartDungeon()
+    public void StartDungeon(GameType gameType)
     {
         // Preventing the StartCommand from activating when it shouldn't. -js
         if (scene is MainMenuScene)
         {
             SoundManager.StopSound("LOZ_Intro");
-            LoadDungeon("Room1");
+            if (gameType == GameType.Classic)
+            {
+                commandManager.ReplaceCommand(CommandType.QuickSaveCommand, new QuickSaveCommand(saveManager));
+                commandManager.ReplaceCommand(CommandType.QuickLoadCommand, new QuickLoadCommand(saveManager));
+                LoadDungeon("Room1", GameType.Classic);
+            }
+            else
+            {
+                LoadDungeon("RoomInfinite", GameType.Infinite);
+            }
         }
     }
 
-    public void LoadDungeon(string roomName)
+    public void LoadDungeon(string startRoom, GameType gameMode)
     {
-        LoadScene(new SceneManager(roomName, GraphicsDevice, commandManager));
+        LoadScene(new SceneManager(gameMode, startRoom, GraphicsDevice, commandManager));
     }
 
     public void ResetGame()
@@ -182,7 +186,7 @@ public class MonoZeldaGame : Game, ISaveable
 
     public void Save(SaveState save)
     {
-        if(scene is SceneManager sceneManager)
+        if (scene is SceneManager sceneManager)
         {
             sceneManager.Save(save);
         }
@@ -193,7 +197,7 @@ public class MonoZeldaGame : Game, ISaveable
         SoundManager.ClearSoundDictionary();
         HUDMapWidget.Reset();
 
-        var loadDungeon = new SceneManager(save.RoomName, GraphicsDevice, commandManager);
+        var loadDungeon = new SceneManager(gameMode, save.RoomName, GraphicsDevice, commandManager);
         loadDungeon.Load(save);
 
         LoadScene(loadDungeon);

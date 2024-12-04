@@ -8,7 +8,7 @@ namespace MonoZelda.Dungeons
     [Serializable]
     public class DoorSpawn : RoomContent<Dungeon1Sprite>
     {
-        public string Destination { get; }
+        public string Destination { get; set; }
         public Rectangle Bounds { get; set; }
         public DoorDirection Direction { get; set; }
 
