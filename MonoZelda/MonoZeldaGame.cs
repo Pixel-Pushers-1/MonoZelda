@@ -161,7 +161,7 @@ public class MonoZeldaGame : Game, ISaveable
         if (scene is MainMenuScene)
         {
             SoundManager.StopSound("LOZ_Intro");
-            LoadDungeon("RoomTest");
+            LoadDungeon("Room1");
         }
     }
 
