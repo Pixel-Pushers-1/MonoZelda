@@ -11,6 +11,7 @@ namespace MonoZelda.Scenes
 {
     internal class InventoryScene : Scene
     {
+        // constants
         private static readonly Point HUDBackgroundPosition = new(0, -32);
         private static readonly Point HUDMapPosition = new(64, 80);
         private static readonly Point LifePosition = new(720, 128);
@@ -19,10 +20,10 @@ namespace MonoZelda.Scenes
         private static readonly Point InventoryMapPosition = new(528, -288);
         private static readonly Point InventoryPosition = new(516, -514);
         private static readonly Point XpBarPosition = new(712, 44);
-
         private const int INVENTORY_OPEN_Y = 704;
         private const int INVENTORY_OPEN_SPEED = 16;
 
+        // fields
         public Screen Screen { get; set; }
         public Dictionary<Type, IScreenWidget> Widgets { get; set; }
         private SpriteFont _spriteFont;
@@ -42,7 +43,7 @@ namespace MonoZelda.Scenes
         {
         }
 
-        public void LoadContent(ContentManager contentManager)
+        public override void LoadContent(ContentManager contentManager)
         {
             _spriteFont ??= contentManager.Load<SpriteFont>("Fonts/Basic");
 
@@ -63,7 +64,7 @@ namespace MonoZelda.Scenes
             LoadContent(cm);
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             foreach (var widget in Widgets.Values)
             {
@@ -84,7 +85,7 @@ namespace MonoZelda.Scenes
             MonoZeldaGame.Shader.SetMenuPosition(Screen.Origin.Y + 176);
         }
 
-        public void Draw(SpriteBatch sb)
+        public override void Draw(SpriteBatch sb)
         {
             foreach (var widget in Widgets.Values)
             {
@@ -92,7 +93,7 @@ namespace MonoZelda.Scenes
             }
         }
 
-        public void UnloadContent()
+        public override void UnloadContent()
         {
         }
 

@@ -19,6 +19,7 @@
     <None Remove="Collision\Collidables\PlayerProjectileCollidable.cs~RFf93dd20.TMP" />
     <None Remove="Commands\GameCommands\LinkDeathAnimationCommand.cs~RF33a921e9.TMP" />
     <None Remove="Commands\GameCommands\PlayerCycleEquippableCommand.cs~RF1a972e8c.TMP" />
+    <None Remove="Dungeons\ProceduralGenration\RoomEnemyGenerator.cs~RF19611377.TMP" />
     <None Remove="Dungeons\ProceduralGenration\RoomGenerator.cs~RFf4eded5.TMP" />
     <None Remove="Enemies\EnemyClasses\Wallmaster.cs~RF5adf002.TMP" />
     <None Remove="Dungeons\Parser\Data\DoorSpawn.cs~RF32b91219.TMP" />

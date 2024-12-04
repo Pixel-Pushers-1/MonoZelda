@@ -78,13 +78,16 @@ public class Fire : IProjectile
     public void Setup(params object[] args)
     {
         // add light for fire
-        lights = (List<ILight>)args[0];
-        fireLight = new ProjectileLight(this);
-        lights.Add(fireLight);
+        if(MonoZeldaGame.GameMode == GameType.Classic)
+        {
+            lights = (List<ILight>)args[0];
+            fireLight = new ProjectileLight(this);
+            lights.Add(fireLight);
+            fireLight.Position = projectilePosition.ToPoint();
+        }
 
         // other collision, sprite dict setup
         projectilePosition = initialPosition;
-        fireLight.Position = projectilePosition.ToPoint();
         SoundManager.PlaySound("LOZ_Candle", false);
         projectileDict = new SpriteDict(SpriteType.Projectiles, SpriteLayer.Projectiles, initialPosition.ToPoint());
         projectileDict.SetSprite("fire");
@@ -102,7 +105,7 @@ public class Fire : IProjectile
         else
         {
             finished = true;
-            lights.Remove(fireLight);
+            if (MonoZeldaGame.GameMode == GameType.Classic) { lights.Remove(fireLight); }
             projectileCollidable.UnregisterHitbox();
             projectileDict.Unregister();
             collisionController.RemoveCollidable(projectileCollidable);

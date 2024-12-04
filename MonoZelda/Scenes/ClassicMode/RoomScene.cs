@@ -16,14 +16,16 @@ using System.Linq;
 using MonoZelda.Trigger;
 using MonoZelda.Sound;
 using MonoZelda.Tiles.Doors;
-using MonoZelda.Dungeons.Dungeon1;
 using MonoZelda.Shaders;
-using System.Runtime.CompilerServices;
 
 namespace MonoZelda.Scenes;
 
 public class RoomScene : Scene
 {
+    // constants
+    private const int DEFAULT_ENEMY_lEVEL = 1;
+
+    // variables
     private GraphicsDevice graphicsDevice;
     private CommandManager commandManager;
     private PlayerSpriteManager playerSprite;
@@ -39,8 +41,7 @@ public class RoomScene : Scene
     private IDungeonRoom room;
     private string roomName;
     private List<ILight> lights = new();
-    private ILight playerLight;
-    
+    private ILight playerLight; 
     private List<IGameUpdate> updateables = new();
     private List<IDisposable> disposables = new();
 
@@ -182,6 +183,7 @@ public class RoomScene : Scene
 
     protected void SpawnEnemies()
     {
+        MonoZeldaGame.EnemyLevel = DEFAULT_ENEMY_lEVEL;
         enemyFactory = new EnemyFactory(collisionController);
         foreach(var enemySpawn in room.GetEnemySpawns())
         {
