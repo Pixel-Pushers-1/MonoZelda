@@ -18,7 +18,7 @@ public static class PlayerState
     private static readonly int INITIAL_RUPEES = 3;
     private static readonly int INITIAL_BOMBS = 0;
     private static readonly int INITIAL_KEYS = 0;
-    private static int _health = INITIAL_HP;
+    private static float _health = INITIAL_HP;
 
     //RPG
     private static readonly int INITIAL_LEVEL = 1;
@@ -61,8 +61,8 @@ public static class PlayerState
         get => _health;
         set
         {
-            _health = (int)value;
-            if (_health <= 0)
+            _health = value;
+            if (_health < 1)
                 IsDead = true;
         }
     }

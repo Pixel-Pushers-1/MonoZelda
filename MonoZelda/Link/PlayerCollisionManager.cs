@@ -47,7 +47,7 @@ public class PlayerCollisionManager
     {
         UpdateBoundingBox();
 
-        if(PlayerState.Health <= 0)
+        if(PlayerState.IsDead)
         {
             player.DisablePlayerSprite();
             linkDeathAnimationCommand.Execute();

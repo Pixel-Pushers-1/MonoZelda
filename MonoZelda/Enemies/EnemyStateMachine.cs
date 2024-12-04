@@ -178,6 +178,7 @@ namespace MonoZelda.Enemies
                     if (GameMode == GameType.Infinite)
                     {
                         itemFactory.CreateItem(new ItemSpawn(new Point(position.X, position.Y), xp), true);
+                        itemFactory.CreateItem(new ItemSpawn(new Point(position.X, position.Y), xp), true);
                     }
                 }
             }
