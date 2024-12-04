@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoZelda.Dungeons.Parser.Data;
 using MonoZelda.Enemies;
 using System;
 using System.Text.RegularExpressions;
@@ -24,7 +25,9 @@ namespace MonoZelda.Dungeons.Parser
             if (!Enum.TryParse(cell, out EnemyList enemy)) return;
 
             var enemySpawn = new EnemySpawn(position, enemy, hasKey);
+            var nonColliderSpawn = new NonColliderSpawn(position);
             room.AddEnemySpawn(enemySpawn);
+            room.AddNonColliderSpawn(nonColliderSpawn);
         }
     }
 }

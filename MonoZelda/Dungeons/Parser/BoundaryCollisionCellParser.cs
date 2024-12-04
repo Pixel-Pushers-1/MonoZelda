@@ -10,7 +10,7 @@ namespace MonoZelda.Dungeons.Parser
 {
     internal class BoundaryCollisionCellParser : ICellParser
     {
-        public new void Parse(string cell, Point position, DungeonRoom room)
+        public void Parse(string cell, Point position, DungeonRoom room)
         {
             if (Enum.TryParse(cell, out CollisionTileRect collisionRect))
             {

@@ -24,6 +24,11 @@ namespace MonoZelda.Scenes
         {
 
         }
+
+        public virtual void SetPaused(bool paused) 
+        { 
+
+        }
         
         public virtual void UnloadContent()
         {

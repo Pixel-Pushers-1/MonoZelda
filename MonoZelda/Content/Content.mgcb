@@ -74,6 +74,12 @@
 /processorParam:Quality=Best
 /build:Sound/LOZ_Boss_Scream3.wav
 
+#begin Sound/LOZ_Campfire.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/LOZ_Campfire.wav
+
 #begin Sound/LOZ_Candle.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

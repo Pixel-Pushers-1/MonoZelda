@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoZelda.Dungeons.Parser.Data;
 using MonoZelda.Trigger;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace MonoZelda.Dungeons
         public List<DoorSpawn> doors { get; set; }
         public List<Rectangle> roomColliders { get; set; }
         public List<Rectangle> boundaryColliders { get; set; }
+        public List<NonColliderSpawn> nonColliderSpawns { get; set; }
         public List<ItemSpawn> itemSpawns { get; set; }
         public List<EnemySpawn> enemySpawns { get; set; }
         public List<TriggerSpawn> triggers { get; set; }
@@ -29,6 +31,7 @@ namespace MonoZelda.Dungeons
             doors = new List<DoorSpawn>();
             roomColliders = new List<Rectangle>();
             boundaryColliders = new List<Rectangle>();
+            nonColliderSpawns = new List<NonColliderSpawn>();
             itemSpawns = new List<ItemSpawn>();
             enemySpawns = new List<EnemySpawn>();
             triggers = new List<TriggerSpawn>();
@@ -47,6 +50,11 @@ namespace MonoZelda.Dungeons
         public void AddTrigger(TriggerSpawn trigger)
         {
             triggers.Add(trigger);
+        }
+
+        public void AddNonColliderSpawn(NonColliderSpawn nonColliderSpawn)
+        {
+            nonColliderSpawns.Add(nonColliderSpawn);    
         }
 
         public void AddItemSpawn(ItemSpawn itemSpawn)
@@ -92,6 +100,16 @@ namespace MonoZelda.Dungeons
         public List<ItemSpawn> GetItemSpawns()
         {
             return itemSpawns;
+        }
+
+        public List<NonColliderSpawn> GetNonColliderSpawns()
+        {
+            return nonColliderSpawns;
+        }
+
+        public void Remove(NonColliderSpawn nonColliderSpawn)
+        {
+            nonColliderSpawns.Remove(nonColliderSpawn);
         }
 
         public List<TriggerSpawn> GetTriggers()
