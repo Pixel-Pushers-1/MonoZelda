@@ -20,8 +20,7 @@ namespace MonoZelda.Controllers
             PlayerIndex = playerIndex;
             _buttonCommandDictionary = new Dictionary<(Buttons button, bool oneShot), CommandType>
             {
-                {new (Buttons.Start, true), CommandType.StartGameCommand},
-                {new (Buttons.Back, true), CommandType.ExitCommand},
+                {new (Buttons.Start, true), CommandType.NavigableGridExecuteCommand},
                 {new (Buttons.A, true), CommandType.PlayerAttackCommand},
                 {new (Buttons.B, true), CommandType.PlayerCycleEquippableCommand},
                 {new (Buttons.Y, true), CommandType.ToggleInventoryCommand},
@@ -73,7 +72,7 @@ namespace MonoZelda.Controllers
                 }
                 else if (oneShot && OneShotPressed(button))
                 {
-                        _commandManager.Execute(buttonCommandPair.Value, 1);
+                        _commandManager.Execute(buttonCommandPair.Value, button);
                         break;
                 }
             }
