@@ -78,9 +78,12 @@ public class Fire : IProjectile
     public void Setup(params object[] args)
     {
         // add light for fire
-        lights = (List<ILight>)args[0];
-        fireLight = new ProjectileLight(this);
-        lights.Add(fireLight);
+        if(MonoZeldaGame.GameMode == GameType.Classic)
+        {
+            lights = (List<ILight>)args[0];
+            fireLight = new ProjectileLight(this);
+            lights.Add(fireLight);
+        }
 
         // other collision, sprite dict setup
         projectilePosition = initialPosition;
