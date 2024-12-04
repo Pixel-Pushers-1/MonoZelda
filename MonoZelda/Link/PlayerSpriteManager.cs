@@ -30,6 +30,8 @@ public class PlayerSpriteManager
     private const float DAMAGE_IMMOBILITY_TIME = .2f;
     private const float PICKUP_TIME = 3f;
     private const float LEVELUP_FLASH_TIME = 3f;
+    private const int BLUE_LEVEL_REQUIREMENT = 2;
+    private const int RED_LEVEL_REQUIREMENT = 4;
 
     private Direction playerDirection;
     private SpriteDict playerSpriteDict;
