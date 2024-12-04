@@ -43,12 +43,9 @@ public class WoodenSwordBeam : IProjectile
 
         rotate = (projectileDirection == Direction.Left || projectileDirection == Direction.Right);
 
-        rotate = (projectileDirection == Direction.Left || projectileDirection == Direction.Right);
-
         projectilePosition += PROJECTILE_SPEED * directionVector;
         projectileCollidable.Bounds = getCollisionRectangle();
         string swordType = "woodensword"; // Default sword
-        projectileCollidable.Bounds = getCollisionRectangle();
 
         if (PlayerState.Level >= 10)
         {

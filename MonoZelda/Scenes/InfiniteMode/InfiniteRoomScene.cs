@@ -75,6 +75,8 @@ public class InfiniteRoomScene : Scene
         commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerSprite));
+        commandManager.ReplaceCommand(CommandType.QuickSaveCommand, new EmptyCommand());
+        commandManager.ReplaceCommand(CommandType.QuickLoadCommand, new EmptyCommand());
     }
 
     private void LoadPlayer()
@@ -101,9 +103,6 @@ public class InfiniteRoomScene : Scene
 
         // spawn Enemies
         SpawnEnemies();
-        
-        // create equippableManager
-        equippableManager = new EquippableManager(collisionController);
     }
 
     private void LoadRoom(ContentManager contentManager)
@@ -245,7 +244,7 @@ public class InfiniteRoomScene : Scene
         }
 
         // update player state and items
-        equippableManager.Update();
+        PlayerState.EquippableManager.Update();
         itemManager.Update();
         playerCollision.Update();
     }

@@ -81,9 +81,9 @@ public class RoomGenerator
         IDungeonRoom boundaryColliderData = roomManager.LoadRoom(BOUNDARY_COLLIDERS_ROOM_NAME);
 
         // Add static room colliders
-        foreach (var roomCollider in boundaryColliderData.GetStaticBoundaryColliders())
+        foreach (var boundaryCollider in boundaryColliderData.GetStaticBoundaryColliders())
         {
-            randomRoom.AddStaticRoomCollider(roomCollider);
+            randomRoom.AddStaticBoundaryCollider(boundaryCollider);
         }
     }
 

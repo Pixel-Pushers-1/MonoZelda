@@ -80,6 +80,8 @@ public class EnterInfiniteModeScene : Scene
         commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerSprite));
+        commandManager.ReplaceCommand(CommandType.QuickSaveCommand, new EmptyCommand());
+        commandManager.ReplaceCommand(CommandType.QuickLoadCommand, new EmptyCommand());
     }
 
     private void LoadPlayer()
@@ -98,9 +100,6 @@ public class EnterInfiniteModeScene : Scene
         itemManager = new ItemManager(GameType.Infinite, null, room.GetItemSpawns(), null, playerCollision);
         itemFactory = new ItemFactory(collisionController, itemManager);
         SpawnItems();
-
-        // create equippableManager
-        equippableManager = new EquippableManager(collisionController);
     }
 
     private void LoadRoom(ContentManager contentManager)
@@ -196,7 +195,7 @@ public class EnterInfiniteModeScene : Scene
             updateable.Update(gameTime);
         }
 
-        equippableManager.Update();
+        PlayerState.EquippableManager.Update();
         itemManager.Update();
         playerCollision.Update();
     }
