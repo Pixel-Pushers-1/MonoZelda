@@ -15,8 +15,8 @@ using System.Collections.Generic;
 using System.Linq;
 using MonoZelda.Trigger;
 using MonoZelda.Sound;
-using MonoZelda.Tiles.Doors;
 using MonoZelda.Shaders;
+using MonoZelda.Doors;
 
 namespace MonoZelda.Scenes;
 

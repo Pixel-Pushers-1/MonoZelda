@@ -14,8 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MonoZelda.Dungeons.InfiniteMode;
-using MonoZelda.Tiles.Doors;
 using MonoZelda.Sound;
+using MonoZelda.Doors;
 
 namespace MonoZelda.Scenes.InfiniteMode;
 

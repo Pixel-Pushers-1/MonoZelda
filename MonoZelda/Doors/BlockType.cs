@@ -1,4 +1,4 @@
-namespace MonoZelda.Tiles;
+namespace MonoZelda.Doors;
 
 public enum BlockType
 {
