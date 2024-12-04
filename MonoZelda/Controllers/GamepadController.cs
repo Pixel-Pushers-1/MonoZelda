@@ -20,8 +20,7 @@ namespace MonoZelda.Controllers
             PlayerIndex = playerIndex;
             _buttonCommandDictionary = new Dictionary<(Buttons button, bool oneShot), CommandType>
             {
-                {new (Buttons.Start, true), CommandType.StartGameCommand},
-                {new (Buttons.Back, true), CommandType.ExitCommand},
+                {new (Buttons.Start, true), CommandType.NavigableGridExecuteCommand},
                 {new (Buttons.A, true), CommandType.PlayerAttackCommand},
                 {new (Buttons.B, true), CommandType.PlayerCycleEquippableCommand},
                 {new (Buttons.Y, true), CommandType.ToggleInventoryCommand},
@@ -29,10 +28,14 @@ namespace MonoZelda.Controllers
                 {new (Buttons.None, false), CommandType.PlayerStandingCommand},
                 {new (Buttons.LeftShoulder, true), CommandType.QuickSaveCommand},
                 {new (Buttons.RightShoulder, true), CommandType.QuickLoadCommand},
-                {new (Buttons.DPadRight, true), CommandType.MuteCommand},
-                {new (Buttons.DPadLeft, true), CommandType.ToggleGizmosCommand},
-                {new (Buttons.DPadDown, false), CommandType.ExitCommand},
-                {new (Buttons.DPadUp, true), CommandType.ResetCommand},
+                {new (Buttons.LeftTrigger, true), CommandType.MuteCommand},
+                {new (Buttons.RightTrigger, true), CommandType.ToggleGizmosCommand},
+                {new (Buttons.RightStick, true), CommandType.ResetCommand},
+                {new (Buttons.LeftStick, true), CommandType.ExitCommand},
+                {new (Buttons.DPadRight, true), CommandType.NavigableGridMoveCommand},
+                {new (Buttons.DPadLeft, true), CommandType.NavigableGridMoveCommand},
+                {new (Buttons.DPadDown, true), CommandType.NavigableGridMoveCommand},
+                {new (Buttons.DPadUp, true), CommandType.NavigableGridMoveCommand},
             };
 
             _currentState = GamePad.GetState(PlayerIndex);
@@ -69,7 +72,7 @@ namespace MonoZelda.Controllers
                 }
                 else if (oneShot && OneShotPressed(button))
                 {
-                        _commandManager.Execute(buttonCommandPair.Value, 1);
+                        _commandManager.Execute(buttonCommandPair.Value, button);
                         break;
                 }
             }
