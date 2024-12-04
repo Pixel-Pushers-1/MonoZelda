@@ -10,11 +10,11 @@ public class RoomEnemyGenerator
     // constants
     private const int EASY_ENEMY_POOL_LENGTH = 2;
     private const int MEDIUM_ENEMY_POOL_LENGTH = 1;
-    private const int HARD_ENEMY_POOL_LENGTH = 1;
-    private const int ROOM_LEVEL_UP_COUNT = 8;
+    private const int HARD_ENEMY_POOL_LENGTH = 2;
+    private const int ROOM_LEVEL_UP_COUNT = 6;
     private static readonly EnemyList[] EasyEnemyList = { EnemyList.Keese, EnemyList.Gel };
     private static readonly EnemyList[] MediumEnemyList = { EnemyList.Stalfos};
-    private static readonly EnemyList[] HardEnemyList = { EnemyList.Goriya };
+    private static readonly EnemyList[] HardEnemyList = { EnemyList.Goriya, EnemyList.Rope };
 
     // variables
     private int easyWeight;
@@ -33,6 +33,12 @@ public class RoomEnemyGenerator
     public List<EnemyList> GenerateEnemiesForRoom(int roomNumber)
     {
         List<EnemyList> enemies = new List<EnemyList>();
+
+        // check for enemy level up
+        if (roomNumber % ROOM_LEVEL_UP_COUNT == 0)
+        {
+            LevelUpEnemies();
+        }
 
         // get initial room enemy count
         int totalEnemies = GetRoomEnemyCount(roomNumber, PlayerState.Level, PlayerState.Health);
@@ -87,28 +93,24 @@ public class RoomEnemyGenerator
 
     private void AdjustEnemyWeights(float playerHealth, float playerLevel)
     {
-        if (playerHealth <= 2)
+        if (playerHealth <= (PlayerState.MaxHealth / 2))
         {
             easyWeight += 20;
             mediumWeight -= 10;
             hardWeight = 0;
         }
-        else if (playerHealth >= 5)
+        else
         {
             mediumWeight += 10;
             hardWeight += 10;
         }
     }
 
-    private void LevelUpEnemies(int roomNumber)
+    private void LevelUpEnemies()
     {
-        if(roomNumber % ROOM_LEVEL_UP_COUNT == 0)
+        if(MonoZeldaGame.EnemyLevel <= 3)
         {
-            // Level Up enemies
-            if(MonoZeldaGame.EnemyLevel <= 3)
-            {
-                MonoZeldaGame.EnemyLevel++;
-            }
+            MonoZeldaGame.EnemyLevel++;
         }
     }
 }

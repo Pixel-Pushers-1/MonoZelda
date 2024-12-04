@@ -164,12 +164,14 @@ public class EnterInfiniteModeScene : Scene
             commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new EmptyCommand());
             commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new EmptyCommand());
             commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new EmptyCommand());
+            commandManager.ReplaceCommand(CommandType.NavigableGridMoveCommand, new NavigableGridMoveCommand(PlayerState.EquippableManager));
         }
         else
         {
             commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
             commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(playerSprite));
             commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand(playerSprite));
+            commandManager.ReplaceCommand(CommandType.NavigableGridMoveCommand, new EmptyCommand());
         }
 
         // update pauseState

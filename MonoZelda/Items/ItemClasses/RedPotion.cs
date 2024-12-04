@@ -24,7 +24,7 @@ public class RedPotion : Item
     public override void HandleCollision(CollisionController collisionController)
     {
         // Add RedPotion to inventory, remove BluePotion if present
-        PlayerState.EquippableManager.AddEquippable(EquippableType.RedPotion, true);
+        PlayerState.EquippableManager.AddEquippable(EquippableType.RedPotion, false);
 
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(collisionController);
