@@ -29,6 +29,7 @@ public class Bomb : IProjectile
     private SpriteDict[] explosionSpriteDicts;
     private CollisionController collisionController;
     private bool exploded;
+    private bool bombAte;
 
     public Vector2 ProjectilePosition
     {
@@ -57,7 +58,7 @@ public class Bomb : IProjectile
 
     public void FinishProjectile()
     {
-        finished = true;
+        bombAte = true;
     }
 
     public Rectangle getCollisionRectangle()
@@ -81,7 +82,7 @@ public class Bomb : IProjectile
 
     public void Update()
     {
-        if(finished){
+        if(bombAte){
             projectileDict.Unregister();
             projectileCollidable.UnregisterHitbox();
             collisionController.RemoveCollidable(projectileCollidable);

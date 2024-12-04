@@ -29,8 +29,10 @@ public class PlayerProjectileStaticBoundaryCollisionCommand : ICommand
             projectileCollidable = (PlayerProjectileCollidable)collidableB;
         }
 
-        projectileCollidable.HandleCollision();
-        collisionController.RemoveCollidable(projectileCollidable);
+        if(projectileCollidable.projectileType != Link.Projectiles.ProjectileType.Bomb){
+            projectileCollidable.HandleCollision();
+            collisionController.RemoveCollidable(projectileCollidable);
+        }
     }
 
     public void UnExecute()

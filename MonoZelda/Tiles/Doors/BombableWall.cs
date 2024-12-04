@@ -112,7 +112,7 @@ namespace MonoZelda.Tiles
         public bool Intersects(ICollidable other)
         {
             if (other is PlayerProjectileCollidable collidable 
-                && collidable.projectileType == ProjectileType.Bomb 
+                && collidable.projectileType == ProjectileType.BombExplosion 
                 && other.Bounds.Intersects(collider.Bounds))
             {
                 BombWall();

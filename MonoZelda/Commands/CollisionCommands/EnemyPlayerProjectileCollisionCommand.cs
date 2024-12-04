@@ -47,8 +47,6 @@ public class EnemyPlayerProjectileCollisionCommand : ICommand
             enemyCollidable = (EnemyCollidable)collidableA;
         }
 
-        projectileCollidable.HandleCollision();
-
         Enemy enemy = enemyCollidable.getEnemy();
 
         if (projectileCollidable.projectileType == ProjectileType.Boomerang ||
@@ -70,9 +68,10 @@ public class EnemyPlayerProjectileCollisionCommand : ICommand
             collisionController.RemoveCollidable(projectileCollidable);
         }
 
-        if(enemyCollidable.enemyType != EnemyList.DodongoMouth){
+        if(enemyCollidable.enemyType != EnemyList.DodongoMouth && projectileCollidable.projectileType != ProjectileType.Bomb){
             enemy.TakeDamage(stunTime, collisionDirection, damage);
             collisionController.RemoveCollidable(projectileCollidable);
+            projectileCollidable.HandleCollision();
         }
     }
 
