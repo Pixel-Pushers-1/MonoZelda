@@ -37,6 +37,8 @@ public enum CommandType
     ToggleInventoryCommand,
     PlayerProjectileDoorCollisionCommand,
     PlayerDeathCommand,
+    NavigableGridMoveCommand,
+    NavigableGridExecuteCommand,
     QuickSaveCommand,
     QuickLoadCommand,
     None,
@@ -52,7 +54,6 @@ public class CommandManager
         AddCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand());
         AddCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());
         AddCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand());
-        AddCommand(CommandType.PlayerCycleEquippableCommand, new PlayerCycleEquippableCommand());
         AddCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
         AddCommand(CommandType.ResetCommand, new ResetCommand());
         AddCommand(CommandType.StartGameCommand, new StartGameCommand());
@@ -76,6 +77,8 @@ public class CommandManager
         AddCommand(CommandType.ToggleGizmosCommand, new ToggleGizmosCommand());
         AddCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand());
         AddCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand());
+        AddCommand(CommandType.NavigableGridMoveCommand, new NavigableGridMoveCommand());
+        AddCommand(CommandType.NavigableGridExecuteCommand, new NavigableGridExecuteCommand());
         AddCommand(CommandType.QuickSaveCommand, new QuickSaveCommand());
         AddCommand(CommandType.QuickLoadCommand, new QuickLoadCommand());
     }

@@ -11,10 +11,10 @@ namespace MonoZelda.Scenes
 {
     internal class InventoryScene : Scene
     {
-        private static readonly Point HUDBackgroundPosition = new (0, -32);
-        private static readonly Point HUDMapPosition = new (64, 80);
-        private static readonly Point LifePosition = new (720, 128);
-        private static readonly Point ItemCountPosition = new (416, 64);
+        private static readonly Point HUDBackgroundPosition = new(0, -32);
+        private static readonly Point HUDMapPosition = new(64, 80);
+        private static readonly Point LifePosition = new(720, 128);
+        private static readonly Point ItemCountPosition = new(416, 64);
         private static readonly Point LevelTextPosition = new(10, 10);
         private static readonly Point InventoryMapPosition = new(528, -288);
         private static readonly Point InventoryPosition = new(516, -514);
@@ -24,7 +24,7 @@ namespace MonoZelda.Scenes
         private const int INVENTORY_OPEN_SPEED = 16;
 
         public Screen Screen { get; set; }
-        public Dictionary<Type,IScreenWidget> Widgets { get; set; }
+        public Dictionary<Type, IScreenWidget> Widgets { get; set; }
         private SpriteFont _spriteFont;
         private GraphicsDevice graphicsDevice;
         private bool isInventoryOpen = false;
@@ -34,6 +34,7 @@ namespace MonoZelda.Scenes
             // The Inventory starts mostly off-screen
             Screen = new Screen() { Origin = new Point(0, 0) }; // Screen is helpfull for moving all the widgets at once
             Widgets = new Dictionary<Type, IScreenWidget>();
+
             graphicsDevice = gd;
         }
 
@@ -64,11 +65,11 @@ namespace MonoZelda.Scenes
 
         public void Update(GameTime gameTime)
         {
-            foreach(var widget in Widgets.Values)
+            foreach (var widget in Widgets.Values)
             {
                 widget.Update();
             }
-            
+
             if (isInventoryOpen && Screen.Origin.Y <= INVENTORY_OPEN_Y)
             {
                 Screen.Origin = new Point(0, Math.Min(Screen.Origin.Y + INVENTORY_OPEN_SPEED, INVENTORY_OPEN_Y));
@@ -77,6 +78,10 @@ namespace MonoZelda.Scenes
             {
                 Screen.Origin = new Point(0, Math.Max(Screen.Origin.Y - INVENTORY_OPEN_SPEED, 0));
             }
+
+            // Need to keep the shader updated on the menu position
+
+            MonoZeldaGame.Shader.SetMenuPosition(Screen.Origin.Y + 176);
         }
 
         public void Draw(SpriteBatch sb)
@@ -97,9 +102,10 @@ namespace MonoZelda.Scenes
             return isInventoryOpen;
         }
 
-        public void SetPlayerMapMarker(Point? coord) {
-            ((HUDMapWidget) Widgets[typeof(HUDMapWidget)]).SetPlayerMapMarker(coord);
-            ((InventoryMapWidget) Widgets[typeof(InventoryMapWidget)]).SetPlayerMapMarker(coord);
+        public void SetPlayerMapMarker(Point? coord)
+        {
+            ((HUDMapWidget)Widgets[typeof(HUDMapWidget)]).SetPlayerMapMarker(coord);
+            ((InventoryMapWidget)Widgets[typeof(InventoryMapWidget)]).SetPlayerMapMarker(coord);
         }
     }
 }

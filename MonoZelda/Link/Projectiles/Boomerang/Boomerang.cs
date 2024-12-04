@@ -21,6 +21,12 @@ public class Boomerang : IProjectile
     private SpriteDict projectileDict;
     private TrackReturn tracker;
 
+    public Vector2 ProjectilePosition
+    {
+        get { return projectilePosition; }
+        set { projectilePosition = value; }
+    }
+
     public Boomerang(Vector2 spawnPosition, CollisionController collisionController)
     {
         finished = false;
@@ -75,7 +81,7 @@ public class Boomerang : IProjectile
         return new Rectangle(spawnPosition.X - 32 / 2, spawnPosition.Y - 32 / 2, 32, 32);
     }
 
-    public void Setup()
+    public void Setup(params object[] args)
     {
         projectilePosition = initialPosition;
         SoundManager.PlaySound("LOZ_Arrow_Boomerang", false);

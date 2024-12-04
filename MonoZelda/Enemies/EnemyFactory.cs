@@ -19,7 +19,7 @@ namespace MonoZelda.Enemies
 
         public Enemy CreateEnemy(EnemyList enemyName, Point spawnPosition, ItemFactory itemFactory, EnemyFactory enemyFactory,bool hasKey)
         {
-            var enemyDict = new SpriteDict(SpriteType.Enemies, SpriteLayer.Player + 1, new Point(0, 0));
+            var enemyDict = new SpriteDict(SpriteType.Enemies, SpriteLayer.Enemies, new Point(0, 0));
             var enemyType = Type.GetType($"MonoZelda.Enemies.EnemyClasses.{enemyName}");
             Enemy enemy = (Enemy)Activator.CreateInstance(enemyType);
             if(enemyType == typeof(Gel) && hasKey){

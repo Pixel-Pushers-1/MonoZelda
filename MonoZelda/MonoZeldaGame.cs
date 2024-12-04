@@ -10,6 +10,8 @@ using MonoZelda.Link;
 using MonoZelda.UI;
 using MonoZelda.Save;
 using Microsoft.Xna.Framework.Input;
+using System;
+using MonoZelda.Shaders;
 
 namespace MonoZelda;
 
@@ -22,11 +24,15 @@ public enum GameState
     None
 }
 
-public enum GameType
-{
-    classic,
-    infinite
+public enum GameType {
+    Classic,
+    Infinite,
 }
+
+public class MonoZeldaGame : Game, ISaveable
+{
+    public static GameTime GameTime { get; private set; }
+    internal static CustomShader Shader { get; private set; }
 
 public class MonoZeldaGame : Game, ISaveable
 {
@@ -69,7 +75,11 @@ public class MonoZeldaGame : Game, ISaveable
         commandManager.ReplaceCommand(CommandType.ExitCommand, new ExitCommand(this));
         commandManager.ReplaceCommand(CommandType.StartGameCommand, new StartGameCommand(this));
         commandManager.ReplaceCommand(CommandType.ResetCommand, new ResetCommand(this));
-        commandManager.ReplaceCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand(this));    
+        commandManager.ReplaceCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand(this));
+
+
+        commandManager.ReplaceCommand(CommandType.QuickSaveCommand, new QuickSaveCommand(saveManager));
+        commandManager.ReplaceCommand(CommandType.QuickLoadCommand, new QuickLoadCommand(saveManager));
     }
 
     protected override void Initialize()
@@ -87,6 +97,8 @@ public class MonoZeldaGame : Game, ISaveable
         spriteBatch = new SpriteBatch(GraphicsDevice);
 
         TextureData.LoadTextures(Content, GraphicsDevice);
+        Shader = new CustomShader(GraphicsDevice);
+        Shader.LoadShader(Content);        
 
         // Start menu goes first
         StartMenu();
@@ -119,7 +131,8 @@ public class MonoZeldaGame : Game, ISaveable
 
         SamplerState samplerState = new();
         samplerState.Filter = TextureFilter.Point;
-        spriteBatch.Begin(SpriteSortMode.Deferred, null, samplerState);
+
+        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, samplerState, null, null, Shader.Effect);
 
         // SpriteDrawer draws all drawables
         SpriteDrawer.Draw(spriteBatch, gameTime);
@@ -134,13 +147,14 @@ public class MonoZeldaGame : Game, ISaveable
     {
         // Clean state to start a new scene
         SpriteDrawer.Reset();
+        Shader.Reset();
         this.scene = scene;
         scene.LoadContent(Content);
     }
 
     public void StartMenu()
     {
-        LoadScene(new MainMenuScene(GraphicsDevice));
+        LoadScene(new MainMenuScene(commandManager));
     }
 
     public void StartDungeon()
@@ -163,8 +177,9 @@ public class MonoZeldaGame : Game, ISaveable
         SoundManager.ClearSoundDictionary();
         HUDMapWidget.Reset();
         InventoryMapWidget.Reset();
+        LoadScene(new MainMenuScene(commandManager));
         PlayerState.Initialize();
-        LoadScene(new MainMenuScene(GraphicsDevice));
+        LoadScene(new MainMenuScene(commandManager));
     }
 
     public void Save(SaveState save)

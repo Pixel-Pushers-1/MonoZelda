@@ -29,7 +29,7 @@ public class Bow : Item
     public override void HandleCollision(CollisionController collisionController)
     {
         // update playerSprite and itemUpdateList
-        PlayerState.EquippableInventory.Add(EquippableType.Bow);
+        PlayerState.EquippableManager.AddEquippable(EquippableType.Bow, false);
         playerCollision.HandleBowCollision(itemDict);
         itemManager.AddUpdateItem(this);
         timer = PICKUP_TIME;

@@ -20,8 +20,6 @@ public class BluePotionEquippable : IEquippable
         PlayerState.Health = PlayerState.MaxHealth;
 
         // Update PlayerState and CyclingIndex
-        PlayerState.EquippableInventory.Remove(EquippableType.BluePotion);
-        PlayerState.EquippedItem = EquippableType.None;
-        equippableManager.CyclingIndex = 0;
+        equippableManager.RemoveEquippable(EquippableType.BluePotion);
     }
 }

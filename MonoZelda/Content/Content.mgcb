@@ -20,6 +20,12 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/Basic.spritefont
 
+#begin Shaders/LitSprite.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/LitSprite.fx
+
 #begin Sound/LOZ_Arrow_Boomerang.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

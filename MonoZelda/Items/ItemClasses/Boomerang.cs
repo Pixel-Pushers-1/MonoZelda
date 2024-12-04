@@ -22,7 +22,7 @@ public class Boomerang : Item
 
     public override void HandleCollision(CollisionController collisionController)
     {
-        PlayerState.EquippableInventory.Add(EquippableType.Boomerang);
+        PlayerState.EquippableManager.AddEquippable(EquippableType.Boomerang, false);
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(collisionController);
     }
