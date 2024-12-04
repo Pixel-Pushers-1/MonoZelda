@@ -31,11 +31,6 @@ public enum GameType {
 
 public class MonoZeldaGame : Game, ISaveable
 {
-    public static GameTime GameTime { get; private set; }
-    internal static CustomShader Shader { get; private set; }
-
-public class MonoZeldaGame : Game, ISaveable
-{
     private GraphicsDeviceManager graphicsDeviceManager;
     private SpriteBatch spriteBatch;
     private IController controller;
@@ -51,6 +46,8 @@ public class MonoZeldaGame : Game, ISaveable
     }
 
     public static GameTime GameTime { get; private set; }
+
+    internal static CustomShader Shader { get; private set; }
 
     public static int EnemyLevel { get; set; }
 
@@ -157,13 +154,20 @@ public class MonoZeldaGame : Game, ISaveable
         LoadScene(new MainMenuScene(commandManager));
     }
 
-    public void StartDungeon()
+    public void StartDungeon(GameType gameType)
     {
         // Preventing the StartCommand from activating when it shouldn't. -js
         if (scene is MainMenuScene)
         {
             SoundManager.StopSound("LOZ_Intro");
-            LoadDungeon("RoomInfinite", GameType.infinite);
+            if (gameType == GameType.Classic)
+            {
+                LoadDungeon("Room1", GameType.Classic);
+            }
+            else
+            {
+                LoadDungeon("RoomInfinite", GameType.Infinite);
+            }
         }
     }
 

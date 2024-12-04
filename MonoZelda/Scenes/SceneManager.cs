@@ -32,8 +32,6 @@ namespace MonoZelda.Scenes
         private EquippableManager equippableManager;
         private SaveManager saveManager;
         private Effect effect;
-        
-        private IScene activeScene;
 
         private RoomGenerator roomGenerator;
         
@@ -133,7 +131,7 @@ namespace MonoZelda.Scenes
 
             // We begin by revealing the the first room depending on game mode selected
             currentRoom = roomManager.LoadRoom(StartRoom);
-            if(gameMode == GameType.classic)
+            if(gameMode == GameType.Classic)
             {
                 EnterDungeonScene(currentRoom);
 

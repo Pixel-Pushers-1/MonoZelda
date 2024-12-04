@@ -90,7 +90,7 @@ public class LinkDeathScene : Scene
         if (displayString == true)
         {
             batch.DrawString(spriteFont, GAME_OVER_STRING, Center.ToVector2(), Color.White);
-            if (gameMode == GameType.infiniteEasy)
+            if (gameMode == GameType.Infinite)
             {
                 Vector2 roomCleared = Center.ToVector2() + new Vector2(-56, 32);
                 batch.DrawString(spriteFont, ROOMS_CLEARED_STRING + (roomNumber - 1), roomCleared, Color.White);

@@ -54,7 +54,7 @@ public class Bow : Item
             itemDict.Unregister();
             itemManager.RemoveUpdateItem(this);
 
-            if(itemManager.GameMode == GameType.classic)
+            if(itemManager.GameMode == GameType.Classic)
             {
                 SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
             }

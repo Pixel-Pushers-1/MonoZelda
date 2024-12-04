@@ -33,7 +33,7 @@ public class RoomGenerator
         IDungeonRoom dungeonRoomData = roomManager.LoadRoom(dungeonRoomString);
 
         // create RandomRoom
-        var randomRoom = new DungeonRoom(ROOM_NAME, dungeonRoomData.RoomSprite);
+        var randomRoom = new DungeonRoom(ROOM_NAME,dungeonRoomData.RoomSprite,true);
         roomManager.AddRandomRoom(ROOM_NAME, randomRoom);
 
         // create doors for the room

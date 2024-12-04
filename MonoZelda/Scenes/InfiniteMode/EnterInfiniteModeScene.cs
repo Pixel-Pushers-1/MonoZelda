@@ -76,9 +76,8 @@ public class EnterInfiniteModeScene : Scene
     {
         // replace required commands
         commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(equippableManager, playerSprite));
-        commandManager.ReplaceCommand(CommandType.PlayerCycleEquippableCommand, new PlayerCycleEquippableCommand(equippableManager));
-        commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand(equippableManager, playerSprite));
+        commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(playerSprite));
+        commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand(playerSprite));
         commandManager.ReplaceCommand(CommandType.PlayerTakeDamageCommand, new PlayerTakeDamageCommand(playerSprite));
     }
@@ -96,7 +95,7 @@ public class EnterInfiniteModeScene : Scene
         playerCollision = new PlayerCollisionManager(playerSprite, playerHitbox, collisionController, null, null);
 
         // create itemFactory and spawn Items
-        itemManager = new ItemManager(GameType.infiniteEasy, null, room.GetItemSpawns(), null, playerCollision);
+        itemManager = new ItemManager(GameType.Infinite, null, room.GetItemSpawns(), null, playerCollision);
         itemFactory = new ItemFactory(collisionController, itemManager);
         SpawnItems();
 
@@ -170,16 +169,13 @@ public class EnterInfiniteModeScene : Scene
         else
         {
             commandManager.ReplaceCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand(playerSprite));
-            commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(equippableManager, playerSprite));
-            commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand(equippableManager, playerSprite));
+            commandManager.ReplaceCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand(playerSprite));
+            commandManager.ReplaceCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand(playerSprite));
         }
 
         // update pauseState
         inventoryToggleTimer = INVENTORY_TOGGLE_TIME;
         pauseState = paused;
-
-        // allow cycling of items since game is paused
-        equippableManager.IsPaused = paused;
     }
 
     public override void Draw(SpriteBatch batch)

@@ -19,8 +19,8 @@ public class StartGameCommand : ICommand
     public void Execute(params object[] metadata)
     {
         GameType gameType = (GameType) metadata[0];
-        Debug.WriteLine($"start {gameType}");
-        game?.StartDungeon();
+ 
+        game?.StartDungeon(gameType);
     }
 
     public void UnExecute()

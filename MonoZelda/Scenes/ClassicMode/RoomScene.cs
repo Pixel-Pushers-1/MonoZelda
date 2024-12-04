@@ -90,7 +90,7 @@ public class RoomScene : Scene
 
         // create itemFactory and spawn Items
         var levelCompleteAnimationCommand = commandManager.GetCommand(CommandType.LevelCompleteAnimationCommand);
-        itemManager = new ItemManager(GameType.infiniteEasy, levelCompleteAnimationCommand, room.GetItemSpawns(), enemies, playerCollision);
+        itemManager = new ItemManager(GameType.Infinite, levelCompleteAnimationCommand, room.GetItemSpawns(), enemies, playerCollision);
         itemFactory = new ItemFactory(collisionController, itemManager);
         SpawnItems();
 
