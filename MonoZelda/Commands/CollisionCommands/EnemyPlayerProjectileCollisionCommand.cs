@@ -2,6 +2,7 @@
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Enemies;
+using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Link;
 using MonoZelda.Link.Projectiles;
 
@@ -46,7 +47,7 @@ public class EnemyPlayerProjectileCollisionCommand : ICommand
             enemyCollidable = (EnemyCollidable)collidableA;
         }
 
-        projectileCollidable.HandleCollision();
+        Enemy enemy = enemyCollidable.getEnemy();
 
         if (projectileCollidable.projectileType == ProjectileType.Boomerang ||
             projectileCollidable.projectileType == ProjectileType.BoomerangBlue)
@@ -55,14 +56,23 @@ public class EnemyPlayerProjectileCollisionCommand : ICommand
             damage = 0;
         }
 
-        if (projectileCollidable.projectileType == ProjectileType.Bomb)
+
+        if (projectileCollidable.projectileType == ProjectileType.BombExplosion)
         {
             damage = 2;
         }
 
-        collisionController.RemoveCollidable(projectileCollidable);
-        Enemy enemy = enemyCollidable.getEnemy();
-        enemy.TakeDamage(stunTime, collisionDirection, damage);
+        if(enemyCollidable.enemyType == EnemyList.DodongoMouth && projectileCollidable.projectileType == ProjectileType.Bomb){
+            enemy.TakeDamage(2, collisionDirection, 2);
+            projectileCollidable.Projectile.FinishProjectile();
+            collisionController.RemoveCollidable(projectileCollidable);
+        }
+
+        if(enemyCollidable.enemyType != EnemyList.DodongoMouth && projectileCollidable.projectileType != ProjectileType.Bomb){
+            enemy.TakeDamage(stunTime, collisionDirection, damage);
+            collisionController.RemoveCollidable(projectileCollidable);
+            projectileCollidable.HandleCollision();
+        }
     }
 
     public void UnExecute()

@@ -7,6 +7,7 @@ public enum ProjectileType
     Boomerang,
     BoomerangBlue,
     Bomb,
+    BombExplosion,
     Fire,
     WoodenSwordBeam,
     WoodenSword,

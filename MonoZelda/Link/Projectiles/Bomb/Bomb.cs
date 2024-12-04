@@ -29,6 +29,7 @@ public class Bomb : IProjectile
     private SpriteDict[] explosionSpriteDicts;
     private CollisionController collisionController;
     private bool exploded;
+    private bool bombAte;
 
     public Vector2 ProjectilePosition
     {
@@ -57,7 +58,7 @@ public class Bomb : IProjectile
 
     public void FinishProjectile()
     {
-        // Empty
+        bombAte = true;
     }
 
     public Rectangle getCollisionRectangle()
@@ -71,16 +72,27 @@ public class Bomb : IProjectile
         projectilePosition = initialPosition;
         SoundManager.PlaySound("LOZ_Bomb_Drop", false);
         projectileDict = new SpriteDict(SpriteType.Projectiles, SpriteLayer.Projectiles, initialPosition.ToPoint());
+        Point spawnPosition = projectilePosition.ToPoint();
+        projectileCollidable = new PlayerProjectileCollidable(new Rectangle(spawnPosition.X - 64 / 2, spawnPosition.Y - 64 / 2, 64, 64), ProjectileType.Bomb);
+        projectileCollidable.setProjectile(this);
+        collisionController.AddCollidable(projectileCollidable);
         projectileDict.SetSprite("bomb");
+
     }
 
     public void Update()
     {
+        if(bombAte){
+            projectileDict.Unregister();
+            projectileCollidable.UnregisterHitbox();
+            collisionController.RemoveCollidable(projectileCollidable);
+        }
         if (explosionTimer <= 0f && !exploded)
         {
+            projectileCollidable.UnregisterHitbox();
+            collisionController.RemoveCollidable(projectileCollidable);
             Explode();
         }
-
         if(animationTimer <= 0f && exploded)
         {
             finished = true;
@@ -103,7 +115,7 @@ public class Bomb : IProjectile
 
     private void Explode() {
         exploded = true;
-        projectileCollidable = new PlayerProjectileCollidable(getCollisionRectangle(), ProjectileType.Bomb);
+        projectileCollidable = new PlayerProjectileCollidable(getCollisionRectangle(), ProjectileType.BombExplosion);
         projectileCollidable.setProjectile(this);
         collisionController.AddCollidable(projectileCollidable);
         SoundManager.PlaySound("LOZ_Bomb_Blow", false);
