@@ -73,7 +73,7 @@ public class LinkDeathScene : Scene
 
         // create FakeLink and border
         FakeLink = new SpriteDict(SpriteType.Player, SpriteLayer.HUD, PlayerState.Position);
-        FakeLink.SetSprite($"standing_{DirectionStringMap[FakeLinkDirection]}");
+        FakeLink.SetSprite($"standing_{DirectionStringMap[FakeLinkDirection]}_{PlayerSpriteManager.GetLinkColor()}");
 
         // create black and red backgrounds
         RedBackground = new BlankSprite(SpriteLayer.HUD - 1, DungeonConstants.DungeonPosition, new Point(graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), new Color(Color.Red, 0.6f));
@@ -108,7 +108,7 @@ public class LinkDeathScene : Scene
             if (directionChangeTimer > DIRECTION_CHANGE_TIME)
             {
                 FakeLinkDirection = ChangeDirectionMap[FakeLinkDirection];
-                FakeLink.SetSprite($"standing_{DirectionStringMap[FakeLinkDirection]}");
+                FakeLink.SetSprite($"standing_{DirectionStringMap[FakeLinkDirection]}_{PlayerSpriteManager.GetLinkColor()}");
                 directionChangeTimer = 0;
             }
         }
