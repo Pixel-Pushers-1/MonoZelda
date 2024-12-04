@@ -11,7 +11,7 @@ public class RoomEnemyGenerator
     private const int EASY_ENEMY_POOL_LENGTH = 2;
     private const int MEDIUM_ENEMY_POOL_LENGTH = 1;
     private const int HARD_ENEMY_POOL_LENGTH = 1;
-    private const int ROOM_LEVEL_UP_COUNT = 5;
+    private const int ROOM_LEVEL_UP_COUNT = 8;
     private static readonly EnemyList[] EasyEnemyList = { EnemyList.Keese, EnemyList.Gel };
     private static readonly EnemyList[] MediumEnemyList = { EnemyList.Stalfos};
     private static readonly EnemyList[] HardEnemyList = { EnemyList.Goriya };
@@ -30,15 +30,15 @@ public class RoomEnemyGenerator
         random = new Random();
     }
 
-    public List<EnemyList> GenerateEnemiesForRoom(int roomNumber, int playerLevel, int playerHealth)
+    public List<EnemyList> GenerateEnemiesForRoom(int roomNumber)
     {
         List<EnemyList> enemies = new List<EnemyList>();
 
         // get initial room enemy count
-        int totalEnemies = GetRoomEnemyCount(roomNumber, playerLevel, playerHealth);
+        int totalEnemies = GetRoomEnemyCount(roomNumber, PlayerState.Level, PlayerState.Health);
 
         // Adjust weights based on health and calculate total enemy weight
-        AdjustEnemyWeights(playerHealth, playerLevel);
+        AdjustEnemyWeights(PlayerState.Health, PlayerState.Level);
         int totalWeight = easyWeight + mediumWeight + hardWeight;
 
         // Generate enemies
@@ -66,7 +66,7 @@ public class RoomEnemyGenerator
         return enemies;
     }
 
-    private int GetRoomEnemyCount(int roomNumber, int playerLevel, int playerHealth)
+    private int GetRoomEnemyCount(int roomNumber, int playerLevel, float playerHealth)
     {
         // initial count for each is three
         int baseEnemyCount = 3;
@@ -85,7 +85,7 @@ public class RoomEnemyGenerator
         return totalEnemies;
     }
 
-    private void AdjustEnemyWeights(int playerHealth, int playerLevel)
+    private void AdjustEnemyWeights(float playerHealth, float playerLevel)
     {
         if (playerHealth <= 2)
         {
@@ -105,6 +105,10 @@ public class RoomEnemyGenerator
         if(roomNumber % ROOM_LEVEL_UP_COUNT == 0)
         {
             // Level Up enemies
+            if(MonoZeldaGame.EnemyLevel <= 3)
+            {
+                MonoZeldaGame.EnemyLevel++;
+            }
         }
     }
 }

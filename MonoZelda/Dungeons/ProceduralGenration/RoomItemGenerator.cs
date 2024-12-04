@@ -31,12 +31,12 @@ public class RoomItemGenerator
         random = new Random();
     }
 
-    public List<ItemList> GenerateItemsForRoom(int roomNumber, int playerLevel, int playerHealth)
+    public List<ItemList> GenerateItemsForRoom(int roomNumber)
     {
         List<ItemList> items = new List<ItemList>();
 
         // adjust health item spawn rate based on player health, roomNumber, and player level
-        AdjustSpawnRates(roomNumber, playerLevel, playerHealth);
+        AdjustSpawnRates(roomNumber, PlayerState.Health, PlayerState.Level);
 
         // add Utility items
         AddUtilityItems(items);
@@ -50,7 +50,7 @@ public class RoomItemGenerator
         return items;
     }
 
-    private void AdjustSpawnRates(int roomNumber, int playerHealth, int playerLevel)
+    private void AdjustSpawnRates(int roomNumber, float playerHealth, int playerLevel)
     {
         // adjust according to health
         double healthModifier = (double)(PLAYER_MAX_HEALTH - playerHealth) / PLAYER_MAX_HEALTH;

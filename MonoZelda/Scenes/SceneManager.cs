@@ -111,7 +111,7 @@ namespace MonoZelda.Scenes
             }
             else if (roomName == MARIO_ROOM)
             {
-                activeScene = new MarioLevelScene(graphicsDevice, commandManager, collisionController, currentRoom);
+                activeScene = new MarioLevelScene(graphicsDevice, commandManager, equippableManager, collisionController, currentRoom);
             }
             else
             {
@@ -119,11 +119,6 @@ namespace MonoZelda.Scenes
             }
 
             activeScene.LoadContent(contentManager);
-        }
-
-        public override void Draw(SpriteBatch batch)
-        {
-            inventoryScene.Draw(batch);
         }
 
         public override void LoadContent(ContentManager contentManager)

@@ -121,14 +121,14 @@ public class InfiniteRoomScene : Scene
         var nonColliderSpawns = room.GetNonColliderSpawns();
 
         // get list of enemies
-        List<EnemyList> roomEnemies = roomEnemyGenerator.GenerateEnemiesForRoom(roomNumber, 1, PlayerState.Health);
+        List<EnemyList> roomEnemies = roomEnemyGenerator.GenerateEnemiesForRoom(roomNumber);
 
         // spawn enemies
         enemyFactory = new EnemyFactory(collisionController);
         for (int i = 0; i < roomEnemies.Count; i++)
         {
             int randomNum = rnd.Next(nonColliderSpawns.Count - 1);
-            var enemy = enemyFactory.CreateEnemy(roomEnemies[i], nonColliderSpawns[randomNum].Position,itemFactory,false);
+            var enemy = enemyFactory.CreateEnemy(roomEnemies[i], nonColliderSpawns[randomNum].Position,itemFactory,enemyFactory,false);
             enemies.Add(enemy);
             room.Remove(nonColliderSpawns[randomNum]);
         }
@@ -141,7 +141,7 @@ public class InfiniteRoomScene : Scene
         var nonColliderSpawns = room.GetNonColliderSpawns();
 
         // get list of items
-        List<ItemList> roomItems = roomItemGenerator.GenerateItemsForRoom(roomNumber, 1, PlayerState.Health);
+        List<ItemList> roomItems = roomItemGenerator.GenerateItemsForRoom(roomNumber);
 
         // spawn items
         itemFactory = new ItemFactory(collisionController, itemManager);

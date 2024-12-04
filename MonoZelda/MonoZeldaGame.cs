@@ -25,9 +25,7 @@ public enum GameState
 public enum GameType
 {
     classic,
-    infiniteEasy,
-    infiniteMedium,
-    infiniteHard,
+    infinite
 }
 
 public class MonoZeldaGame : Game, ISaveable
@@ -38,9 +36,9 @@ public class MonoZeldaGame : Game, ISaveable
     private CommandManager commandManager;
     private SaveManager saveManager;
     private IScene scene;
-    private GameType gameMode;
+    private static GameType gameMode;
 
-    public GameType GameMode
+    public static GameType GameMode
     {
         get { return gameMode; }
         private set { gameMode = value; }
@@ -48,7 +46,7 @@ public class MonoZeldaGame : Game, ISaveable
 
     public static GameTime GameTime { get; private set; }
 
-    public static int EnemyLevel {get; set;}
+    public static int EnemyLevel { get; set; }
 
     public MonoZeldaGame()
     {
@@ -108,13 +106,6 @@ public class MonoZeldaGame : Game, ISaveable
                 controller = new KeyboardController(commandManager);
             }
         }
-        if (PlayerState.IsDead)
-        {
-            commandManager.Execute(CommandType.PlayerDeathCommand);
-            PlayerState.IsDead = false;
-            PlayerState.Initialize();
-
-        }
 
         GameTime = gameTime;
         controller.Update(gameTime);
@@ -158,7 +149,7 @@ public class MonoZeldaGame : Game, ISaveable
         if (scene is MainMenuScene)
         {
             SoundManager.StopSound("LOZ_Intro");
-            LoadDungeon("RoomInfinite", GameType.infiniteEasy);
+            LoadDungeon("RoomInfinite", GameType.infinite);
         }
     }
 
