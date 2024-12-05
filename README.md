@@ -61,6 +61,14 @@ All Sprint review write ups can be found in `SprintReflections.md`.
 
 # Sprint 5
 
+## Sprint 5 Burndown
+A complete burndown chart of start and end times for all Sprint 5 functionality can be found at
+https://github.com/orgs/Pixel-Pushers-1/projects/1/views/4 
+
+## Sprint 5 Pull Requests
+The pull requests at the link below demonstrate our teams code review and maintainability for Sprint 5.
+https://github.com/Pixel-Pushers-1/MonoZelda/pulls?page=1&q=is%3Apr+is%3Aclosed+closed%3A%3E2024-11-13
+
 ## New Features
 The following features have been implemented this sprint.
 
