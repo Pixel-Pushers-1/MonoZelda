@@ -63,6 +63,8 @@ public class LinkDeathScene : Scene
         FakeLinkDirection = Direction.Down;
         this.graphicsDevice = graphicsDevice;
         this.resetGameCommand = resetGameCommand;
+
+        MonoZeldaGame.Shader.SetNumLineSegments(0);
     }
 
     public override void LoadContent(ContentManager contentManager)
