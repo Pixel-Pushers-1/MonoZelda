@@ -18,6 +18,7 @@ namespace MonoZelda.Scenes
     {
         public static readonly string MARIO_ROOM = "Room18";
         public static readonly string MARIO_ENTRANCE_ROOM = "Room17";
+        public static readonly string OLDMAN_ROOM = "Room10";
         public static readonly string ROOM_INFINITE = "RoomInfinite";
 
         private IDungeonRoomLoader roomManager;
@@ -115,6 +116,10 @@ namespace MonoZelda.Scenes
             else if (roomName == MARIO_ROOM)
             {
                 activeScene = new MarioLevelScene(graphicsDevice, commandManager, collisionController, currentRoom);
+            }
+            else if(roomName == OLDMAN_ROOM)
+            {
+                activeScene = new OldmanScene(graphicsDevice, commandManager, collisionController, currentRoom);
             }
             else
             {
