@@ -84,6 +84,19 @@ Players can now choose to play with a compatible gamepad or with the keyboard. A
 ### Infinite Game Mode
 Players can choose to play an infinite mode that moves Link through a series of rooms. Link needs to kill all enemies in the room before moving to the next. This sequence goes on infinitely or until Link dies.
 
+### RPG Elements
+Link can now level up! There is an xp bar at the top along with level number that is updated when link picks up orbs from killing enemies. 
+
+**Every Level: 
+- Recover Health
+- Gain Defense(reduces damage)
+**Every 5 Levels:
+
+- Link does more damage
+- Sword color changes
+- Cloak color changes
+
+
 # Sprint 4
 
 ## Sprint 4 Pull Requests
