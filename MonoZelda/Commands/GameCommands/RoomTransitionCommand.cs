@@ -8,18 +8,18 @@ namespace MonoZelda.Commands.GameCommands
 {
     public class RoomTransitionCommand : ICommand
     {
-        private DungeonScene dungeonScene;
+        private SceneManager sceneManager;
 
         public RoomTransitionCommand() { }
 
-        public RoomTransitionCommand(DungeonScene dungeonScene)
+        public RoomTransitionCommand(SceneManager sceneManager)
         {
-            this.dungeonScene = dungeonScene;
+            this.sceneManager = sceneManager;
         }
 
         public void Execute(params object[] metadata)
         {
-            if (dungeonScene == null)
+            if (sceneManager == null)
             {
                 return;
             }
@@ -28,7 +28,7 @@ namespace MonoZelda.Commands.GameCommands
             Direction collisionDirection = (Direction)metadata[1];
             if (destination is string dest && !string.IsNullOrEmpty(dest))
             {
-                dungeonScene.TransitionRoom(dest,collisionDirection);
+                sceneManager.TransitionRoom(dest,collisionDirection);
             }
         }
 

@@ -11,8 +11,8 @@ public class ItemCollidable : ICollidable
     public CollidableType type { get; set; }
     public Rectangle Bounds { get; set; }
     public SpriteDict CollidableDict { get; set; }
+    public ItemList itemType { get; set; }
 
-    private ItemList itemType;
     private Item item;
     private readonly CollisionHitboxDraw hitbox;
 

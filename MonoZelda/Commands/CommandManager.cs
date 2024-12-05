@@ -11,13 +11,17 @@ public enum CommandType
     PlayerAttackCommand,
     PlayerMoveCommand,
     PlayerTakeDamageCommand,
-    PlayerEquipProjectileCommand,
-    PlayerFireProjectileCommand,
+    PlayerCycleEquippableCommand,
+    PlayerUseEquippableCommand,
     ResetCommand,
     PlayerStandingCommand,
     StartGameCommand,
     LoadRoomCommand,
     RoomTransitionCommand,
+    LevelCompleteAnimationCommand,
+    LinkDeathAnimationCommand,
+    WallmasterGrabAnimationCommand,
+    EnterDungeonAnimationCommand,
     MuteCommand,
     PlayerItemCollisionCommand,
     PlayerEnemyCollisionCommand,
@@ -33,7 +37,11 @@ public enum CommandType
     ToggleInventoryCommand,
     PlayerProjectileDoorCollisionCommand,
     PlayerDeathCommand,
-    None
+    NavigableGridMoveCommand,
+    NavigableGridExecuteCommand,
+    QuickSaveCommand,
+    QuickLoadCommand,
+    None,
 }
 
 public class CommandManager
@@ -45,13 +53,16 @@ public class CommandManager
         AddCommand(CommandType.ExitCommand, new ExitCommand());
         AddCommand(CommandType.PlayerAttackCommand, new PlayerAttackCommand());
         AddCommand(CommandType.PlayerMoveCommand, new PlayerMoveCommand());
-        AddCommand(CommandType.PlayerFireProjectileCommand, new PlayerFireProjectileCommand());
-        AddCommand(CommandType.PlayerEquipProjectileCommand, new PlayerEquipProjectileCommand());
+        AddCommand(CommandType.PlayerUseEquippableCommand, new PlayerUseEquippableCommand());
         AddCommand(CommandType.PlayerStandingCommand, new PlayerStandingCommand());
         AddCommand(CommandType.ResetCommand, new ResetCommand());
         AddCommand(CommandType.StartGameCommand, new StartGameCommand());
         AddCommand(CommandType.LoadRoomCommand, new LoadRoomCommand());
         AddCommand(CommandType.RoomTransitionCommand, new RoomTransitionCommand());
+        AddCommand(CommandType.LevelCompleteAnimationCommand, new LevelCompleteAnimationCommand());
+        AddCommand(CommandType.LinkDeathAnimationCommand, new LinkDeathAnimationCommand());
+        AddCommand(CommandType.WallmasterGrabAnimationCommand, new WallMasterGrabAnimationCommand());
+        AddCommand(CommandType.EnterDungeonAnimationCommand, new EnterDungeonAnimationCommand());
         AddCommand(CommandType.MuteCommand, new MuteCommand());
         AddCommand(CommandType.PlayerItemCollisionCommand, new PlayerItemCollisionCommand());
         AddCommand(CommandType.PlayerEnemyCollisionCommand, new PlayerEnemyCollisionCommand());
@@ -66,6 +77,10 @@ public class CommandManager
         AddCommand(CommandType.ToggleGizmosCommand, new ToggleGizmosCommand());
         AddCommand(CommandType.ToggleInventoryCommand, new ToggleInventoryCommand());
         AddCommand(CommandType.PlayerDeathCommand, new PlayerDeathCommand());
+        AddCommand(CommandType.NavigableGridMoveCommand, new NavigableGridMoveCommand());
+        AddCommand(CommandType.NavigableGridExecuteCommand, new NavigableGridExecuteCommand());
+        AddCommand(CommandType.QuickSaveCommand, new QuickSaveCommand());
+        AddCommand(CommandType.QuickLoadCommand, new QuickLoadCommand());
     }
 
     public void Execute(CommandType commandType, params object[] metadata)

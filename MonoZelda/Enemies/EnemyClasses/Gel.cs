@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
@@ -15,6 +16,11 @@ namespace MonoZelda.Enemies.EnemyClasses
         private int jumpCount = 3;
         private bool readyToJump;
         private Random rnd = new Random();
+        private ItemFactory itemFactory;
+        private bool zolAlive = false;
+        private Enemy bigSlime;
+        private List<Enemy> smallSlimes = new();
+        private bool smallSlimesAlive = false;
 
         public Gel()
         {
@@ -22,18 +28,29 @@ namespace MonoZelda.Enemies.EnemyClasses
             Height = 32;
             Health = 1;
             Alive = true;
+            Level = MonoZeldaGame.EnemyLevel;
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory,EnemyFactory enemyFactory, bool hasItem)
         {
-            EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Gel);
-            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory, hasItem);
-            spawnTimer = 0;
-            readyToJump = false;
-            StateMachine.SetSprite("gel_turquoise");
+            if(Level == 1){
+                EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Gel);
+                base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory,enemyFactory, hasItem);
+                Level = 1;
+                spawnTimer = 0;
+                readyToJump = false;
+                StateMachine.SetSprite("gel_turquoise");
+                if(hasItem){
+                    StateMachine.Spawning = false;
+                }
+            }
+            Pos = spawnPosition;
+            this.itemFactory = itemFactory;
+            this.EnemyFactory = enemyFactory;
+
         }
 
-        public override void Update()
+        public override void LevelOneBehavior()
         {
             if (spawnTimer > 1 && spawnTimer < 1.05)
             {
@@ -65,6 +82,60 @@ namespace MonoZelda.Enemies.EnemyClasses
             CheckBounds();
             Pos = StateMachine.Update(this, Pos);
             EnemyCollision.Update(Width,Height,Pos);
+        }
+
+        public override void LevelTwoBehavior()
+        {
+            if(!zolAlive){
+                bigSlime = EnemyFactory.CreateEnemy(EnemyList.Zol,Pos,itemFactory,EnemyFactory,false);
+                zolAlive = true;
+            }
+            if(bigSlime.Alive){
+                bigSlime.Update();
+            }else{
+                if(!smallSlimesAlive){
+                    smallSlimesAlive = true;
+                    smallSlimes.Add(EnemyFactory.CreateEnemy(EnemyList.Gel,bigSlime.Pos,itemFactory,EnemyFactory,true));
+                }
+                updateSlimes();
+            }
+        }
+
+        public override void LevelThreeBehavior()
+        {
+            if(!zolAlive){
+                bigSlime = EnemyFactory.CreateEnemy(EnemyList.Zol,Pos,itemFactory,EnemyFactory,false);
+                zolAlive = true;
+            }
+            if(bigSlime.Alive){
+                bigSlime.Update();
+            }else{
+                if(!smallSlimesAlive){
+                    smallSlimesAlive = true;
+                    smallSlimes.Add(EnemyFactory.CreateEnemy(EnemyList.Gel,bigSlime.Pos,itemFactory,EnemyFactory,true));
+                    smallSlimes.Add(EnemyFactory.CreateEnemy(EnemyList.Gel,bigSlime.Pos,itemFactory,EnemyFactory,true));
+                    smallSlimes.Add(EnemyFactory.CreateEnemy(EnemyList.Gel,bigSlime.Pos,itemFactory,EnemyFactory,true));
+                }
+                updateSlimes();
+            }
+        }
+
+        public void updateSlimes(){
+            var tempActive = false;
+            foreach (var gel in smallSlimes){
+                gel.Update();
+                if(gel.Alive){
+                    tempActive = true;
+                }
+            }
+            if(!tempActive){
+                Alive = false;
+            }
+        }
+
+        public override void Update()
+        {
+            DecideBehavior();
         }
 
         public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)

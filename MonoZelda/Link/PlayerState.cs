@@ -1,4 +1,8 @@
 using Microsoft.Xna.Framework;
+using MonoZelda.Dungeons.Parser.Data;
+using MonoZelda.Save;
+using MonoZelda.Link.Equippables;
+using System.Collections.Generic;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Link.Projectiles;
 using MonoZelda.Sound;
@@ -12,9 +16,8 @@ public static class PlayerState
 {
     private static readonly int INITIAL_HP = 6;
     private static readonly int INITIAL_RUPEES = 3;
-    private static readonly int INITIAL_BOMBS = 1;
+    private static readonly int INITIAL_BOMBS = 0;
     private static readonly int INITIAL_KEYS = 0;
-
     private static float _health = INITIAL_HP;
 
     //RPG
@@ -23,6 +26,9 @@ public static class PlayerState
     private static readonly float XP_SCALING = 1.3f;
     private static readonly float INITIAL_DEFENSE = 0f;
 
+    // (RoomName, Direction)
+    public static HashSet<(string, DoorDirection)> Keyring { get; set; } = new ();
+    public static HashSet<Point> DiscoveredRooms { get; set; } = new();
 
     public static void Initialize()
     {
@@ -36,7 +42,10 @@ public static class PlayerState
         Rupees = INITIAL_RUPEES;
         Bombs = INITIAL_BOMBS;
         Keys = INITIAL_KEYS;
-        EquippedProjectile = ProjectileType.None;
+        HasMap = false;
+        HasCompass = false;
+        Keyring = new();
+        DiscoveredRooms = new();
         Level = INITIAL_LEVEL;
         Defense = INITIAL_DEFENSE;
         XP = 0;
@@ -53,7 +62,7 @@ public static class PlayerState
         set
         {
             _health = value;
-            if (_health <= 0)
+            if (_health < 1)
                 IsDead = true;
         }
     }
@@ -89,9 +98,11 @@ public static class PlayerState
     public static int MaxHealth { get; set; }
     public static Point Position { get; set; }
     public static Direction Direction { get; set; }
-    public static ProjectileType EquippedProjectile { get; set; }
     public static bool HasBoomerang { get; set; }
     public static bool ObtainedTriforce { get; set; }
+    public static bool HasCompass;
+    public static bool HasMap;
+    public static EquippableManager EquippableManager { get; set; }
 
     // RPG 
     public static int Level { get; private set; }
@@ -128,4 +139,38 @@ public static class PlayerState
     public static void AddRupees(int amount) => Rupees += amount;
     public static void AddBombs(int amount) => Bombs += amount;
     public static void AddKeys(int amount) => Keys += amount;
+
+    public static void Save(SaveState save)
+    {
+        save.MaxHealth = MaxHealth;
+        save.HasBoomerang = HasBoomerang;
+        save.ObtainedTriforce = ObtainedTriforce;
+        save.Health = (int)Health;
+        save.BombCount = Bombs;
+        save.RupeeCount = Rupees;
+        save.KeyCount = Keys;
+        save.HasCompass = HasCompass;
+        save.HasMap = HasMap;
+        save.Keyring = Keyring;
+        save.DiscoveredRooms = DiscoveredRooms;
+
+        EquippableManager.Save(save);
+    }
+
+    public static void Load(SaveState save)
+    {
+        MaxHealth = save.MaxHealth;
+        HasBoomerang = save.HasBoomerang;
+        ObtainedTriforce = save.ObtainedTriforce;
+        Health = save.Health;
+        Bombs = save.BombCount;
+        Rupees = save.RupeeCount;
+        Keys = save.KeyCount;
+        HasCompass = save.HasCompass;
+        HasMap = save.HasMap;
+        Keyring = save.Keyring;
+        DiscoveredRooms = save.DiscoveredRooms;
+
+        EquippableManager.Load(save);
+    }
 }

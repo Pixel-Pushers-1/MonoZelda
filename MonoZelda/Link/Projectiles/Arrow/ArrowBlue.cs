@@ -1,46 +1,54 @@
-﻿using Microsoft.Xna.Framework;
-using MonoZelda.Sprites;
+﻿using MonoZelda.Sprites;
+using Microsoft.Xna.Framework;
+using MonoZelda.Controllers;
+using MonoZelda.Sound;
+using MonoZelda.Dungeons;
+using MonoZelda.Collision;
 
 namespace MonoZelda.Link.Projectiles;
 
-public class ArrowBlue : ProjectileFactory, IProjectile
+public class ArrowBlue : IProjectile
 {
-    private bool Finished;
     private const float PROJECTILE_SPEED = 8f;
     private const int TILES_TO_TRAVEL = 5;
+    private bool finished;
     private int tilesTraveled;
     private bool rotate;
-    private Vector2 initialPosition;
-    private Vector2 Dimension = new Vector2(8, 16);
     private SpriteDict projectileDict;
+    private PlayerProjectileCollidable projectileCollidable;
+    private CollisionController collisionController;
+    private Direction projectileDirection;
+    private Vector2 projectilePosition;
+    private Vector2 initialPosition;
 
-    public ArrowBlue(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection)
-    : base(projectileDict, playerPosition, playerDirection)
+    public Vector2 ProjectilePosition
     {
-        this.projectileDict = projectileDict;
-        Finished = false;
+        get { return projectilePosition; }
+        set { projectilePosition = value; }
+    }
+
+    public ArrowBlue(Vector2 spawnPos, CollisionController collisionController)
+    {
+        finished = false;
         rotate = false;
         tilesTraveled = 0;
-        initialPosition = SetInitialPosition(Dimension);
+        projectileDirection = PlayerState.Direction;
+        initialPosition = spawnPos;
+        this.collisionController = collisionController;
     }
 
     private void updatePosition()
     {
-        Vector2 directionVector = playerDirection switch
-        {
-            Direction.Up => new Vector2(0, -1),
-            Direction.Down => new Vector2(0, 1),
-            Direction.Left => new Vector2(-1, 0),
-            Direction.Right => new Vector2(1, 0),
-            _ => Vector2.Zero
-        };
+        Vector2 directionVector = DungeonConstants.DirectionVector[projectileDirection];
+
+        rotate = (projectileDirection == Direction.Left || projectileDirection == Direction.Right);
 
         projectilePosition += PROJECTILE_SPEED * directionVector;
+        projectileCollidable.Bounds = getCollisionRectangle();
 
-        string spriteName = $"arrow_blue_{playerDirection.ToString().ToLower()}";
-        SetProjectileSprite(spriteName);
+        string spriteName = $"arrow_blue_{projectileDirection.ToString().ToLower()}";
+        projectileDict.SetSprite(spriteName);
 
-        rotate = (playerDirection == Direction.Left || playerDirection == Direction.Right);
         updateTilesTraveled();
     }
 
@@ -58,7 +66,7 @@ public class ArrowBlue : ProjectileFactory, IProjectile
 
     public bool hasFinished()
     {
-        return Finished;
+        return finished;
     }
 
     public void FinishProjectile()
@@ -68,29 +76,42 @@ public class ArrowBlue : ProjectileFactory, IProjectile
 
     public Rectangle getCollisionRectangle()
     {
-        Point spawnPosition = projectilePosition.ToPoint();
+        Point rectPosition = projectilePosition.ToPoint();
         int width = rotate ? 64 : 32;
         int height = rotate ? 32 : 64;
 
-        return new Rectangle(spawnPosition.X - width / 2, spawnPosition.Y - height / 2, width, height);
+        return new Rectangle(rectPosition.X - width / 2, rectPosition.Y - height / 2, width, height);
     }
 
-    public void UpdateProjectile()
+    public void Setup(params object[] args)
+    {
+        projectilePosition = initialPosition;
+        SoundManager.PlaySound("LOZ_Arrow_Boomerang", false);
+        projectileDict = new SpriteDict(SpriteType.Projectiles, SpriteLayer.Projectiles, initialPosition.ToPoint());
+        string spriteName = $"arrow_blue_{projectileDirection.ToString().ToLower()}";
+        projectileDict.SetSprite(spriteName);
+        projectileCollidable = new PlayerProjectileCollidable(getCollisionRectangle(), ProjectileType.Arrow);
+        projectileCollidable.setProjectile(this);
+        collisionController.AddCollidable(projectileCollidable);
+    }
+
+    public void Update()
     {
         if (tilesTraveled < TILES_TO_TRAVEL)
         {
             updatePosition();
         }
-        else if (tilesTraveled == TILES_TO_TRAVEL)
+        else if (tilesTraveled == (TILES_TO_TRAVEL))
         {
-            SetProjectileSprite("poof");
+            projectileDict.SetSprite("poof");
             tilesTraveled = 6;
         }
         else
         {
-            Finished = true;
-            projectileDict.SetSprite("");
-            projectileDict.Enabled = false;
+            finished = true;
+            projectileDict.Unregister();
+            projectileCollidable.UnregisterHitbox();
+            collisionController.RemoveCollidable(projectileCollidable); 
         }
         projectileDict.Position = projectilePosition.ToPoint();
     }

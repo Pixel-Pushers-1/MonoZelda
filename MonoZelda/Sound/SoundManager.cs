@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
-using System;
 using System.Collections.Generic;
 
 namespace MonoZelda.Sound;
@@ -9,6 +8,7 @@ public static class SoundManager
 {
     private static ContentManager contentManager;
     private static Dictionary<string, SoundEffectInstance> gameSoundEffects;
+    private static bool Paused;
     private static bool Muted;
 
     // Static initialization method to set up ContentManager and other resources
@@ -16,7 +16,8 @@ public static class SoundManager
     {
         contentManager = content;
         gameSoundEffects = new Dictionary<string, SoundEffectInstance>();
-        Muted = false;  
+        Muted = false;
+        Paused = false;
     }
 
     public static void PlaySound(string soundName, bool Looped)
@@ -53,8 +54,11 @@ public static class SoundManager
 
     public static void Pause(string soundName)
     {
-        SoundEffectInstance soundInstance = gameSoundEffects[soundName];
-        soundInstance.Pause();
+        if (gameSoundEffects.ContainsKey(soundName))
+        {
+            SoundEffectInstance soundEffect = gameSoundEffects[soundName];
+            soundEffect.Pause();
+        }
     }
 
     public static void ChangeMuteState()

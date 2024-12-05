@@ -3,6 +3,7 @@ using MonoZelda.Sound;
 using MonoZelda.Link;
 using MonoZelda.Dungeons;
 using Microsoft.Xna.Framework;
+using MonoZelda.Link.Equippables;
 
 namespace MonoZelda.Items.ItemClasses;
 
@@ -28,6 +29,7 @@ public class Bow : Item
     public override void HandleCollision(CollisionController collisionController)
     {
         // update playerSprite and itemUpdateList
+        PlayerState.EquippableManager.AddEquippable(EquippableType.Bow, false);
         playerCollision.HandleBowCollision(itemDict);
         itemManager.AddUpdateItem(this);
         timer = PICKUP_TIME;
@@ -51,7 +53,11 @@ public class Bow : Item
         {
             itemDict.Unregister();
             itemManager.RemoveUpdateItem(this);
-            SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
+
+            if(itemManager.GameMode == GameType.Classic)
+            {
+                SoundManager.PlaySound("LOZ_Dungeon_Theme", true);
+            }
         }
     }
 }

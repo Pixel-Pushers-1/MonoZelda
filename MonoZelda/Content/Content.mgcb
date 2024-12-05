@@ -20,6 +20,12 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/Basic.spritefont
 
+#begin Shaders/LitSprite.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/LitSprite.fx
+
 #begin Sound/LOZ_Arrow_Boomerang.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -68,6 +74,12 @@
 /processorParam:Quality=Best
 /build:Sound/LOZ_Boss_Scream3.wav
 
+#begin Sound/LOZ_Campfire.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/LOZ_Campfire.wav
+
 #begin Sound/LOZ_Candle.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -79,6 +91,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sound/LOZ_Door_Unlock.wav
+
+#begin Sound/LOZ_Drink_Potion.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sound/LOZ_Drink_Potion.wav
 
 #begin Sound/LOZ_Dungeon_Theme.wav
 /importer:WavImporter

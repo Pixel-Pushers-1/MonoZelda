@@ -37,6 +37,11 @@ public class PlayerCollidable : ICollidable
         hitbox.Unregister();
     }
 
+    public void HandleEnemyCollision(Direction collisionDirection)
+    {
+        PlayerCollision.HandleEnemyCollision(collisionDirection);
+    }
+
     public bool Intersects(ICollidable other)
     {
         return Bounds.Intersects(other.Bounds);

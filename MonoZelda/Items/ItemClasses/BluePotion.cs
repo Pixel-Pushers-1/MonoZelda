@@ -3,6 +3,7 @@ using MonoZelda.Sound;
 using MonoZelda.Link;
 using MonoZelda.Dungeons;
 using Microsoft.Xna.Framework;
+using MonoZelda.Link.Equippables;
 
 namespace MonoZelda.Items.ItemClasses;
 
@@ -22,7 +23,7 @@ public class BluePotion : Item
 
     public override void HandleCollision(CollisionController collisionController)
     {
-        PlayerState.Health = PlayerState.MaxHealth;
+        PlayerState.EquippableManager.AddEquippable(EquippableType.BluePotion, false);
         SoundManager.PlaySound("LOZ_Get_Item", false);
         base.HandleCollision(collisionController);
     }

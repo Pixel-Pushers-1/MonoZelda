@@ -22,6 +22,9 @@ public enum PickUpType
 
 public class PlayerSpriteManager
 {
+    public const int BLUE_LEVEL_REQUIREMENT = 5;
+    public const int RED_LEVEL_REQUIREMENT = 10;
+
     private const float DAMAGE_FLASH_TIME = .5f;
     private const float CLOCK_FLASH_TIME = 3f;
     private const float DAMAGE_IMMOBILITY_TIME = .2f;
@@ -66,7 +69,7 @@ public class PlayerSpriteManager
     public void SetPlayerSpriteDict(SpriteDict spriteDict)
     {
         playerSpriteDict = spriteDict;
-        playerSpriteDict.SetSprite($"walk_{DirectionToStringMap[PlayerState.Direction]}");
+        playerSpriteDict.SetSprite($"walk_{DirectionToStringMap[PlayerState.Direction]}_{GetLinkColor()}");
         playerDirection = PlayerState.Direction;
     }
 
@@ -99,7 +102,7 @@ public class PlayerSpriteManager
         // Get direction string from the dictionary
         if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
         {
-            string spriteName = $"walk_{directionString}";
+            string spriteName = $"walk_{directionString}_{GetLinkColor()}";
             playerSpriteDict.SetSprite(spriteName);
         }
 
@@ -107,6 +110,7 @@ public class PlayerSpriteManager
         playerPosition += playerSpeed * movement;
         playerSpriteDict.Position = playerPosition.ToPoint();
         PlayerState.Position = playerPosition.ToPoint();
+        PlayerState.Direction = playerDirection;
     }
         
     public void StandStill(PlayerStandingCommand standCommand)
@@ -116,15 +120,14 @@ public class PlayerSpriteManager
             // Get direction string from the dictionary
             if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
             {
-                string spriteName = $"standing_{directionString}";
+                string spriteName = $"standing_{directionString}_{GetLinkColor()}";
                 playerSpriteDict.SetSprite(spriteName);
             }
         }
         else {
             immobilityTimer -= MonoZeldaGame.GameTime.ElapsedGameTime.TotalSeconds;
         }
-        playerSpriteDict.Position = playerPosition.ToPoint();
-        PlayerState.Position = playerPosition.ToPoint();
+        playerSpriteDict.Position = PlayerState.Position;
     }
 
     public void PlayerDeath()
@@ -145,20 +148,10 @@ public class PlayerSpriteManager
     {
         if (immobilityTimer <= 0)
         {
-            string swordType = "woodensword"; // Default sword
-
-            if (PlayerState.Level >= 10)
-            {
-                swordType = "magicalsword";
-            }
-            else if (PlayerState.Level >= 5)
-            {
-                swordType = "whitesword";
-            }
             // Get direction string from the dictionary
             if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
             {
-                string spriteName = $"{swordType}_{directionString}";
+                string spriteName = $"attack_{directionString}_{GetLinkColor()}";
                 immobilityTimer = playerSpriteDict.SetSpriteOneshot(spriteName);
             }
         }
@@ -174,7 +167,7 @@ public class PlayerSpriteManager
             // Get direction string from the dictionary
             if (DirectionToStringMap.TryGetValue(playerDirection, out string directionString))
             {
-                string spriteName = $"useitem_{directionString}";
+                string spriteName = $"useitem_{directionString}_{GetLinkColor()}";
                 immobilityTimer = playerSpriteDict.SetSpriteOneshot(spriteName);
             }
         } 
@@ -202,7 +195,7 @@ public class PlayerSpriteManager
         immobilityTimer = PICKUP_TIME;
         if (immobilityTimer > 0)
         {
-            playerSpriteDict.SetSprite(pickUpSprite.ToString());
+            playerSpriteDict.SetSprite($"{pickUpSprite}_{GetLinkColor()}");
         }
         else
         {
@@ -210,4 +203,25 @@ public class PlayerSpriteManager
         }
     }
 
+    public static string GetLinkColor()
+    {
+        if (PlayerState.Level >= RED_LEVEL_REQUIREMENT) {
+            return "red";
+        }
+        if (PlayerState.Level >= BLUE_LEVEL_REQUIREMENT) {
+            return "blue";
+        }
+        return "green";
+    }
+
+    public static string GetLinkSword()
+    {
+        if (PlayerState.Level >= RED_LEVEL_REQUIREMENT) {
+            return "magicsword";
+        }
+        if (PlayerState.Level >= BLUE_LEVEL_REQUIREMENT) {
+            return "whitesword";
+        }
+        return "woodensword";
+    }
 }

@@ -2,9 +2,9 @@
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Enemies;
+using MonoZelda.Enemies.EnemyClasses;
 using MonoZelda.Link;
 using MonoZelda.Link.Projectiles;
-using MonoZelda.Sound;
 
 namespace MonoZelda.Commands.CollisionCommands;
 
@@ -20,11 +20,11 @@ public class EnemyPlayerProjectileCollisionCommand : ICommand
     {
         int damage = 1;
 
-        if (PlayerState.Level >= 10)
+        if (PlayerState.Level >= PlayerSpriteManager.RED_LEVEL_REQUIREMENT)
         {
             damage = 3;
         }
-        else if (PlayerState.Level >= 5)
+        else if (PlayerState.Level >= PlayerSpriteManager.BLUE_LEVEL_REQUIREMENT)
         {
             damage = 2;
         }
@@ -47,10 +47,7 @@ public class EnemyPlayerProjectileCollisionCommand : ICommand
             enemyCollidable = (EnemyCollidable)collidableA;
         }
 
-        if (projectileCollidable.ProjectileManager != null)
-        {
-            projectileCollidable.ProjectileManager.destroyProjectile();
-        }
+        Enemy enemy = enemyCollidable.getEnemy();
 
         if (projectileCollidable.projectileType == ProjectileType.Boomerang ||
             projectileCollidable.projectileType == ProjectileType.BoomerangBlue)
@@ -59,14 +56,23 @@ public class EnemyPlayerProjectileCollisionCommand : ICommand
             damage = 0;
         }
 
-        if (projectileCollidable.projectileType == ProjectileType.Bomb)
+
+        if (projectileCollidable.projectileType == ProjectileType.BombExplosion)
         {
             damage = 2;
         }
 
-        collisionController.RemoveCollidable(projectileCollidable);
-        Enemy enemy = enemyCollidable.getEnemy();
-        enemy.TakeDamage(stunTime, collisionDirection, damage);
+        if(enemyCollidable.enemyType == EnemyList.DodongoMouth && projectileCollidable.projectileType == ProjectileType.Bomb){
+            enemy.TakeDamage(2, collisionDirection, 2);
+            projectileCollidable.Projectile.FinishProjectile();
+            collisionController.RemoveCollidable(projectileCollidable);
+        }
+
+        if(enemyCollidable.enemyType != EnemyList.DodongoMouth && projectileCollidable.projectileType != ProjectileType.Bomb){
+            enemy.TakeDamage(stunTime, collisionDirection, damage);
+            collisionController.RemoveCollidable(projectileCollidable);
+            projectileCollidable.HandleCollision();
+        }
     }
 
     public void UnExecute()

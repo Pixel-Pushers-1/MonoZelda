@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,102 +14,121 @@ namespace MonoZelda.Enemies.EnemyClasses
 {
     public class Rope : Enemy
     {
-        public Point Pos { get; set; }
-        public EnemyCollidable EnemyHitbox { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public bool Alive { get; set; }
-        private readonly Random rnd = new();
-        private EnemyStateMachine.Direction direction = EnemyStateMachine.Direction.None;
-        private EnemyStateMachine stateMachine;
-        private CollisionController collisionController;
-        private EnemyCollisionManager enemyCollision;
-        private int pixelsMoved;
-        private int health = 3;
-        private int tileSize = 64;
+        private const int LeftBound = TileSize * 2 + 31;
+        private const int RightBound = TileSize * 14 - 31;
+        private const int TopBound = TileSize * 5 + 31;
+        private const int BottomBound = TileSize * 12 - 31;
+        private bool attacking = false;
+        private int boundHit;
+        private readonly Random rnd = new Random();
 
         public Rope()
         {
             Width = 48;
             Height = 48;
+            Health = 2;
             Alive = true;
         }
 
-        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory, bool hasItem)
+        public override void EnemySpawn(SpriteDict enemyDict, Point spawnPosition, CollisionController collisionController, ItemFactory itemFactory,EnemyFactory enemyFactory, bool hasItem)
         {
-            this.collisionController = collisionController;
             EnemyHitbox = new EnemyCollidable(new Rectangle(spawnPosition.X, spawnPosition.Y, Width, Height), EnemyList.Rope);
-            collisionController.AddCollidable(EnemyHitbox);
-            EnemyHitbox.setSpriteDict(enemyDict);
-            enemyDict.Position = spawnPosition;
-            Pos = spawnPosition;
-            enemyCollision = new EnemyCollisionManager(this, Width, Height);
-            pixelsMoved = 0;
-            stateMachine = new EnemyStateMachine(enemyDict, itemFactory, hasItem);
+            base.EnemySpawn(enemyDict, spawnPosition, collisionController, itemFactory,enemyFactory, hasItem);
+            base.ChangeDirection();
+            ChangeSprite();
         }
 
         public override void ChangeDirection()
         {
-            stateMachine.SetSprite("rope_left");
-            switch (rnd.Next(1, 5))
-            {
-                case 1:
-                    direction = EnemyStateMachine.Direction.Left;
-                    stateMachine.SetSprite("rope_left");
-                    break;
-                case 2:
-                    direction = EnemyStateMachine.Direction.Right;
-                    stateMachine.SetSprite("rope_right");
-                    break;
-                case 3:
-                    direction = EnemyStateMachine.Direction.Up;
-                    break;
-                case 4:
-                    direction = EnemyStateMachine.Direction.Down;
-                    break;
+            if(boundHit == TopBound || boundHit == BottomBound){
+                Direction = rnd.Next(1, 3) switch
+                {
+                    1 => EnemyStateMachine.Direction.Left,
+                    2 => EnemyStateMachine.Direction.Right,
+                    _ => EnemyStateMachine.Direction.Left
+                };
+            }else if(boundHit == LeftBound || boundHit == RightBound){
+                Direction = rnd.Next(1, 3) switch
+                {
+                    1 => EnemyStateMachine.Direction.Up,
+                    2 => EnemyStateMachine.Direction.Down,
+                    _ => EnemyStateMachine.Direction.Up
+                };
+            }else{
+                base.ChangeDirection();
             }
-            stateMachine.ChangeDirection(direction);
+            StateMachine.ChangeDirection(Direction);
+            StateMachine.ChangeSpeed(120);
+            ChangeSprite();
+        }
+
+        public void ChangeSprite(){
+            string newSprite = Direction switch
+            {
+                EnemyStateMachine.Direction.Left => "rope_left",
+                EnemyStateMachine.Direction.Right => "rope_right",
+                _ => "rope_left"
+            };
+            StateMachine.SetSprite(newSprite);
+        }
+
+        public override void LevelOneBehavior()
+        {
+            if (!attacking)
+                {
+                    attacking = true;
+                    StateMachine.ChangeDirection(Direction);
+                    ChangeSprite();
+                    StateMachine.ChangeSpeed(240);
+                }
+        }
+        public override void LevelTwoBehavior()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void LevelThreeBehavior()
+        {
+            throw new NotImplementedException();
         }
 
         public override void Update()
         {
-            if (pixelsMoved >= tileSize)
-            {
-                pixelsMoved = 0;
+            var playerPos = PlayerState.Position;
+            boundHit = CheckBounds();
+            if(boundHit != 0){
+                attacking = false;
                 ChangeDirection();
             }
-            else
+            if (Math.Abs(playerPos.Y - Pos.Y) < 25 && !attacking)
             {
-                pixelsMoved++;
-            }
-            Pos = stateMachine.Update(this, Pos);
-            enemyCollision.Update(Width, Height, Pos);
-        }
-
-        public override void TakeDamage(float stunTime, Direction collisionDirection, int damage)
-        {
-            if (stunTime > 0)
-            {
-                stateMachine.ChangeDirection(EnemyStateMachine.Direction.None);
-                pixelsMoved = -128;
-            }
-            else
-            {
-                health--;
-                if (health > 0)
+                if (playerPos.X - Pos.X > 0)
                 {
-                    SoundManager.PlaySound("LOZ_Enemy_Hit", false);
-                    StateMachine.DamageFlash();
-                    stateMachine.Knockback(true, collisionDirection);
+                    Direction = EnemyStateMachine.Direction.Right;
+                    LevelOneBehavior();
                 }
                 else
                 {
-                    SoundManager.PlaySound("LOZ_Enemy_Die", false);
-                    stateMachine.Die(false);
-                    EnemyHitbox.UnregisterHitbox();
-                    collisionController.RemoveCollidable(EnemyHitbox);
+                    Direction = EnemyStateMachine.Direction.Left;
+                    LevelOneBehavior();
                 }
             }
+            
+            if (Math.Abs(playerPos.X - Pos.X) < 25 && !attacking)
+            {
+                if (playerPos.Y - Pos.Y > 0)
+                {
+                    Direction = EnemyStateMachine.Direction.Down;
+                    LevelOneBehavior();
+                }
+                else
+                {
+                    Direction = EnemyStateMachine.Direction.Up;
+                    LevelOneBehavior();
+                }
+            }
+            Pos = StateMachine.Update(this, Pos);
+            EnemyCollision.Update(Width, Height, Pos);
         }
     }
 }

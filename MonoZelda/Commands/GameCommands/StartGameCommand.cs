@@ -1,4 +1,6 @@
-﻿namespace MonoZelda.Commands.GameCommands;
+﻿using System.Diagnostics;
+
+namespace MonoZelda.Commands.GameCommands;
 
 public class StartGameCommand : ICommand
 {
@@ -16,7 +18,9 @@ public class StartGameCommand : ICommand
 
     public void Execute(params object[] metadata)
     {
-        game?.StartDungeon();
+        GameType gameType = (GameType) metadata[0];
+ 
+        game?.StartDungeon(gameType);
     }
 
     public void UnExecute()

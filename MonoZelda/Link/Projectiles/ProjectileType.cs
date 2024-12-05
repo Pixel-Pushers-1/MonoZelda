@@ -2,13 +2,14 @@
 
 public enum ProjectileType
 {
-    WoodenSword,
     Arrow,
     ArrowBlue,
     Boomerang,
     BoomerangBlue,
     Bomb,
-    CandleBlue,
+    BombExplosion,
+    Fire,
     WoodenSwordBeam,
+    WoodenSword,
     None,
 }

@@ -25,10 +25,10 @@ namespace MonoZelda.Items.ItemClasses
 
             // create item SpriteDict
             itemDict = new SpriteDict(SpriteType.Items, SpriteLayer.Items, itemSpawn.Position + offset);
-            itemDict.SetFlashing(SpriteDict.FlashingType.OnOff, FLASHING_TIME);
+            itemDict.SetSprite("fire");
 
             // create item Collidable
-            itemBounds = new Rectangle(itemSpawn.Position, new Point(56, 56));
+            itemBounds = new Rectangle(itemSpawn.Position + offset, new Point(56, 56));
             itemCollidable = new ItemCollidable(itemBounds, itemType);
             collisionController.AddCollidable(itemCollidable);
         }

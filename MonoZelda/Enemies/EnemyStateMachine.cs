@@ -34,9 +34,11 @@ namespace MonoZelda.Enemies
         private SpriteDict keyDict;
         private bool hasItem;
         private bool itemSpawned = false;
+        private GameType GameMode;
 
         public EnemyStateMachine(SpriteDict spriteDict, ItemFactory itemFactory, bool hasItem)
         {
+            GameMode = MonoZeldaGame.GameMode;
             enemySpriteDict = spriteDict;
             Spawning = true;
             Dead = false;
@@ -168,12 +170,16 @@ namespace MonoZelda.Enemies
                 {
                     enemySpriteDict.Enabled = false;
                     enemy.Alive = false;
-                    if (enemy.GetType() != typeof(Keese) && enemy.GetType() != typeof(Gel))
+                    if (enemy.GetType() != typeof(Keese) && enemy.GetType() != typeof(Gel) && enemy.GetType() != typeof(Zol))
                     {
                         DropItem(position, enemy);
                     }
-                    itemFactory.CreateItem(new ItemSpawn(new Point(position.X, position.Y), xp), true);
 
+                    if (GameMode == GameType.Infinite)
+                    {
+                        itemFactory.CreateItem(new ItemSpawn(new Point(position.X, position.Y), xp), true);
+                        itemFactory.CreateItem(new ItemSpawn(new Point(position.X, position.Y), xp), true);
+                    }
                 }
             }
             else

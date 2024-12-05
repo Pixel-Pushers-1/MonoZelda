@@ -1,61 +1,63 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoZelda.Collision;
+using MonoZelda.Controllers;
+using MonoZelda.Dungeons;
+using MonoZelda.Sound;
 using MonoZelda.Sprites;
 
 namespace MonoZelda.Link.Projectiles;
 
-public class WoodenSwordBeam : ProjectileFactory, IProjectile
+public class WoodenSwordBeam : IProjectile
 {
-    private bool Finished;
+    private bool finished;
     private float PROJECTILE_SPEED = 8f;
     private const int TILES_TO_TRAVEL = 5;
     private int tilesTraveled;
     private bool rotate;
     private Vector2 initialPosition;
-    private Vector2 Dimension = new Vector2(8, 16);
+    private Vector2 projectilePosition;
+    private Direction projectileDirection;
+    private CollisionController collisionController;
+    private PlayerProjectileCollidable projectileCollidable;
     private SpriteDict projectileDict;
-    private AnimateSwordBeamEnd animateSwordBeamEnd;
 
-    public WoodenSwordBeam(SpriteDict projectileDict, Vector2 playerPosition, Direction playerDirection)
-    : base(projectileDict, playerPosition, playerDirection)
+    public Vector2 ProjectilePosition
     {
-        this.projectileDict = projectileDict;
-        Finished = false;
-        rotate = false;
-        tilesTraveled = 0;
-        initialPosition = SetInitialPosition(Dimension);
+        get { return projectilePosition; }
+        set { projectilePosition = value; }
     }
 
-    private void AnimateSwordBeam()
+    public WoodenSwordBeam(Vector2 spawnPosition, CollisionController collisionController)
     {
-        animateSwordBeamEnd = AnimateSwordBeamEnd.CreateInstance(this);
+        finished = false;
+        rotate = false;
+        tilesTraveled = 0;
+        projectileDirection = PlayerState.Direction;
+        initialPosition = spawnPosition;
+        this.collisionController = collisionController;
     }
 
     private void updatePosition()
     {
-        Vector2 directionVector = playerDirection switch
-        {
-            Direction.Up => new Vector2(0, -1),
-            Direction.Down => new Vector2(0, 1),
-            Direction.Left => new Vector2(-1, 0),
-            Direction.Right => new Vector2(1, 0),
-            _ => Vector2.Zero
-        };
+        Vector2 directionVector = DungeonConstants.DirectionVector[projectileDirection];
+
+        rotate = (projectileDirection == Direction.Left || projectileDirection == Direction.Right);
 
         projectilePosition += PROJECTILE_SPEED * directionVector;
+        projectileCollidable.Bounds = getCollisionRectangle();
         string swordType = "woodensword"; // Default sword
 
-        if (PlayerState.Level >= 10)
+        if (PlayerState.Level >= PlayerSpriteManager.RED_LEVEL_REQUIREMENT)
         {
             swordType = "magicsword";
         }
-        else if (PlayerState.Level >= 5)
+        else if (PlayerState.Level >= PlayerSpriteManager.BLUE_LEVEL_REQUIREMENT)
         {
             swordType = "whitesword";
         }
-        string spriteName = $"{swordType}_item_{playerDirection.ToString().ToLower()}";
-        SetProjectileSprite(spriteName);
+        string spriteName = $"{swordType}_item_{projectileDirection.ToString().ToLower()}";
+        projectileDict.SetSprite(spriteName);
 
-        rotate = (playerDirection == Direction.Left || playerDirection == Direction.Right);
         updateTilesTraveled();
     }
 
@@ -73,12 +75,12 @@ public class WoodenSwordBeam : ProjectileFactory, IProjectile
 
     public bool hasFinished()
     {
-        return Finished;
+        return finished;
     }
 
     public void FinishProjectile()
     {
-        tilesTraveled = 6;
+        tilesTraveled = TILES_TO_TRAVEL;
     }
 
     public Rectangle getCollisionRectangle()
@@ -90,7 +92,19 @@ public class WoodenSwordBeam : ProjectileFactory, IProjectile
         return new Rectangle(spawnPosition.X - width / 2, spawnPosition.Y - height / 2, width, height);
     }
 
-    public void UpdateProjectile()
+    public void Setup(params object[] args)
+    {
+        projectilePosition = initialPosition;
+        SoundManager.PlaySound("LOZ_Sword_Shoot", false);
+        projectileDict = new SpriteDict(SpriteType.Projectiles, SpriteLayer.Projectiles, projectilePosition.ToPoint());
+        string spriteName = $"woodensword_item_{projectileDirection.ToString().ToLower()}";
+        projectileDict.SetSprite(spriteName);
+        projectileCollidable = new PlayerProjectileCollidable(getCollisionRectangle(), ProjectileType.WoodenSwordBeam);
+        projectileCollidable.setProjectile(this);
+        collisionController.AddCollidable(projectileCollidable);
+    }
+
+    public void Update()
     {
         if (tilesTraveled < TILES_TO_TRAVEL)
         {
@@ -98,15 +112,15 @@ public class WoodenSwordBeam : ProjectileFactory, IProjectile
         }
         else if (tilesTraveled == TILES_TO_TRAVEL)
         {
-            //tilesTraveled = AnimateSwordBeamEnd.animate();
             projectileDict.SetSprite("poof");
             tilesTraveled = 6;
         }
         else
         {
-            Finished = true;
-            projectileDict.SetSprite("");
-            projectileDict.Enabled = false;
+            finished = true;
+            projectileDict.Unregister();
+            projectileCollidable.UnregisterHitbox();
+            collisionController.RemoveCollidable(projectileCollidable);
         }
         projectileDict.Position = projectilePosition.ToPoint();
 
