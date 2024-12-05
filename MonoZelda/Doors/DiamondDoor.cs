@@ -12,31 +12,31 @@ using MonoZelda.Sound;
 using MonoZelda.Dungeons.Parser.Data;
 using MonoZelda.Enemies;
 
-namespace MonoZelda.Tiles
+namespace MonoZelda.Doors
 {
     internal class DiamondDoor : DungeonDoor, IGameUpdate
     {
         private const int HALF_TILE = 32;
-        
+
         private IDungeonRoom room;
         private bool isOpen;
         private ICollidable collider;
         private List<Enemy> enemies;
-        
-        public DiamondDoor(DoorSpawn door, ICommand roomTransitionCommand, CollisionController c, List<Enemy> enemies) 
+
+        public DiamondDoor(DoorSpawn door, ICommand roomTransitionCommand, CollisionController c, List<Enemy> enemies)
             : base(door, roomTransitionCommand, c)
         {
             this.enemies = enemies;
-            
+
             // Create collider to block entry, HALF_TILE makes the door flush with the wall
-            var offset = door.Direction == DoorDirection.North ? 
+            var offset = door.Direction == DoorDirection.North ?
                 new Point(0, -door.Bounds.Size.Y / 2 + HALF_TILE) : new Point(0, 0);
-            
+
             var bounds = new Rectangle(door.Position + offset, door.Bounds.Size);
-            
+
             collider = new StaticBoundaryCollidable(bounds);
             c.AddCollidable(collider);
-            
+
             // These doors close after the player enters
             SoundManager.PlaySound("LOZ_Door_Unlock", false);
             SpriteDict.SetSprite(GetClosedSprite().ToString());
@@ -53,7 +53,7 @@ namespace MonoZelda.Tiles
                 _ => Spawn.Type
             };
         }
-        
+
         private Dungeon1Sprite GetOpenSprite()
         {
             return Spawn.Type switch

@@ -18,7 +18,8 @@ namespace MonoZelda.UI
         {
             // Create Mini-Menu
             MiniMenu = new(SpriteType.HUD, SpriteLayer.HUD - 1, position);
-            MiniMenu.SetSprite("hud_background");
+            string backgroundSpriteName = $"hud_background_{(MonoZeldaGame.GameMode == GameType.Classic ? "noxp" : "xp")}";
+            MiniMenu.SetSprite(backgroundSpriteName);
 
             // Create Map and Inventory Menu
             Map = new(SpriteType.HUD, SpriteLayer.HUD - 1, position + mapOffset);

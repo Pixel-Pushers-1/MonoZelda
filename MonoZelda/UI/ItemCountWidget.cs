@@ -37,8 +37,8 @@ namespace MonoZelda.UI
 
             //set SwordSprite
             Point swordPosition = WidgetLocation + margin + new Point(184, 12);
-            swordSprite = new SpriteDict(SpriteType.HUD, SpriteLayer.HUD, swordPosition);
-            swordSprite.SetSprite("woodensword");
+            swordSprite = new SpriteDict(SpriteType.Player, SpriteLayer.HUD, swordPosition);
+            swordSprite.SetSprite($"{PlayerSpriteManager.GetLinkSword()}_item_up");
 
             //update Weapon sprite
             UpdateEquippableSprite();
@@ -86,6 +86,7 @@ namespace MonoZelda.UI
         private void UpdateSwordSprite()
         {
             swordSprite.Position = WidgetLocation + margin + new Point(184, 12);
+            swordSprite.SetSprite($"{PlayerSpriteManager.GetLinkSword()}_item_up");
         }
     }
 }

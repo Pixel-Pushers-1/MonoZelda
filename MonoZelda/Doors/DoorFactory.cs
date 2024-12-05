@@ -9,7 +9,7 @@ using MonoZelda.Link.Projectiles;
 using MonoZelda.Scenes;
 using MonoZelda.Trigger;
 
-namespace MonoZelda.Tiles.Doors;
+namespace MonoZelda.Doors;
 
 internal static class DoorFactory
 {
@@ -34,7 +34,7 @@ internal static class DoorFactory
             _ => throw new InvalidEnumArgumentException()
         };
     }
-    
+
     private static readonly Dictionary<Dungeon1Sprite, DoorType> DoorTypeMap = new()
     {
         { Dungeon1Sprite.door_locked_east, DoorType.LockedDoor },

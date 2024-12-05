@@ -1,5 +1,6 @@
 Sprite,X,Y,W,H,Frames,Anchor,Fps
-hud_background,256,11,256,56,1,top left,10
+hud_background_xp,256,11,256,56,1,top left,10
+hud_background_noxp,0,123,256,56,1,top left,10
 hud_map,272,80,64,24,1,top left,10
 inventory_background,0,16,256,88,1,top left,10
 triforce_background,0,120,256,88,1,top left,10

@@ -4,12 +4,12 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Commands;
 using MonoZelda.Controllers;
+using MonoZelda.Dungeons;
 using MonoZelda.Dungeons.Parser.Data;
 using MonoZelda.Link;
 using MonoZelda.Sprites;
-using MonoZelda.Tiles;
 
-namespace MonoZelda.Dungeons
+namespace MonoZelda.Doors
 {
     internal class DungeonDoor : IDoor
     {
@@ -18,27 +18,27 @@ namespace MonoZelda.Dungeons
         internal TriggerCollidable DoorTrigger;
         internal DoorSpawn Spawn;
         internal CollisionController CollisionController;
-        
-        
+
+
         public DoorDirection Direction => Spawn.Direction;
         public Point Position { get; set; }
-        
+
         private ICommand transitionCommand;
         private SpriteDict doorMask;
-        
+
         // So many arguments, but it's necessary for the door to be able to transition to the next room, open to suggetions -js
         public DungeonDoor(DoorSpawn spawnPoint, ICommand roomTransitionCommand, CollisionController c)
         {
             Spawn = spawnPoint;
             transitionCommand = roomTransitionCommand;
             CollisionController = c;
-            
+
             SpriteDict = new SpriteDict(SpriteType.Blocks, SpriteLayer.Background, Spawn.Position);
             SpriteDict.SetSprite(Spawn.Type.ToString());
 
             DoorTrigger = CreateActivateTrigger();
             c.AddCollidable(DoorTrigger);
-            
+
             AddDoorMask();
         }
 
@@ -48,12 +48,12 @@ namespace MonoZelda.Dungeons
             var sprite = GetMaskSprite();
             doorMask.SetSprite(sprite.ToString());
         }
-        
+
         public void SetMaskSprite(Dungeon1Sprite sprite)
         {
             doorMask.SetSprite(sprite.ToString());
         }
-        
+
         protected virtual Dungeon1Sprite GetMaskSprite()
         {
             return Direction switch
@@ -69,10 +69,10 @@ namespace MonoZelda.Dungeons
         private TriggerCollidable CreateActivateTrigger()
         {
             var bounds = GetDoorBounds();
-            
+
             DoorTrigger = new TriggerCollidable(bounds);
             DoorTrigger.OnTrigger += Transition;
-            
+
             return DoorTrigger;
         }
 
@@ -88,20 +88,20 @@ namespace MonoZelda.Dungeons
                 DoorDirection.East => new Point(Spawn.Bounds.Size.X - SAFE_EDGE, 0),
                 _ => throw new ArgumentOutOfRangeException()
             };
-            
+
             return new Rectangle(Spawn.Position + offset, Spawn.Bounds.Size);
         }
 
         internal void ResetDoorTrigger()
         {
             if (DoorTrigger == null) return;
-            
+
             DoorTrigger.Bounds = GetDoorBounds();
         }
 
         public void Open()
         {
-            switch(Direction)
+            switch (Direction)
             {
                 case DoorDirection.North:
                     SpriteDict.SetSprite(nameof(Dungeon1Sprite.door_open_north));
