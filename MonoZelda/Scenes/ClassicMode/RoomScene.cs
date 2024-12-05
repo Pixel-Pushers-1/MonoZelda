@@ -107,9 +107,9 @@ public class RoomScene : Scene
         transitionCommand = commandManager.GetCommand(CommandType.RoomTransitionCommand);
         
         SetupShader();
+        CreateTriggers(contentManager);
         LoadRoomTextures(contentManager);
         CreateStaticColliders();
-        CreateTriggers(contentManager);
     }
 
     private void SetupShader()
@@ -226,7 +226,7 @@ public class RoomScene : Scene
         var doors = room.GetDoors();
         foreach (var door in doors)
         {
-            var gameDoor = DoorFactory.CreateDoor(door, transitionCommand, collisionController, enemies);
+            var gameDoor = DoorFactory.CreateDoor(door, transitionCommand, collisionController, enemies, triggers);
             if (gameDoor is IGameUpdate updateable)
             {
                 updateables.Add(updateable);

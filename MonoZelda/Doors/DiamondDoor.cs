@@ -82,6 +82,11 @@ namespace MonoZelda.Doors
         {
             if (isOpen || CheckForEnemies()) return;
 
+            OpenDoor();
+        }
+
+        protected virtual void OpenDoor()
+        {
             SoundManager.PlaySound("LOZ_Door_Unlock", false);
             isOpen = true;
             SpriteDict.SetSprite(GetOpenSprite().ToString());
@@ -89,7 +94,7 @@ namespace MonoZelda.Doors
             CollisionController.RemoveCollidable(collider);
         }
 
-        private bool CheckForEnemies()
+        protected virtual bool CheckForEnemies()
         {
             return enemies.Count > 0;
         }
