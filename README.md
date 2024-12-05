@@ -87,10 +87,11 @@ Players can choose to play an infinite mode that moves Link through a series of 
 ### RPG Elements
 Link can now level up! There is an xp bar at the top along with level number that is updated when link picks up orbs from killing enemies. 
 
-**Every Level: 
+**Every Level**: 
 - Recover Health
 - Gain Defense(reduces damage)
-**Every 5 Levels:
+  
+**Every 5 Levels**:
 
 - Link does more damage
 - Sword color changes
