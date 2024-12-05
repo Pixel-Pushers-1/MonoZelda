@@ -42,7 +42,7 @@ public class LevelCompleteScene : Scene
 
         // create fake Link, Background, and Triforce
         FakeLink = new SpriteDict(SpriteType.Player, SpriteLayer.Triforce, PlayerState.Position);
-        FakeLink.SetSprite("pickupitem_twohands");
+        FakeLink.SetSprite($"pickupitem_twohands_{PlayerSpriteManager.GetLinkColor()}");
         FakeTriforce = new SpriteDict(SpriteType.Items, SpriteLayer.Triforce, PlayerState.Position + new Point(-32, -84));
         FakeTriforce.SetSprite("triforce");
         FakeBackground = new SpriteDict(SpriteType.Blocks, SpriteLayer.Triforce - 2, DungeonConstants.BackgroundPosition);

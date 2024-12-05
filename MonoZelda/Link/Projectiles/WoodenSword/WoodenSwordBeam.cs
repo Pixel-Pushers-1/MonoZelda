@@ -47,11 +47,11 @@ public class WoodenSwordBeam : IProjectile
         projectileCollidable.Bounds = getCollisionRectangle();
         string swordType = "woodensword"; // Default sword
 
-        if (PlayerState.Level >= 10)
+        if (PlayerState.Level >= PlayerSpriteManager.RED_LEVEL_REQUIREMENT)
         {
             swordType = "magicsword";
         }
-        else if (PlayerState.Level >= 5)
+        else if (PlayerState.Level >= PlayerSpriteManager.BLUE_LEVEL_REQUIREMENT)
         {
             swordType = "whitesword";
         }
