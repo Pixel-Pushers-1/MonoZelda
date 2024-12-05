@@ -170,7 +170,7 @@ namespace MonoZelda.Enemies
                 {
                     enemySpriteDict.Enabled = false;
                     enemy.Alive = false;
-                    if (enemy.GetType() != typeof(Keese) && enemy.GetType() != typeof(Gel))
+                    if (enemy.GetType() != typeof(Keese) && enemy.GetType() != typeof(Gel) && enemy.GetType() != typeof(Zol))
                     {
                         DropItem(position, enemy);
                     }
