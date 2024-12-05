@@ -8,7 +8,7 @@ using MonoZelda.Dungeons.Parser.Data;
 using MonoZelda.Link;
 using MonoZelda.Sound;
 
-namespace MonoZelda.Tiles
+namespace MonoZelda.Doors
 {
     internal class KeyDoor : DungeonDoor
     {
@@ -17,8 +17,8 @@ namespace MonoZelda.Tiles
         private ICollidable collider;
         private TriggerCollidable trigger;
         private bool isOpen;
-        
-        public KeyDoor(DoorSpawn spawnPoint, ICommand roomTransitionCommand, CollisionController c) 
+
+        public KeyDoor(DoorSpawn spawnPoint, ICommand roomTransitionCommand, CollisionController c)
             : base(spawnPoint, roomTransitionCommand, c)
         {
             BlockDoor(spawnPoint, c);
@@ -26,7 +26,7 @@ namespace MonoZelda.Tiles
 
         private void BlockDoor(DoorSpawn spawnPoint, CollisionController c)
         {
-            if(collider != null)
+            if (collider != null)
             {
                 c.RemoveCollidable(collider);
             }
@@ -50,7 +50,7 @@ namespace MonoZelda.Tiles
                 base.Transition(transitionDirection);
             }
 
-            if(!isOpen && PlayerState.Keys > 0)
+            if (!isOpen && PlayerState.Keys > 0)
             {
                 Unlock(Spawn.Direction);
             }

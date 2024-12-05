@@ -1,4 +1,4 @@
-namespace MonoZelda.Tiles.Doors;
+namespace MonoZelda.Doors;
 
 public enum DoorType
 {

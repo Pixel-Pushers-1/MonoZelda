@@ -9,7 +9,7 @@ using MonoZelda.Link;
 using MonoZelda.Link.Projectiles;
 using MonoZelda.Sprites;
 
-namespace MonoZelda.Tiles
+namespace MonoZelda.Doors
 {
     internal class BombableWall : DungeonDoor, ICollidable
     {
@@ -22,13 +22,13 @@ namespace MonoZelda.Tiles
             : base(spawnPoint, roomTransitionCommand, c)
         {
             hitbox = new CollisionHitboxDraw(this);
-            
-            isOpen = spawnPoint.Type is 
-                Dungeon1Sprite.wall_bombed_east or 
-                Dungeon1Sprite.wall_bombed_north or 
-                Dungeon1Sprite.wall_bombed_south or 
+
+            isOpen = spawnPoint.Type is
+                Dungeon1Sprite.wall_bombed_east or
+                Dungeon1Sprite.wall_bombed_north or
+                Dungeon1Sprite.wall_bombed_south or
                 Dungeon1Sprite.wall_bombed_west;
-            
+
             if (!isOpen)
                 MakeBombable();
             else
@@ -39,13 +39,13 @@ namespace MonoZelda.Tiles
         {
             hitbox = new CollisionHitboxDraw(this);
             CollisionController.AddCollidable(this);
-            
+
             // Create collider to block entry, HALF_TILE makes the door flush with the wall
-            var offset = Spawn.Direction == DoorDirection.North ? 
+            var offset = Spawn.Direction == DoorDirection.North ?
                 new Point(0, -Spawn.Bounds.Size.Y / 2 + HALF_TILE) : new Point(0, 0);
-            
+
             var bounds = new Rectangle(Spawn.Position + offset, Spawn.Bounds.Size);
-            
+
             collider = new StaticRoomCollidable(bounds);
             CollisionController.AddCollidable(collider);
         }
@@ -56,7 +56,7 @@ namespace MonoZelda.Tiles
             {
                 return GetBombedSprite();
             }
-            
+
             return Direction switch
             {
                 DoorDirection.North => Dungeon1Sprite.doorframe_wall_north,
@@ -87,7 +87,7 @@ namespace MonoZelda.Tiles
                 Dungeon1Sprite.bombable_wall_north => Dungeon1Sprite.wall_bombed_north,
                 Dungeon1Sprite.bombable_wall_south => Dungeon1Sprite.wall_bombed_south,
                 Dungeon1Sprite.bombable_wall_west => Dungeon1Sprite.wall_bombed_west,
-                _ => throw new System.Exception("Invalid bombable wall type")
+                _ => throw new Exception("Invalid bombable wall type")
             };
         }
 
@@ -102,7 +102,7 @@ namespace MonoZelda.Tiles
             get => collider?.Bounds ?? Spawn.Bounds;
             set => collider.Bounds = value;
         }
-        
+
         public SpriteDict CollidableDict { get; set; }
         public void UnregisterHitbox()
         {
@@ -111,8 +111,8 @@ namespace MonoZelda.Tiles
 
         public bool Intersects(ICollidable other)
         {
-            if (other is PlayerProjectileCollidable collidable 
-                && collidable.projectileType == ProjectileType.BombExplosion 
+            if (other is PlayerProjectileCollidable collidable
+                && collidable.projectileType == ProjectileType.BombExplosion
                 && other.Bounds.Intersects(collider.Bounds))
             {
                 BombWall();

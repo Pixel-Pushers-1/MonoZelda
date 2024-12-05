@@ -4,17 +4,15 @@ using MonoZelda.Commands;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Enemies;
-using MonoZelda.Link.Projectiles;
-using MonoZelda.Scenes;
 
-namespace MonoZelda.Tiles.Doors;
+namespace MonoZelda.Doors;
 
 internal static class DoorFactory
 {
     public static IDoor CreateDoor(DoorSpawn door, ICommand roomTransitionCommand, CollisionController c, List<Enemy> enemies)
     {
         var doorType = DoorTypeMap[door.Type];
-        
+
         return doorType switch
         {
             DoorType.NormalDoor => new DungeonDoor(door, roomTransitionCommand, c),
@@ -25,7 +23,7 @@ internal static class DoorFactory
             _ => throw new InvalidEnumArgumentException()
         };
     }
-    
+
     private static readonly Dictionary<Dungeon1Sprite, DoorType> DoorTypeMap = new()
     {
         { Dungeon1Sprite.door_locked_east, DoorType.LockedDoor },
