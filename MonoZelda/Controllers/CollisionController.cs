@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoZelda.Collision;
 using MonoZelda.Commands;
+using MonoZelda.Doors;
 using MonoZelda.Link;
-using MonoZelda.Tiles;
 
 namespace MonoZelda.Controllers;
 

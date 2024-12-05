@@ -1,14 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using MonoZelda.Collision;
 using MonoZelda.Controllers;
 using MonoZelda.Link;
 using MonoZelda.Sprites;
-using MonoZelda.Tiles;
 using System;
-using System.Collections.Generic;
 using MonoZelda.Scenes;
+using MonoZelda.Doors;
 
 namespace MonoZelda.Trigger
 {

@@ -11,8 +11,8 @@ using MonoZelda.Dungeons;
 using MonoZelda.Items;
 using MonoZelda.Commands.GameCommands;
 using MonoZelda.Sound;
-using MonoZelda.Tiles.Doors;
 using System.Collections.Generic;
+using MonoZelda.Doors;
 
 namespace MonoZelda.Scenes;
 
