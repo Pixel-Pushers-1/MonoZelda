@@ -81,15 +81,20 @@ namespace MonoZelda.Tiles
         public void Update(GameTime time)
         {
             if (isOpen || CheckForEnemies()) return;
-            
+
+            OpenDoor();
+        }
+
+        protected virtual void OpenDoor()
+        {
             SoundManager.PlaySound("LOZ_Door_Unlock", false);
             isOpen = true;
             SpriteDict.SetSprite(GetOpenSprite().ToString());
             Spawn.Type = GetOpenSprite();
             CollisionController.RemoveCollidable(collider);
         }
-        
-        private bool CheckForEnemies()
+
+        protected virtual bool CheckForEnemies()
         {
             return enemies.Count > 0;
         }

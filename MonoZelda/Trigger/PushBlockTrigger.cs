@@ -22,6 +22,8 @@ namespace MonoZelda.Trigger
         private Direction pushDirection;
         private SpriteDict blockDict;
 
+        public bool IsPushed { get; private set; }
+
         // Overriding Bounds to enforce this trigger collider follows the static collider we create
         public new Rectangle Bounds
         {
@@ -78,6 +80,7 @@ namespace MonoZelda.Trigger
                 // We don't want trigger this again
                 UnregisterHitbox();
                 collisionManager.RemoveCollidable(this);
+                IsPushed = true;
                 OnTrigger -= PushTrigger; // Allways clean up your events
             }
 

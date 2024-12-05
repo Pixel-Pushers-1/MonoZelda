@@ -1,20 +1,29 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using MonoZelda.Commands;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Enemies;
 using MonoZelda.Link.Projectiles;
 using MonoZelda.Scenes;
+using MonoZelda.Trigger;
 
 namespace MonoZelda.Tiles.Doors;
 
 internal static class DoorFactory
 {
-    public static IDoor CreateDoor(DoorSpawn door, ICommand roomTransitionCommand, CollisionController c, List<Enemy> enemies)
+    public static IDoor CreateDoor(DoorSpawn door, ICommand roomTransitionCommand, CollisionController c, List<Enemy> enemies, List<ITrigger> triggers = null)
     {
         var doorType = DoorTypeMap[door.Type];
-        
+
+        // I don't want to create a new door type for one use case
+        if(door.Destination == "Room10" && triggers != null)
+        {
+            var pushBlockTrigger = triggers.OfType<PushBlockTrigger>().FirstOrDefault();
+            return new SecretDoor(door, roomTransitionCommand, c, pushBlockTrigger);
+        }
+
         return doorType switch
         {
             DoorType.NormalDoor => new DungeonDoor(door, roomTransitionCommand, c),
