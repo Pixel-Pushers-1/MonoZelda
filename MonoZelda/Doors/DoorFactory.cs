@@ -5,8 +5,7 @@ using MonoZelda.Commands;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
 using MonoZelda.Enemies;
-using MonoZelda.Link.Projectiles;
-using MonoZelda.Scenes;
+using MonoZelda.Tiles;
 using MonoZelda.Trigger;
 
 namespace MonoZelda.Doors;

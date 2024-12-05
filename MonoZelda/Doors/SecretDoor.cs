@@ -1,18 +1,12 @@
 ﻿
 using System.Collections.Generic;
-using System.ComponentModel;
-using Microsoft.Xna.Framework;
-using MonoZelda.Collision;
 using MonoZelda.Commands;
 using MonoZelda.Controllers;
 using MonoZelda.Dungeons;
-using MonoZelda.Link;
-using MonoZelda.Scenes;
 using MonoZelda.Sound;
-using MonoZelda.Dungeons.Parser.Data;
 using MonoZelda.Enemies;
 using MonoZelda.Trigger;
-using System;
+using MonoZelda.Doors;
 
 namespace MonoZelda.Tiles
 {
